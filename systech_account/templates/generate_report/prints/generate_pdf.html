@@ -1,0 +1,102 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html ng-app="generate_report">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title page-title>{% block title %}Generate Report{%endblock%}</title>
+    <link href="{% static 'inspinia/css/bootstrap3.3.6.min.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/font-awesome/css/font-awesome.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/animate.css'%}" rel="stylesheet">
+    <link href="{% static 'css/lib/table-resize.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/sweetalert/sweetalert.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/toastr/angular-toaster.css'%}" rel="stylesheet">
+    <!-- <link href="{% static 'inspinia/css/style.css'%}" rel="stylesheet"> -->
+    <link href="{% static 'inspinia/css/plugins/sweetalert/sweetalert.css'%}" rel="stylesheet">
+    <link href="{% static 'css/common/lib_common.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/toastr/angular-toaster.css'%}" rel="stylesheet">
+    <link href="{% static 'css/common/site.css'%}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+    <style>
+        ol,ul {
+            padding-left: 15px;
+        }
+    </style>
+</head>
+
+<body ng-controller="generate_reportCtrl as main" ng-cloak="" ng-init="generate_report = {{ datus }}; instantiate(true);">
+    <center><h2>{{pagename}}</h2>Business Assessment</center><br><br><br>
+    <table class="table table-bordered">
+        <thead>
+            <th>Transaction Type</th>
+            <!-- <th>Question</th> -->
+            <th>Finding</th>
+            <th>Effect</th>
+            <th>Document</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat-start="(key, transaction_type) in transaction_types">
+                <td>
+                    <b>{$ transaction_type.name $}</b>
+                </td>
+                <td colspan="4"></td>
+            </tr>
+            <tr ng-repeat-end ng-repeat="(record_key, record) in records" ng-if="record.transaction_type.id == transaction_type.id && record.dupes">
+                <td></td>
+                <!-- <td><b>{$record.code$}</b> - {$record.value$}</td>
+                <td>
+                    <span ng-if="record.choices.length > 0">
+                        <ol type="a">
+                            <li ng-repeat="choice in record.choices">
+                                {$ choice.value $}
+                            </li>
+                        </ol>
+                    </span>
+                </td> -->
+                <td>
+                    <span ng-if="record.findings.length > 0">
+                        <ul>
+                            <li ng-repeat="finding in record.findings">
+                                {$ finding.value $}
+                            </li>
+                        </ul>
+                    </span>
+                </td>
+                <td>
+                    <span ng-if="record.effects.length > 0">
+                        <ul>
+                            <li ng-repeat="effect in record.effects">
+                                {$ effect.value $}
+                            </li>
+                        </ul>
+                    </span>
+                </td>
+                <td>
+                    <img ng-if="record.image" src="/static/uploads/{$record.image$}"  class="img-rounded" style="height:100px;width:100px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br>
+    <div>
+        <h2>Recommendations:</h2>
+        <ul>
+            <li ng-repeat="recommendation in generated_recommendations">
+                {$recommendation.value$}
+            </li>
+        </ul>
+    </div>
+    <toaster-container></toaster-container>
+
+
+    {% block content %}
+    {% endblock %}    
+    {% include "footer.html" %}
+    {% block loader_js_bottom %}
+        <script type="text/javascript" src="{% static 'js/generate_report.js' %}"></script>
+    {% endblock %}    
+</body>
+</html>

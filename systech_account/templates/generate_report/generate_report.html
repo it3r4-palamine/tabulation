@@ -1,0 +1,112 @@
+{% extends "base.html" %} {% load static %} {% block ngapp %}ng-app="generate_report"{% endblock %} {% block ngctrl %}ng-controller="generate_reportCtrl as main"{% endblock %} {% block title %}Generate Report {% endblock %} {% block loader_js_bottom %}
+<script type="text/javascript" src="{% static 'js/generate_report.js' %}"></script>
+{% endblock loader_js_bottom %} {% block page_header %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>{{pagename}}</h2>
+    </div>
+</div>
+{% endblock %} 
+
+{% block editable_css %}
+    <style type="text/css">
+        .hand_cursor {
+            cursor: pointer !important;
+        }
+
+        .hand_cursor:hover {
+            background-color: #E8E8E8 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content_body %}
+<div class="wrapper wrapper-content animated fadeIn" ng-cloak="" ng-init="generate_report = {{ datus }}; instantiate();">
+    <div class="ibox">
+        <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
+            {% include "common/loader.html" %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="/company_assessment"><button class="btn btn-default btn-outline">BACK</button></a>
+                    <!-- <button class="btn btn-primary pull-right" ng-disabled="!recommendation.length > 0 && generate_report.status == 'False'" ng-click="generate()">GENERATE REPORT</button> -->
+                    <button class="btn btn-primary pull-right" ng-disabled="!recommendation.length > 0 || generate_report.status == 'False'" ng-click="generate()">GENERATE REPORT</button>
+                </div>
+                <div class="clearfix"></div>
+                <hr>
+                <div class="col-sm-4">
+                    <label>Recommendations</label>
+                    <div style="overflow: auto; height: 400px;">
+                        <div ng-repeat="(key,recommendation) in recommendations">
+                            <div class="checkbox checkbox-success">
+                                <input type="checkbox" id="recommendation_{$key$}" name="recommendation_{$key$}" ng-click="check_recommendation(recommendation)" ng-model="recommendation.is_recommended"><label for="recommendation_{$key$}">{$ recommendation.value $}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="col-sm-8">
+                    <label>Answers</label><br>
+                    <label>Legend: <br><span class="correct_answer">&nbsp;&nbsp;&nbsp;</span> - Correct Answer
+                    <br><span class="wrong_answer">&nbsp;&nbsp;&nbsp;</span> - Wrong Answer
+                    <br><span><i class="fa fa-user"></i></span> - User Answer
+                    </label>
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default" ng-repeat="(key,transaction_type) in transaction_types">
+                            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse_{$key$}" style="cursor: pointer;">
+                                <h5 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse_{$key$}">{$ transaction_type.name $}</a>
+                                </h5>
+                            </div>
+                            <div id="collapse_{$key$}" class="panel-collapse collapse" ng-class="{'in' : $first}">
+                                <div class="panel-body" ng-repeat="(record_key, record) in records" ng-if="record.transaction_type.id == transaction_type.id">
+                                    {$ record.value $}<br>
+                                    <span ng-if="record.choices.length > 0">
+                                        <ol type="a">
+                                            <li ng-repeat="choice in record.choices" ng-class="{'wrong_answer':!choice.is_answer, 'correct_answer':choice.is_answer}">
+                                                {$ choice.value $}
+                                                <span ng-repeat="answer in record.answers" ng-if="choice.id == answer.id">
+                                                    <i class="fa fa-user"></i>
+                                                </span>
+                                            </li>
+                                        </ol>
+                                    </span>
+                                    <span ng-if="record.choices.length <= 0">
+                                        <b>Answer: <u>{$record.answers$}</u></b> <i class="fa fa-user"></i><br><br>
+                                    </span>
+                                    <span ng-if="record.findings.length > 0"><b>Findings:</b><br>
+                                        <ul>
+                                            <li ng-repeat="finding in record.findings">
+                                                {$ finding.value $}
+                                            </li>
+                                        </ul>
+                                    </span>
+                                    <span ng-if="record.effects.length > 0"><b>Effects:</b><br>
+                                        <ul>
+                                            <li ng-repeat="effect in record.effects">
+                                                {$ effect.value $}
+                                            </li>
+                                        </ul>
+                                    </span>
+                                    <div class="lightBoxGallery" ng-if="record.image">
+                                        <a href="/static/uploads/{$record.image$}" title="Document image" data-gallery=""><img src="/static/uploads/{$record.image$}"  class="img-rounded" style="height:100px;width:100px;"></a>
+
+                                        <div id="blueimp-gallery" class="blueimp-gallery">
+                                            <div class="slides"></div>
+                                            <h3 class="title"></h3>
+                                            <a class="prev">‹</a>
+                                            <a class="next">›</a>
+                                            <a class="close">×</a>
+                                            <a class="play-pause"></a>
+                                            <ol class="indicator"></ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

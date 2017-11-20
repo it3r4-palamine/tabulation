@@ -1,0 +1,23 @@
+<div class="wrapper wrapper-content animated fadeIn modalibox">
+    <div class="ibox">
+        <div class="ibox-title ibox_title_reset">
+            <h3>Download Link</h3>
+        </div>
+
+        <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+            <div class="row">
+                <form class="form" name="form">
+                    <div class="col-sm-12">
+                        <label>Download Powerpoint <a href="{$ download_link.link $}">Here.</a></label><br>
+                        <label>Download PDF <a href="/generate_report_pdf/{$generate_report.id$}" target="_blank">Here. </a></label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="ibox-footer">
+            <div class="pull-right">
+                <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="close_download_dialog()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

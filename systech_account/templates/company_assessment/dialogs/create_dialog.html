@@ -1,0 +1,68 @@
+<div class="wrapper wrapper-content animated fadeIn modalibox">
+    <div class="ibox">
+        <div class="ibox-title ibox_title_reset">
+            <h3>Company Assessment</h3>
+        </div>
+
+        <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+            {% include "common/loader.html" %}
+            <div class="row">
+                <form class="form" name="form">
+                    <div class="col-sm-12" ng-class="{ 'has-error' : form.reference_no.$invalid && !form.reference_no.$pristine }">
+                        <label>Reference No.</label>
+                        <input type="text" name="reference_no" ng-model="record.reference_no" class="form-control">
+                    </div>
+                    <div class="col-sm-12" ng-class="{ 'has-error' : form.date_from.$invalid && !form.date_from.$pristine }">
+                        <label>Date From</label>
+                        <input type="date" name="date_from" ng-model="record.date_from" class="form-control">
+                    </div>
+                    <div class="col-sm-12">
+                        <br>
+                        <label>Date To</label>
+                        <input type="date" name="date_to" ng-model="record.date_to" class="form-control">
+                    </div>
+                    <div class="col-sm-12">
+                        <br>
+                        <label>Company</label>
+                        <ui-select ng-model="record.company" ng-change="select_transaction_type(record)">
+                            <ui-select-match placeholder="Select...">{$ $select.selected.name $}</ui-select-match>
+                            <ui-select-choices repeat="company in companies | filter: $select.search | limitTo:50">
+                                <div ng-bind-html="company.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-sm-12">
+                        <br>
+                        <label>Assigned To</label>
+                        <ui-select ng-model="record.consultant">
+                            <ui-select-match placeholder="Select...">{$ $select.selected.fullname $}</ui-select-match>
+                            <ui-select-choices repeat="consultant in consultants | filter: $select.search | limitTo:50">
+                                <span ng-bind-html="consultant.fullname | highlight: $select.search"></span> - <span ng-bind-html="consultant.user_type.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-sm-12">
+                        <br>
+                        <label>Transaction Type</label>
+                        <ui-select ng-model="record.transaction_types" ng-disabled="!record.company" multiple>
+                            <ui-select-match ng-attr-placeholder="{$ record.transaction_type ? 'Select...' : 'Please select a company...' $}">{$ $item.name $}</ui-select-match>
+                            <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">
+                                <div ng-bind-html="transaction_type.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-sm-12" ng-hide="true">
+                        <br>
+                        <input type="checkbox" id="is_active" name="is_active" ng-model="record.is_active"><label for="is_active">Active</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="ibox-footer">
+            <div class="pull-right">
+                <button type="button" class="btn btn-sm btn-primary btn-w-m" ng-click="create()" ng-disabled="form.$invalid">Save</button>
+                <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="main.close_dialog()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

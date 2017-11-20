@@ -1,0 +1,10 @@
+<div class="panel-footer">
+	<span>Total records : {$main.pagination.total_records$} </span>
+    <!-- <div class=" pull-right">
+		<button type="button" class="btn btn-xs btn-default btn-refresh" ng-click="main.main_loader()"><i class="fa fa-refresh"></i></button>
+	</div> -->
+	<div class=" pull-right">
+    	<ul uib-pagination total-items="main.pagination.total_records" items-per-page="main.pagination.limit" ng-model="main.pagination.current_page" ng-change="main.main_loader()" max-size="2" boundary-link-numbers="true" rotate="false" style="margin: 0px;">
+    	</ul>
+    </div>
+</div>

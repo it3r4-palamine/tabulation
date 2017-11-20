@@ -1,0 +1,60 @@
+{% extends "base.html" %} {% load static %} {% block ngapp %}ng-app="users"{% endblock %} {% block ngctrl %}ng-controller="usersCtrl as main"{% endblock %} {% block title %}Users {% endblock %} {% block loader_js_bottom %}
+<script type="text/javascript" src="{% static 'js/users.js' %}"></script>
+{% endblock loader_js_bottom %} {% block page_header %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Users</h2>
+    </div>
+</div>
+{% endblock %} 
+
+{% block editable_css %}
+    <style type="text/css">
+        .hand_cursor {
+            cursor: pointer !important;
+        }
+
+        .hand_cursor:hover {
+            background-color: #E8E8E8 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content_body %}
+<div class="wrapper wrapper-content animated fadeIn" ng-cloak="">
+    <div class="ibox">
+        <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
+            {% include "common/loader.html" %} 
+            <div class="row">
+                <div class="col-sm-12 pull-right">
+                    <button class="btn btn-primary pull-right" ng-click="create_dialog()">CREATE</button>
+                </div>
+                <div class="clearfix"></div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <th>Fullname</th>
+                            <th>Email</th>
+                            <th>User Type</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="record in records" class="hand_cursor">
+                                <td ng-click="load_to_edit(record)">{$ record.fullname $}</td>
+                                <td ng-click="load_to_edit(record)">{$ record.email $}</td>
+                                <td ng-click="load_to_edit(record)">{$ record.user_type.name $}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" ng-click="change_pass_dialog(record)">Change Password</button>
+                                    <button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <pagination></pagination>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

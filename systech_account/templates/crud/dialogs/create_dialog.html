@@ -1,0 +1,22 @@
+<div class="wrapper wrapper-content animated fadeIn modalibox" windowresize>
+    <div class="ibox">
+        <div class="ibox-title ibox_title_reset">
+            <h3>Setup Location</h3>
+        </div>
+
+        <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+            <div class="row">
+                <form class="form" name="form">
+                    <div class="col-sm-12" ng-class="{ 'has-error' : form.name.$invalid && !form.name.$pristine }">
+                        <label class="required">Name</label>
+                        <input ng-model="record.name" name="name" type="text" required placeholder="Name" class="form-control input-sm">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="ibox-footer">
+            <button type="button" class="btn btn-sm btn-primary btn-w-m" ng-click="create()" ng-disabled="form.$invalid">Save</button>
+            <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="close_dialog()">Close</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+.ibox-content > .sk-spinner { display: none; }
+.ibox-content.sk-loading { position: relative;}
+.ibox-content.sk-loading:after {
+    content: '';
+    background-color: rgba(255,255,255,0.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+}
+.ibox-content.sk-loading > .sk-spinner {
+    display: block;
+    position: absolute;
+    top: 0%;
+    left: 0;
+    right: 0;
+    z-index: 2000;
+}
+
+
+/*For spinner panel*/
+.panel > .sk-spinner { display: none; }
+.panel.sk-loading { position: relative;}
+.panel.sk-loading:after {
+    content: '';
+    background-color: rgba(255,255,255,0.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+}
+.panel.sk-loading > .sk-spinner {
+    display: block;
+    position: absolute;
+    top: 5%;
+    left: 0;
+    right: 0;
+    z-index: 2000;
+}
+
+
+
+
+div.panel-body > .sk-spinner { display: none; }
+div.panel-body.sk-loading { position: relative;}
+div.panel-body.sk-loading:after {
+    content: '';
+    background-color: rgba(255,255,255,0.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+}
+div.panel-body.sk-loading > .sk-spinner {
+    display: block;
+    position: absolute;
+    top: 0%;
+    left: 0;
+    right: 0;
+    z-index: 2000;
+}
+
+
+.ui-select-match-text{
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 40px;
+}
+.ui-select-toggle > .btn.btn-link {
+  margin-right: 10px;
+  top: 6px;
+  position: absolute;
+  right: 10px;
+}
+
+table.resizable th {text-align:center;border:1px solid #bbb !important;}

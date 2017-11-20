@@ -1,0 +1,7 @@
+#sudo apt-get install postgresql postgresql-contrib libpq-dev python-dev
+django==1.9
+psycopg2==2.6.2
+python-pptx
+djangorestframework
+django-cors-headers
+django-extra-fields

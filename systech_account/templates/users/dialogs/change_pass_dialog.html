@@ -1,0 +1,29 @@
+<div class="wrapper wrapper-content animated fadeIn modalibox">
+    <div class="ibox">
+        <div class="ibox-title ibox_title_reset">
+            <h3>Change Password</h3>
+        </div>
+
+        <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+            {% include "common/loader.html" %} 
+            <div class="row">
+                <form class="form" name="form">
+                    <div class="col-sm-12" ng-class="{ 'has-error' : form.password1.$invalid && !form.password1.$pristine }">
+                        <label class="required">Password</label>
+                        <input type="password" ng-model="pwd_form.password1" name="password" class="form-control">
+                    </div>
+                    <div class="col-sm-12" ng-class="{ 'has-error' : form.password2.$invalid && !form.password2.$pristine }">
+                        <label class="required">Confirm Password</label>
+                        <input type="password" ng-model="pwd_form.password2" name="password" class="form-control">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="ibox-footer">
+            <div class="pull-right">
+                <button type="button" class="btn btn-sm btn-primary btn-w-m" ng-click="change_password()" ng-disabled="form.$invalid">Save</button>
+                <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="main.close_dialog()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

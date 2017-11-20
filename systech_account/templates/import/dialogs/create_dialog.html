@@ -1,0 +1,115 @@
+<style>
+    .wizard > .steps .done a {background:#8c9eff;}
+    .wizard > .steps .done a:hover {background:#8c9eff;}
+    .wizard > .steps .current a {background:#3F51B5;}
+    .wizard > .steps .current a:hover {background:#3F51B5;}
+    .wizard > .actions a {background:#3F51B5;}
+    .wizard > .actions a:hover {background:#3F51B5;}
+</style>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Import {$ title $}</h3>
+        <div class="col-sm-8 col-sm-offset-4">
+            <div class="pull-right margin_top_reverse_20 margin_right_reverse_30">
+                 <button class="btn btn-sm btn-link" ng-click="main.close_dialog()"><i class="fa fa-times"></i></button>            
+            </div>
+        </div>
+    </div>
+    <div class="panel-body" ng-cloak>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+                        {% include "common/loader.html" %}
+                        <form ng-switch="" on="current_tab" class="wizard-big wizard clearfix ng-pristine ng-valid" role="application" novalidate="novalidate">
+                            <div class="steps clearfix">
+                                <ul role="tablist">
+                                    <li role="tab" ng-class="current_tab == 1 ? 'current' : 'disabled'" class="current" style="">
+                                        <a id="form-t-0" ng-click="current_tab = 1" class="hand_cursor">
+                                            <span class="number">1.</span> Upload file</a>
+                                    </li>
+                                    <li role="tab" ng-class="current_tab == 2 ? 'current' : 'disabled'" class="disabled" style="">
+                                        <a id="form-t-0" ng-click="current_tab = 2" class="hand_cursor">
+                                            <span class="number">2.</span> Submit</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="content clearfix">
+                                <div class="actions clearfix">
+                                    <button class="btn btn-w-s btn-success " ng-hide="current_tab==1 " ng-click="previous()">&lt; Previous</button>
+                                    <button class="btn btn-w-s btn-success pull-right" ng-if="current_tab !=2 " ng-click="next()">Next &gt;</button>
+                                    <button class="btn btn-w-s btn-success pull-right" ng-if="current_tab !=1 " ng-click="submit(0) ">Submit</button>
+                                </div>
+                                <div class="col-sm-8 " ng-switch-when="1">
+                                    <h1>Upload</h1>
+                                    <fieldset>
+                                        <label>Select a CSV file to upload</label>
+                                        <div style="position:relative;">
+                                            <label class="btn btn-outline btn-success" for="my-file-selector">
+                                                <input accept=".CSV,.csv" ng-model="uploaded_file" id="my-file-selector" type="file" style="display:none;" onchange="$('#upload-file-info').html(this.files[0].name);" "=" " custom-on-change="import_file_change" class="ng-pristine ng-untouched ng-valid ng-empty ">
+                                                Choose file...
+                                            </label>
+                                            <span class="label label-info " id="upload-file-info "></span>
+                                        </div>
+                                        <div class="clearfix"><br><br></div>
+                                       <div style="height:50% !important;overflow:auto !important; ">
+                                           <span ng-repeat="header in headers " class=" ">
+                                                <div class="col-sm-12 ">
+                                                    <div class="col-sm-4 ">
+                                                        <label class="{$ (header.required) ? 'required' : '' $} ">{$ header.display $}</label>
+                                                    </div>
+                                                    <div class="col-sm-8 ">
+                                                        <select class="form-control " ng-model="header.selected " name="{$ header.value $} ">
+                                                            <option value=" " selected>---</option>
+                                                            <option ng-repeat="csv_header in header.csv_headers " value="{$ csv_header $} ">{$ csv_header $}</option>
+                                                        </select>
+                                                    </div>
+                                                    <br><br>
+                                                </div>
+                                           </span>
+                                       </div>
+                                    </fieldset>
+                                </div>
+
+                                <div class="col-sm-12" ng-switch-when="2 ">
+                                        <div class="col-sm-12 ">
+                                            <h3><i>{$ final_rows.length $} record(s) are ready to be imported.</i></h3>
+                                        </div>
+                                        <div class="clearfix "><br><br></div>
+
+                                        <div class="col-sm-12 well" ng-if="error_count" style="height:100px; overflow: auto;">
+                                            <p ng-repeat="record in final_rows" ng-if="record.error">Line {$ $index + 1 $}: {$ record.error_message $}</p>
+                                        </div>
+
+                                        <div class="col-sm-12 import_data">
+                                             <table class="table table-fixed table-hover resize " resizeable=" " mode="main.resizeMode " id="table ">
+                                                <thead>
+                                                    <th></th>
+                                                    <th>#</th>
+                                                    <th ng-repeat="column in columns "><span ng-if="title == 'Employees'">({$ $index + 1$})<br></span>{$ column.display $}</th>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="row in final_rows" class="ng-scope">
+                                                    <td>
+                                                        <button class="btn btn-xs btn-danger btn-circle" type="button" ng-click="remove_line(row)"><i class="fa fa-times"></i>
+                                                                                    </button>
+                                                    </td>
+                                                        <td>{$ $index + 1 $}.</td>
+                                                        <td ng-repeat="column in columns">
+                                                            <input ng-if="column.type == 'number'" currencyformat ng-model="row[column.value]" name="code" type="text" required placeholder="{$ column.display $}" class="form-control input-sm">
+                                                            <input ng-if="column.type != 'number'" ng-model="row[column.value]" name="code" type="text" required placeholder="{$ column.display $}" class="form-control input-sm">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

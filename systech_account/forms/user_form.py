@@ -1,0 +1,70 @@
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from ..models.user import *
+from django import forms
+from django.db.models import Q,F
+
+
+class CustomUserCreationForm(UserCreationForm):
+	"""
+	A form that creates a user, with no privileges, from the given email and
+	password.
+	"""
+
+	def __init__(self, *args, **kargs):
+		super(CustomUserCreationForm, self).__init__(*args, **kargs)
+
+	class Meta:
+		model  = User
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit")
+
+
+	def clean(self):
+		raw_data = self.cleaned_data
+		email = (Q(email = raw_data["email"]) & Q(is_active = True))
+		instance = User.objects.filter(email)
+		if instance.exists():
+			instance = instance.first()
+			if instance.pk != self.instance.pk and raw_data["email"]:	
+				raise ValueError("Email address already in use.")
+
+		return raw_data
+
+class CustomUserChangeForm(forms.ModelForm):
+
+	class Meta:
+		model  = User
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit")
+
+	def clean(self):
+		raw_data = self.cleaned_data
+		email = (Q(email = raw_data["email"]) & Q(is_active = True))
+		instance = User.objects.filter(email)
+		if instance.exists():
+			instance = instance.first()
+			if instance.pk != self.instance.pk and raw_data["email"]:	
+				raise ValueError("Email address already in use.")
+
+		return raw_data
+
+class SetPasswordForm(forms.ModelForm):
+	"""
+	A form that lets a user change set their password without entering the old
+	password
+	"""
+	password1 = forms.CharField(widget=forms.PasswordInput)
+	password2 = forms.CharField(widget=forms.PasswordInput)
+	
+	class Meta:
+		model = User
+		fields = ('email', 'fullname', 'is_active')
+
+
+	def clean_new_password2(self):
+		raw_data = self.cleaned_data
+		password1 = raw_data.get('password1')
+		password2 = raw_data.get('password2')
+		if password1 and password2:
+			if password1 != password2:
+				raise ValueError("Password didn't match.")
+			   
+		return password2

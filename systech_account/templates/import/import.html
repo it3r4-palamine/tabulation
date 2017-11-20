@@ -1,0 +1,75 @@
+{% extends "base.html" %} {% load static %} {% block ngapp %}ng-app="import"{% endblock %} {% block ngctrl %}ng-controller="importCtrl as main"{% endblock %} {% block title %}Import {% endblock %} {% block loader_js_bottom %}
+<script type="text/javascript" src="{% static 'js/import.js' %}"></script>
+{% endblock loader_js_bottom %} {% block page_header %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Import</h2>
+    </div>
+</div>
+{% endblock %} 
+{% block content_body %}
+<div class="wrapper wrapper-content animated fadeIn" ng-cloak="">
+    <div class="ibox">
+        <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
+            {% include "common/loader.html" %}
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" style=" height: 250px; margin-left: 20px;">
+                            <br>
+                            <br>
+                            <br>
+                            <a href="#" ng-click="import_dialog('questions')"><h2 align="center" style="color:#5778C9;"><b>Questions</b></h2></a>
+                            <p align="center">Import questions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" style=" height: 250px; margin-left: 20px;">
+                            <br>
+                            <br>
+                            <br>
+                            <a href="#" ng-click="import_dialog('choices')"><h2 align="center" style="color:#5778C9;"><b>Choices</b></h2></a>
+                            <p align="center">Import choices</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" style=" height: 250px; margin-left: 20px;">
+                            <br>
+                            <br>
+                            <br>
+                            <a href="#" ng-click="import_dialog('effects')"><h2 align="center" style="color:#5778C9;"><b>Effects</b></h2></a>
+                            <p align="center">Import effects</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" style=" height: 250px; margin-left: 20px;">
+                            <br>
+                            <br>
+                            <br>
+                            <a href="#" ng-click="import_dialog('findings')"><h2 align="center" style="color:#5778C9;"><b>Findings</b></h2></a>
+                            <p align="center">Import findings</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" style=" height: 250px; margin-left: 20px;">
+                            <br>
+                            <br>
+                            <br>
+                            <a href="#" ng-click="import_dialog('recommendations')"><h2 align="center" style="color:#5778C9;"><b>Recommendations</b></h2></a>
+                            <p align="center">Import recommendations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

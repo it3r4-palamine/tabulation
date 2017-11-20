@@ -1,0 +1,19 @@
+#!/bin/bash -vx
+WORKON="source env/accounting/bin/activate;"
+NAVAGATION="cd projects/accounting;"
+SCRIPT="git pull;"
+
+if [ "$1" != "no-migrate" ]; then
+	SCRIPT="$SCRIPT python manage.py migrate;"
+fi
+
+if [ "$1" != "no-restart" ]; then
+	SCRIPT="$SCRIPT sudo restart accounting;"
+fi
+
+SCRIPT="$SCRIPT sudo service nginx reload;"
+
+ssh "ybas" "${WORKON} ${NAVAGATION}
+    eval \$(ssh-agent)
+    ssh-add ~/.ssh/bitbucket
+    ${SCRIPT}"

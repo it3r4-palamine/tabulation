@@ -1,0 +1,104 @@
+from ..forms.transaction_types import *
+from ..models.transaction_types import *
+from ..models.assessments import *
+from ..models.company import *
+from ..views.common import *
+import sys, traceback, os
+
+
+def transaction_type(request):
+	return render(request, 'transaction_type/transaction_type.html')
+
+def create_dialog(request):
+	return render(request, 'transaction_type/dialogs/create_dialog.html')
+
+def read(request):
+	try:
+		data = req_data(request)
+		filters = {}
+		filters['is_active'] = True
+		has_company = data.get("company",None)
+		if has_company:
+			try:
+				company = Company.objects.get(id=has_company)
+				filters['id__in'] = company.transaction_type
+			except Company.DoesNotExist:
+				raise_error("Company doesn't exist.")
+
+		has_ids = data.get('ids',None)
+		if has_ids:
+			filters['id__in'] = has_ids
+		pagination = None
+
+		if 'pagination' in data:
+			pagination = data.pop("pagination",None)
+
+		records = Transaction_type.objects.filter(**filters).order_by("id")
+		results = {'data':[]}
+		results['total_records'] = records.count()
+
+		if pagination:
+			results.update(generate_pagination(pagination,records))
+			records = records[results['starting']:results['ending']]
+		data = []
+		for record in records:
+			row = {}
+			row['id'] = record.pk
+			row['name'] = record.name
+			row['is_active'] = record.is_active
+			data.append(row)
+
+		results['data'] = data
+		return success_list(results,False)
+	except Exception as e:
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		print(sys.exc_traceback.tb_lineno)
+		print(filename)
+		return HttpResponse(e, status = 400)
+
+def create(request):
+	try: 
+		postdata = post_data(request)
+		try:
+			instance = Transaction_type.objects.get(id=postdata.get('id',None),is_active=True)
+			try:
+				check_transaction_type = Transaction_type.objects.get(name__iexact=postdata['name'],is_active=True)
+				if check_transaction_type.pk != postdata['id']: 
+					return error(check_transaction_type.name + " already exists.")
+				transaction_type = Transaction_type_form(postdata, instance=instance)
+			except Transaction_type.DoesNotExist:
+				transaction_type = Transaction_type_form(postdata, instance=instance)
+		except Transaction_type.DoesNotExist:
+			try:
+				check_transaction_type = Transaction_type.objects.get(name__iexact=postdata['name'],is_active=True)
+				return error(check_transaction_type.name + " already exists.")
+			except Transaction_type.DoesNotExist:
+				transaction_type = Transaction_type_form(postdata)
+
+		if(transaction_type.is_valid()):
+			transaction_type.save()
+			return HttpResponse("Successfully saved.", status = 200)
+		else:
+			return HttpResponse(transaction_type.errors, status = 400)
+	except Exception as err:
+		return HttpResponse(err, status = 400)
+
+def delete(request,id = None):
+	try:
+		use_in_questions = Assessment_question.objects.filter(transaction_type=id,is_active=True).first()
+		use_in_companies = Company.objects.filter(transaction_type__contains=[id],is_active=True)
+		if use_in_questions or use_in_companies:
+			raise_error("This transaction type is currently in use.")
+		try:
+			record = Transaction_type.objects.get(pk = id)
+			record.is_active = False
+			record.save()
+			return success()
+		except Transaction_type.DoesNotExist:
+			raise_error("Transaction Type doesn't exist.")
+	except Exception as e:
+		return HttpResponse(e, status = 400)
+
+
+

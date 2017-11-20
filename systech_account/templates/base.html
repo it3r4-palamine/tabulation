@@ -1,0 +1,79 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html {% block ngapp %}ng-app="dashboard"{% endblock %}>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title page-title>{% block title %}YAHSHUA System{%endblock%}</title>
+    <link href="{% static 'inspinia/css/bootstrap3.3.6.min.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/font-awesome/css/font-awesome.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/animate.css'%}" rel="stylesheet">
+    <link href="{% static 'css/lib/select2.min.css'%}" rel="stylesheet">
+    <link href="{% static 'css/lib/awesome-bootstrap-checkbox.css'%}" rel="stylesheet">
+    <link href="{% static 'css/lib/select2-theme.css'%}" rel="stylesheet">
+    <link href="{% static 'css/lib/table-resize.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/sweetalert/sweetalert.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/toastr/angular-toaster.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/style.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/sweetalert/sweetalert.css'%}" rel="stylesheet">
+    
+    <link href="{% static 'css/common/lib_common.css'%}" rel="stylesheet">
+
+    <link href="{% static 'inspinia/css/plugins/dropzone/basic.css' %}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/dropzone/dropzone.css' %}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/blueimp/css/blueimp-gallery.min.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/toastr/angular-toaster.css'%}" rel="stylesheet">
+
+    <link href="{% static 'inspinia/css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
+    <link href="{% static 'css/common/site.css'%}" rel="stylesheet">
+
+
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+
+    {% block editable_css %}{% endblock %}
+
+    {% block loader_css %}{% endblock %}
+</head>
+
+<!-- ControllerAs syntax -->
+<!-- Main controller with serveral data used in Inspinia theme on diferent view -->
+<body {% block ngctrl %}{% endblock %} landing-scrollspy id="page-top">
+    <div id="wrapper">
+        {% include "sidenav.html" %}
+        <div id="page-wrapper" class="page-wrapper gray-bg">
+            {% include "header.html" %}
+
+            <!-- Content Header -->
+            {% block page_header %}{% endblock %}
+
+            <!-- Content Body -->
+            <div class="wrapper wrapper-content body">
+                {% block content_body %}
+                    <div class="middle-box text-center animated fadeInRightBig">
+                        <h3 class="font-bold">This page has no content.</h3>
+                        <div class="error-desc">
+                            <a href="/" class="btn btn-primary m-t">Back to Homepage</a>
+                        </div>
+                    </div>
+                {% endblock %}
+            </div>
+            <!-- <div class="footer">
+                <div class="pull-right">
+                    <strong>Copyright</strong> YAHSHUA Systech &copy; 2015-2016
+                </div>
+            </div> -->
+        </div>
+    </div>
+    <toaster-container></toaster-container>
+
+
+    {% block content %}{% endblock %}    
+    {% include "footer.html" %}
+    {% block loader_js_bottom %}
+        <script type="text/javascript" src="{% static "js/dashboard.js" %}"></script>
+    {% endblock %}    
+</body>
+</html>

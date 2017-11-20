@@ -1,0 +1,39 @@
+<div class="wrapper wrapper-content animated fadeIn modalibox">
+    <div class="ibox">
+        <div class="ibox-title ibox_title_reset">
+            <h3>Company</h3>
+        </div>
+
+        <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+            {% include "common/loader.html" %} 
+            <div class="row">
+                <form class="form" name="form">
+                    <div class="col-sm-12" ng-class="{ 'has-error' : form.name.$invalid && !form.name.$pristine }">
+                        <label class="required">Name</label>
+                        <input type="text" ng-model="record.name" name="name" required class="form-control">
+                    </div>
+                    <div class="col-sm-12">
+                        <br>
+                        <label>Transaction Type</label>
+                        <ui-select ng-model="record.transaction_types" multiple>
+                            <ui-select-match placeholder="Select...">{$ $item.name $}</ui-select-match>
+                            <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">
+                                <div ng-bind-html="transaction_type.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-sm-12" ng-hide="true">
+                        <br>
+                        <input type="checkbox" id="is_active" name="is_active" ng-model="record.is_active"><label for="is_active">Active</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="ibox-footer">
+            <div class="pull-right">
+                <button type="button" class="btn btn-sm btn-primary btn-w-m" ng-click="create()" ng-disabled="form.$invalid">Save</button>
+                <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="main.close_dialog()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

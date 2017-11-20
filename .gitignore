@@ -1,0 +1,8 @@
+*.pyc
+root/local_settings.py
+.gitignore.save
+systech_account/static/uploads/assessment/document_images/
+
+systech_account/static/images/
+
+systech_account/static/reports/

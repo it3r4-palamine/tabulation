@@ -1,0 +1,65 @@
+.popover {
+    max-width: none !important;
+}
+
+div.transaction-content-body .nav-tabs > li > a {
+    color: #A7B1C2;
+    font-weight: 600;
+    padding: 10px 70px 10px 70px;
+}
+
+
+/*div.transaction-content-header{
+            background-color: #f3f3f4;
+        }*/
+
+div.header_controls .nav>li>a {
+    display: initial !important;
+}
+
+div.fixed-nav .dialog_body {
+    margin-top: 65px !important;
+}
+
+div.wholedialog div.footer.fixed {
+    margin-left: 0px;
+    background-color: #222;
+}
+
+div.wholedialog .table>tbody>tr>td{
+    padding: 3px !important;
+    border-top: 0px !important;
+}
+
+div.wholedialog div.overflowy{
+    overflow-y: initial !important;
+    overflow-x: initial !important;
+}
+
+.modal-fullscreen div.modal-content{
+    overflow: auto !important;
+}
+
+.right { text-align: right; }
+
+
+div.dialog_body > .sk-spinner { display: none; }
+div.dialog_body.sk-loading { position: relative;}
+div.dialog_body.sk-loading:after {
+    content: '';
+    background-color: rgba(255,255,255,0.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+}
+div.dialog_body.sk-loading > .sk-spinner {
+    display: block;
+    position: absolute;
+    top: 0%;
+    left: 0;
+    right: 0;
+    z-index: 2000;
+}

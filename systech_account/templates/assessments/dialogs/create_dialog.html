@@ -1,0 +1,178 @@
+<div class="wrapper wrapper-content animated fadeIn modalibox">
+    <div class="ibox">
+        <div class="ibox-title ibox_title_reset">
+            <h3>Question</h3>
+        </div>
+
+        <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+            <div class="row">
+                <form class="form" name="form">
+                    <div class="col-sm-12" ng-if="record.is_related">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Related Question
+                            </div>
+                            <div class="panel-body">
+                                <p>{$ record.is_related.code $}: {$ record.is_related.value $}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" ng-class="{ 'has-error' : form.code.$invalid && !form.code.$pristine }">
+                        <label class="required">Code</label>
+                        <input type="text" name="code" ng-model="record.code" required class="form-control">
+                    </div>
+                    <div class="col-sm-12" ng-class="{ 'has-error' : form.value.$invalid && !form.value.$pristine }">
+                        <label class="required">Question</label>
+                        <textarea ng-model="record.value" name="value" required class="form-control"></textarea>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="checkbox checkbox-success">
+                            <input type="checkbox" id="is_general" name="is_general" ng-model="record.is_general" ng-click="isGeneral()"><label for="is_general">General Question</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" ng-if="record.is_general">
+                        <label>Transaction Types</label>
+                        <ui-select ng-model="record.transaction_types" multiple>
+                            <ui-select-match placeholder="Select...">{$ $item.name $}</ui-select-match>
+                            <ui-select-choices repeat="transaction_type in transaction_types2 | filter: $select.search | limitTo:50">
+                                <div ng-bind-html="transaction_type.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-sm-12" ng-if="!record.is_general">
+                        <label>Transaction Type</label>
+                        <ui-select ng-model="record.transaction_type">
+                            <ui-select-match placeholder="Select...">{$ $select.selected.name $}</ui-select-match>
+                            <ui-select-choices repeat="transaction_type in transaction_types2 | filter: $select.search | limitTo:50">
+                                <div ng-bind-html="transaction_type.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-sm-12" ng-hide="true">
+                        <br>
+                        <div class="checkbox checkbox-success">
+                            <input type="checkbox" id="is_active" name="is_active" ng-model="record.is_active"><label for="is_active">Active</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <br>
+                        <div class="checkbox checkbox-success">
+                            <input type="checkbox" id="is_document" name="is_document" ng-model="record.is_document" ng-click="isMultiple()"><label for="is_document">Needs document image</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="checkbox checkbox-success">
+                            <input type="checkbox" id="is_multiple" name="is_multiple" ng-model="record.is_multiple" ng-click="isMultiple()"><label for="is_multiple">Multiple Choice</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" ng-if="record.is_multiple">
+                        <table class="table">
+                            <thead>
+                                <th>Correct Answer</th>
+                                <th>Choice</th>
+                                <th>Is Related Required</th>
+                                <th></th>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key, choice) in choices">
+                                    <td align="center">
+                                        <div class="checkbox checkbox-success">
+                                            <input type="checkbox" id="is_answer_{$key$}" name="is_answer_{$key$}" ng-model="choice.is_answer"><label for="is_answer_{$key$}">&nbsp;</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input ng-model="choice.value" name="value" type="text" class="form-control">
+                                    </td>
+                                    <td align="center">
+                                        <div class="checkbox checkbox-success">
+                                            <input type="checkbox" id="is_related_required_{$key$}" name="is_related_required_{$key$}" ng-model="choice.is_related_required"><label for="is_related_required_{$key$}">&nbsp;</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="" class="btn bt-outline btn-danger" ng-click="remove_choice(choice, $index)"><i class="fa fa-trash-o"></i></a> 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center">
+                                        <div class="checkbox checkbox-success">
+                                            <input type="checkbox" name="is_answer" ng-model="choice_list.is_answer"><label>&nbsp;</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input ng-model="choice_list.value" name="value" type="text" class="form-control">
+                                    </td>
+                                    <td align="center">
+                                        <div class="checkbox checkbox-success">
+                                            <input type="checkbox" name="is_related_required" ng-model="choice_list.is_related_required"><label>&nbsp;</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="" class="btn btn-white" ng-click="add_choice(choice_list)"><i class="fa fa-check"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-12">
+                        <br>
+                        <div class="tabs-container">
+                            <uib-tabset>
+                                <uib-tab heading="Effect">
+                                    <br>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr ng-repeat="(key, effect) in effects">
+                                                <td>
+                                                    <textarea ng-model="effect.value" class="form-control"></textarea>
+                                                </td>
+                                                <td>
+                                                    <a href="" class="btn bt-outline btn-danger" ng-click="remove_effect(effect, $index)"><i class="fa fa-trash-o"></i></a> 
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <textarea ng-model="effect_list.value" class="form-control"></textarea>
+                                                </td>
+                                                <td>
+                                                    <a href="" class="btn btn-white" ng-click="add_effect(effect_list)"><i class="fa fa-check"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </uib-tab>
+                                <uib-tab heading="Finding">
+                                    <br>
+                                    <table class="table">
+                                        <tr ng-repeat="(key, finding) in findings">
+                                            <td>
+                                                <textarea ng-model="finding.value" class="form-control"></textarea>
+                                            </td>
+                                            <td>
+                                                <a href="" class="btn bt-outline btn-danger" ng-click="remove_finding(finding, $index)"><i class="fa fa-trash-o"></i></a> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea ng-model="finding_list.value" class="form-control"></textarea>
+                                            </td>
+                                            <td>
+                                                <a href="" class="btn btn-white" ng-click="add_finding(finding_list)"><i class="fa fa-check"></i></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </uib-tab>
+                            </uib-tabset>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="ibox-footer">
+            <div class="pull-right">
+                <button type="button" class="btn btn-sm btn-primary btn-w-m" ng-click="create()" ng-disabled="form.$invalid">Save</button>
+                <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="main.close_dialog()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
