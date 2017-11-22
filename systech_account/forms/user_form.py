@@ -15,7 +15,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 	class Meta:
 		model  = User
-		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit")
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company")
 
 
 	def clean(self):
@@ -33,7 +33,7 @@ class CustomUserChangeForm(forms.ModelForm):
 
 	class Meta:
 		model  = User
-		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit")
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company")
 
 	def clean(self):
 		raw_data = self.cleaned_data

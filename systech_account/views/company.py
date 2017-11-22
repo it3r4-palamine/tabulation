@@ -14,12 +14,12 @@ def create_dialog(request):
 
 def read(request):
 	try:
-		data = req_data(request)
+		data = req_data(request,True)
 		filters = {}
 		filters['is_active'] = True
-		has_transaction = data.get("transaction_type",None)
-		if has_transaction:
-			filters['transaction_type'] = has_transaction
+		# has_transaction = data.get("transaction_type",None)
+		# if has_transaction:
+		# 	filters['transaction_type'] = has_transaction
 
 		pagination = None
 

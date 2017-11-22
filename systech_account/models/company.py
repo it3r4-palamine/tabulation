@@ -5,7 +5,6 @@ from django.contrib.postgres.fields import ArrayField
 class Company(models.Model):
 	name             = models.CharField(max_length=200,blank=True,null=True)
 	is_active        = models.BooleanField(default=1)
-	transaction_type = ArrayField(models.IntegerField("Transaction_type"),blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"

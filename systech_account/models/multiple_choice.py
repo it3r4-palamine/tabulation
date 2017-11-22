@@ -7,7 +7,7 @@ class Choice(models.Model):
 	is_answer   	 	= models.BooleanField(default=0)
 	is_import   	 	= models.BooleanField(default=0)
 	is_related_required = models.BooleanField(default=0)
-
+	company 			= models.ForeignKey("Company",blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"

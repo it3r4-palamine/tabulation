@@ -16,13 +16,14 @@ def change_pass_dialog(request):
 
 def read(request):
 	try:
-		data = req_data(request)
+		data = req_data(request,True)
 		pagination = None
 
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
 		filters = {}
 		filters['is_active'] = True
+		filters['company'] = data['company']
 		records = User.objects.filter(**filters).order_by("id")
 		results = {'data':[]}
 		results['total_records'] = records.count()
@@ -82,7 +83,8 @@ def delete(request,id = None):
 
 def read_user_types(request):
 	try:
-		records = User_type.objects.filter(is_active=True).values("id","name","is_active").order_by("id")
+		data = req_data(request,True)
+		records = User_type.objects.filter(company=data['company'],is_active=True).values("id","name","is_active").order_by("id")
 		return success_list(records)
 	except Exception as e:
 		return HttpResponse(e,status=400)

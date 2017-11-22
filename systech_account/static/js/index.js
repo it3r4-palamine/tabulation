@@ -9,6 +9,7 @@ app.config(['$httpProvider', '$interpolateProvider', function($httpProvider, $in
 app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,SweetAlert,toastr){
 	$scope.record = {}
 	$scope.credentials = {};
+	$scope.reg_form = {};
 	
 	$scope.login = function(credentials){
 		$http.post('/login/',credentials)
@@ -17,6 +18,19 @@ app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,Sweet
 			$scope.credentials = {};
 			setTimeout(function(){
 			    window.location.href = "/assessments";
+			}, 500);
+		}).error(function(err){
+			toastr.error(err)
+		})
+	}
+
+	$scope.reg_company = function(data){
+		$http.post('/register/',data)
+		.success(function(response){
+			toastr.success(response)
+			$scope.reg_form = {};
+			setTimeout(function(){
+			    window.location.href = "/login";
 			}, 500);
 		}).error(function(err){
 			toastr.error(err)

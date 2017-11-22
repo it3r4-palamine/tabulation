@@ -1,0 +1,34 @@
+<div class="panel-body">
+    <div class="ibox-content" layout="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
+        {% include "common/loader.html" %} 
+        <div class="row">
+            <div class="col-sm-12 pull-right">
+                <button class="btn btn-primary pull-right" ng-click="save_terms()">SAVE</button>
+            </div>
+            <div class="clearfix"></div>
+            <hr>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <th>Name</th>
+                        <th>Term</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Company Assessment</td>
+                            <td><input type="text" name="company_assessments" class="form-control" ng-model="records[0].company_assessments"></td>
+                        </tr>
+                        <tr>
+                            <td>Transaction Types</td>
+                            <td><input type="text" name="transaction_types" class="form-control" ng-model="records[0].transaction_types"></td>
+                        </tr>
+                        <tr>
+                            <td>Questions</td>
+                            <td><input type="text" name="questions" class="form-control" ng-model="records[0].questions"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

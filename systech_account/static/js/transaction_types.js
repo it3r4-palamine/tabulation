@@ -65,4 +65,5 @@ app.controller('transaction_typesCtrl', function($scope, $http, $timeout, $eleme
 
 	$scope.read();
 	me.main_loader = function(){$scope.read();}
+	CommonRead.get_display_terms($scope);
 });

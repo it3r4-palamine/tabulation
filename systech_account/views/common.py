@@ -20,6 +20,8 @@ from django.db.models.functions import Coalesce
 from django.forms.models import model_to_dict
 from django.apps import apps
 
+from ..models.settings import *
+
 
 def post_data(request):
 	post_params = json.loads(request.body.decode("utf-8")) if request.body.decode("utf-8") else {}
@@ -143,6 +145,26 @@ def req_data(request,has_company = False, common_filter = False):
 
 
 	return post_params
+
+def get_current_company(request,company_obj = False):
+	company = request.session.get('company_id',None)
+	if company_obj:
+		company = str_to_model("Company").objects.get(pk = company)
+		# try:
+		# 	company_settings = Company_settings.objects.get(company = company.pk)
+		# except Company_settings.DoesNotExist:
+		# 	raise e
+	return company 
+
+def get_display_terms(request):
+	company = request.session.get('company_id',None)
+	# display_terms = str_to_model("Display_setting").objects.filter(company=company).values("id","company_assessments","questions","transaction_types")
+	try:
+		display_terms = str_to_model("Display_setting").objects.get(company=company)
+	except Display_setting.DoesNotExist:
+		display_terms = None
+
+	return display_terms
 
 def error(to_return = "Something went wrong. Please contact your administrator"):
 	return HttpResponse(to_return, status = 400)

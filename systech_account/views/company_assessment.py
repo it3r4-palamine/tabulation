@@ -18,12 +18,12 @@ def create_dialog(request):
 
 def read(request):
 	try:
-		data = req_data(request)
+		data = req_data(request,True)
 		pagination = None
 
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
-		records = Company_assessment.objects.filter(is_active=True).order_by("id")
+		records = Company_assessment.objects.filter(company=data['company'],is_active=True).order_by("id")
 		results = {'data':[]}
 		results['total_records'] = records.count()
 
@@ -46,12 +46,18 @@ def read(request):
 
 def create(request):
 	try: 
-		postdata = post_data(request)
+		postdata = req_data(request,True)
 		# postdata['transaction_type'] = postdata['transaction_type']['id']
-		postdata['company'] = postdata['company']['id']
+		postdata['company'] = postdata['company']
 		postdata['consultant'] = postdata['consultant']['id']
+
+		term = "Transaction Type"
+		terms = get_display_terms(request)
+		if terms:
+			if terms.transaction_types:
+				term = terms.transaction_types
 		if 'transaction_types' not in postdata:
-			return error("Transaction Type is required.")
+			return error("%s is required."%(term))
 
 		transaction_types = postdata.pop('transaction_types',[])
 
@@ -71,8 +77,8 @@ def create(request):
 			total_questions = Decimal(0)
 			total_answers = Decimal(0)
 			for transaction_type in company_assessment_transaction_type:
-				questions = Assessment_question.objects.filter(Q(transaction_types__contains=[transaction_type],is_active=True) | Q(transaction_type=transaction_type,is_active=True))
-				answers = Assessment_answer.objects.filter(transaction_type=transaction_type,company_assessment=assessment_id.pk)
+				questions = Assessment_question.objects.filter(Q(company=postdata['company'],transaction_types__contains=[transaction_type],is_active=True) | Q(company=postdata['company'],transaction_type=transaction_type,is_active=True))
+				answers = Assessment_answer.objects.filter(company=postdata['company'],transaction_type=transaction_type,company_assessment=assessment_id.pk)
 				total_questions += len(questions)
 				total_answers += len(answers)
 
@@ -102,7 +108,8 @@ def delete(request,id = None):
 
 def check_reference_no(request):
 	try:
-		instance = Company_assessment.objects.all().last()
+		data = req_data(request,True)
+		instance = Company_assessment.objects.filter(is_active=True,company=data['company']).last()
 		if not instance:
 			last_char = "000001"
 		else:

@@ -61,6 +61,14 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 		})
 	};
 
+	$scope.checkAdmin = function(){
+		if($scope.record.is_admin){
+			$scope.record.is_edit = true
+		}else{
+			$scope.record.is_edit = false
+		}
+	}
+
 	$scope.delete = function(record){
 		swal({
 		    title: "Continue",
@@ -101,4 +109,5 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 	$scope.read_transaction_types();
 	$scope.read_user_types();
 	me.main_loader = function(){$scope.read();}
+	CommonRead.get_display_terms($scope)
 });

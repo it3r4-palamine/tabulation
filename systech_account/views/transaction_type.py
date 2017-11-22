@@ -14,16 +14,17 @@ def create_dialog(request):
 
 def read(request):
 	try:
-		data = req_data(request)
+		data = req_data(request,True)
 		filters = {}
 		filters['is_active'] = True
-		has_company = data.get("company",None)
-		if has_company:
-			try:
-				company = Company.objects.get(id=has_company)
-				filters['id__in'] = company.transaction_type
-			except Company.DoesNotExist:
-				raise_error("Company doesn't exist.")
+		filters['company'] = data['company']
+		# has_company = data.get("company",None)
+		# if has_company:
+		# 	try:
+		# 		company = Company.objects.get(id=has_company)
+		# 		filters['id__in'] = company.transaction_type
+		# 	except Company.DoesNotExist:
+		# 		raise_error("Company doesn't exist.")
 
 		has_ids = data.get('ids',None)
 		if has_ids:
@@ -59,11 +60,11 @@ def read(request):
 
 def create(request):
 	try: 
-		postdata = post_data(request)
+		postdata = req_data(request,True)
 		try:
-			instance = Transaction_type.objects.get(id=postdata.get('id',None),is_active=True)
+			instance = Transaction_type.objects.get(company=postdata['company'],id=postdata.get('id',None),is_active=True)
 			try:
-				check_transaction_type = Transaction_type.objects.get(name__iexact=postdata['name'],is_active=True)
+				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],name__iexact=postdata['name'],is_active=True)
 				if check_transaction_type.pk != postdata['id']: 
 					return error(check_transaction_type.name + " already exists.")
 				transaction_type = Transaction_type_form(postdata, instance=instance)
@@ -71,7 +72,7 @@ def create(request):
 				transaction_type = Transaction_type_form(postdata, instance=instance)
 		except Transaction_type.DoesNotExist:
 			try:
-				check_transaction_type = Transaction_type.objects.get(name__iexact=postdata['name'],is_active=True)
+				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],name__iexact=postdata['name'],is_active=True)
 				return error(check_transaction_type.name + " already exists.")
 			except Transaction_type.DoesNotExist:
 				transaction_type = Transaction_type_form(postdata)
@@ -86,17 +87,23 @@ def create(request):
 
 def delete(request,id = None):
 	try:
-		use_in_questions = Assessment_question.objects.filter(transaction_type=id,is_active=True).first()
-		use_in_companies = Company.objects.filter(transaction_type__contains=[id],is_active=True)
-		if use_in_questions or use_in_companies:
-			raise_error("This transaction type is currently in use.")
+		data = req_data(request,True)
+		t_term = "Transaction Type"
+		terms = get_display_terms(request)
+		if terms:
+			if terms.transaction_types:
+				t_term = terms.transaction_types
+		use_in_questions = Assessment_question.objects.filter(company=data['company'],transaction_type=id,is_active=True).first()
+		# use_in_companies = Company.objects.filter(transaction_type__contains=[id],is_active=True)
+		if use_in_questions:
+			raise_error("This %s is currently in use."%(t_term))
 		try:
 			record = Transaction_type.objects.get(pk = id)
 			record.is_active = False
 			record.save()
 			return success()
 		except Transaction_type.DoesNotExist:
-			raise_error("Transaction Type doesn't exist.")
+			raise_error("%s doesn't exist."%(t_term))
 	except Exception as e:
 		return HttpResponse(e, status = 400)
 

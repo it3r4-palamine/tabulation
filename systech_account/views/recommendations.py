@@ -11,12 +11,12 @@ def create_dialog(request):
 
 def read(request):
 	try:
-		data = req_data(request)
+		data = req_data(request,True)
 		pagination = None
 
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
-		records = Assessment_recommendation.objects.filter(is_active=True).order_by("id")
+		records = Assessment_recommendation.objects.filter(company=data['company'],is_active=True).order_by("id")
 		results = {'data':[]}
 		results['total_records'] = records.count()
 
@@ -36,7 +36,7 @@ def read(request):
 
 def create(request):
 	try: 
-		postdata = post_data(request)
+		postdata = req_data(request,True)
 		try:
 			instance = Assessment_recommendation.objects.get(id=postdata.get('id',None))
 			recommendation = Assessment_recommendation_form(postdata, instance=instance)

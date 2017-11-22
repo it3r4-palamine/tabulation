@@ -19,8 +19,8 @@
                             <br>
                             <br>
                             <br>
-                            <a href="#" ng-click="import_dialog('questions')"><h2 align="center" style="color:#5778C9;"><b>Questions</b></h2></a>
-                            <p align="center">Import questions</p>
+                            <a href="#" ng-click="import_dialog('questions')"><h2 align="center" style="color:#5778C9;"><b><span ng-if="!display_terms[0].questions" ng-cloak="">Questions</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></b></h2></a>
+                            <p align="center">Import <span ng-if="!display_terms[0].questions" ng-cloak="">questions</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></p>
                         </div>
                     </div>
                 </div>

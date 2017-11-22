@@ -21,7 +21,7 @@
                         <label>Date To</label>
                         <input type="date" name="date_to" ng-model="record.date_to" class="form-control">
                     </div>
-                    <div class="col-sm-12">
+                    <!-- <div class="col-sm-12">
                         <br>
                         <label>Company</label>
                         <ui-select ng-model="record.company" ng-change="select_transaction_type(record)">
@@ -30,7 +30,7 @@
                                 <div ng-bind-html="company.name | highlight: $select.search"></div>
                             </ui-select-choices>
                         </ui-select>
-                    </div>
+                    </div> -->
                     <div class="col-sm-12">
                         <br>
                         <label>Assigned To</label>
@@ -43,8 +43,8 @@
                     </div>
                     <div class="col-sm-12">
                         <br>
-                        <label>Transaction Type</label>
-                        <ui-select ng-model="record.transaction_types" ng-disabled="!record.company" multiple>
+                        <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label>
+                        <ui-select ng-model="record.transaction_types" multiple>
                             <ui-select-match ng-attr-placeholder="{$ record.transaction_type ? 'Select...' : 'Please select a company...' $}">{$ $item.name $}</ui-select-match>
                             <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">
                                 <div ng-bind-html="transaction_type.name | highlight: $select.search"></div>

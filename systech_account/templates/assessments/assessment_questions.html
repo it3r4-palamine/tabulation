@@ -3,7 +3,7 @@
 {% endblock loader_js_bottom %} {% block page_header %}
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <h2>Questions</h2>
+        <h2><span ng-if="!display_terms[0].questions" ng-cloak="">Questions</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></h2>
     </div>
 </div>
 {% endblock %} 
@@ -27,7 +27,7 @@
             {% include "common/loader.html" %} 
             <div class="row">
                 <div class="col-sm-3">
-                    <label>Transaction Type</label>
+                    <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label>
                     <ui-select ng-model="filter.transaction_type">
                         <ui-select-match placeholder="Select...">{$ $select.selected.name $}</ui-select-match>
                         <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">
@@ -55,8 +55,8 @@
                     <table class="table table-bordered">
                         <thead>
                             <th>Code</th>
-                            <th>Question</th>
-                            <th>Transaction Type</th>
+                            <th><span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></th>
+                            <th><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></th>
                             <th>Multiple Choice</th>
                             <th>Action</th>
                         </thead>

@@ -184,5 +184,6 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
     me.main_loader = function(){$scope.read();}
     CommonRead.get_transaction_types($scope);
     CommonRead.get_transaction_types2($scope);
+    CommonRead.get_display_terms($scope);
 	// $scope.read_transaction_types();
 });

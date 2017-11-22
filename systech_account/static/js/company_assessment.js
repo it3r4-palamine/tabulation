@@ -78,7 +78,7 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 	}
 
 	$scope.read_transaction_types = function(record){
-    	me.post_generic("/transaction_types/read/",{"company":record.company.id},"main")
+    	me.post_generic("/transaction_types/read/",{},"main")
     	.success(function(response){
     		$scope.transaction_types = response.data;
     	})
@@ -101,11 +101,12 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 
     $scope.select_transaction_type = function(record){
     	$scope.record.transaction_types = {}
-		$scope.read_transaction_types(record);
     }
 
 	$scope.read();
 	me.main_loader = function(){$scope.read();}
-	$scope.read_companies();
+	$scope.read_transaction_types();
+	// $scope.read_companies();
 	$scope.read_users();
+	CommonRead.get_display_terms($scope)
 });

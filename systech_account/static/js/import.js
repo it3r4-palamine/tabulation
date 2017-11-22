@@ -120,6 +120,9 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		if($scope.current_module == 'questions'){
 			$scope.current_url = "/import/import_questions/";
 			$scope.title = "Questions"
+			if($scope.display_terms.length > 0 && $scope.display_terms[0].questions){
+				$scope.title = $scope.display_terms[0].questions
+			}
 		}else if($scope.current_module == "choices"){
 			$scope.current_url = "/import/import_choices/";
 			$scope.title = "Choices"
@@ -297,6 +300,8 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		})
 		return results;
 	}
+
+	CommonRead.get_display_terms($scope)
 
 });
 

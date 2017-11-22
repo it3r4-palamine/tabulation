@@ -12,6 +12,7 @@ urlpatterns = [
 	url(r'^$', index.loginpage, name='loginpage'),
 	url(r'^login/$',index.log_in),
 	url(r'^logout/$',index.log_out,name="logout"),
+	url(r'^register/$',index.register,name="register"),
 	url(r'^assessments/$', assessments.home, name='home'),
 	url(r'^assessments/create_dialog/$', assessments.create_dialog),
 	url(r'^assessments/create/$', assessments.create),
@@ -71,6 +72,17 @@ urlpatterns = [
 	url(r'^generate_report/read_chosen_recommendations/$', generate_report.read_chosen_recommendations),
 	url(r'^generate_report/read_assessments/$', generate_report.read_assessments),
 	url(r'^generate_report/delete_report/$', generate_report.delete_report),
+
+	
+	url(r'^settings/$', settings.settings, name='settings'),
+	url(r'^settings/display_settings/$', settings.display_settings),
+	url(r'^settings/display_settings_read/$', settings.display_settings_read),
+	url(r'^settings/save_display_terms/$', settings.save_display_terms),
+	url(r'^settings/user_types/$', settings.user_types),
+	url(r'^settings/read_user_types/$', settings.read_user_types),
+	url(r'^settings/user_types_create_dialog/$', settings.user_types_create_dialog),
+	url(r'^settings/user_types_create/$', settings.user_types_create),
+	url(r'^settings/user_types_delete/(?P<id>[0-9]+)$', settings.user_types_delete),
 ]
 urlpatterns += static(root_settings.STATIC_URL,document_root=root_settings.STATIC_ROOT)
 urlpatterns += static(root_settings.MEDIA_URL,document_root=root_settings.MEDIA_ROOT)

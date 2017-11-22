@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% load static %} {% block ngapp %}ng-app="settings"{% endblock %} {% block ngctrl %}ng-controller="settingsCtrl as main"{% endblock %}{% block title %}Settings {% endblock %} {% block loader_js_bottom %}
+<script type="text/javascript" src="{% static 'js/settings.js' %}"></script>
+{% endblock loader_js_bottom %} {% block page_header %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Settings</h2>
+    </div>
+</div>
+{% endblock %} 
+
+{% block editable_css %}
+    <style type="text/css">
+        .hand_cursor {
+            cursor: pointer !important;
+        }
+
+        .hand_cursor:hover {
+            background-color: #E8E8E8 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content_body %}
+<div class="wrapper wrapper-content" ng-cloak="">
+    <div class="ibox">
+        <div class="ibox-content" layout="ibox-content">
+            <nav class="navbar" role="navigation">
+                <ul class="nav nav-tabs">
+                    <li ui-sref-active="active" class="active"><a ui-sref="display_settings">Display Settings</a></li>
+                    <li ui-sref-active="active" class="active"><a ui-sref="user_types">User Types</a></li>
+                </ul>
+            </nav>
+            <div ui-view></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

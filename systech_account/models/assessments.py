@@ -16,6 +16,7 @@ class Assessment_question(models.Model):
 	is_general			= models.BooleanField(default=0)
 	transaction_types	= ArrayField(models.IntegerField("Transaction_type"),blank=True,null=True)
 	has_follow_up		= models.BooleanField(default=0)
+	company 			= models.ForeignKey("Company",blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -31,6 +32,7 @@ class Assessment_question(models.Model):
 			"is_document": self.is_document,
 			"has_multiple_answer" : self.has_multiple_answer,
 			"is_general" : self.is_general,
+			"has_follow_up" : self.has_follow_up,
 		}
 
 		if self.is_related:
@@ -66,6 +68,7 @@ class Assessment_effect(models.Model):
 	value     = models.CharField(max_length=200,blank=True,null=True)
 	is_active = models.BooleanField(default=1)
 	is_import = models.BooleanField(default=0)
+	company   = models.ForeignKey("Company",blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -84,6 +87,7 @@ class Assessment_recommendation(models.Model):
 	value     = models.CharField(max_length=200,blank=True,null=True)
 	is_active = models.BooleanField(default=1)
 	is_import = models.BooleanField(default=0)
+	company   = models.ForeignKey("Company",blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -104,6 +108,7 @@ class Assessment_answer(models.Model):
 	text_answer        = models.CharField(max_length=200,null=True,blank=True)
 	document_image	   = models.ImageField(upload_to='assessment/document_images/', blank=True, null=True)
 	transaction_type   = models.ForeignKey("Transaction_type",blank=True,null=True)
+	company 		   = models.ForeignKey("Company",blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -121,7 +126,7 @@ class Assessment_answer(models.Model):
 			assessment_answers['company_assessment'] = self.company_assessment.get_dict()
 		else:
 			assessment_answers['question'] = self.question.pk
-			assessment_answers['transaction_type'] = self.transaction_type.pk
+			assessment_answers['transaction_type'] = self.transaction_type.pk if self.transaction_type else None
 			assessment_answers['company_assessment'] = self.company_assessment.pk
 
 		choice = None
@@ -161,6 +166,7 @@ class Assessment_finding(models.Model):
 	value     = models.CharField(max_length=200,blank=True,null=True)
 	is_active = models.BooleanField(default=1)
 	is_import = models.BooleanField(default=0)
+	company   = models.ForeignKey("Company",blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -178,6 +184,7 @@ class Assessment_finding(models.Model):
 class Generated_assessment_recommendation(models.Model):
 	company_assessment = models.ForeignKey("Company_assessment")
 	recommendations    = ArrayField(models.IntegerField("Assessment_recommendation"),blank=True,null=True)
+	company 		   = models.ForeignKey("Company",blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"

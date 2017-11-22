@@ -63,4 +63,5 @@ app.controller('recommendationsCtrl', function($scope, $http, $timeout, $element
 
 	$scope.read();
 	me.main_loader = function(){$scope.read();}
+	CommonRead.get_display_terms($scope)
 });

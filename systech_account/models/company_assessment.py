@@ -14,6 +14,7 @@ class Company_assessment(models.Model):
 	reference_no     = models.CharField(max_length=200,blank=True,null=True,unique=True)
 	consultant       = models.ForeignKey("User",blank=True,null=True)
 	is_generated     = models.BooleanField(default=0)
+	company 		 = models.ForeignKey("Company",blank=True,null=True)
 
 
 	class Meta:

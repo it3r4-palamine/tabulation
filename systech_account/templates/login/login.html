@@ -47,23 +47,57 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-6 b-r"><h3 class="m-t-none m-b">Welcome to Yahshua Assessment Online!</h3>
+                                <p>&nbsp;</p>
                                 <!-- <form id="form_submit" role="form" action="login/"> -->
                                 <form id="form_submit" role="form" ng-submit="login(credentials)">
                                     <div class="form-group"><label>Email</label> <input required type="email" placeholder="Enter email" class="form-control" id="email" ng-model="credentials.email"></div>
                                     <div class="form-group"><label>Password</label> <input required type="password" placeholder="Password" class="form-control" id="password" ng-model="credentials.password"></div>
                                     <div>
-                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Log in</strong></button>
+                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Log in</strong></button><br><label> &nbsp;</label>
                                         <!-- <a data-toggle="modal" id="forgot_password" data-target="#forgot-password-modal" data-backdrop="static" href="#">Forgot password?</a><br><label> &nbsp;</label> -->
                                     </div>
                                 </form>
-                            </div><!-- 
+                            </div>
                             <div class="col-sm-6"><h4>Not yet registered?</h4>
                                 <p>You can create an account by clicking the arrow below:</p>
                                 <p class="text-center">
                                     <a data-toggle="modal" id="register_button" data-target="#modal-form" data-backdrop="static" href="#"><i class="fa fa-sign-in big-icon"></i></a>
                                 </p>
-                            </div> -->
+                                <div id="modal-form" class="modal inmodal" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content animated bounceInRight">
+                                            <div class="modal-body">
+                                                <form id="form" role="form" ng-submit="reg_company(reg_form)">
+                                                    <div class="form-group">
+                                                        <label>Company Name</label>
+                                                        <input type="text" required="true" name="company_name" ng-model="reg_form.company_name" id="company_name" class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Fullname</label>
+                                                        <input type="text" name="fullname" required="true" ng-model="reg_form.fullname" class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Email</label>
+                                                        <input type="email" name="email" required="true" ng-model="reg_form.email" class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Password</label>
+                                                        <input type="password" name="password" required="true" ng-model="reg_form.password1" class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Confirm Password</label>
+                                                        <input type="password" name="password" required="true" ng-model="reg_form.password2" class="form-control">
+                                                    </div>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Log in</strong></button><br><label> &nbsp;</label>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

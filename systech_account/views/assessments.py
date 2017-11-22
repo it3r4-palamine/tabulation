@@ -14,16 +14,16 @@ def create_dialog(request):
 
 def read(request):
 	try:
-		data = req_data(request)
+		data = req_data(request,True)
 		pagination = None
 
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
 
 		if 'transaction_type' in data and data['transaction_type']:
-			records = Assessment_question.objects.filter(Q(is_active=True,transaction_type=data['transaction_type']) | Q(is_active=True,transaction_types__overlap=[data['transaction_type']])).order_by("id")
+			records = Assessment_question.objects.filter(Q(company=data['company'],is_active=True,transaction_type=data['transaction_type']) | Q(company=data['company'],is_active=True,transaction_types__overlap=[data['transaction_type']])).order_by("id")
 		else:
-			records = Assessment_question.objects.filter(is_active=True).order_by("id")
+			records = Assessment_question.objects.filter(company=data['company'],is_active=True).order_by("id")
 		results = {'data':[]}
 		results['total_records'] = records.count()
 
@@ -35,19 +35,19 @@ def read(request):
 		for record in records:
 			general_transaction_types = []
 			row = record.get_dict()
-			choices = Choice.objects.filter(question=record.pk,is_active=True)
+			choices = Choice.objects.filter(company=data['company'],question=record.pk,is_active=True)
 			answers = []
 			for choice in choices:
 				answer_choice = choice.get_dict()
 				answers.append(answer_choice)
 
-			effects = Assessment_effect.objects.filter(question=record.pk,is_active=True)
+			effects = Assessment_effect.objects.filter(company=data['company'],question=record.pk,is_active=True)
 			possible_effect = []
 			for effect in effects:
 				effect_question = effect.get_dict()
 				possible_effect.append(effect_question)
 
-			findings = Assessment_finding.objects.filter(question=record.pk,is_active=True)
+			findings = Assessment_finding.objects.filter(company=data['company'],question=record.pk,is_active=True)
 			possible_finding = []
 			for finding in findings:
 				finding_question = finding.get_dict()
@@ -56,7 +56,7 @@ def read(request):
 			if record.transaction_types:
 				for t_types in record.transaction_types:
 					try:
-						t_type = Transaction_type.objects.get(id=t_types,is_active=True)
+						t_type = Transaction_type.objects.get(company=data['company'],id=t_types,is_active=True)
 					except Transaction_type.DoesNotExist:
 						continue
 					transaction_type_dict = {'id':t_type.pk,'name':t_type.name,'is_active':t_type.is_active}
@@ -77,22 +77,28 @@ def create(request,results=None):
 		if results:
 			postdata = results
 		else:
-			postdata = post_data(request)
+			postdata = req_data(request,True)
 			postdata['value'] = postdata['value']
 			# if postdata['is_related']:
 			postdata['is_related'] = postdata['is_related']['id'] if 'is_related' in postdata and postdata['is_related'] else None
 			transaction_types = postdata.pop('transaction_types',[])
 
+			terms = get_display_terms(request)
+			term = "transaction types"
+			if terms:
+				if terms.transaction_types:
+					term = terms.transaction_types
+
 			if 'is_general' in postdata:
 				if postdata['is_general'] == True:
 					if not transaction_types:
-						return error("Please select transaction types.")
+						return error("Please select %s."%(term))
 				else:
 					if 'transaction_type' not in postdata:
-						return error("Please select transaction type.")
+						return error("Please select %s."%(term))
 			else:
 				if 'transaction_type' not in postdata:
-					return error("Please select transaction type.")
+					return error("Please select %s."%(term))
 
 			# else:
 			# 	data['code'] = data['code']
@@ -111,6 +117,7 @@ def create(request,results=None):
 
 			postdata['t_types'] = t_type
 			postdata['transaction_types'] = list_to_string(general_transaction_types)
+			postdata['company'] = postdata['company']
 		choices = postdata.pop("choices",None)
 		effects = postdata.pop("effects",None)
 		findings = postdata.pop("findings",None)
@@ -120,7 +127,7 @@ def create(request,results=None):
 			instance = Assessment_question.objects.get(id=postdata.get('id',None))
 			assessment_question = Assessment_question_form(postdata,instance=instance)
 		except Assessment_question.DoesNotExist:
-			if Assessment_question.objects.filter(code=postdata['code'],is_active=True).exists():
+			if Assessment_question.objects.filter(company=postdata['company'],code=postdata['code'],is_active=True).exists():
 				return error("Code already exists.")
 			assessment_question = Assessment_question_form(postdata)
 			is_edit = False
@@ -130,14 +137,14 @@ def create(request,results=None):
 
 			if not is_edit:
 				for t_typess in t_types:
-					company_assessments = Company_assessment.objects.filter(Q(transaction_type__overlap=[postdata['transaction_type']],is_active=True,is_generated=False) | Q(transaction_type__contains=[t_typess],is_active=True,is_generated=False))
+					company_assessments = Company_assessment.objects.filter(Q(company=postdata['company'],transaction_type__overlap=[postdata['transaction_type']],is_active=True,is_generated=False) | Q(company=postdata['company'],transaction_type__contains=[t_typess],is_active=True,is_generated=False))
 					for assessments in company_assessments:
 						no_answer = Decimal(0)
 						for company_assessments_ttypes in assessments.transaction_type:
-							questions = Assessment_question.objects.filter(Q(transaction_types__contains=[t_typess],is_active=True) | Q(transaction_type=t_typess,is_active=True))
+							questions = Assessment_question.objects.filter(Q(company=postdata['company'],transaction_types__contains=[t_typess],is_active=True) | Q(company=postdata['company'],transaction_type=t_typess,is_active=True))
 						for question in questions:
 							try:
-								answers = Assessment_answer.objects.get(transaction_type=t_typess,company_assessment=assessments.pk,question=question.pk)
+								answers = Assessment_answer.objects.get(company=postdata['company'],transaction_type=t_typess,company_assessment=assessments.pk,question=question.pk)
 								continue
 							except Assessment_answer.DoesNotExist:
 								no_answer += 1
@@ -148,6 +155,7 @@ def create(request,results=None):
 				for choice in choices:
 					choice['question'] = assessment_save.pk
 					choice['is_active'] = True
+					choice['company'] = postdata['company']
 					try:
 						instance_choice = Choice.objects.get(id=choice.get('id',None))
 						answer_choice = Choice_form(choice,instance=instance_choice)
@@ -160,6 +168,7 @@ def create(request,results=None):
 				for effect in effects:
 					effect['question'] = assessment_save.pk
 					effect['is_active'] = True
+					effect['company'] = postdata['company']
 					try:
 						instance_effect = Assessment_effect.objects.get(id=effect.get('id',None))
 						effect_question = Assessment_effect_form(effect,instance=instance_effect)
@@ -172,6 +181,7 @@ def create(request,results=None):
 				for finding in findings:
 					finding['question'] = assessment_save.pk
 					finding['is_active'] = True
+					finding['company'] = postdata['company']
 					try:
 						instance_finding = Assessment_finding.objects.get(id=finding.get('id',None))
 						finding_question = Assessment_finding_form(finding,instance=instance_finding)

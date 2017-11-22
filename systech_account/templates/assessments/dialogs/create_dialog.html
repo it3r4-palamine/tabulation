@@ -1,7 +1,7 @@
 <div class="wrapper wrapper-content animated fadeIn modalibox">
     <div class="ibox">
         <div class="ibox-title ibox_title_reset">
-            <h3>Question</h3>
+            <h3><span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></h3>
         </div>
 
         <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
@@ -10,7 +10,7 @@
                     <div class="col-sm-12" ng-if="record.is_related">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                Related Question
+                                Related <span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span>
                             </div>
                             <div class="panel-body">
                                 <p>{$ record.is_related.code $}: {$ record.is_related.value $}</p>
@@ -22,16 +22,16 @@
                         <input type="text" name="code" ng-model="record.code" required class="form-control">
                     </div>
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.value.$invalid && !form.value.$pristine }">
-                        <label class="required">Question</label>
+                        <label class="required"><span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></label>
                         <textarea ng-model="record.value" name="value" required class="form-control"></textarea>
                     </div>
                     <div class="col-sm-12">
                         <div class="checkbox checkbox-success">
-                            <input type="checkbox" id="is_general" name="is_general" ng-model="record.is_general" ng-click="isGeneral()"><label for="is_general">General Question</label>
+                            <input type="checkbox" id="is_general" name="is_general" ng-model="record.is_general" ng-click="isGeneral()"><label for="is_general">General <span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></label>
                         </div>
                     </div>
                     <div class="col-sm-12" ng-if="record.is_general">
-                        <label>Transaction Types</label>
+                        <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label>
                         <ui-select ng-model="record.transaction_types" multiple>
                             <ui-select-match placeholder="Select...">{$ $item.name $}</ui-select-match>
                             <ui-select-choices repeat="transaction_type in transaction_types2 | filter: $select.search | limitTo:50">
@@ -40,7 +40,7 @@
                         </ui-select>
                     </div>
                     <div class="col-sm-12" ng-if="!record.is_general">
-                        <label>Transaction Type</label>
+                        <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label>
                         <ui-select ng-model="record.transaction_type">
                             <ui-select-match placeholder="Select...">{$ $select.selected.name $}</ui-select-match>
                             <ui-select-choices repeat="transaction_type in transaction_types2 | filter: $select.search | limitTo:50">

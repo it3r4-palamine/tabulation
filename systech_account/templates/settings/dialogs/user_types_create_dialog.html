@@ -1,7 +1,7 @@
 <div class="wrapper wrapper-content animated fadeIn modalibox">
     <div class="ibox">
         <div class="ibox-title ibox_title_reset">
-            <h3><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></h3>
+            <h3>User Type</h3>
         </div>
 
         <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
@@ -9,7 +9,7 @@
             <div class="row">
                 <form class="form" name="form">
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.name.$invalid && !form.name.$pristine }">
-                        <label class="required"><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label>
+                        <label class="required">User Type</label>
                         <input type="text" ng-model="record.name" name="name" required class="form-control">
                     </div>
                     <div class="col-sm-12" ng-hide="true">
@@ -22,7 +22,7 @@
         <div class="ibox-footer">
             <div class="pull-right">
                 <button type="button" class="btn btn-sm btn-primary btn-w-m" ng-click="create()" ng-disabled="form.$invalid">Save</button>
-                <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="main.close_dialog()">Close</button>
+                <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="close_dialog()">Close</button>
             </div>
         </div>
     </div>

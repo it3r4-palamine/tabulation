@@ -826,6 +826,13 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
                 scope["transaction_types2"] = response.data;
             })
         },
+
+        get_display_terms: function(scope) {
+            var post = CommonRequests.read_common_records(scope, "display_terms", "/settings/display_settings_read/",{},true);
+            return post.success(function(response){
+                scope["display_terms"] = response.data;
+            })
+        }
     }
 })
 

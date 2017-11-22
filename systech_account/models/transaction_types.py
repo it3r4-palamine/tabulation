@@ -3,6 +3,7 @@ from django.db import models
 class Transaction_type(models.Model):
 	name      = models.CharField(max_length=200,blank=True,null=True)
 	is_active = models.BooleanField(default=1)
+	company	  = models.ForeignKey("Company",blank=True,null=True)
 
 
 	class Meta:
