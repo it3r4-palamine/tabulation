@@ -58,6 +58,7 @@ urlpatterns = [
 	url(r'^users/delete/(?P<id>[0-9]+)$', users.delete),
 	url(r'^users/change_pass_dialog/$', users.change_pass_dialog),
 	url(r'^users/change_password/$', users.change_password),
+	url(r'^users/get_intelex_students/$', users.get_intelex_students),
 	
 	url(r'^recommendations/$', recommendations.recommendations, name='recommendations'),
 	url(r'^recommendations/read/$', recommendations.read),

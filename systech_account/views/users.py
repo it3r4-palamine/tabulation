@@ -3,6 +3,7 @@ from ..models.transaction_types import *
 from ..forms.user_form import *
 from ..models.user import *
 from ..views.common import *
+import requests
 
 
 def users(request):
@@ -120,5 +121,24 @@ def change_password(request):
 			except Exception, e:
 				return error(e)
 		else: return error("Invalid request method")
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
+def get_intelex_students(request):
+	try:
+
+		url = 'http://192.168.1.69:8000/api/read_enrolled_students/'
+		headers = {'content-type': 'application/json'}
+		data = {"complete_detail": True}
+
+		result = requests.post(url, data=json.dumps(data), headers=headers)
+		result.encoding = 'ISO-8859-1'
+		records = result.json()
+
+		for record in records["records"]:
+			print record
+
+
+		return HttpResponse("Success", status=200)
 	except Exception as e:
 		return HttpResponse(e,status=400)

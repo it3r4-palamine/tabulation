@@ -26,6 +26,15 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 		})
 	}
 
+	$scope.get_intelex_students = function()
+	{
+		me.post_generic("/users/get_intelex_students/")
+			.success(function(data)
+			{
+			})
+
+	}
+
 	$scope.load_to_edit = function(record){
 		$scope.create_dialog(record);
 	}
