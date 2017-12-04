@@ -29,6 +29,32 @@ class CustomUserCreationForm(UserCreationForm):
 
 		return raw_data
 
+
+class StudentUserForm(UserCreationForm):
+	"""
+	A form that creates a user, with no privileges, from the given email and
+	password.
+	"""
+
+	def __init__(self, *args, **kargs):
+		super(StudentUserForm, self).__init__(*args, **kargs)
+
+	class Meta:
+		model  = User
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","is_intelex","session_credits","session_end_date")
+
+
+	def clean(self):
+		raw_data = self.cleaned_data
+		email = (Q(email = raw_data["email"]) & Q(is_active = True))
+		instance = User.objects.filter(email)
+		if instance.exists():
+			instance = instance.first()
+			if instance.pk != self.instance.pk and raw_data["email"]:	
+				print "Email Already Exists"
+
+		return raw_data
+
 class CustomUserChangeForm(forms.ModelForm):
 
 	class Meta:

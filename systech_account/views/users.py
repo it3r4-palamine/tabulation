@@ -3,6 +3,7 @@ from ..models.transaction_types import *
 from ..forms.user_form import *
 from ..models.user import *
 from ..views.common import *
+from datetime import *
 import requests
 
 
@@ -74,6 +75,7 @@ def delete(request,id = None):
 	try:
 		try:
 			record = User.objects.get(pk=id)
+			record.email = record.email + str(datetime.now())
 			record.is_active = False
 			record.save()
 			return success()
@@ -136,9 +138,34 @@ def get_intelex_students(request):
 		records = result.json()
 
 		for record in records["records"]:
-			print record
+			student = record.pop("student", None)
+			first_name = student.get("first_name", "student_")
+			last_name = student.get("last_name", "code")
+			username = '%s%s' % (first_name.lower(), last_name.lower()) 
+			username = username.replace(" ", "")
+			
+
+			student["email"] = username + "@gmail.com"
+			student["full_name"] = student["full_name"]
+			student["password1"] = username
+			student["password2"] = username
+			student["is_intelex"] = True
+			student["is_active"] = True
+			student["session_credits"] = timedelta(milliseconds=record["session_credits"])
+			student["company"] = get_current_company(request)
+
+			print student
+
+			user_type = StudentUserForm(student)
+
+			if user_type.is_valid():
+				print "test"
+				user_type.save()
+			else:
+				print user_type
 
 
 		return HttpResponse("Success", status=200)
 	except Exception as e:
+		print e
 		return HttpResponse(e,status=400)

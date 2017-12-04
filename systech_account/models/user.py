@@ -32,6 +32,9 @@ class User(AbstractBaseUser):
 	is_edit          = models.BooleanField(default=False)
 	company			 = models.ForeignKey("Company",blank=True,null=True)
 	objects          = User_Manager()
+	is_intelex       = models.BooleanField(default=False)
+	session_credits  = models.DurationField(blank=True, null=True)
+	session_end_date = models.DateTimeField(blank=True, null=True)
 
 	USERNAME_FIELD = 'email'
 
@@ -44,6 +47,7 @@ class User(AbstractBaseUser):
 			"id" : self.pk,
 			"fullname" : self.fullname,
 		}
+
 
 class User_type(models.Model):
 	name      = models.CharField(max_length=200,blank=True,null=True)
