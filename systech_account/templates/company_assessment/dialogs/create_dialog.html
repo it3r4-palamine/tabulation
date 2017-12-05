@@ -10,16 +10,16 @@
                 <form class="form" name="form">
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.reference_no.$invalid && !form.reference_no.$pristine }">
                         <label>Reference No.</label>
-                        <input type="text" name="reference_no" ng-model="record.reference_no" class="form-control">
+                        <input type="text" name="reference_no" ng-disabled="true" ng-model="record.reference_no" class="form-control">
                     </div>
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.date_from.$invalid && !form.date_from.$pristine }">
                         <label>Date From</label>
-                        <input type="date" name="date_from" ng-model="record.date_from" class="form-control">
+                        <input type="date" name="date_from" ng-disabled="record.is_complete" ng-change="minimum_date()" ng-model="record.date_from" class="form-control">
                     </div>
                     <div class="col-sm-12">
                         <br>
                         <label>Date To</label>
-                        <input type="date" name="date_to" ng-model="record.date_to" class="form-control">
+                        <input type="date" name="date_to" ng-disabled="!record.date_from || record.is_complete" min="{$ minimum_date_to $}" ng-model="record.date_to" class="form-control">
                     </div>
                     <!-- <div class="col-sm-12">
                         <br>

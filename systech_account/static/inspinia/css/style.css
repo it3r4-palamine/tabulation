@@ -160,8 +160,12 @@ h5 {
   font-size: 12px;
 }
 .nav-header {
-  padding: 33px 25px;
+  /*padding: 33px 25px;*/
   background: url("patterns/header-profile.png") no-repeat;
+  padding: 5px 25px;
+  /*background-color: #dee1e4;*/
+  border-bottom-style: solid;
+  border-bottom-color: #1ab394;
 }
 .pace-done .nav-header {
   transition: all 0.4s;
@@ -184,7 +188,13 @@ h5 {
 }
 .minimalize-styl-2 {
   padding: 4px 12px;
-  margin: 14px 5px 5px 20px;
+  margin: 14px 5px 5px 12px;
+  font-size: 14px;
+  float: left;
+}
+.minimalize-styl-22 {
+  padding: 4px 0px;
+  margin: 14px 5px 5px 0px;
   font-size: 14px;
   float: left;
 }

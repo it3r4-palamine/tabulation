@@ -201,3 +201,20 @@ def generate_pagination(pagination_data,records):
 def str_to_model(model_str):
 	model = apps.get_model(app_label='systech_account', model_name=model_str)
 	return model
+
+def generate_sorting(sort_dict = None,replace_id = None):
+	if not sort_dict:
+		sort_dict = {"sort_by" : "id","reverse" : False}
+
+	sort_by = sort_dict.get("sort_by","id")
+
+	if replace_id and sort_by == "id":
+		sort_by = replace_id
+
+
+
+	if not sort_dict.get("reverse",False):
+		return [sort_by,"id"]
+
+	sort_by = "-"+sort_by
+	return [sort_by,"-id"]

@@ -9,14 +9,17 @@ class Assessment_question(models.Model):
 	transaction_type    = models.ForeignKey("Transaction_type",null=True,blank=True)
 	is_multiple 	    = models.BooleanField(default=0)
 	is_document         = models.BooleanField(default=0)
-	is_related          = models.ForeignKey("Assessment_question",null=True,blank=True)
+	parent_question     = models.ForeignKey("Assessment_question",null=True,blank=True)
+	# parent_question		= models.ForeignKey("Assessment_question", null=True, blank=True)
+	has_follow_up		= models.BooleanField(default=0)
 	code                = models.CharField(max_length=200,blank=True,null=True)
 	is_import   	    = models.BooleanField(default=0)
 	has_multiple_answer = models.BooleanField(default=0)
 	is_general			= models.BooleanField(default=0)
 	transaction_types	= ArrayField(models.IntegerField("Transaction_type"),blank=True,null=True)
-	has_follow_up		= models.BooleanField(default=0)
 	company 			= models.ForeignKey("Company",blank=True,null=True)
+	answer_type			= models.CharField(max_length=200,blank=True,null=True)
+	has_related			= models.BooleanField(default=0)
 
 	class Meta:
 		app_label = "systech_account"
@@ -33,13 +36,31 @@ class Assessment_question(models.Model):
 			"has_multiple_answer" : self.has_multiple_answer,
 			"is_general" : self.is_general,
 			"has_follow_up" : self.has_follow_up,
+			"code_value" : self.code + ": " + self.value,
+			"answer_type" : self.answer_type,
+			"has_related" : self.has_related,
+
 		}
+		if self.parent_question:
+			if forAPI:
+				assessment_question["parent_question"] = self.parent_question.id
+			else:
+				assessment_question["parent_question"] = {
+					'id' : self.parent_question.id,
+					'code' : self.parent_question.code,
+					'value' : self.parent_question.value,
+					'code_value' :  self.parent_question.code + ": " + self.parent_question.value,
+				}
 
-		if self.is_related:
-			assessment_question["is_related"] = self.is_related.id if forAPI else self.is_related.get_dict()
 		else:
-			assessment_question["is_related"] = None
+			assessment_question["parent_question"] = None
 
+		if self.has_related:
+			related_questions = Related_question.objects.filter(related_questions__overlap=[self.pk],is_active=True)
+			for related_question in related_questions:
+				assessment_question['related_question'] = related_question.pk
+			# print(related_question)
+		
 		# Transaction Types
 		if self.is_general:
 			transaction_types = []
@@ -109,6 +130,8 @@ class Assessment_answer(models.Model):
 	document_image	   = models.ImageField(upload_to='assessment/document_images/', blank=True, null=True)
 	transaction_type   = models.ForeignKey("Transaction_type",blank=True,null=True)
 	company 		   = models.ForeignKey("Company",blank=True,null=True)
+	created_on 		   = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+	is_deleted		   = models.BooleanField(default=0)
 
 	class Meta:
 		app_label = "systech_account"
@@ -189,3 +212,32 @@ class Generated_assessment_recommendation(models.Model):
 	class Meta:
 		app_label = "systech_account"
 		db_table  = "generated_assessment_recommendations"
+
+class Related_question(models.Model):
+	related_questions = ArrayField(models.IntegerField("Assessment_question"),blank=True,null=True)
+	is_active 		  = models.BooleanField(default=1)
+	is_import 		  = models.BooleanField(default=0)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "related_questions"
+
+	def get_dict(self):
+		related_questions = {
+			'id' : self.pk,
+			'is_active' : self.is_active
+		}
+
+		questions = []
+		for related_question in self.related_questions:
+			try:
+				question = Assessment_question.objects.get(id=related_question,is_active=True)
+			except Assessment_question.DoesNotExist:
+				continue
+
+			question = question.get_dict()
+			questions.append(question)
+
+		related_questions['related_questions'] = questions
+
+		return related_questions 

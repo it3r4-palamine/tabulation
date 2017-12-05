@@ -14,9 +14,17 @@ def read(request):
 		data = req_data(request,True)
 		pagination = None
 
+		filters = {}
+		filters['is_active'] = True
+		value_search = data.pop("value","")
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
-		records = Assessment_recommendation.objects.filter(company=data['company'],is_active=True).order_by("id")
+
+		sort_by = generate_sorting(data.pop("sort",None))
+		if value_search:
+			filters['value__icontains'] = value_search
+		filters['company'] = data['company']
+		records = Assessment_recommendation.objects.filter(**filters).order_by(*sort_by)
 		results = {'data':[]}
 		results['total_records'] = records.count()
 

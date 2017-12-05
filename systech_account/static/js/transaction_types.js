@@ -4,6 +4,7 @@ app.controller('transaction_typesCtrl', function($scope, $http, $timeout, $eleme
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
 	var me = this;
 	$scope.record = {}
+	$scope.filter = {}
 	$scope.create_dialog = function(record){
 		$scope.record = {}
 		$scope.record['is_active'] = true
@@ -30,7 +31,13 @@ app.controller('transaction_typesCtrl', function($scope, $http, $timeout, $eleme
 	}
 
 	$scope.read = function(){
-		me.post_generic("/transaction_types/read/",{'pagination':me.pagination},"main")
+		me.sort.sort_by = "name"
+		var data = {
+			name : $scope.filter.name,
+			pagination : me.pagination,
+			sort : me.sort,
+		}
+		me.post_generic("/transaction_types/read/",data,"main")
 		.success(function(response){
 			$scope.records = response.data;
 			me.starting = response.starting;

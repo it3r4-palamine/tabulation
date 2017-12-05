@@ -619,6 +619,20 @@ app.factory("Notification", function(toastr) {
 
             return toastr.error(body, title, config);
         },
+
+        error_action: function(title, body,id=null){
+            if(body == 'transaction_type'){
+                a = "<a class='pull-right' href='/transaction_types/#/transaction_type' target='_blank'><br><b><u>Set code here</a>"
+            }
+
+            var config = {
+                allowHtml:true,
+                closeButton: true,
+            }
+
+            return toastr.error(title+" "+a, config)
+        },
+
         warning: function(title, body, timeout) {
 
             if (!title) {
@@ -827,12 +841,23 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
+        get_questions: function(scope,transaction_types) {
+            data = {"all": true}
+            if(transaction_types){
+                data['transaction_type'] = transaction_types
+            }
+            var post = CommonRequests.read_common_records(scope, "questions", "/assessments/read/",data,true);
+            return post.success(function(response){
+                scope["questions"] = response.data;
+            })
+        },
+
         get_display_terms: function(scope) {
             var post = CommonRequests.read_common_records(scope, "display_terms", "/settings/display_settings_read/",{},true);
             return post.success(function(response){
                 scope["display_terms"] = response.data;
             })
-        }
+        },
     }
 })
 

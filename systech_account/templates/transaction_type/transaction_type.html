@@ -26,7 +26,16 @@
         <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
             {% include "common/loader.html" %} 
             <div class="row">
-                <div class="col-sm-12 pull-right">
+                <div class="col-sm-3">
+                    <!-- <label>Transaction Type</label> -->
+                    <input type="text" class="form-control" placeholder="Search..." ng-model="filter.name" name="">
+                </div>
+                <div class="col-sm-3">
+                    <!-- <label>&nbsp;</label><br> -->
+                    <button class="btn btn-default" ng-click="read()"><i class="fa fa-search"></i> SEARCH</button><br>
+                </div>
+                <div class="col-sm-6 pull-right">
+                    <!-- <label>&nbsp;</label><br> -->
                     <button class="btn btn-primary pull-right" ng-click="create_dialog()">CREATE</button>
                 </div>
                 <div class="clearfix"></div>
@@ -34,12 +43,14 @@
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
-                            <th>Name</th>
+                            <th custom-sort order="name">Name</th>
+                            <th custom-sort order="transaction_code">Code</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
                             <tr ng-repeat="record in records" class="hand_cursor">
                                 <td ng-click="load_to_edit(record)">{$ record.name $}</td>
+                                <td ng-click="load_to_edit(record)">{$ record.transaction_code $}</td>
                                 <td><button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button></td>
                             </tr>
                         </tbody>

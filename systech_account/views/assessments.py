@@ -4,6 +4,7 @@ from ..forms.multiple_choice import *
 from ..models.multiple_choice import *
 from django.db.models import *
 from ..views.common import *
+from ..views.sentence_matching import *
 
 
 def home(request):
@@ -17,13 +18,35 @@ def read(request):
 		data = req_data(request,True)
 		pagination = None
 
+		code = data.pop("code","")
+
+		filters = (Q(company=data['company'],is_active=True))
+
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
 
 		if 'transaction_type' in data and data['transaction_type']:
-			records = Assessment_question.objects.filter(Q(company=data['company'],is_active=True,transaction_type=data['transaction_type']) | Q(company=data['company'],is_active=True,transaction_types__overlap=[data['transaction_type']])).order_by("id")
+			if isinstance(data['transaction_type'],list):
+				filters &= (Q(is_active=True,transaction_type__in=data['transaction_type']) | Q(is_active=True,transaction_types__overlap=data['transaction_type']))
+			else:	
+				filters &= (Q(is_active=True,transaction_type=data['transaction_type']) | Q(is_active=True,transaction_types__overlap=[data['transaction_type']]))
+			# records = Assessment_question.objects.filter(Q(is_active=True,transaction_type=data['transaction_type']) | Q(is_active=True,transaction_types__overlap=[data['transaction_type']])).order_by("id")
+		
+		if code:
+			filters &= (Q(code__icontains=code) | Q(value__icontains=code))
+
+		sort_by = generate_sorting(data.pop("sort",None))
+		questionsIds = []
+		if 'type' in data:
+			related_questions = Related_question.objects.filter(is_active=True)
+			for related_question in related_questions:
+				for ids in related_question.related_questions:
+					questionsIds.append(ids)
+
+			records = Assessment_question.objects.filter(filters).exclude(id__in=questionsIds).order_by(*sort_by)
 		else:
-			records = Assessment_question.objects.filter(company=data['company'],is_active=True).order_by("id")
+			records = Assessment_question.objects.filter(filters).order_by(*sort_by)
+
 		results = {'data':[]}
 		results['total_records'] = records.count()
 
@@ -33,44 +56,102 @@ def read(request):
 
 		datus = []
 		for record in records:
-			general_transaction_types = []
-			row = record.get_dict()
-			choices = Choice.objects.filter(company=data['company'],question=record.pk,is_active=True)
-			answers = []
-			for choice in choices:
-				answer_choice = choice.get_dict()
-				answers.append(answer_choice)
+			if 'all' in data:
+				row = record.get_dict()
+			else:
+				general_transaction_types = []
+				row = record.get_dict()
+				choices = Choice.objects.filter(company=data['company'],question=record.pk,is_active=True)
+				answers = []
+				for choice in choices:
+					answer_choice = choice.get_dict()
+					answers.append(answer_choice)
 
-			effects = Assessment_effect.objects.filter(company=data['company'],question=record.pk,is_active=True)
-			possible_effect = []
-			for effect in effects:
-				effect_question = effect.get_dict()
-				possible_effect.append(effect_question)
+				effects = Assessment_effect.objects.filter(company=data['company'],question=record.pk,is_active=True)
+				possible_effect = []
+				for effect in effects:
+					effect_question = effect.get_dict()
+					possible_effect.append(effect_question)
 
-			findings = Assessment_finding.objects.filter(company=data['company'],question=record.pk,is_active=True)
-			possible_finding = []
-			for finding in findings:
-				finding_question = finding.get_dict()
-				possible_finding.append(finding_question)
+				findings = Assessment_finding.objects.filter(company=data['company'],question=record.pk,is_active=True)
+				possible_finding = []
+				for finding in findings:
+					finding_question = finding.get_dict()
+					possible_finding.append(finding_question)
 
-			if record.transaction_types:
-				for t_types in record.transaction_types:
-					try:
-						t_type = Transaction_type.objects.get(company=data['company'],id=t_types,is_active=True)
-					except Transaction_type.DoesNotExist:
-						continue
-					transaction_type_dict = {'id':t_type.pk,'name':t_type.name,'is_active':t_type.is_active}
-					general_transaction_types.append(transaction_type_dict)
-			row['transaction_types'] = general_transaction_types
-			row['choices'] = answers
-			row['effects'] = possible_effect
-			row['findings'] = possible_finding
+				if record.transaction_types:
+					for t_types in record.transaction_types:
+						try:
+							t_type = Transaction_type.objects.get(company=data['company'],id=t_types,is_active=True)
+						except Transaction_type.DoesNotExist:
+							continue
+						transaction_type_dict = {'id':t_type.pk,'name':t_type.name,'is_active':t_type.is_active}
+						general_transaction_types.append(transaction_type_dict)
+				
+				row['transaction_types'] = general_transaction_types
+				row['choices'] = answers
+				row['effects'] = possible_effect
+				row['findings'] = possible_finding
+
 			datus.append(row)
 
 		results['data'] = datus
 		return success_list(results,False)
 	except Exception as e:
+		cprint(e)
 		return HttpResponse(e, status = 400)
+
+def generate_code(request):
+	try:
+		data = req_data(request)
+		new_code = True
+		if data['is_general']:
+			filters = {'is_general' : True}
+			transaction_code = "GENE"
+		else:
+			filters = {'is_general' : False,"transaction_type__id" : data['transaction_type']['id']}
+			try:
+				transaction_code = Transaction_type.objects.get(transaction_code=data['transaction_type']['transaction_code']).transaction_code
+			except Exception as e:
+				return error("No code.")
+
+			if 'id' in data:
+				instance = Assessment_question.objects.get(id=data['id'])
+				transaction_type_id = instance.transaction_type.pk
+				
+				if data['transaction_type']['id'] != transaction_type_id:
+					questionUsed = Assessment_answer.objects.filter(question=instance.id,company_assessment__is_active=True,transaction_type=transaction_type_id).first()
+					if questionUsed:
+						return error("Question is currently in use.")
+				
+				if data['transaction_type']['id'] == transaction_type_id:
+					last_code = instance.code
+					new_code = False
+
+		questions = Assessment_question.objects.filter(**filters).last()
+
+		if new_code:
+			if not questions:
+				last_code = transaction_code + "000001"
+			else:
+				if len(questions.code) != 10:
+					last_code = transaction_code + "000001"
+				else:
+					code = questions.code
+					last_code = code[-1:]
+					if last_code.isdigit():
+						last_code = str(int(last_code) + 1)
+						if len(last_code) == 1:
+							last_code = code[:-1] + last_code
+						else:
+							last_code = code[:-2] + last_code
+					else:
+						last_code += " - 1"
+			
+		return success(last_code)
+
+	except Exception as e:
+		raise e
 
 def create(request,results=None):
 	try: 
@@ -79,9 +160,10 @@ def create(request,results=None):
 		else:
 			postdata = req_data(request,True)
 			postdata['value'] = postdata['value']
-			# if postdata['is_related']:
-			postdata['is_related'] = postdata['is_related']['id'] if 'is_related' in postdata and postdata['is_related'] else None
+			# if postdata['parent_question']:
+			postdata['parent_question'] = postdata['parent_question']['id'] if 'parent_question' in postdata and postdata['parent_question'] else None
 			transaction_types = postdata.pop('transaction_types',[])
+			old_is_related = postdata.pop('old_is_related',None)
 
 			terms = get_display_terms(request)
 			term = "transaction types"
@@ -123,6 +205,10 @@ def create(request,results=None):
 		findings = postdata.pop("findings",None)
 		t_types = postdata.pop("t_types",None)
 		is_edit = True
+
+		if postdata['is_multiple']:
+			postdata['answer_type'] = None
+
 		try:
 			instance = Assessment_question.objects.get(id=postdata.get('id',None))
 			assessment_question = Assessment_question_form(postdata,instance=instance)
@@ -135,7 +221,20 @@ def create(request,results=None):
 		if assessment_question.is_valid():
 			assessment_save = assessment_question.save()
 
-			if not is_edit:
+			if is_edit:
+				if assessment_save.parent_question:
+					condition = old_is_related and assessment_save.parent_question.id != old_is_related
+				else:
+					condition = old_is_related
+				
+				if condition:
+					is_related_assessment = Assessment_question.objects.filter(parent_question=old_is_related)
+					if len(is_related_assessment) < 1:
+						old_is_related_assessment = Assessment_question.objects.filter(id=old_is_related).update(has_follow_up=False)
+
+				Assessment_question.objects.filter(id=postdata.get('parent_question',None)).update(has_follow_up=True)
+
+			if not is_edit and t_types:
 				for t_typess in t_types:
 					company_assessments = Company_assessment.objects.filter(Q(company=postdata['company'],transaction_type__overlap=[postdata['transaction_type']],is_active=True,is_generated=False) | Q(company=postdata['company'],transaction_type__contains=[t_typess],is_active=True,is_generated=False))
 					for assessments in company_assessments:
@@ -151,16 +250,23 @@ def create(request,results=None):
 						if not assessments.is_generated and no_answer > 0:
 							assessments.is_complete = False
 							assessments.save()
+			
 			if not results:
 				for choice in choices:
 					choice['question'] = assessment_save.pk
-					choice['is_active'] = True
+					choice['is_active'] = True if postdata['is_multiple'] else False
 					choice['company'] = postdata['company']
 					try:
 						instance_choice = Choice.objects.get(id=choice.get('id',None))
+						result = sentence_matching(choice.get('value',None),"Choice",assessment_save.pk,instance_choice.pk)
 						answer_choice = Choice_form(choice,instance=instance_choice)
 					except Choice.DoesNotExist:
+						result = sentence_matching(choice.get('value',None),"Choice",assessment_save.pk)
+						
 						answer_choice = Choice_form(choice)
+
+					if result:
+						return error("Answer already exists: '" + result + "'")
 
 					if answer_choice.is_valid():
 						answer_choice.save()
@@ -171,9 +277,15 @@ def create(request,results=None):
 					effect['company'] = postdata['company']
 					try:
 						instance_effect = Assessment_effect.objects.get(id=effect.get('id',None))
+						result = sentence_matching(effect.get('value',None),"Assessment_effect",assessment_save.pk,instance_effect.pk)
 						effect_question = Assessment_effect_form(effect,instance=instance_effect)
 					except Assessment_effect.DoesNotExist:
+						result = sentence_matching(effect.get('value',None),"Assessment_effect",assessment_save.pk)
+
 						effect_question = Assessment_effect_form(effect)
+
+					if result:
+						return error("Effect already exists: '" + result + "'")
 
 					if effect_question.is_valid():
 						effect_question.save()
@@ -184,9 +296,15 @@ def create(request,results=None):
 					finding['company'] = postdata['company']
 					try:
 						instance_finding = Assessment_finding.objects.get(id=finding.get('id',None))
+						result = sentence_matching(finding.get('value',None),"Assessment_finding",assessment_save.pk,instance_finding.pk)
 						finding_question = Assessment_finding_form(finding,instance=instance_finding)
 					except Assessment_finding.DoesNotExist:
+						result = sentence_matching(finding.get('value',None),"Assessment_finding",assessment_save.pk)
+						
 						finding_question = Assessment_finding_form(finding)
+					
+					if result:
+						return error("Findings already exists: '" + result + "'")
 
 					if finding_question.is_valid():
 						finding_question.save()
@@ -203,10 +321,16 @@ def delete(request,id = None):
 		try:
 			question = Assessment_question.objects.get(pk = id)
 			question.is_active = False
-			question.save()
-			return success()
+
+			questionUsed = Assessment_answer.objects.filter(question=id,company_assessment__is_active=True).first()
+			if questionUsed:
+				raise_error("Question is currently in use.")
+			else:
+				question.save()
+
+			return success("Successfully deleted.")
 		except Assessment_question.DoesNotExist:
-			raise_error("Record doesn't exist.")
+			raise_error("Question doesn't exist.")
 	except Exception as e:
 		return HttpResponse(e, status = 400)
 
@@ -243,5 +367,92 @@ def delete_finding(request,id = None):
 			return success("Successfully deleted.")
 		except Assessment_finding.DoesNotExist:
 			raise_error("Finding doesn't exist.")
+	except Exception as e:
+		return HttpResponse(e, status = 400)
+
+def related_questions(request):
+	return render(request, 'assessments/related_questions.html')
+
+def read_related_questions(request):
+	try:
+		data = req_data(request)
+		pagination = None
+
+		filters = {}
+		filters['is_active'] = True
+
+		if 'pagination' in data:
+			pagination = data.pop("pagination",None)
+
+		records = Related_question.objects.filter(**filters).order_by('id')
+		results = {'data':[]}
+
+		results['total_records'] = records.count()
+
+		if pagination:
+			results.update(generate_pagination(pagination,records))
+			records = records[results['starting']:results['ending']]
+
+		data = []
+		for record in records:
+			row = record.get_dict()
+			data.append(row)
+
+		results['data'] = data
+		return success_list(results,False)
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
+def related_questions_create_dialog(request):
+	return render(request, 'assessments/dialogs/related_questions_create_dialog.html')
+
+def related_questions_create(request):
+	try:
+		data = req_data(request)
+		related_questions = data.pop('related_questions',[])
+
+		related_questionsArr = []
+		for related_question in related_questions:
+			related_questionsArr.append(related_question['id'])
+
+		data['related_questions'] = list_to_string(related_questionsArr)
+
+		try:
+			instance = Related_question.objects.get(id=data.get('id',None))
+			related_questions_form = Related_question_form(data,instance=instance)
+		except Related_question.DoesNotExist:
+			related_questions_form = Related_question_form(data)
+
+		if related_questions_form.is_valid():
+			related_questions_form.save()
+
+			questionsIds = []
+			related_questions = Related_question.objects.filter(is_active=True)
+			for related_question in related_questions:
+				for ids in related_question.related_questions:
+					questionsIds.append(ids)
+
+			questions = Assessment_question.objects.filter(is_active=True)
+			for question in questions:
+				if question.pk in questionsIds:
+					question.has_related = True
+				else:
+					question.has_related = False
+				question.save()
+			return HttpResponse("Successfully saved.",status=200)
+		else:
+			return HttpResponse(related_questions_form.errors,status=400)
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
+def delete_related_questions(request,id = None):
+	try:
+		try:
+			related_question = Related_question.objects.get(pk = id)
+			related_question.is_active = False
+			related_question.save()
+			return success("Successfully deleted.")
+		except Related_question.DoesNotExist:
+			raise_error("Related question doesn't exist.")
 	except Exception as e:
 		return HttpResponse(e, status = 400)

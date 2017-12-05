@@ -6,6 +6,7 @@ from ..forms.settings import *
 from ..forms.user_type import *
 from ..views.assessments import *
 from ..views.common import *
+from ..views.sentence_matching import *
 
 
 def import_default(request):
@@ -28,21 +29,24 @@ def get_fields(request, module_type):
 			q_term = terms.questions
 	fields = {
 		"questions" : {
+			"code" : {"display" : "Code", "sort" : 1},
 			"question" : {"display" : q_term, "sort" : 2},
 			"transaction_type" : {"display" : t_term, "sort" : 3},
 			"is_multiple" : {"display" : "Is Multiple Choice", "sort" : 4},
-			"code" : {"display" : "Code", "sort" : 1},
-			"is_document" : {"display" : "Is Document", "sort" : 5},
-			"is_related" : {"display" : "Is Related", "sort" : 6},
-			"has_multiple_answer" : {"display" : "Has Multiple Answer", "sort" : 7},
-			"is_general" : {"display" : "Is General", "sort" : 8},
-			"transaction_types" : {"display" : "General %s"%(t_term), "sort" : 9},
+			"answer_type" : {"display" : "Answer Type", "sort" : 5},
+			"is_document" : {"display" : "Is Document", "sort" : 6},
+			"parent_question" : {"display" : "Is Follow up", "sort" : 7},
+			"has_multiple_answer" : {"display" : "Has Multiple Answer", "sort" : 8},
+			"is_general" : {"display" : "Is General", "sort" : 9},
+			"transaction_types" : {"display" : "General %s"%(t_term), "sort" : 10},
+			"has_follow_up" : {"display" : "Has Follow up", "sort" : 11},
 		},
 		"choices" : {
 			"question" : {"display" : "%s Code"%(q_term), "sort" : 1},
 			"value" : {"display" : "Answer", "sort" : 2},
 			"is_answer" : {"display" : "Is Answer", "sort" : 3},
-			"is_related_required" : {"display" : "Is Related Required", "sort" : 4},
+			"follow_up_required" : {"display" : "Is Follow up Required", "sort" : 4},
+			"required_document_image" : {"display" : "Required Document Image", "sort" : 5},
 		},
 		"effects" : {
 			"question" : {"display" : "%s Code"%(q_term), "sort" : 1},
@@ -110,6 +114,27 @@ def import_questions(request):
 				data['is_multiple'] = False
 		else:
 			return error("Is Multiple must be 'Yes' or 'No'.")
+
+		if data['is_multiple'] == False:
+			if 'answer_type' in data:
+				answer_type = clean_string(data['answer_type'])
+				if answer_type != "Text" and answer_type != "Number":
+					return error("Answer Type must be 'Text' or 'Number'.")
+				
+				data['answer_type'] = answer_type
+			else:
+				return error("Answer Type must be 'Text' or 'Number'.")
+
+		if 'has_follow_up' in data:
+			has_follow_up = clean_string(data['has_follow_up'])
+			if has_follow_up != "Yes" and has_follow_up != "No":
+				return error("Has Follow up must be 'Yes' or 'No'.")
+			if has_follow_up == "Yes":
+				data['has_follow_up'] = True
+			else:
+				data['has_follow_up'] = False
+		else:
+			return error("Has Follow up must be 'Yes' or 'No'.")
 
 		if 'is_document' in data:
 			is_document = clean_string(data['is_document'])
@@ -184,13 +209,13 @@ def import_questions(request):
 				except Transaction_type.DoesNotExist:
 					return error("%s: "%(t_term)+data['transaction_type'] + " does not exists.")
 
-		if 'is_related' in data:
-			is_related_code = clean_string(data['is_related'])
+		if 'parent_question' in data:
+			is_related_code = clean_string(data['parent_question'])
 			try:
 				assessment_question_code = Assessment_question.objects.get(code=is_related_code,is_active=True)
-				data['is_related'] = assessment_question_code.pk
+				data['parent_question'] = assessment_question_code.pk
 			except Assessment_question.DoesNotExist:
-				return error("%s Code: "%(q_term)+is_related_code + " does not exists for Is Related.")
+				return error("%s Code: "%(q_term)+is_related_code + " does not exists for Is Follow up.")
 
 		return_results = create(request,data)
 		if return_results != True:
@@ -213,6 +238,10 @@ def import_choices(request):
 				data['question'] = assessment_question.pk
 				if 'value' not in data:
 					return error("Answer is required.")
+				else:
+					result = sentence_matching(data.get('value',None),"Choice",assessment_question.pk)
+					if result:
+						return error("Answer already exists: '" + result + "'")
 
 				if not assessment_question.is_multiple:
 					return error("Question Code: "+ str(question_code) +" is not a multiple choice type.")
@@ -228,16 +257,27 @@ def import_choices(request):
 				else:
 					return error("Is Answer must be 'Yes' or 'No'.")
 
-				if 'is_related_required' in data:
-					is_related_required = clean_string(data['is_related_required'])
-					if is_related_required != "Yes" and is_related_required != "No":
-						return error("Is Related Required must be 'Yes' or 'No'.")
-					if is_related_required == "Yes":
-						data['is_related_required'] = True
+				if 'follow_up_required' in data:
+					follow_up_required = clean_string(data['follow_up_required'])
+					if follow_up_required != "Yes" and follow_up_required != "No":
+						return error("Is Follow up Required must be 'Yes' or 'No'.")
+					if follow_up_required == "Yes":
+						data['follow_up_required'] = True
 					else:
-						data['is_related_required'] = False
+						data['follow_up_required'] = False
 				else:
-					return error("Is Related Required must be 'Yes' or 'No'.")
+					return error("Is Follow up Required must be 'Yes' or 'No'.")
+
+				if 'required_document_image' in data:
+					required_document_image = clean_string(data['required_document_image'])
+					if required_document_image != "Yes" and required_document_image != "No":
+						return error("Required Document Image must be 'Yes' or 'No'.")
+					if required_document_image == "Yes":
+						data['required_document_image'] = True
+					else:
+						data['required_document_image'] = False
+				else:
+					return error("Required Document Image must be 'Yes' or 'No'.")
 
 				answer_choice = Choice_form(data)
 				if answer_choice.is_valid():
@@ -267,6 +307,10 @@ def import_effects(request):
 
 				if 'value' not in data:
 					return error("Effect is required.")
+				else:
+					result = sentence_matching(data.get('value',None),"Assessment_effect",assessment_question.pk)
+					if result:
+						return error("Effect already exists: '" + result + "'")
 
 				effect_question = Assessment_effect_form(data)
 				if effect_question.is_valid():
@@ -292,6 +336,10 @@ def import_findings(request):
 
 				if 'value' not in data:
 					return error("Findings is required.")
+				else:
+					result = sentence_matching(data.get('value',None),"Assessment_finding",assessment_question.pk)
+					if result:
+						return error("Findings already exists: '" + result + "'")
 
 				finding_question = Assessment_finding_form(data)
 				if finding_question.is_valid():
@@ -307,8 +355,13 @@ def import_recommendations(request):
 	try:
 		data = req_data(request,True)
 		data['is_active'] = True
+		
 		if 'value' not in data:
 				return error("Recommendation is required.")
+		else:
+			result = sentence_matching(data.get('value',None),"Assessment_recommendation")
+			if result:
+				return error("Recommendation already exists: '" + result + "'")
 
 		recommendation_question = Assessment_recommendation_form(data)
 		if recommendation_question.is_valid():

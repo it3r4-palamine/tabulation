@@ -1,39 +1,28 @@
-var app = angular.module("company_assessment",['common_module']);
+var app = angular.module("related_questions",['common_module']);
 
-app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $element, $controller,CommonFunc,Notification,CommonRead) {
+app.controller('relatedquestionsCtrl', function($scope, $http, $timeout, $element, $controller,CommonFunc,Notification,CommonRead) {
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
 	var me = this;
 	$scope.record = {}
+	$scope.questions = []
 	$scope.create_dialog = function(record){
 		$scope.record = {}
 		$scope.record['is_active'] = true
 		if(record){
-			$scope.read_transaction_types(record)
 			$scope.record = angular.copy(record);
-			$scope.record.date_from = new Date($scope.record.date_from)
-			$scope.record.date_to = new Date($scope.record.date_to)
-			$scope.record.transaction_types = $scope.record.transaction_type
-			$scope.minimum_date()
-		}else{
-			
-			me.post_generic("/company_assessment/check_reference_no/","","main")
-			.success(function(response){
-				$scope.record.reference_no = response
-			})
 		}
-
 		
-		me.open_dialog("/company_assessment/create_dialog/","","main")
+		me.open_dialog("/assessments/related_questions_create_dialog/","","main")
 	}
 
 	$scope.create = function(){
-		$scope.record.date_from = moment(new Date($scope.record.date_from)).format('YYYY-MM-DD');
-		$scope.record.date_to = moment(new Date($scope.record.date_to)).format('YYYY-MM-DD');
-		me.post_generic("/company_assessment/create/",$scope.record,"dialog")
+		me.post_generic("/assessments/related_questions_create/",$scope.record,"dialog")
 		.success(function(response){
+			$scope.questions = []
 			me.close_dialog();
 			Notification.success(response);
 			$scope.read();
+			$scope.read_questions();
 		}).error(function(err){
 			Notification.error(err)
 		})
@@ -44,7 +33,7 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 	}
 
 	$scope.read = function(){
-		me.post_generic("/company_assessment/read/",{'pagination':me.pagination},"main")
+		me.post_generic("/assessments/read_related_questions/",{'pagination':me.pagination},"main")
 		.success(function(response){
 			$scope.records = response.data;
 			me.starting = response.starting;
@@ -56,6 +45,13 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 		})
 	};
 
+	$scope.read_questions = function(){
+		me.post_generic("/assessments/read/",{'type':'related_questions'},"main")
+		.success(function(response){
+			$scope.questions = response.data;
+		})
+	};
+
 	$scope.minimum_date = function(){
 		$scope.minimum_date_to = moment(new Date($scope.record.date_from)).format('YYYY-MM-DD');
 	}
@@ -63,7 +59,7 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 	$scope.delete = function(record){
 		swal({
 		    title: "Continue",
-		    text: "Remove "+record.company.name+"'s assessment?",
+		    text: "Remove related questions?",
 		    type: "warning",
 		    showCancelButton: true,
 		    confirmButtonColor: "#DD6B55",
@@ -72,7 +68,7 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 		    closeOnConfirm: true
 		},
 		function(){
-			me.post_generic("/company_assessment/delete/"+record.id,"","main")
+			me.post_generic("/assessments/delete_related_questions/"+record.id,"","main")
 			.success(function(response){
 				Notification.success(response);
 				$scope.read();
@@ -83,7 +79,7 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 	}
 
 	$scope.read_transaction_types = function(record){
-    	me.post_generic("/transaction_types/read/",{},"main")
+    	me.post_generic("/transaction_types/read/",{"company":record.company.id},"main")
     	.success(function(response){
     		$scope.transaction_types = response.data;
     	})
@@ -106,12 +102,12 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 
     $scope.select_transaction_type = function(record){
     	$scope.record.transaction_types = {}
+		$scope.read_transaction_types(record);
     }
 
 	$scope.read();
+	$scope.read_questions();
 	me.main_loader = function(){$scope.read();}
-	$scope.read_transaction_types();
 	// $scope.read_companies();
-	$scope.read_users();
-	CommonRead.get_display_terms($scope)
+	// $scope.read_users();
 });

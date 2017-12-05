@@ -18,6 +18,7 @@ def read(request):
 		filters = {}
 		filters['is_active'] = True
 		filters['company'] = data['company']
+		name_search = data.pop("name","")
 		# has_company = data.get("company",None)
 		# if has_company:
 		# 	try:
@@ -34,7 +35,12 @@ def read(request):
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
 
-		records = Transaction_type.objects.filter(**filters).order_by("id")
+		if name_search:
+			filters['name__icontains'] = name_search
+
+		sort_by = generate_sorting(data.pop("sort",None))
+
+		records = Transaction_type.objects.filter(**filters).order_by(*sort_by)
 		results = {'data':[]}
 		results['total_records'] = records.count()
 
@@ -43,10 +49,13 @@ def read(request):
 			records = records[results['starting']:results['ending']]
 		data = []
 		for record in records:
-			row = {}
-			row['id'] = record.pk
-			row['name'] = record.name
-			row['is_active'] = record.is_active
+			row = record.get_dict()
+			row['code_exist'] = False
+			if row['transaction_code']:
+				questions = Assessment_question.objects.filter(code__startswith=row['transaction_code'])
+				if questions:
+					row['code_exist'] = True
+			
 			data.append(row)
 
 		results['data'] = data
@@ -67,6 +76,7 @@ def create(request):
 				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],name__iexact=postdata['name'],is_active=True)
 				if check_transaction_type.pk != postdata['id']: 
 					return error(check_transaction_type.name + " already exists.")
+
 				transaction_type = Transaction_type_form(postdata, instance=instance)
 			except Transaction_type.DoesNotExist:
 				transaction_type = Transaction_type_form(postdata, instance=instance)
@@ -101,7 +111,7 @@ def delete(request,id = None):
 			record = Transaction_type.objects.get(pk = id)
 			record.is_active = False
 			record.save()
-			return success()
+			return success("Successfully deleted.")
 		except Transaction_type.DoesNotExist:
 			raise_error("%s doesn't exist."%(t_term))
 	except Exception as e:

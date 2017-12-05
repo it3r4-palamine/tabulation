@@ -26,7 +26,15 @@
         <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
             {% include "common/loader.html" %} 
             <div class="row">
-                <div class="col-sm-12 pull-right">
+                <div class="col-sm-3">
+                    <!-- <label>Transaction Type</label> -->
+                    <input type="text" class="form-control" placeholder="Search..." ng-model="filter.value" name="">
+                </div>
+                <div class="col-sm-3">
+                    <!-- <label>&nbsp;</label><br> -->
+                    <button class="btn btn-default" ng-click="read()"><i class="fa fa-search"></i> SEARCH</button><br>
+                </div>
+                <div class="col-sm-6 pull-right">
                     <button class="btn btn-primary pull-right" ng-click="create_dialog()">CREATE</button>
                 </div>
                 <div class="clearfix"></div>
@@ -34,7 +42,7 @@
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
-                            <th>Recommendation</th>
+                            <th custom-sort order="value">Recommendation</th>
                             <th>Action</th>
                         </thead>
                         <tbody>

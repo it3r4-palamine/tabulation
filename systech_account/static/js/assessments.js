@@ -11,6 +11,7 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 	$scope.findings = []
 
 	$scope.create_dialog = function(record){
+		$scope.edit_is_related = false
 		$scope.choices = []
 		$scope.effects = []
 		$scope.findings = []
@@ -26,24 +27,48 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 			$scope.findings = $scope.record.findings
 		}
 		
-		me.open_dialog("/assessments/create_dialog/","","main")
+		me.open_dialog("/assessments/create_dialog/","dialog_whole","main")
 	}
 
 	$scope.close_dialog = function(){$uibModalStack.dismissAll();}
 
+	$scope.old_is_related = null
 	$scope.create = function(){
-		if(Object.keys($scope.choice_list).length > 0) $scope.choices.push(angular.copy($scope.choice_list))
-		if(Object.keys($scope.effect_list).length > 0) $scope.effects.push(angular.copy($scope.effect_list))
-		if(Object.keys($scope.finding_list).length > 0) $scope.findings.push(angular.copy($scope.finding_list))
+		if(Object.keys($scope.choice_list).length > 0) {
+			if($scope.choice_list.value){
+				$scope.choices.push(angular.copy($scope.choice_list))
+			}
+		}
+		if(Object.keys($scope.effect_list).length > 0) {
+			if($scope.effect_list.value){
+				$scope.effects.push(angular.copy($scope.effect_list))
+			}
+		}
+		if(Object.keys($scope.finding_list).length > 0) {
+			if($scope.finding_list.value){
+				$scope.findings.push(angular.copy($scope.finding_list))
+			}
+		}
 		var has_true = 0
+		var has_required_document = 0
+		if($scope.record.is_document == undefined) $scope.record.is_document = false;
 		for(x in $scope.choices){
 			if($scope.choices[x].is_answer == true){
 				has_true++
+			}
+
+			if($scope.record.is_document){
+				if($scope.choices[x].required_document_image == true){
+					has_required_document++
+				}
+			}else{
+				$scope.choices[x].required_document_image = false
 			}
 		}
 		$scope.choice_list = {}
 		$scope.effect_list = {}
 		$scope.finding_list = {}
+		if($scope.record.is_multiple == undefined) $scope.record.is_multiple = false;
 		if($scope.record.is_multiple){
 			if(has_true > 1){
 				$scope.record['has_multiple_answer'] = true
@@ -53,6 +78,16 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 			}else if(has_true == 1){
 				$scope.record['has_multiple_answer'] = false
 			}
+		}else{
+			if(!$scope.record.answer_type){
+				return Notification.error("Please select answer type.")	
+			}
+		}
+
+		if($scope.record.is_document){
+			if(has_required_document == 0){
+				return Notification.error("Please select a choice that requires document image.")
+			}
 		}
 
 		if($scope.record.is_general == false) $scope.record.transaction_types = []
@@ -60,6 +95,10 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 		$scope.record['choices'] = $scope.choices
 		$scope.record['effects'] = $scope.effects
 		$scope.record['findings'] = $scope.findings
+		$scope.record['old_is_related'] = $scope.old_is_related
+		if($scope.record.parent_question){
+			$scope.record.parent_question.has_follow_up = true;
+		}
 
 		me.post_generic("/assessments/create/",$scope.record,"dialog")
 		.success(function(response){
@@ -85,6 +124,8 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 		var data = {
 			pagination:me.pagination,
 			transaction_type:$scope.filter.transaction_type['id'] ? $scope.filter.transaction_type['id'] : null,
+			code : $scope.filter.code,
+			sort: me.sort
 			// show_general:$scope.filter.is_general
 		}
 		me.post_generic("/assessments/read/",data,"main")
@@ -115,6 +156,8 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 				.success(function(response){
 					Notification.success(response);
 					$scope.read();
+				}).error(function(err){
+					Notification.error(err)
 				})
 			}
 		);
@@ -179,6 +222,49 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
     		$scope.transaction_types = response.data;
     	})
     }
+
+    $scope.edit_is_related = false;
+    $scope.edit_parent_question = function(){
+    	if($scope.record.parent_question){
+    		$scope.old_is_related = angular.copy($scope.record.parent_question.id)
+    	}
+    	
+		$scope.edit_is_related = true;
+		if($scope.record.is_general){
+			var transaction_types = []
+			for(x in $scope.record.transaction_types){
+				transaction_types.push($scope.record.transaction_types[x].id)	
+			}
+		}else{
+			transaction_types = $scope.record.transaction_type.id
+		}
+		CommonRead.get_questions($scope,transaction_types);
+    }
+
+    $scope.remove_parent_question = function(){
+    	$scope.old_is_related = angular.copy($scope.record.parent_question.id)
+    	delete($scope.record.parent_question)
+    }
+
+    $scope.generate_code = function(){
+    	$scope.record.code = null;
+    	if(!$scope.record.is_general) $scope.record.is_general = false;
+		me.post_generic("/assessments/generate_code/",$scope.record,"dialog")
+		.success(function(response){
+			$scope.record.code = response;
+		}).error(function(err){
+			if(err == "No code."){
+				$scope.record.code = null
+				Notification.error_action(err,"transaction_type")
+			}else{
+				Notification.error(err)
+			}
+		})
+    }
+
+    // $scope.isGeneral = function(){
+    // 	$scope.record = {};	
+    // }
 
 	$scope.read();
     me.main_loader = function(){$scope.read();}

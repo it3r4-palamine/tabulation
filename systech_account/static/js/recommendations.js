@@ -4,6 +4,7 @@ app.controller('recommendationsCtrl', function($scope, $http, $timeout, $element
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
 	var me = this;
 	$scope.record = {}
+	$scope.filter = {}
 	$scope.create_dialog = function(record){
 		$scope.record = {}
 		$scope.record['is_active'] = true
@@ -28,7 +29,12 @@ app.controller('recommendationsCtrl', function($scope, $http, $timeout, $element
 	}
 
 	$scope.read = function(){
-		me.post_generic("/recommendations/read/",{'pagination':me.pagination},"main")
+		var data = {
+			value : $scope.filter.value,
+			pagination : me.pagination,
+			sort : me.sort,
+		}
+		me.post_generic("/recommendations/read/",data,"main")
 		.success(function(response){
 			$scope.records = response.data;
 			me.starting = response.starting;

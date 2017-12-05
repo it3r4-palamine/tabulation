@@ -1,20 +1,25 @@
 <div class="wrapper wrapper-content animated fadeIn modalibox">
     <div class="ibox">
         <div class="ibox-title ibox_title_reset">
-            <h3><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></h3>
+            <h3>Related Questions</h3>
         </div>
 
         <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
             {% include "common/loader.html" %} 
             <div class="row">
                 <form class="form" name="form">
-                    <div class="col-sm-12" ng-class="{ 'has-error' : form.name.$invalid && !form.name.$pristine }">
-                        <label class="required"><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label>
+                    <!-- <div class="col-sm-12" ng-class="{ 'has-error' : form.name.$invalid && !form.name.$pristine }">
+                        <label class="required">Name</label>
                         <input type="text" ng-model="record.name" name="name" required class="form-control">
-                    </div>
-                    <div class="col-sm-12" ng-class="{ 'has-error' : form.transaction_code.$invalid && !form.transaction_code.$pristine }">
-                        <label class="required">Code</label> <small class="text-danger"><b>(Must be 4 characters)</b></small>
-                        <input type="text" ng-minlength="4" ng-maxlength="4" ng-model="record.transaction_code" name="transaction_code" required class="form-control" ng-disabled="record.code_exist">
+                    </div> -->
+                    <div class="col-sm-12">
+                        <label>Questions</label>
+                        <ui-select ng-model="record.related_questions" multiple ng-disabled="!questions[0]">
+                            <ui-select-match placeholder="{$ questions[0] ? 'Select...' : 'Please wait...' $}"><span ng-if="questions[0]">{$ $item.code_value $}</span></ui-select-match>
+                            <ui-select-choices repeat="question in questions | filter: $select.search | limitTo:50">
+                                <div ng-bind-html="question.code_value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
                     <div class="col-sm-12" ng-hide="true">
                         <br>

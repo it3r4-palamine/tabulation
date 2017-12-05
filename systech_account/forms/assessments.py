@@ -10,7 +10,7 @@ class Assessment_question_form(forms.ModelForm):
 			'is_active',
 			'transaction_type',
 			'is_multiple',
-			'is_related',
+			'parent_question',
 			'is_document',
 			'code',
 			'is_import',
@@ -18,7 +18,8 @@ class Assessment_question_form(forms.ModelForm):
 			'is_general',
 			'transaction_types',
 			'has_follow_up',
-			'company',	
+			'company',
+			'answer_type',	
 		)
 
 class Assessment_effect_form(forms.ModelForm):
@@ -40,3 +41,8 @@ class Generated_assessment_recommendation_form(forms.ModelForm):
 	class Meta:
 		model  = Generated_assessment_recommendation
 		fields = ('recommendations','company_assessment','company')
+
+class Related_question_form(forms.ModelForm):
+	class Meta:
+		model  = Related_question
+		fields = ('related_questions','is_active','is_import')

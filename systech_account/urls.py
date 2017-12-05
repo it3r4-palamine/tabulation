@@ -17,6 +17,7 @@ urlpatterns = [
 	url(r'^assessments/create_dialog/$', assessments.create_dialog),
 	url(r'^assessments/create/$', assessments.create),
 	url(r'^assessments/read/$', assessments.read),
+	url(r'^assessments/generate_code/$', assessments.generate_code),
 	url(r'^assessments/delete/(?P<id>[0-9]+)$', assessments.delete),
 	url(r'^assessments/delete_choice/(?P<id>[0-9]+)$', assessments.delete_choice),
 	url(r'^assessments/delete_effect/(?P<id>[0-9]+)$', assessments.delete_effect),
@@ -74,6 +75,11 @@ urlpatterns = [
 	url(r'^generate_report/read_assessments/$', generate_report.read_assessments),
 	url(r'^generate_report/delete_report/$', generate_report.delete_report),
 
+	url(r'^related_questions/$', assessments.related_questions),
+	url(r'^assessments/read_related_questions/$', assessments.read_related_questions),
+	url(r'^assessments/related_questions_create_dialog/$', assessments.related_questions_create_dialog),
+	url(r'^assessments/related_questions_create/$', assessments.related_questions_create),
+	url(r'^assessments/delete_related_questions/(?P<id>[0-9]+)$', assessments.delete_related_questions),
 	
 	url(r'^settings/$', settings.settings, name='settings'),
 	url(r'^settings/display_settings/$', settings.display_settings),
