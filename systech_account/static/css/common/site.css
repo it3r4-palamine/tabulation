@@ -550,18 +550,18 @@ ul.dropdown-menu-large > li > ul {
     position: relative;
     float: left;
     width: 100%;
-    margin-bottom: 0;
+   /* margin-bottom: 0;
     display: table;
-    table-layout: fixed;
+    table-layout: fixed;*/
 }
 
 .input-group .ui-select-container {
     position: relative;
     float: left;
     width: 100%;
-    margin-bottom: 0;
+   /* margin-bottom: 0;
     display: table;
-    table-layout: fixed;
+    table-layout: fixed;*/
 }
 
 .open>.dropdown-menu {

@@ -82,6 +82,14 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 			if(!$scope.record.answer_type){
 				return Notification.error("Please select answer type.")	
 			}
+			if(has_true > 1){
+				$scope.record['has_multiple_answer'] = true
+			}else if(has_true == 0){
+				$scope.record['has_multiple_answer'] = false
+				return Notification.error("The question has no correct answer. Please select one.")
+			}else if(has_true == 1){
+				$scope.record['has_multiple_answer'] = false
+			}
 		}
 
 		if($scope.record.is_document){

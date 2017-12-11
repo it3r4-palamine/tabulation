@@ -13,8 +13,8 @@
                         <input type="text" ng-model="record.name" name="name" required class="form-control">
                     </div>
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.transaction_code.$invalid && !form.transaction_code.$pristine }">
-                        <label class="required">Code</label> <small class="text-danger"><b>(Must be 4 characters)</b></small>
-                        <input type="text" ng-minlength="4" ng-maxlength="4" ng-model="record.transaction_code" name="transaction_code" required class="form-control" ng-disabled="record.code_exist">
+                        <label class="required">Code</label> <small class="text-danger"><b>(Must be at least 4 characters)</b></small>
+                        <input type="text" ng-minlength="4" ng-model="record.transaction_code" name="transaction_code" required class="form-control" ng-disabled="record.code_exist">
                     </div>
                     <div class="col-sm-12" ng-hide="true">
                         <br>

@@ -28,14 +28,15 @@
 </head>
 
 <body ng-controller="generate_reportCtrl as main" ng-cloak="" ng-init="generate_report = {{ datus }}; instantiate(true);">
-    <center><h2>{{pagename}}</h2>Business Assessment</center><br><br><br>
+    <!-- <center><h2>{{pagename}}</h2>Business Assessment</center><br><br><br> -->
+    <center><span style="font-size: xx-large;">{$ generate_report.company $}</span></center><span class="pull-right" style="margin-top: -30px; margin-right: 5px;">Reference No.: {$ generate_report.reference_no $}</span><center>Business Assessment</center><br><br><br>
     <table class="table table-bordered">
         <thead>
             <th>Transaction Type</th>
             <!-- <th>Question</th> -->
-            <th>Findings</th>
-            <th>Effects</th>
-            <th>Document</th>
+            <th></th>
+            <!-- <th>Effects</th> -->
+            <!-- <th>Document</th> -->
         </thead>
         <tbody>
             <tr ng-repeat-start="(key, transaction_type) in transaction_types">
@@ -48,34 +49,31 @@
                 <td></td>
                 <!-- <td><b>{$record.code$}</b> - {$record.value$}</td>
                 <td>
-                    <span ng-if="record.choices.length > 0">
-                        <ol type="a">
-                            <li ng-repeat="choice in record.choices">
-                                {$ choice.value $}
-                            </li>
-                        </ol>
-                    </span>
-                </td> -->
-                <td>
+                    <div>
+                        
                     <span ng-if="record.findings.length > 0">
+                        <b>FINDING:</b>
                         <ul>
                             <li ng-repeat="finding in record.findings">
                                 {$ finding.value $}
                             </li>
                         </ul>
                     </span>
-                </td>
-                <td>
+                <!-- </td> -->
+                <!-- <td> -->
                     <span ng-if="record.effects.length > 0">
+                        <b>EFFECT:</b>
                         <ul>
                             <li ng-repeat="effect in record.effects">
                                 {$ effect.value $}
                             </li>
                         </ul>
                     </span>
-                </td>
-                <td>
-                    <img ng-if="record.image" src="/static/uploads/{$record.image$}"  class="img-rounded" style="height:100px;width:100px;">
+                <!-- </td> -->
+                <!-- <td> -->
+                    <!-- <img src="/static/images/picture.png"  class="img-rounded pull-right" style="height:100px;width:100px;"> -->
+                    <img ng-if="record.image" src="/static/uploads/{$record.image$}"  class="img-rounded pull-right" style="height:300px;width:300px;">
+                    </div>
                 </td>
             </tr>
         </tbody>

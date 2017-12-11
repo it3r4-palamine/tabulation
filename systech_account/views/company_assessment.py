@@ -50,6 +50,7 @@ def create(request):
 		# postdata['transaction_type'] = postdata['transaction_type']['id']
 		postdata['company'] = postdata['company']
 		postdata['consultant'] = postdata['consultant']['id']
+		postdata['company_rename'] = postdata['company_rename']['id']
 
 		term = "Transaction Type"
 		terms = get_display_terms(request)
@@ -111,18 +112,15 @@ def check_reference_no(request):
 		data = req_data(request,True)
 		instance = Company_assessment.objects.filter(is_active=True,company=data['company']).last()
 		if not instance:
-			last_char = "000001"
+			ref_no = "000001"
 		else:
 			ref_no = instance.reference_no
-			last_char = ref_no[-1:]
-			if last_char.isdigit():
-				last_char = str(int(last_char) + 1)
-				if len(last_char) == 1:
-					last_char = ref_no[:-1] + last_char
-				else:
-					last_char = ref_no[:-2] + last_char
-			else:
-				last_char += " - 1"
-		return success(last_char)
+
+		ref_no_len = len(instance.reference_no)
+
+
+		ref_no = str(int(ref_no) + 1)
+		ref_no = ref_no.zfill(ref_no_len)
+		return success(ref_no)
 	except Exception as e:
 		return HttpResponse(e,status=400)

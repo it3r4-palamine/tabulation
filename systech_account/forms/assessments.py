@@ -45,4 +45,14 @@ class Generated_assessment_recommendation_form(forms.ModelForm):
 class Related_question_form(forms.ModelForm):
 	class Meta:
 		model  = Related_question
-		fields = ('related_questions','is_active','is_import')
+		fields = ('related_questions','is_active','is_import','company')
+
+class Assessment_score_form(forms.ModelForm):
+	class Meta:
+		model  = Assessment_score
+		fields = ('transaction_type','is_active','company_assessment','score') 
+
+class Assessment_session_form(forms.ModelForm):
+	class Meta:
+		model  = Assessment_session
+		fields = ('company_assessment','date','time_start','time_end')

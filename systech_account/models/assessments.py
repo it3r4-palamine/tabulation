@@ -1,6 +1,6 @@
 from django.db import models
 from ..models.multiple_choice import *
-from ..models.company_assessment import *
+# from ..models.company_assessment import *
 from django.contrib.postgres.fields import ArrayField
 
 class Assessment_question(models.Model):
@@ -65,14 +65,14 @@ class Assessment_question(models.Model):
 		if self.is_general:
 			transaction_types = []
 			for transaction_type_id in self.transaction_types:
-				try:
-					transaction_type = Transaction_type.objects.get(id=transaction_type_id, is_active=True)
-				except Transaction_type.DoesNotExist:
-					continue
+				# try:
+				# 	transaction_type = Transaction_type.objects.get(id=transaction_type_id, is_active=True)
+				# except Transaction_type.DoesNotExist:
+				# 	continue
 
-				transaction_type = transaction_type.id if forAPI else transaction_type.get_dict()
-
-				transaction_types.append(transaction_type)
+				# transaction_type = transaction_type.id if forAPI else transaction_type.get_dict()
+				# print(transaction_type)
+				transaction_types.append(transaction_type_id)
 			assessment_question['transaction_types'] = transaction_types
 		else:
 			assessment_question["transaction_type"] = self.transaction_type.id if forAPI else self.transaction_type.get_dict() if self.transaction_type else None
@@ -95,11 +95,11 @@ class Assessment_effect(models.Model):
 		app_label = "systech_account"
 		db_table  = "assessment_effects"
 
-	def get_dict(self):
+	def get_dict(self,forAPI=False):
 		return {
 			"id" : self.pk,
 			"value" : self.value,
-			"question" : self.question.get_dict(),
+			"question" : self.question.pk if forAPI else self.question.get_dict(),
 			"is_active" : self.is_active,
 			"is_import" : self.is_import,
 		}
@@ -195,11 +195,11 @@ class Assessment_finding(models.Model):
 		app_label = "systech_account"
 		db_table  = "assessment_findings"
 
-	def get_dict(self):
+	def get_dict(self,forAPI=False):
 		return {
 			"id" : self.pk,
 			"value" : self.value,
-			"question" : self.question.get_dict(),
+			"question" : self.question.pk if forAPI else self.question.get_dict(),
 			"is_active" : self.is_active,
 			"is_import" : self.is_import,
 		}
@@ -217,6 +217,7 @@ class Related_question(models.Model):
 	related_questions = ArrayField(models.IntegerField("Assessment_question"),blank=True,null=True)
 	is_active 		  = models.BooleanField(default=1)
 	is_import 		  = models.BooleanField(default=0)
+	company 		  = models.ForeignKey("Company",blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -241,3 +242,23 @@ class Related_question(models.Model):
 		related_questions['related_questions'] = questions
 
 		return related_questions 
+
+class Assessment_score(models.Model):
+	company_assessment = models.ForeignKey("Company_assessment")
+	transaction_type   = models.ForeignKey("Transaction_type")
+	is_active 		   = models.BooleanField(default=1)
+	score 			   = models.IntegerField(blank=True, null=True)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "assessment_scores"
+
+class Assessment_session(models.Model):
+	company_assessment = models.ForeignKey("Company_assessment")
+	date 			   = models.DateField(blank=True,null=True)
+	time_start		   = models.TimeField(auto_now=False, auto_now_add=False, blank = True, null = True)
+	time_end		   = models.TimeField(auto_now=False, auto_now_add=False, blank = True, null = True)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "assessment_sessions"

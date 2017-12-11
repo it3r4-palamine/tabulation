@@ -29,9 +29,11 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 	$scope.get_intelex_students = function()
 	{
 		me.post_generic("/users/get_intelex_students/")
-			.success(function(data)
-			{
-			})
+		.success(function(data)
+		{
+			Notification.success(data)
+			$scope.read()
+		})
 
 	}
 
@@ -115,7 +117,7 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
     }
 
 	$scope.read();
-	$scope.read_transaction_types();
+	// $scope.read_transaction_types();
 	$scope.read_user_types();
 	me.main_loader = function(){$scope.read();}
 	CommonRead.get_display_terms($scope)

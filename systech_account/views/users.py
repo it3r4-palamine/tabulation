@@ -53,7 +53,7 @@ def read(request):
 
 def create(request):
 	try: 
-		postdata = post_data(request)
+		postdata = req_data(request,True)
 		if 'user_type' not in postdata:
 			return error("User Type is required.")
 		postdata['user_type'] = postdata['user_type']['id']
@@ -75,10 +75,9 @@ def delete(request,id = None):
 	try:
 		try:
 			record = User.objects.get(pk=id)
-			record.email = record.email + str(datetime.now())
-			record.is_active = False
+			record.delete()
 			record.save()
-			return success()
+			return success("Successfully deleted.")
 		except User.DoesNotExist:
 			raise_error("User doesn't exist.")
 	except Exception as e:
@@ -128,7 +127,7 @@ def change_password(request):
 
 def get_intelex_students(request):
 	try:
-
+		datus = req_data(request,True)
 		url = 'http://192.168.1.69:8000/api/read_enrolled_students/'
 		headers = {'content-type': 'application/json'}
 		data = {"complete_detail": True}
@@ -138,6 +137,7 @@ def get_intelex_students(request):
 		records = result.json()
 
 		for record in records["records"]:
+			print record
 			student = record.pop("student", None)
 			first_name = student.get("first_name", "student_")
 			last_name = student.get("last_name", "code")
@@ -145,27 +145,38 @@ def get_intelex_students(request):
 			username = username.replace(" ", "")
 			
 
-			student["email"] = username + "@gmail.com"
-			student["full_name"] = student["full_name"]
-			student["password1"] = username
-			student["password2"] = username
-			student["is_intelex"] = True
-			student["is_active"] = True
-			student["session_credits"] = timedelta(milliseconds=record["session_credits"])
-			student["company"] = get_current_company(request)
+			email_add = username + "@gmail.com"
 
-			print student
-
-			user_type = StudentUserForm(student)
-
-			if user_type.is_valid():
-				print "test"
-				user_type.save()
+			if User.objects.filter(email__iexact=email_add,is_active=True).exists():
+				continue
 			else:
-				print user_type
+				student_user = User_type.objects.filter(is_active=True,company=datus['company'],name="Student").first()
+				if student_user:
+					student['user_type'] = student_user.pk
+				else:
+					return error("No Student user type. Please go to User Types Settings.")
+				student["email"] = email_add
+				student["fullname"] = student["full_name"]
+				student["user_intelex_id"] = record["student_id"]
+				student["password1"] = username
+				student["password2"] = username
+				student["is_intelex"] = True
+				student["is_active"] = True
+				student["session_credits"] = timedelta(milliseconds=record["session_credits"])
+				student["company"] = get_current_company(request)
+
+				print student
+
+				user_type = StudentUserForm(student)
+
+				if user_type.is_valid():
+					print "test"
+					user_type.save()
+				else:
+					print user_type
 
 
-		return HttpResponse("Success", status=200)
+		return HttpResponse("Successfully saved.", status=200)
 	except Exception as e:
 		print e
 		return HttpResponse(e,status=400)

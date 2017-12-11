@@ -57,7 +57,7 @@ def read_assessments(request):
 							row['transaction_type'] = types
 
 				try:
-					answers_chosen = Assessment_answer.objects.get(company_assessment=data['id'],question=question.pk)
+					answers_chosen = Assessment_answer.objects.get(company_assessment=data['id'],question=question.pk,is_deleted=False)
 				except Assessment_answer.DoesNotExist:
 					continue
 				wrong_answer = Decimal(0)

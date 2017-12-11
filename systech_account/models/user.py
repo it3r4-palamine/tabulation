@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from ..models.transaction_types import *
 from ..models.company import *
 
+import time
+
 class User_Manager(BaseUserManager):
 	def create_user(self, email, password=None, **extra_fields):
 		if not email:
@@ -35,6 +37,7 @@ class User(AbstractBaseUser):
 	is_intelex       = models.BooleanField(default=False)
 	session_credits  = models.DurationField(blank=True, null=True)
 	session_end_date = models.DateTimeField(blank=True, null=True)
+	user_intelex_id	 = models.IntegerField(blank=True,null=True)
 
 	USERNAME_FIELD = 'email'
 
@@ -48,6 +51,13 @@ class User(AbstractBaseUser):
 			"fullname" : self.fullname,
 		}
 
+	def delete(self):
+		self.is_active = False
+		self.email += ("__"+str(time.time()))
+
+		self.save()
+
+		return True
 
 class User_type(models.Model):
 	name      = models.CharField(max_length=200,blank=True,null=True)

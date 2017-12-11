@@ -26,9 +26,18 @@
         <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
             {% include "common/loader.html" %} 
             <div class="row">
-                <div class="col-sm-12 pull-right">
-                    <button class="btn btn-primary pull-right" ng-click="create_dialog()">CREATE</button>
-                    <button class="btn btn-primary pull-right" ng-click="get_intelex_students()">Get Intelex Students</button>
+                <div class="col-sm-12">
+                    <div class="btn-group pull-right">
+                        <button class="btn btn-primary" ng-click="create_dialog()">CREATE</button>
+                        <div class="btn-group pull-right" uib-dropdown>
+                            <button type="button" class="btn btn-outline btn-primary" uib-dropdown-toggle>
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()">
+                                <li><a href="#" ng-click="get_intelex_students()"><i class="fa fa-upload"></i> Get Intelex Students</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="clearfix"></div>
                 <hr>

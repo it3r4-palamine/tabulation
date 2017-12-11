@@ -75,4 +75,5 @@ app.controller('companyCtrl', function($scope, $http, $timeout, $element, $contr
 	$scope.read();
 	me.main_loader = function(){$scope.read();}
 	$scope.read_transaction_types();
+	CommonRead.get_display_terms($scope);
 });

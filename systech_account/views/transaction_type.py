@@ -4,6 +4,7 @@ from ..models.assessments import *
 from ..models.company import *
 from ..views.common import *
 import sys, traceback, os
+import requests
 
 
 def transaction_type(request):
@@ -19,13 +20,18 @@ def read(request):
 		filters['is_active'] = True
 		filters['company'] = data['company']
 		name_search = data.pop("name","")
-		# has_company = data.get("company",None)
-		# if has_company:
-		# 	try:
-		# 		company = Company.objects.get(id=has_company)
-		# 		filters['id__in'] = company.transaction_type
-		# 	except Company.DoesNotExist:
-		# 		raise_error("Company doesn't exist.")
+		has_company = data.get("company_rename",None)
+		c_term = "Company"
+		terms = get_display_terms(request)
+		if terms:
+			if terms.company_rename:
+				c_term = terms.company_rename
+		if has_company:
+			try:
+				company = Company_rename.objects.get(id=has_company)
+				filters['id__in'] = company.transaction_type
+			except Company_rename.DoesNotExist:
+				raise_error("%s doesn't exist."%(c_term))
 
 		has_ids = data.get('ids',None)
 		if has_ids:
@@ -37,6 +43,7 @@ def read(request):
 
 		if name_search:
 			filters['name__icontains'] = name_search
+			# filters['transaction_code__icontains'] = name_search
 
 		sort_by = generate_sorting(data.pop("sort",None))
 
@@ -118,4 +125,40 @@ def delete(request,id = None):
 		return HttpResponse(e, status = 400)
 
 
+def get_intelex_exercises(request):
 
+	try:
+		datus = req_data(request,True)
+		url = 'http://192.168.1.69:8000/api/read_exercises/'
+		headers = {'content-type': 'application/json'}
+		data = {"complete_detail": True}
+
+		result = requests.post(url, data=json.dumps(data), headers=headers)
+		result.encoding = 'ISO-8859-1'
+		records = result.json()
+
+		for record in records["records"]:
+			print(record)
+			if Transaction_type.objects.filter(set_no=record['set_no'],transaction_code__iexact=record['exercise_code'],name__iexact=record['exercise_name'],exercise_id=record['id'],is_intelex=True,is_active=True,company=datus['company']).exists():
+				continue
+			else:
+				datus['transaction_code'] = record['exercise_code']
+				datus['name'] = record['exercise_name']
+				datus['exercise_id'] = record['id']
+				datus['is_active'] = True
+				datus['is_intelex'] = True
+				datus['set_no'] = record['set_no']
+				datus['total_items'] = record['total_items']
+				datus['company'] = datus['company']
+
+				transaction_type_form = Transaction_type_form(datus)
+
+				if(transaction_type_form.is_valid()):
+					transaction_type_form.save()
+				else:
+					return HttpResponse(transaction_type_form.errors, status = 400)
+		return HttpResponse("Successfully saved.", status = 200)
+		# return HttpResponse("Success", status=200)
+	except Exception as e:
+		print e
+		return HttpResponse(e,status=400)

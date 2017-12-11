@@ -1,7 +1,7 @@
 <div class="wrapper wrapper-content animated fadeIn modalibox">
     <div class="ibox">
         <div class="ibox-title ibox_title_reset">
-            <h3>Company</h3>
+            <h3><span ng-if="!display_terms[0].company_rename" ng-cloak="">Company</span><span ng-if="display_terms[0].company_rename" ng-cloak="">{$ display_terms[0].company_rename $}</span></h3>
         </div>
 
         <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
@@ -14,9 +14,9 @@
                     </div>
                     <div class="col-sm-12">
                         <br>
-                        <label>Transaction Type</label>
+                        <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label>
                         <ui-select ng-model="record.transaction_types" multiple>
-                            <ui-select-match placeholder="Select...">{$ $item.name $}</ui-select-match>
+                            <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}"><span ng-if="transaction_types[0]">{$ $item.name $}</span></ui-select-match>
                             <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">
                                 <div ng-bind-html="transaction_type.name | highlight: $select.search"></div>
                             </ui-select-choices>

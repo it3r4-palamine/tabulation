@@ -31,7 +31,7 @@ app.controller('transaction_typesCtrl', function($scope, $http, $timeout, $eleme
 	}
 
 	$scope.read = function(){
-		me.sort.sort_by = "name"
+		// me.sort.sort_by = "name"
 		var data = {
 			name : $scope.filter.name,
 			pagination : me.pagination,
@@ -60,7 +60,7 @@ app.controller('transaction_typesCtrl', function($scope, $http, $timeout, $eleme
 		    cancelButtonText: "Cancel",
 		    closeOnConfirm: true
 		},function(){
-			$http.post("/transaction_types/delete/"+record.id)
+			me.post_generic("/transaction_types/delete/"+record.id,"","main")
 			.success(function(response){
 				Notification.success(response);
 				$scope.read();
@@ -68,6 +68,17 @@ app.controller('transaction_typesCtrl', function($scope, $http, $timeout, $eleme
 				Notification.error(err)
 			})
 		})
+	}
+
+	$scope.get_intelex_exercises = function()
+	{
+		me.post_generic("/transaction_types/get_intelex_exercises/","","main")
+		.success(function(data)
+		{
+			Notification.success(data)
+			$scope.read()
+		})
+
 	}
 
 	$scope.read();

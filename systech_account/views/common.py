@@ -202,6 +202,12 @@ def str_to_model(model_str):
 	model = apps.get_model(app_label='systech_account', model_name=model_str)
 	return model
 
+def str2model(model_name,get_instance = False,filters = {}):
+	model = apps.get_model(app_label='systech_account', model_name=model_name)
+	if get_instance:
+		model = model.objects.get(**filters)
+	return model
+
 def generate_sorting(sort_dict = None,replace_id = None):
 	if not sort_dict:
 		sort_dict = {"sort_by" : "id","reverse" : False}

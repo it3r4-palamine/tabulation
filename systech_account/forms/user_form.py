@@ -41,7 +41,7 @@ class StudentUserForm(UserCreationForm):
 
 	class Meta:
 		model  = User
-		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","is_intelex","session_credits","session_end_date")
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","is_intelex","session_credits","session_end_date","user_intelex_id")
 
 
 	def clean(self):

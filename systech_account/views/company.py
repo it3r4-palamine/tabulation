@@ -17,6 +17,7 @@ def read(request):
 		data = req_data(request,True)
 		filters = {}
 		filters['is_active'] = True
+		filters['company'] = data['company']
 		# has_transaction = data.get("transaction_type",None)
 		# if has_transaction:
 		# 	filters['transaction_type'] = has_transaction
@@ -25,14 +26,14 @@ def read(request):
 
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
-		records = Company.objects.filter(**filters).order_by("id")
+		records = Company_rename.objects.filter(**filters).order_by("id")
 		results = {'data':[]}
 		results['total_records'] = records.count()
 
 		if pagination:
 			results.update(generate_pagination(pagination,records))
 			records = records[results['starting']:results['ending']]
-		data = []
+		datus = []
 		for record in records:
 			company_transaction_type = []
 			row = record.get_dict()
@@ -40,23 +41,32 @@ def read(request):
 			if record.transaction_type:
 				for t_types in record.transaction_type:
 					try:
-						t_type = Transaction_type.objects.get(id=t_types,is_active=True)
+						t_type = Transaction_type.objects.get(id=t_types,is_active=True,company=data['company'])
 					except Transaction_type.DoesNotExist:
 						continue
 					transaction_type_dict = {'id':t_type.pk,'name':t_type.name,'is_active':t_type.is_active}
 					company_transaction_type.append(transaction_type_dict)
 			row['transaction_type'] = company_transaction_type
-			data.append(row)
-		results['data'] = data
+			datus.append(row)
+		results['data'] = datus
 		return success_list(results,False)
 	except Exception as e:
 		return HttpResponse(e, status = 400)
 
 def create(request):
 	try: 
-		postdata = post_data(request)
+		postdata = req_data(request,True)
+		t_term = "Transaction Type"
+		c_term = "Company"
+		terms = get_display_terms(request)
+		if terms:
+			if terms.transaction_types:
+				t_term = terms.transaction_types
+
+			if terms.company_rename:
+				c_term = terms.company_rename
 		if 'transaction_types' not in postdata or not postdata['transaction_types']:
-			return error("Transaction Type is required.")
+			return error("%s is required."%(t_term))
 
 		transaction_types = postdata.pop('transaction_types',[])
 		
@@ -66,12 +76,12 @@ def create(request):
 
 		postdata['transaction_type'] = list_to_string(company_transaction_type)
 		try:
-			instance = Company.objects.get(id=postdata.get('id',None))
-			company = Company_form(postdata, instance=instance)
-		except Company.DoesNotExist:
-			if not Company.objects.filter(name=postdata['name']).exists():
-				company = Company_form(postdata)
-			else: return error("Company already exists.")
+			instance = Company_rename.objects.get(id=postdata.get('id',None))
+			company = Company_rename_form(postdata, instance=instance)
+		except Company_rename.DoesNotExist:
+			if not Company_rename.objects.filter(name=postdata['name']).exists():
+				company = Company_rename_form(postdata)
+			else: return error("%s already exists."%(c_term))
 
 		if company.is_valid():
 			company.save()
@@ -83,15 +93,15 @@ def create(request):
 
 def delete(request,id = None):
 	try:
-		has_record = Company_assessment.objects.filter(company=id).first()
+		has_record = Company_assessment.objects.filter(company=id,is_active=True).first()
 		if has_record:
 			raise_error("This company is currently in use.")
 		try:
-			record = Company.objects.get(pk = id)
+			record = Company_rename.objects.get(pk = id)
 			record.is_active = False
 			record.save()
 			return success()
-		except Company.DoesNotExist:
+		except Company_rename.DoesNotExist:
 			raise_error("Company doesn't exist.")
 	except Exception as e:
 		return HttpResponse(e, status = 400)

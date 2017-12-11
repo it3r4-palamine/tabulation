@@ -78,16 +78,15 @@ def read(request):
 				for finding in findings:
 					finding_question = finding.get_dict()
 					possible_finding.append(finding_question)
-
 				if record.transaction_types:
 					for t_types in record.transaction_types:
 						try:
-							t_type = Transaction_type.objects.get(company=data['company'],id=t_types,is_active=True)
+							t_type = str2model("Transaction_type").objects.get(company=data['company'],id=t_types,is_active=True)
 						except Transaction_type.DoesNotExist:
 							continue
 						transaction_type_dict = {'id':t_type.pk,'name':t_type.name,'is_active':t_type.is_active}
 						general_transaction_types.append(transaction_type_dict)
-				
+
 				row['transaction_types'] = general_transaction_types
 				row['choices'] = answers
 				row['effects'] = possible_effect
@@ -103,15 +102,16 @@ def read(request):
 
 def generate_code(request):
 	try:
-		data = req_data(request)
+		data = req_data(request,True)
 		new_code = True
 		if data['is_general']:
 			filters = {'is_general' : True}
 			transaction_code = "GENE"
 		else:
-			filters = {'is_general' : False,"transaction_type__id" : data['transaction_type']['id']}
+			# filters = {'is_general' : False,"transaction_type__id" : data['transaction_type']['id'],"transaction_type__transaction_code" : data['transaction_type']['transaction_code']}
+			filters = {'is_general' : False,"transaction_type__transaction_code" : data['transaction_type']['transaction_code']}
 			try:
-				transaction_code = Transaction_type.objects.get(transaction_code=data['transaction_type']['transaction_code']).transaction_code
+				transaction_code = str2model("Transaction_type").objects.get(exercise_id=data['transaction_type']['exercise_id'],set_no=data['transaction_type']['set_no'],is_active=True,company=data['company'],transaction_code=data['transaction_type']['transaction_code']).transaction_code
 			except Exception as e:
 				return error("No code.")
 
@@ -134,19 +134,20 @@ def generate_code(request):
 			if not questions:
 				last_code = transaction_code + "000001"
 			else:
-				if len(questions.code) != 10:
-					last_code = transaction_code + "000001"
-				else:
-					code = questions.code
-					last_code = code[-1:]
-					if last_code.isdigit():
-						last_code = str(int(last_code) + 1)
-						if len(last_code) == 1:
-							last_code = code[:-1] + last_code
-						else:
-							last_code = code[:-2] + last_code
+				# if len(questions.code) != 10:
+				# 	cprint("QQQQ")
+				# 	last_code = transaction_code + "000001"
+				# else:
+				code = questions.code
+				last_code = code[-1:]
+				if last_code.isdigit():
+					last_code = str(int(last_code) + 1)
+					if len(last_code) == 1:
+						last_code = code[:-1] + last_code
 					else:
-						last_code += " - 1"
+						last_code = code[:-2] + last_code
+				else:
+					last_code += " - 1"
 			
 		return success(last_code)
 
@@ -213,7 +214,14 @@ def create(request,results=None):
 			instance = Assessment_question.objects.get(id=postdata.get('id',None))
 			assessment_question = Assessment_question_form(postdata,instance=instance)
 		except Assessment_question.DoesNotExist:
-			if Assessment_question.objects.filter(company=postdata['company'],code=postdata['code'],is_active=True).exists():
+			create_filters = {
+				'company' : postdata['company'],
+				'code' : postdata['code'],
+				'is_active' : True
+			}
+			if not postdata['is_general']:
+				create_filters['transaction_type'] = postdata['transaction_type']
+			if Assessment_question.objects.filter(**create_filters).exists():
 				return error("Code already exists.")
 			assessment_question = Assessment_question_form(postdata)
 			is_edit = False
@@ -236,7 +244,7 @@ def create(request,results=None):
 
 			if not is_edit and t_types:
 				for t_typess in t_types:
-					company_assessments = Company_assessment.objects.filter(Q(company=postdata['company'],transaction_type__overlap=[postdata['transaction_type']],is_active=True,is_generated=False) | Q(company=postdata['company'],transaction_type__contains=[t_typess],is_active=True,is_generated=False))
+					company_assessments = str2model("Company_assessment").objects.filter(Q(company=postdata['company'],transaction_type__overlap=[postdata['transaction_type']],is_active=True,is_generated=False) | Q(company=postdata['company'],transaction_type__contains=[t_typess],is_active=True,is_generated=False))
 					for assessments in company_assessments:
 						no_answer = Decimal(0)
 						for company_assessments_ttypes in assessments.transaction_type:
@@ -254,7 +262,7 @@ def create(request,results=None):
 			if not results:
 				for choice in choices:
 					choice['question'] = assessment_save.pk
-					choice['is_active'] = True if postdata['is_multiple'] else False
+					choice['is_active'] = True
 					choice['company'] = postdata['company']
 					try:
 						instance_choice = Choice.objects.get(id=choice.get('id',None))
@@ -375,11 +383,12 @@ def related_questions(request):
 
 def read_related_questions(request):
 	try:
-		data = req_data(request)
+		data = req_data(request,True)
 		pagination = None
 
 		filters = {}
 		filters['is_active'] = True
+		filters['company'] = data['company']
 
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
@@ -408,7 +417,7 @@ def related_questions_create_dialog(request):
 
 def related_questions_create(request):
 	try:
-		data = req_data(request)
+		data = req_data(request,True)
 		related_questions = data.pop('related_questions',[])
 
 		related_questionsArr = []

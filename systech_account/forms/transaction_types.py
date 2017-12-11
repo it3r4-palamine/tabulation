@@ -5,7 +5,7 @@ from django.db.models import Q
 class Transaction_type_form(forms.ModelForm):
 	class Meta:
 		model  = Transaction_type
-		fields = ('name','transaction_code','is_active','company')
+		fields = ('name','transaction_code','is_active','company','exercise_id','set_no','total_items','is_intelex')
 
 
 	def clean(self,):
@@ -17,6 +17,7 @@ class Transaction_type_form(forms.ModelForm):
 		if instance.exists():
 			instance = instance.first()
 			if instance.pk != self.instance.pk and raw_data["transaction_code"]:
-				raise ValueError(raw_data["transaction_code"] + " transaction code already exist.")
+				if not raw_data['is_intelex']:
+					raise ValueError(raw_data["transaction_code"] + " transaction code already exist.")
 
 		return raw_data

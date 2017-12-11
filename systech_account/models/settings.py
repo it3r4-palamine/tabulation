@@ -4,6 +4,7 @@ class Display_setting(models.Model):
 	company_assessments = models.CharField(max_length=200,blank=True,null=True)
 	transaction_types 	= models.CharField(max_length=200,blank=True,null=True)
 	questions 			= models.CharField(max_length=200,blank=True,null=True)
+	company_rename		= models.CharField(max_length=200,blank=True,null=True)
 	company 			= models.ForeignKey("Company")
 
 	class Meta:
@@ -17,4 +18,5 @@ class Display_setting(models.Model):
 			"company_assessments" : self.company_assessments,
 			"transaction_types" : self.transaction_types,
 			"questions" : self.questions,
+			"company_rename" : self.company_rename,
 		}

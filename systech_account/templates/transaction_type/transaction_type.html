@@ -34,9 +34,19 @@
                     <!-- <label>&nbsp;</label><br> -->
                     <button class="btn btn-default" ng-click="read()"><i class="fa fa-search"></i> SEARCH</button><br>
                 </div>
-                <div class="col-sm-6 pull-right">
+                <div class="col-sm-6">
                     <!-- <label>&nbsp;</label><br> -->
-                    <button class="btn btn-primary pull-right" ng-click="create_dialog()">CREATE</button>
+                    <div class="btn-group pull-right">
+                        <button class="btn btn-primary" ng-click="create_dialog()">CREATE</button>
+                        <div class="btn-group pull-right" uib-dropdown>
+                            <button type="button" class="btn btn-outline btn-primary" uib-dropdown-toggle>
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()">
+                                <li><a href="#" ng-click="get_intelex_exercises()"><i class="fa fa-upload"></i> Get Intelex Exercises</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="clearfix"></div>
                 <hr>
@@ -45,12 +55,14 @@
                         <thead>
                             <th custom-sort order="name">Name</th>
                             <th custom-sort order="transaction_code">Code</th>
+                            <th>Set No.</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
                             <tr ng-repeat="record in records" class="hand_cursor">
                                 <td ng-click="load_to_edit(record)">{$ record.name $}</td>
                                 <td ng-click="load_to_edit(record)">{$ record.transaction_code $}</td>
+                                <td ng-click="load_to_edit(record)">{$ record.set_no $}</td>
                                 <td><button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button></td>
                             </tr>
                         </tbody>
