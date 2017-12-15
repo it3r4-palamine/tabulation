@@ -35,6 +35,7 @@ urlpatterns = [
 	url(r'^company/create_dialog/$', company.create_dialog),
 	url(r'^company/create/$', company.create),
 	url(r'^company/delete/(?P<id>[0-9]+)$', company.delete),
+	url(r'^company/get_intelex_subjects/$', company.get_intelex_subjects),
 
 	url(r'^company_assessment/$', company_assessment.company_assessment, name='company_assessment'),
 	url(r'^company_assessment/read/$', company_assessment.read),
@@ -61,6 +62,7 @@ urlpatterns = [
 	url(r'^users/change_pass_dialog/$', users.change_pass_dialog),
 	url(r'^users/change_password/$', users.change_password),
 	url(r'^users/get_intelex_students/$', users.get_intelex_students),
+	url(r'^users/read_user_credits/$', users.read_user_credits),
 	
 	url(r'^recommendations/$', recommendations.recommendations, name='recommendations'),
 	url(r'^recommendations/read/$', recommendations.read),

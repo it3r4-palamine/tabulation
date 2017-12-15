@@ -12,9 +12,9 @@
                         <label class="required">Name</label>
                         <input type="text" ng-model="record.name" name="name" required class="form-control">
                     </div>
-                    <div class="col-sm-12">
+                    <div class="col-sm-12" ng-if="!record.id">
                         <br>
-                        <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label>
+                        <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
                         <ui-select ng-model="record.transaction_types" multiple>
                             <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}"><span ng-if="transaction_types[0]">{$ $item.name $}</span></ui-select-match>
                             <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">
@@ -25,6 +25,46 @@
                     <div class="col-sm-12" ng-hide="true">
                         <br>
                         <input type="checkbox" id="is_active" name="is_active" ng-model="record.is_active"><label for="is_active">Active</label>
+                    </div>
+                    <div class="col-sm-12" ng-if="record.id">
+                        <br>
+                        <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!old_subject_transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
+                        <div class="table-responsive">
+                            <ui-select ng-model="record.new_transaction_types" multiple>
+                                <ui-select-match placeholder="{$ old_subject_transaction_types[0] ? 'Select...' : 'Please wait...' $}"><span ng-if="old_subject_transaction_types[0]">{$ $item.name $}</span></ui-select-match>
+                                <ui-select-choices repeat="transaction_type in old_subject_transaction_types | filter: $select.search | limitTo:50">
+                                    <div ng-bind-html="transaction_type.name | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select><br><br>
+                            <div class="clearfix"></div>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <th>Exercise Code</th>
+                                    <th>Name</th>
+                                    <th>Set No.</th>
+                                    <th>Action</th>
+                                </thead>
+                                <tbody>
+                                    <tr ng-model="record.transaction_types" ng-repeat="transaction_type in subject_transaction_types" class="hand_cursor">
+                                        <td>{$ transaction_type.code $}</td>
+                                        <td>{$ transaction_type.name $}</td>
+                                        <td>{$ transaction_type.set_no $}</td>
+                                        <td>
+                                            <a class="btn-sm btn-white" ng-click="remove_transaction_type(transaction_type)">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="panel-footer">
+                                <span>Total records : {$t_types_total_records$}</span>
+                                <div class=" pull-right">
+                                    <ul uib-pagination total-items="t_types_total_records" ng-click="changePage(currentPage)" items-per-page="itemsPerPage" ng-model="currentPage" max-size="4" boundary-link-numbers="true" rotate="false" style="margin: 0px;">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

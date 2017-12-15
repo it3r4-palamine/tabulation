@@ -4,6 +4,7 @@ class Transaction_type(models.Model):
 	name      		 = models.CharField(max_length=200,blank=True,null=True)
 	transaction_code = models.CharField(max_length=200,blank=True,null=True)
 	exercise_id 	 = models.IntegerField(blank=True, null=True)
+	program_id  	 = models.IntegerField(blank=True, null=True)
 	set_no 			 = models.IntegerField(blank=True, null=True)
 	total_items 	 = models.IntegerField(blank=True, null=True)
 	is_active 		 = models.BooleanField(default=1)

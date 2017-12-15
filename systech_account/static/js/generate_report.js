@@ -29,6 +29,7 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 		me.post_generic(url,data,'main')
 		.success(function(response){
 			$scope.records = response.data;
+			$scope.scores = response.scores;
 		}).error(function(err){
 			if(err == "Assessment_answer matching query does not exist."){
 				Notification.error("Some answers are not yet sycned.")

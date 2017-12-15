@@ -47,6 +47,10 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 		me.post_generic("/company_assessment/read/",{'pagination':me.pagination},"main")
 		.success(function(response){
 			$scope.records = response.data;
+			for(var record in $scope.records){
+				$scope.records[record]['credits_left_seconds'] = convertSecondstoHours($scope.records[record].credits_left);
+				$scope.records[record]['session_credits_seconds'] = convertSecondstoHours($scope.records[record].session_credits);
+			}
 			me.starting = response.starting;
 			me.ending = response.data.length;
 			me.pagination.limit_options = angular.copy(me.pagination.limit_options_orig);
@@ -55,6 +59,18 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 			me.pagination["total_pages"] = response.total_pages;
 		})
 	};
+
+	convertSecondstoHours = function(d){
+			d = Number(d);
+		    var h = Math.floor(d / 3600);
+		    var m = Math.floor(d % 3600 / 60);
+		    var s = Math.floor(d % 3600 % 60);
+
+		    var hDisplay = h > 0 ? h + (h == 1 ? " hour" : " hours, ") : "";
+		    var mDisplay = m > 0 ? m + (m == 1 ? " minute" : " minutes, ") : "";
+		    var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+		    return "Time left: " + hDisplay + mDisplay + sDisplay; 
+	}
 
 	$scope.minimum_date = function(){
 		$scope.minimum_date_to = moment(new Date($scope.record.date_from)).format('YYYY-MM-DD');
@@ -108,6 +124,19 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
     $scope.select_transaction_type = function(record){
     	$scope.record.transaction_types = {}
 		$scope.read_transaction_types(record);
+    }
+
+    $scope.select_user = function(record){
+    	$scope.read_user_credits(record);
+    }
+
+    $scope.read_user_credits = function(record){
+    	record.date_from = moment(new Date(record.date_from)).format('YYYY-MM-DD');
+    	record.date_to = moment(new Date(record.date_to)).format('YYYY-MM-DD');
+    	me.post_generic("/users/read_user_credits/",record,"dialog")
+    	.success(function(response){
+    		$scope.record.session_credits = response.data[0].session_credits
+    	})
     }
 
 	$scope.read();

@@ -40,10 +40,17 @@ def download_dialog(request):
 def read_assessments(request):
 	try:
 		data = req_data(request)
-		results = {'data':[]}
+		results = {'data':[],'scores':[]}
 		transaction_types = Transaction_type.objects.filter(id__in=data['transaction_type'])
 		datus = []
+		scoresArr = []
+
 		for transaction_type in transaction_types:
+			scores = Assessment_score.objects.filter(transaction_type=transaction_type.pk,company_assessment=data['id'])
+			for score in scores:
+				score_list = score.get_dict()
+				scoresArr.append(score_list)
+
 			questions = Assessment_question.objects.filter(Q(is_active=True,transaction_type=transaction_type.pk) | Q(is_active=True,transaction_types__overlap=[transaction_type.pk])).order_by('transaction_type__name')
 			all_findings = []
 
@@ -131,6 +138,7 @@ def read_assessments(request):
 						if wrong_answer > 0:
 							all_findings.append(all_finding.value)
 
+		results['scores'] = scoresArr 
 		results['data'] = datus
 		return success_list(results,False)
 	except Exception as e:

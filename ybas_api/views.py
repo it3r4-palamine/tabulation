@@ -32,8 +32,8 @@ class GetData(APIView):
 		}
 		transactionTypeIdList = []
 		questionList = []
-		# findingsList = []
-		# effectsList = []
+		findingsList = []
+		effectsList = []
 		answerList = []
 		generalQuestionList = []
 		relatedQuestionList = []
@@ -135,8 +135,8 @@ class GetData(APIView):
 				relatedQuestionList.append(row)
 
 		response["questionList"] = questionList
-		response["effectsList"] = effectsList
-		response["findingsList"] = findingsList
+		# response["effectsList"] = effectsList
+		# response["findingsList"] = findingsList
 		response["generalQuestionList"] = generalQuestionList
 		response["relatedQuestionList"] = relatedQuestionList
 		response["answerList"] = answerList
@@ -167,6 +167,8 @@ class SyncAssessments(APIView):
 			# if len(questions) == len(assessment["answerArr"]):
 			# 	assessmentInstance.is_complete = True
 			assessmentInstance.is_complete = assessment['is_complete']
+			if assessment['credits_left']:
+				assessmentInstance.credits_left = timedelta(seconds=assessment['credits_left'])
 			
 			assessmentInstance.save()
 

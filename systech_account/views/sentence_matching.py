@@ -48,8 +48,12 @@ def is_ci_partial_set_token_stopword_lemma_match(a, b):
 
 
 def sentence_matching(target_sentence,model,pk,model_pk=None):
-	filters = {"question" : pk,"is_active" : True}
-	model = str_to_model(model)
+    filters = {"is_active" : True}
+
+    if model != "Assessment_recommendation":
+        filters["question"] = pk
+
+	model = str2model(model)
 
 	if model_pk:
 		sentences = model.objects.filter(**filters).exclude(id=model_pk).values_list('value',flat=True)

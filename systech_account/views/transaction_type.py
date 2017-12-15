@@ -47,7 +47,10 @@ def read(request):
 
 		sort_by = generate_sorting(data.pop("sort",None))
 
-		records = Transaction_type.objects.filter(**filters).order_by(*sort_by)
+		if 'program_id' in data:
+			records = Transaction_type.objects.filter(**filters).exclude(id__in=data['program_id']).order_by(*sort_by)
+		else:
+			records = Transaction_type.objects.filter(**filters).order_by(*sort_by)
 		results = {'data':[]}
 		results['total_records'] = records.count()
 
@@ -145,6 +148,7 @@ def get_intelex_exercises(request):
 				datus['transaction_code'] = record['exercise_code']
 				datus['name'] = record['exercise_name']
 				datus['exercise_id'] = record['id']
+				datus['program_id'] = record['program_id']
 				datus['is_active'] = True
 				datus['is_intelex'] = True
 				datus['set_no'] = record['set_no']

@@ -34,7 +34,7 @@
                     <div class="col-sm-12">
                         <br>
                         <label>Assigned To</label>
-                        <ui-select ng-model="record.consultant">
+                        <ui-select ng-model="record.consultant" ng-change="read_user_credits(record)">
                             <ui-select-match placeholder="Select...">{$ $select.selected.fullname $}</ui-select-match>
                             <ui-select-choices repeat="consultant in consultants | filter: $select.search | limitTo:50">
                                 <span ng-bind-html="consultant.fullname | highlight: $select.search"></span> - <span ng-bind-html="consultant.user_type.name | highlight: $select.search"></span>
@@ -43,13 +43,18 @@
                     </div>
                     <div class="col-sm-12">
                         <br>
-                        <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label>
+                        <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
                         <ui-select ng-model="record.transaction_types" ng-disabled="!record.company_rename" multiple>
                             <ui-select-match ng-attr-placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $item.name $}</ui-select-match>
                             <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">
                                 <div ng-bind-html="transaction_type.name | highlight: $select.search"></div>
                             </ui-select-choices>
                         </ui-select>
+                    </div>
+                    <div class="col-sm-12">
+                        <br>
+                        <label>Session Credits</label>
+                        <input type="text" name="session_credits" ng-model="record.session_credits" class="form-control">
                     </div>
                     <div class="col-sm-12" ng-hide="true">
                         <br>

@@ -253,6 +253,13 @@ class Assessment_score(models.Model):
 		app_label = "systech_account"
 		db_table  = "assessment_scores"
 
+	def get_dict(self):
+		return {
+			'score' : self.score,
+			'transaction_type' : self.transaction_type.get_dict(),
+			'company_assessment' : self.company_assessment.get_dict(),
+		}
+
 class Assessment_session(models.Model):
 	company_assessment = models.ForeignKey("Company_assessment")
 	date 			   = models.DateField(blank=True,null=True)

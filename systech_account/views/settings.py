@@ -359,7 +359,7 @@ def import_recommendations(request):
 		if 'value' not in data:
 				return error("Recommendation is required.")
 		else:
-			result = sentence_matching(data.get('value',None),"Assessment_recommendation")
+			result = sentence_matching(data.get('value',None),"Assessment_recommendation",None)
 			if result:
 				return error("Recommendation already exists: '" + result + "'")
 

@@ -23,6 +23,8 @@ class Company_rename(models.Model):
 	is_active        = models.BooleanField(default=1)
 	transaction_type = ArrayField(models.IntegerField("Transaction_type"),blank=True,null=True)
 	company 		 = models.ForeignKey("Company",blank=True,null=True)
+	is_intelex		 = models.BooleanField(default=0)
+	program_id		 = models.IntegerField(blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -32,5 +34,6 @@ class Company_rename(models.Model):
 		return {
 			"id" : self.pk,
 			"name" : self.name,
-			"is_active" : self.is_active
+			"is_active" : self.is_active,
+			"program_id" : self.program_id,
 		}

@@ -17,6 +17,8 @@ class Company_assessment(models.Model):
 	consultant       = models.ForeignKey("User",blank=True,null=True)
 	is_generated     = models.BooleanField(default=0)
 	company_rename	 = models.ForeignKey("Company_rename",blank=True,null=True)
+	session_credits	 = models.DurationField(blank=True, null=True)
+	credits_left	 = models.DurationField(blank=True, null=True)
 
 
 	class Meta:
@@ -31,6 +33,8 @@ class Company_assessment(models.Model):
 			"is_complete": self.is_complete,
 			"date_from": self.date_from,
 			"date_to": self.date_to,
+			"session_credits": self.session_credits.total_seconds() if self.session_credits else None,
+			"credits_left": self.credits_left.total_seconds() if self.credits_left else None,
 			"consultant": self.consultant.id if forAPI else self.consultant.get_dict(),
 			# "transaction_type": [],
 		}

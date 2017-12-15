@@ -35,8 +35,6 @@ class User(AbstractBaseUser):
 	company			 = models.ForeignKey("Company",blank=True,null=True)
 	objects          = User_Manager()
 	is_intelex       = models.BooleanField(default=False)
-	session_credits  = models.DurationField(blank=True, null=True)
-	session_end_date = models.DateTimeField(blank=True, null=True)
 	user_intelex_id	 = models.IntegerField(blank=True,null=True)
 
 	USERNAME_FIELD = 'email'
@@ -70,3 +68,25 @@ class User_type(models.Model):
 
 	def get_dict(self):
 		return {"id" : self.pk,"name" : self.name,"is_active" : self.is_active}
+
+class User_credit(models.Model):
+	user 			   = models.ForeignKey("User")
+	enrollment_id 	   = models.IntegerField(blank=True, null=True)
+	session_credits    = models.DurationField(blank=True, null=True)
+	session_start_date = models.DateTimeField(blank=True, null=True)
+	session_end_date   = models.DateTimeField(blank=True, null=True)
+	program_id	 	   = models.IntegerField(blank=True, null=True)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "user_credits"
+
+	def get_dict(self):
+		return {
+			'user' : self.user.get_dict(),
+			'enrollment_id' : self.enrollment_id,
+			'session_credits' : self.session_credits.total_seconds(),
+			'session_start_date' : self.session_start_date,
+			'session_end_date' : self.session_end_date,
+			'program_id' : self.program_id,
+		}

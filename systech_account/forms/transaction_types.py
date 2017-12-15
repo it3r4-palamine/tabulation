@@ -5,7 +5,7 @@ from django.db.models import Q
 class Transaction_type_form(forms.ModelForm):
 	class Meta:
 		model  = Transaction_type
-		fields = ('name','transaction_code','is_active','company','exercise_id','set_no','total_items','is_intelex')
+		fields = ('name','transaction_code','is_active','company','exercise_id','set_no','total_items','is_intelex','program_id')
 
 
 	def clean(self,):

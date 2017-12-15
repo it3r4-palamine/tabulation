@@ -4,18 +4,28 @@ app.controller('companyCtrl', function($scope, $http, $timeout, $element, $contr
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
 	var me = this;
 	$scope.record = {}
+	$scope.subject_transaction_types = []
+	$scope.new_transaction_types = []
 	$scope.create_dialog = function(record){
 		$scope.record = {}
 		$scope.record['is_active'] = true
 		if(record){
 			$scope.record = angular.copy(record);
 			$scope.record['transaction_types'] = $scope.record.transaction_type
+			$scope.t_types_total_records = $scope.record.transaction_type.length
+			$scope.setPagingData($scope.currentPage);
+			$scope.read_subject_transaction_types($scope.record)
 		}
 		
 		me.open_dialog("/company/create_dialog/","","main")
 	}
 
 	$scope.create = function(){
+		if($scope.record.new_transaction_types){
+			for(var t_type in $scope.record.new_transaction_types){
+				$scope.record.transaction_types.push($scope.record.new_transaction_types[t_type])
+			}
+		}
 		me.post_generic("/company/create/",$scope.record,"dialog")
 		.success(function(response){
 			me.close_dialog();
@@ -43,6 +53,34 @@ app.controller('companyCtrl', function($scope, $http, $timeout, $element, $contr
 		})
 	};
 
+	$scope.currentPage = 1;
+	$scope.itemsPerPage = 10;
+	$scope.$watch("currentPage", function() {
+	    $scope.setPagingData($scope.currentPage);
+	});
+
+	$scope.changePage = function(page){
+		$scope.$watch("currentPage", function() {
+		    $scope.setPagingData(page);
+		});		
+	}
+
+	$scope.setPagingData = function(page) {
+		if($scope.record['transaction_types']) {
+		    var pagedData = $scope.record['transaction_types'].slice(
+		      (page - 1) * $scope.itemsPerPage,
+		       page * $scope.itemsPerPage
+		    );
+		    
+		    $scope.subject_transaction_types = pagedData;
+		}
+	}
+
+	$scope.remove_transaction_type = function(list){
+		$scope.record.transaction_types.splice($scope.record.transaction_types.indexOf(list), 1);
+		$scope.subject_transaction_types.splice($scope.record.transaction_types.indexOf(list), 1);
+	}
+
 	$scope.delete = function(record){
 		swal({
 		    title: "Continue",
@@ -65,10 +103,36 @@ app.controller('companyCtrl', function($scope, $http, $timeout, $element, $contr
 		})
 	}
 
+	$scope.get_intelex_subjects = function()
+	{
+		me.post_generic("/company/get_intelex_subjects/","","main")
+		.success(function(data)
+		{
+			Notification.success(data)
+			$scope.read()
+		})
+
+	}
+
 	$scope.read_transaction_types = function(){
     	me.post_generic("/transaction_types/read/","","main")
     	.success(function(response){
     		$scope.transaction_types = response.data;
+    	})
+    }
+
+    $scope.read_subject_transaction_types = function(data){
+    	transaction_typesArr = []
+    	for(var t_types in data.transaction_types){
+    		transaction_typesArr.push(data.transaction_types[t_types].id)
+    	}
+    	console.log(transaction_typesArr)
+    	var datus = {
+    		program_id: transaction_typesArr
+    	}
+    	me.post_generic("/transaction_types/read/",datus,"main")
+    	.success(function(response){
+    		$scope.old_subject_transaction_types = response.data;
     	})
     }
 

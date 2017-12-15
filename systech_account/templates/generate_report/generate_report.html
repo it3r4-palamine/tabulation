@@ -54,7 +54,12 @@
                         <div class="panel panel-default" ng-repeat="(key,transaction_type) in transaction_types">
                             <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse_{$key$}" style="cursor: pointer;">
                                 <h5 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse_{$key$}">{$ transaction_type.name $}</a>
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse_{$key$}">
+                                        {$ transaction_type.name $}
+                                        <span ng-repeat="score in scores" ng-if="score.transaction_type.id == transaction_type.id">
+                                         - SCORE: {$score.score$}
+                                        </span>
+                                    </a>
                                 </h5>
                             </div>
                             <div id="collapse_{$key$}" class="panel-collapse collapse" ng-class="{'in' : $first}">
@@ -64,13 +69,13 @@
                                         <ol type="a">
                                             <li ng-repeat="choice in record.choices" ng-class="{'wrong_answer':!choice.is_answer, 'correct_answer':choice.is_answer}">
                                                 {$ choice.value $}
-                                                <span ng-repeat="answer in record.answers" ng-if="choice.id == answer.id">
+                                                <span ng-repeat="answer in record.answers track by $index" ng-if="choice.id == answer.id">
                                                     <i class="fa fa-user"></i>
                                                 </span>
                                             </li>
                                         </ol>
                                     </span>
-                                    <span ng-if="record.choices.length <= 0">
+                                    <span ng-if="!record.is_multiple">
                                         <b>Answer: <u>{$record.answers$}</u></b> <i class="fa fa-user"></i><br><br>
                                     </span>
                                     <span ng-if="record.findings.length > 0"><b>Findings:</b><br>

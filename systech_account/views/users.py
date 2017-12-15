@@ -125,19 +125,32 @@ def change_password(request):
 	except Exception as e:
 		return HttpResponse(e,status=400)
 
+def read_user_credits(request):
+	try:
+		datus = req_data(request,True)
+		results = {'data':[]}
+		data = []
+		user_credits = User_credit.objects.filter(program_id=datus['company_rename']['program_id'],user=datus['consultant']['id'])
+		for user_credit in user_credits:
+			row = user_credit.get_dict()
+			data.append(row)
+		results['data'] = data
+		return success_list(results,False)
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
 def get_intelex_students(request):
 	try:
 		datus = req_data(request,True)
 		url = 'http://192.168.1.69:8000/api/read_enrolled_students/'
 		headers = {'content-type': 'application/json'}
 		data = {"complete_detail": True}
-
 		result = requests.post(url, data=json.dumps(data), headers=headers)
 		result.encoding = 'ISO-8859-1'
 		records = result.json()
 
 		for record in records["records"]:
-			print record
+			cprint(record)
 			student = record.pop("student", None)
 			first_name = student.get("first_name", "student_")
 			last_name = student.get("last_name", "code")
@@ -146,8 +159,32 @@ def get_intelex_students(request):
 			
 
 			email_add = username + "@gmail.com"
+			user_id = None
+			user_exists = User.objects.filter(email__iexact=email_add,is_active=True).first()
+			if user_exists:
+				user_id = user_exists.pk
 
-			if User.objects.filter(email__iexact=email_add,is_active=True).exists():
+				for credits in record['enrollments']:
+					session_credits = credits["session_credits"]
+					user_credits = {
+						'user' : user_id,
+						'enrollment_id' : credits['enrollment_id'],
+						'program_id' : credits['program_id'],
+						'session_start_date' : datetime.strptime(credits['session_start_date'], '%Y-%m-%d').date(),
+						'session_end_date' : datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
+						# 'session_credits' : credits['session_credits']
+					}
+					user_credits["session_credits"]  = timedelta(seconds=credits['session_credits'])
+					try:
+						instance = User_credit.objects.get(enrollment_id=credits['enrollment_id'])
+						user_credits_form = User_credit_form(user_credits,instance=instance)
+					except User_credit.DoesNotExist:
+						user_credits_form = User_credit_form(user_credits)
+
+					if user_credits_form.is_valid():
+						user_credits_form.save()
+					else:
+						print user_credits_form
 				continue
 			else:
 				student_user = User_type.objects.filter(is_active=True,company=datus['company'],name="Student").first()
@@ -157,12 +194,12 @@ def get_intelex_students(request):
 					return error("No Student user type. Please go to User Types Settings.")
 				student["email"] = email_add
 				student["fullname"] = student["full_name"]
-				student["user_intelex_id"] = record["student_id"]
+				student["user_intelex_id"] = student["id"]
 				student["password1"] = username
 				student["password2"] = username
 				student["is_intelex"] = True
 				student["is_active"] = True
-				student["session_credits"] = timedelta(milliseconds=record["session_credits"])
+				# student["session_credits"] = timedelta(milliseconds=record["session_credits"])
 				student["company"] = get_current_company(request)
 
 				print student
@@ -171,11 +208,31 @@ def get_intelex_students(request):
 
 				if user_type.is_valid():
 					print "test"
-					user_type.save()
+					user_account = user_type.save()
+					user_id = user_account.pk
+					for credits in record['enrollments']:
+						session_credits = credits["session_credits"]
+						user_credits = {
+							'user' : user_id,
+							'enrollment_id' : credits['enrollment_id'],
+							'program_id' : credits['program_id'],
+							'session_start_date' : datetime.strptime(credits['session_start_date'], '%Y-%m-%d').date(),
+							'session_end_date' : datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
+							# 'session_credits' : credits['session_credits']
+						}
+						user_credits["session_credits"]  = timedelta(seconds=credits['session_credits'])
+						try:
+							instance = User_credit.objects.get(enrollment_id=credits['enrollment_id'])
+							user_credits_form = User_credit_form(user_credits,instance=instance)
+						except User_credit.DoesNotExist:
+							user_credits_form = User_credit_form(user_credits)
+
+						if user_credits_form.is_valid():
+							user_credits_form.save()
+						else:
+							print user_credits_form
 				else:
 					print user_type
-
-
 		return HttpResponse("Successfully saved.", status=200)
 	except Exception as e:
 		print e

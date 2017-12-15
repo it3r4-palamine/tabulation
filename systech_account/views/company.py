@@ -4,6 +4,7 @@ from ..models.company_assessment import *
 from ..forms.company import *
 from ..models.company import *
 from ..views.common import *
+import requests
 
 
 def company(request):
@@ -44,7 +45,12 @@ def read(request):
 						t_type = Transaction_type.objects.get(id=t_types,is_active=True,company=data['company'])
 					except Transaction_type.DoesNotExist:
 						continue
-					transaction_type_dict = {'id':t_type.pk,'name':t_type.name,'is_active':t_type.is_active}
+					transaction_type_dict = {'id':t_type.pk,
+											'name':t_type.name,
+											'is_active':t_type.is_active,
+											'code':t_type.transaction_code,
+											'set_no':t_type.set_no,
+										}
 					company_transaction_type.append(transaction_type_dict)
 			row['transaction_type'] = company_transaction_type
 			datus.append(row)
@@ -93,15 +99,59 @@ def create(request):
 
 def delete(request,id = None):
 	try:
-		has_record = Company_assessment.objects.filter(company=id,is_active=True).first()
+		c_term = "Company"
+		terms = get_display_terms(request)
+		if terms:
+			if terms.company_rename:
+				c_term = terms.company_rename
+		has_record = Company_assessment.objects.filter(company_rename=id,is_active=True).first()
 		if has_record:
-			raise_error("This company is currently in use.")
+			raise_error("This %s is currently in use."%(c_term))
 		try:
 			record = Company_rename.objects.get(pk = id)
 			record.is_active = False
 			record.save()
-			return success()
+			return success("Successfully deleted.")
 		except Company_rename.DoesNotExist:
 			raise_error("Company doesn't exist.")
 	except Exception as e:
 		return HttpResponse(e, status = 400)
+
+def get_intelex_subjects(request):
+	try:
+		datus = req_data(request,True)
+		url = 'http://192.168.1.69:8000/api/read_programs/'
+		headers = {'content-type': 'application/json'}
+		data = {'complete_detail': True}
+		result = requests.post(url,data=json.dumps(data),headers=headers)
+		result.encoding = 'ISO-8859-1'
+		records = result.json()
+
+		for record in records['records']:
+			print record
+			if Company_rename.objects.filter(name__iexact=record['name'],program_id=record['id'],is_intelex=True,is_active=True,company=datus['company']).exists():
+				continue
+			else:
+				program = {}
+				program['program_id'] = record['id']
+				program['is_active'] = True
+				program['is_intelex'] = True
+				program['company'] = datus['company']
+				program['name'] = record['name']
+
+				transaction_types = Transaction_type.objects.filter(program_id=record['id'],is_active=True,is_intelex=True)
+				transaction_typesArr = []
+				for transaction_type in transaction_types:
+					transaction_typesArr.append(transaction_type.pk)
+
+				program['transaction_type'] = list_to_string(transaction_typesArr)
+
+				company_rename_form = Company_rename_form(program)
+
+				if company_rename_form.is_valid():
+					company_rename_form.save()
+				else:
+					return HttpResponse(transaction_type_form.errors, status = 400)
+		return HttpResponse("Successfully saved.", status = 200)
+	except Exception as e:
+		return HttpResponse(e,status=400)

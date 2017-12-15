@@ -41,7 +41,7 @@ class StudentUserForm(UserCreationForm):
 
 	class Meta:
 		model  = User
-		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","is_intelex","session_credits","session_end_date","user_intelex_id")
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","is_intelex","user_intelex_id")
 
 
 	def clean(self):
@@ -81,7 +81,7 @@ class SetPasswordForm(forms.ModelForm):
 	password2 = forms.CharField(widget=forms.PasswordInput)
 	
 	class Meta:
-		model = User
+		model  = User
 		fields = ('email', 'fullname', 'is_active')
 
 
@@ -94,3 +94,8 @@ class SetPasswordForm(forms.ModelForm):
 				raise ValueError("Password didn't match.")
 			   
 		return password2
+
+class User_credit_form(forms.ModelForm):
+	class Meta:
+		model  = User_credit
+		fields = ('user','enrollment_id','session_credits','session_end_date','program_id','session_start_date')

@@ -51,6 +51,7 @@ def create(request):
 		postdata['company'] = postdata['company']
 		postdata['consultant'] = postdata['consultant']['id']
 		postdata['company_rename'] = postdata['company_rename']['id']
+		postdata['session_credits'] = timedelta(seconds=postdata['session_credits'])
 
 		term = "Transaction Type"
 		terms = get_display_terms(request)
@@ -101,7 +102,7 @@ def delete(request,id = None):
 			record = Company_assessment.objects.get(pk = id)
 			record.is_active = False
 			record.save()
-			return success()
+			return success("Successfully deleted.")
 		except Company_assessment.DoesNotExist:
 			raise_error("Company assessment doesn't exist.")
 	except Exception as e:
@@ -110,13 +111,13 @@ def delete(request,id = None):
 def check_reference_no(request):
 	try:
 		data = req_data(request,True)
-		instance = Company_assessment.objects.filter(is_active=True,company=data['company']).last()
+		instance = Company_assessment.objects.filter(company=data['company']).last()
 		if not instance:
-			ref_no = "000001"
+			ref_no = "000000"
 		else:
 			ref_no = instance.reference_no
 
-		ref_no_len = len(instance.reference_no)
+		ref_no_len = len(ref_no)
 
 
 		ref_no = str(int(ref_no) + 1)

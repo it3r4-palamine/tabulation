@@ -26,8 +26,19 @@
         <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
             {% include "common/loader.html" %} 
             <div class="row">
-                <div class="col-sm-12 pull-right">
-                    <button class="btn btn-primary pull-right" ng-click="create_dialog()">CREATE</button>
+                <div class="col-sm-12">
+                    <div class="btn-group pull-right">
+                        <button class="btn btn-primary" ng-click="create_dialog()">CREATE</button>
+                        <div class="btn-group pull-right" uib-dropdown>
+                            <button type="button" class="btn btn-outline btn-primary" uib-dropdown-toggle>
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()">
+                                <li><a href="#" ng-click="get_intelex_subjects()"><i class="fa fa-upload"></i> Get Intelex Subjects</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- <button class="btn btn-primary pull-right" ng-click="create_dialog()">CREATE</button> -->
                 </div>
                 <div class="clearfix"></div>
                 <hr>
@@ -35,19 +46,19 @@
                     <table class="table table-bordered">
                         <thead>
                             <th>Name</th>
-                            <th><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></th>
+                            <!-- <th><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></th> -->
                             <th>Action</th>
                         </thead>
                         <tbody>
                             <tr ng-repeat="record in records" class="hand_cursor">
                                 <td ng-click="load_to_edit(record)">{$ record.name $}</td>
-                                <td ng-click="load_to_edit(record)">
+                                <!-- <td ng-click="load_to_edit(record)">
                                     <ul>
                                         <li ng-repeat="transaction_type in record.transaction_type">
                                             {$transaction_type.name$}    
                                         </li>
                                     </ul>
-                                </td>
+                                </td> -->
                                 <td><button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button></td>
                             </tr>
                         </tbody>
