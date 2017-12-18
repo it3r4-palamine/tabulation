@@ -1,0 +1,12 @@
+django==1.9
+#psycopg2==2.6.2
+python-pptx
+djangorestframework
+django-cors-headers
+django-extra-fields==0.9
+lxml==4.1.0
+olefile==0.44
+Pillow==4.3.0
+XlsxWriter==1.0.2
+nltk
+
