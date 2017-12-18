@@ -52,6 +52,7 @@ def create(request):
 		postdata['consultant'] = postdata['consultant']['id']
 		postdata['company_rename'] = postdata['company_rename']['id']
 		postdata['session_credits'] = timedelta(seconds=postdata['session_credits'])
+		postdata['credits_left'] = timedelta(seconds=postdata['credits_left'])
 
 		term = "Transaction Type"
 		terms = get_display_terms(request)

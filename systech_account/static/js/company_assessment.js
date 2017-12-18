@@ -29,6 +29,27 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 	$scope.create = function(){
 		$scope.record.date_from = moment(new Date($scope.record.date_from)).format('YYYY-MM-DD');
 		$scope.record.date_to = moment(new Date($scope.record.date_to)).format('YYYY-MM-DD');
+		var total_seconds = 0
+		var total_time =0
+		for(var sessions in $scope.record.sessions){
+			var start_hms = $scope.record.sessions[sessions].time_start
+			var end_hms = $scope.record.sessions[sessions].time_end
+
+			var a = start_hms.split(':')
+			var b = end_hms.split(':')
+
+			var start_seconds = (+a[0])*60*60+(+a[1])*60+(+a[2])
+			var end_seconds = (+b[0])*60*60+(+b[1])*60+(+b[2])
+
+			total_seconds += (end_seconds - start_seconds)
+		}
+		total_time += total_seconds
+		credits = angular.copy($scope.record.session_credits)
+		if(total_time > 0){
+			credits -= total_time
+		}
+		// console.log(credits)
+		$scope.record.credits_left = credits
 		me.post_generic("/company_assessment/create/",$scope.record,"dialog")
 		.success(function(response){
 			me.close_dialog();
@@ -131,11 +152,13 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
     }
 
     $scope.read_user_credits = function(record){
-    	record.date_from = moment(new Date(record.date_from)).format('YYYY-MM-DD');
-    	record.date_to = moment(new Date(record.date_to)).format('YYYY-MM-DD');
+    	// record.date_from = moment(new Date(record.date_from)).format('YYYY-MM-DD');
+    	// record.date_to = moment(new Date(record.date_to)).format('YYYY-MM-DD');
     	me.post_generic("/users/read_user_credits/",record,"dialog")
     	.success(function(response){
     		$scope.record.session_credits = response.data[0].session_credits
+    		$scope.record.date_from = new Date(response.data[0].session_start_date)
+    		$scope.record.date_to = new Date(response.data[0].session_end_date)
     	})
     }
 

@@ -190,6 +190,11 @@ class SyncAssessments(APIView):
 						assessment_score_form.save()
 					else: Response(assessment_score_form.errors,status=status.HTTP_400_BAD_REQUEST)
 
+			sessionsQs = Assessment_session.objects.filter(company_assessment=assessmentInstance.id)
+			for sessionsQ in sessionsQs:
+				sessionsQ.is_deleted = True
+				sessionsQ.save()
+
 			for session in assessment['session']:
 				sessions = {
 					'company_assessment' : session['assessment_id'],

@@ -41,6 +41,7 @@ class Company_assessment(models.Model):
 
 		# Assessment transaction types
 		transaction_type_list = []
+		sessions_list = []
 
 		if self.transaction_type:
 			for transaction_type_id in self.transaction_type:
@@ -57,6 +58,12 @@ class Company_assessment(models.Model):
 				except Transaction_type.DoesNotExist:
 					continue
 
+		sessions = str2model("Assessment_session").objects.filter(is_deleted=False,company_assessment=self.pk)
+		for session in sessions:
+			rowSession = session.get_dict()
+			if forAPI:
+				rowSession['assessment_id'] = session.company_assessment.pk
+			sessions_list.append(rowSession)
 
 		if forAPI:
 			company_assessment["company_name"] = self.company.name
@@ -64,11 +71,14 @@ class Company_assessment(models.Model):
 			company_assessment["consultant_fullname"] = self.consultant.fullname
 			company_assessment["transaction_type_arr"] = transaction_type_list
 			company_assessment["is_synced"] = self.is_synced
+			company_assessment["sessions"] = sessions_list
 		else:
 			company_assessment["is_active"] = self.is_active
 			company_assessment["company"] = self.company.get_dict()
 			company_assessment["company_rename"] = self.company_rename.get_dict() if self.company_rename else None
 			company_assessment["transaction_type"] = transaction_type_list
 			company_assessment["is_synced"] = self.is_synced
+			# company_assessment["sessions"] = json.dumps(sessions_list)
+			company_assessment["sessions"] = sessions_list
 
 		return company_assessment

@@ -2,6 +2,7 @@ from django.db import models
 from ..models.multiple_choice import *
 # from ..models.company_assessment import *
 from django.contrib.postgres.fields import ArrayField
+from datetime import *
 
 class Assessment_question(models.Model):
 	value               = models.CharField(max_length=200,blank=True,null=True)
@@ -265,7 +266,15 @@ class Assessment_session(models.Model):
 	date 			   = models.DateField(blank=True,null=True)
 	time_start		   = models.TimeField(auto_now=False, auto_now_add=False, blank = True, null = True)
 	time_end		   = models.TimeField(auto_now=False, auto_now_add=False, blank = True, null = True)
+	is_deleted 		   = models.BooleanField(default=0)
 
 	class Meta:
 		app_label = "systech_account"
 		db_table  = "assessment_sessions"
+
+	def get_dict(self):
+		return {
+			'date' : datetime.strptime(str(self.date), '%Y-%m-%d').date(),
+			'time_start' : self.time_start.strftime("%H:%M:%S"),
+			'time_end' : self.time_end.strftime("%H:%M:%S"),
+		}

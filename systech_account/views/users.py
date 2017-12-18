@@ -130,7 +130,15 @@ def read_user_credits(request):
 		datus = req_data(request,True)
 		results = {'data':[]}
 		data = []
-		user_credits = User_credit.objects.filter(program_id=datus['company_rename']['program_id'],user=datus['consultant']['id'])
+		i = datetime.today()
+		date_now = i.strftime('%Y-%m-%d')
+		# user_credits = User_credit.objects.filter(program_id=datus['company_rename']['program_id'],user=datus['consultant']['id'])
+		user_credits = User_credit.objects.filter(
+								program_id=datus['company_rename']['program_id'],
+								user=datus['consultant']['id'],
+								session_start_date__lte=date_now,
+								session_end_date__gte=date_now,
+							)
 		for user_credit in user_credits:
 			row = user_credit.get_dict()
 			data.append(row)

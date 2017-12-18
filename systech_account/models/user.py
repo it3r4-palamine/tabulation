@@ -73,8 +73,8 @@ class User_credit(models.Model):
 	user 			   = models.ForeignKey("User")
 	enrollment_id 	   = models.IntegerField(blank=True, null=True)
 	session_credits    = models.DurationField(blank=True, null=True)
-	session_start_date = models.DateTimeField(blank=True, null=True)
-	session_end_date   = models.DateTimeField(blank=True, null=True)
+	session_start_date = models.DateField(blank=True, null=True)
+	session_end_date   = models.DateField(blank=True, null=True)
 	program_id	 	   = models.IntegerField(blank=True, null=True)
 
 	class Meta:
@@ -83,6 +83,7 @@ class User_credit(models.Model):
 
 	def get_dict(self):
 		return {
+			'id' : self.pk,
 			'user' : self.user.get_dict(),
 			'enrollment_id' : self.enrollment_id,
 			'session_credits' : self.session_credits.total_seconds(),
