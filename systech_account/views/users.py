@@ -171,28 +171,28 @@ def get_intelex_students(request):
 			user_exists = User.objects.filter(email__iexact=email_add,is_active=True).first()
 			if user_exists:
 				user_id = user_exists.pk
+				if 'enrollments' in record:
+					for credits in record['enrollments']:
+						session_credits = credits["session_credits"]
+						user_credits = {
+							'user' : user_id,
+							'enrollment_id' : credits['enrollment_id'],
+							'program_id' : credits['program_id'],
+							'session_start_date' : datetime.strptime(credits['session_start_date'], '%Y-%m-%d').date(),
+							'session_end_date' : datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
+							# 'session_credits' : credits['session_credits']
+						}
+						user_credits["session_credits"]  = timedelta(seconds=credits['session_credits'])
+						try:
+							instance = User_credit.objects.get(enrollment_id=credits['enrollment_id'])
+							user_credits_form = User_credit_form(user_credits,instance=instance)
+						except User_credit.DoesNotExist:
+							user_credits_form = User_credit_form(user_credits)
 
-				for credits in record['enrollments']:
-					session_credits = credits["session_credits"]
-					user_credits = {
-						'user' : user_id,
-						'enrollment_id' : credits['enrollment_id'],
-						'program_id' : credits['program_id'],
-						'session_start_date' : datetime.strptime(credits['session_start_date'], '%Y-%m-%d').date(),
-						'session_end_date' : datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
-						# 'session_credits' : credits['session_credits']
-					}
-					user_credits["session_credits"]  = timedelta(seconds=credits['session_credits'])
-					try:
-						instance = User_credit.objects.get(enrollment_id=credits['enrollment_id'])
-						user_credits_form = User_credit_form(user_credits,instance=instance)
-					except User_credit.DoesNotExist:
-						user_credits_form = User_credit_form(user_credits)
-
-					if user_credits_form.is_valid():
-						user_credits_form.save()
-					else:
-						print user_credits_form
+						if user_credits_form.is_valid():
+							user_credits_form.save()
+						else:
+							print user_credits_form
 				continue
 			else:
 				student_user = User_type.objects.filter(is_active=True,company=datus['company'],name="Student").first()
@@ -218,27 +218,28 @@ def get_intelex_students(request):
 					print "test"
 					user_account = user_type.save()
 					user_id = user_account.pk
-					for credits in record['enrollments']:
-						session_credits = credits["session_credits"]
-						user_credits = {
-							'user' : user_id,
-							'enrollment_id' : credits['enrollment_id'],
-							'program_id' : credits['program_id'],
-							'session_start_date' : datetime.strptime(credits['session_start_date'], '%Y-%m-%d').date(),
-							'session_end_date' : datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
-							# 'session_credits' : credits['session_credits']
-						}
-						user_credits["session_credits"]  = timedelta(seconds=credits['session_credits'])
-						try:
-							instance = User_credit.objects.get(enrollment_id=credits['enrollment_id'])
-							user_credits_form = User_credit_form(user_credits,instance=instance)
-						except User_credit.DoesNotExist:
-							user_credits_form = User_credit_form(user_credits)
+					if 'enrollments' in record:
+						for credits in record['enrollments']:
+							session_credits = credits["session_credits"]
+							user_credits = {
+								'user' : user_id,
+								'enrollment_id' : credits['enrollment_id'],
+								'program_id' : credits['program_id'],
+								'session_start_date' : datetime.strptime(credits['session_start_date'], '%Y-%m-%d').date(),
+								'session_end_date' : datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
+								# 'session_credits' : credits['session_credits']
+							}
+							user_credits["session_credits"]  = timedelta(seconds=credits['session_credits'])
+							try:
+								instance = User_credit.objects.get(enrollment_id=credits['enrollment_id'])
+								user_credits_form = User_credit_form(user_credits,instance=instance)
+							except User_credit.DoesNotExist:
+								user_credits_form = User_credit_form(user_credits)
 
-						if user_credits_form.is_valid():
-							user_credits_form.save()
-						else:
-							print user_credits_form
+							if user_credits_form.is_valid():
+								user_credits_form.save()
+							else:
+								print user_credits_form
 				else:
 					print user_type
 		return HttpResponse("Successfully saved.", status=200)
