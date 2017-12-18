@@ -13,7 +13,7 @@ fi
 
 SCRIPT="$SCRIPT sudo service nginx reload;"
 
-ssh "ybas" "${WORKON} ${NAVAGATION}
+ssh "yias" "${WORKON} ${NAVAGATION}
     eval \$(ssh-agent)
     ssh-add ~/.ssh/bitbucket
     ${SCRIPT}"
