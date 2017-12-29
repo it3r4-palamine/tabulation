@@ -65,6 +65,9 @@ def get_fields(request, module_type):
 def create_dialog(request):
 	return render(request, 'import/dialogs/create_dialog.html')
 
+def upload_dialog(request):
+	return render(request, 'import/dialogs/upload_dialog.html')
+
 def import_questions(request):
 	try:
 		data = req_data(request, True)

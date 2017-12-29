@@ -48,7 +48,7 @@
                 </div>
                 <div class="col-sm-3">
                     <label>&nbsp;</label><br>
-                    <button class="btn btn-primary pull-right" ng-click="create_dialog()">CREATE</button><br>
+                    <button class="btn btn-primary pull-right" ng-click="chooseQuestion()">CREATE</button><br>
                 </div>
                 <div class="clearfix"></div>
                 <hr>
@@ -62,10 +62,27 @@
                             <th>Action</th>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="record in records" class="hand_cursor">
+                            <tr ng-repeat="(key, record) in records" class="hand_cursor">
                                 <td ng-click="load_to_edit(record)">{$ record.code $} <span ng-if="record.parent_question"><i class="fa fa-child"></i></span>
                                     <span ng-if="record.is_document"><i class="fa fa-camera"></i></span></td>
-                                <td ng-click="load_to_edit(record)">{$ record.value $}</td>
+                                <td>
+                                    <div ng-click="load_to_edit(record)" ng-if="record.value">
+                                        {$ record.value $}
+                                    </div>
+                                    <div align="center" class="carousel slide" id="carousel{$ key+1 $}" ng-if="record.images">
+                                        <div ng-click="load_to_edit(record)" class="carousel-inner">
+                                            <div class="item" ng-class="{'active': key1 == 0 }" ng-repeat="(key1,image) in record.images">
+                                                <img style="height:100px;width:100px;" src="http://35.196.233.235{$image.image$}" class="img-responsive img-rounded" alt="image">
+                                            </div>
+                                        </div>
+                                        <a data-slide="prev" href="#carousel{$ key+1 $}" class="left carousel-control">
+                                            <span class="icon-prev"></span>
+                                        </a>
+                                        <a data-slide="next" href="#carousel{$ key+1 $}" class="right carousel-control">
+                                            <span class="icon-next"></span>
+                                        </a>
+                                    </div>
+                                </td>
                                 <td ng-click="load_to_edit(record)">
                                     <span ng-if="record.transaction_types.length == 0">{$ record.transaction_type.name $}</span>
                                     <span ng-if="record.transaction_types">

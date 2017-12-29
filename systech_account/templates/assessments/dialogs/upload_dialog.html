@@ -1,17 +1,17 @@
 <div class="wrapper wrapper-content animated fadeIn modalibox">
     <div class="ibox">
         <div class="ibox-title ibox_title_reset">
-            <h3><span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></h3>
+            <h3><span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">aaaaaaaaaaaaaa{$ display_terms[0].questions $}</span></h3>
         </div>
 
         <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
             <div class="row">
                 <form class="form" name="form">
-                    <div class="col-sm-12">
+                    <!-- <div class="col-sm-12">
                         <div class="checkbox checkbox-success">
                             <input type="checkbox" id="is_general" name="is_general" ng-model="record.is_general" ng-click="record.code=null;record.transaction_types={};record.transaction_type={}" ng-disabled="record.id"><label for="is_general">General <span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></label>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-sm-12" ng-if="record.is_general">
                         <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
                         <ui-select ng-model="record.transaction_types" multiple ng-change="generate_code()">
@@ -25,9 +25,8 @@
                     <div class="col-sm-12" ng-if="!record.is_general">
                         <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
                         <ui-select ng-model="record.transaction_type" ng-change="generate_code()">
-                            <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $}</ui-select-match>
+                            <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $} - {$ $select.selected.set_no $}</ui-select-match>
                             <ui-select-choices repeat="transaction_type in transaction_types2 | filter: $select.search | limitTo:50">
-                                <!-- <div ng-bind-html="transaction_type.name | highlight: $select.search"></div> -->
                                 <span ng-bind-html="transaction_type.name | highlight: $select.search"></span> - Set <span ng-bind-html="transaction_type.set_no | highlight: $select.search"></span>
                             </ui-select-choices>
                         </ui-select>
@@ -39,7 +38,7 @@
                         </div>
                         <div class="clearfix"></div>
                         <hr>
-                        <div class="col-sm-12">
+                        <!-- <div class="col-sm-12">
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     Related <span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span>
@@ -73,10 +72,42 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-12" ng-class="{ 'has-error' : form.value.$invalid && !form.value.$pristine }">
+                        </div> -->
+                        <!-- <div class="col-sm-12" ng-class="{ 'has-error' : form.value.$invalid && !form.value.$pristine }">
                             <label class="required"><span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></label>
                             <textarea ng-model="record.value" name="value" required class="form-control"></textarea>
+                        </div> -->
+                        <div class="col-sm-12">
+                            <label class="btn btn-outline btn-success" for="my-file-selector">
+                                <!-- <input accept=".CSV,.csv" ng-model="uploaded_file" id="my-file-selector" type="file" style="display:none;" onchange="$('#upload-file-info').html(this.files[0].name);" "=" " custom-on-change="import_file_change" class="ng-pristine ng-untouched ng-valid ng-empty "> -->
+                                <input type="file" style="display:none;" name="image" class="ng-pristine ng-untouched ng-valid ng-empty " file-model="record.images" id="my-file-selector" multiple accept=".png,.jpg,.jpeg">
+                                Choose file...
+                            </label>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="lightBoxGallery">
+                                <div class="col-sm-2" ng-repeat="image in ImageSrc">
+                                    <a href="{$ image.image $}" title="" data-gallery="">
+                                        <img src="{$ image.image $}"  class="img-rounded" style="height:100px;width:100px;"><br>
+                                    </a>
+                                    <button class="btn bt-outline btn-danger" ng-click="remove_image(image, $index)"><i class="fa fa-trash-o"></i></button>
+                                </div>
+                                <div class="col-sm-2" ng-repeat="imageUpload in ImageSrcUpload">
+                                    <a href="{$ imageUpload.image $}" title="" data-gallery="">
+                                        <img src="{$ imageUpload.image $}"  class="img-rounded" style="height:100px;width:100px;"><br>
+                                    </a>
+                                    <button class="btn bt-outline btn-danger" ng-click="remove_image(imageUpload, $index)"><i class="fa fa-trash-o"></i></button>
+                                </div>
+                                <div id="blueimp-gallery" class="blueimp-gallery">
+                                    <div class="slides"></div>
+                                    <h3 class="title"></h3>
+                                    <a class="prev">‹</a>
+                                    <a class="next">›</a>
+                                    <a class="close">×</a>
+                                    <a class="play-pause"></a>
+                                    <ol class="indicator"></ol>
+                                </div>
+                            </div>
                         </div>
                         <div class="clearfix"></div>
                         <div class="col-sm-12" ng-hide="true">
@@ -92,6 +123,39 @@
                             </div>
                         </div>
                         <div class="col-sm-12">
+                            <table class="table">
+                                <thead>
+                                    <th>Item #</th>
+                                    <th>Answer</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="(key, answer) in answers">
+                                        <td>
+                                            <input type="number" min="0" name="item" ng-model="answer.item_no" class="form-control">
+                                        </td>
+                                        <td>
+                                            <textarea ng-model="answer.answer" class="form-control"></textarea>
+                                        </td>
+                                        <td>
+                                            <a href="" class="btn bt-outline btn-danger" ng-click="remove_answer(answer, $index)"><i class="fa fa-trash-o"></i></a> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="number" min="0" name="item" ng-model="answer_list.item_no" class="form-control">
+                                        </td>
+                                        <td>
+                                            <textarea ng-model="answer_list.answer" class="form-control"></textarea>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-white" ng-click="add_answer(answer_list)" ng-disabled="!answer_list.answer && !answer_list.item_no"><i class="fa fa-plus"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- <div class="col-sm-12">
                             <div class="checkbox checkbox-success">
                                 <input type="checkbox" id="is_multiple" name="is_multiple" ng-model="record.is_multiple" ng-click="isMultiple()"><label for="is_multiple">Multiple Choice</label>
                             </div>
@@ -102,8 +166,8 @@
                                     <input type="radio" ng-model="record.answer_type" ng-value="'Number'" name="Number" id="Number"> <label for="Number">Number</label>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-12">
+                        </div> -->
+                        <!-- <div class="col-sm-12">
                             <table class="table">
                                 <thead>
                                     <th>Correct Answer</th>
@@ -161,7 +225,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
+                        </div> -->
                         <div class="col-sm-12">
                             <br>
                             <div class="tabs-container">
@@ -219,7 +283,7 @@
         </div>
         <div class="ibox-footer">
             <div class="pull-right">
-                <button type="button" class="btn btn-sm btn-primary btn-w-m" ng-click="create(true)" ng-disabled="form.$invalid">Save</button>
+                <button type="button" class="btn btn-sm btn-primary btn-w-m" ng-click="create(false)" ng-disabled="form.$invalid">Save</button>
                 <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="main.close_dialog()">Close</button>
             </div>
         </div>

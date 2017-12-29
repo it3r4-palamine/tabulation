@@ -1,4 +1,4 @@
-var app = angular.module("import",['common_module']);
+var app = angular.module("import",['common_module','file-model']);
 
 app.controller('importCtrl', function($scope, $http, $timeout, $element, $controller,CommonFunc,Notification,CommonRead) {
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
@@ -10,6 +10,8 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 	$scope.headers = []
 	$scope.raw_rows = []
 	$scope.final_rows = []
+	$scope.records = []
+	$scope.uploaded_images = []
 
 	$scope.$watch("current_tab",function(current,old){
 		if(current == 2){
@@ -135,6 +137,9 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		}else if($scope.current_module == "findings"){
 			$scope.current_url = "/import/import_findings/";
 			$scope.title = "Findings"
+		}else if($scope.current_module == "image"){
+			$scope.current_url = "/import/import_questions/";
+			$scope.title = "Questions"
 		}else{
 			return false;
 		}
@@ -149,9 +154,87 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		}
 
 		$scope.read_module_columns()
-		me.open_dialog("/import/create_dialog/","dialog_whole","main")
+		if(type == "image"){
+			$scope.ImageSrc = []
+			$scope.record = []
+			$scope.record['images'] = []
+			me.open_dialog("/import/upload_dialog/","dialog_whole","main")
+		}else{
+			me.open_dialog("/import/create_dialog/","dialog_whole","main")
+		}
 
 	}
+
+	$scope.remove_image = function(list,index){
+		$scope.ImageSrc.splice($scope.ImageSrc.indexOf(list), 1);
+		var fayl = document.getElementById('my-file-selector').files
+		$scope.ImageSrcArr2 = []
+		for(var y in fayl){
+			if(typeof fayl[y] === 'object') {
+				if(fayl[y].name != list.name)
+					$scope.ImageSrcArr2.push(fayl[y])
+			}
+		}
+
+		$scope.record.images = $scope.ImageSrcArr2
+    }
+    $scope.idx = 0
+    $scope.create = function(){
+    	$scope.upload($scope.idx)
+    }
+
+    $scope.upload = function(idx){
+    	if(idx == $scope.record.images.length){
+    		Notification.success("Successfully uploaded.")
+    		me.close_dialog()
+    	}else{
+    		var number = idx + 1;
+    		if(!$scope.record.code)
+    			return Notification.error("Code is required for Image "+number+".")
+			else{
+				if(!$scope.record.code[idx])
+    				return Notification.error("Code is required for Image "+number+".")
+			}
+
+    		if(!$scope.record.transaction_type)
+    			return Notification.error("Transaction type is required for Image "+number+".")
+    		else{
+    			if(!$scope.record.transaction_type[idx])
+    				return Notification.error("Transaction type is required for Image "+number+".")
+    		}
+
+    		var datus = {
+    			images : $scope.record.images[idx],
+    			code : $scope.record.code[idx],
+    			transaction_type : $scope.record.transaction_type[idx].id,
+    			// is_document : $scope.record.is_document[idx]
+    		}
+
+    		var upload = new FormData();
+
+    		angular.forEach(datus, function(value, key){
+    			if(datus[key] === undefined){
+    			    value = ""
+    			}
+    			upload.append(key, value)
+    		});
+    		$http.post('/assessments/multiple_upload/', upload, { 
+    		    method: "post", 
+    		    transformRequest: angular.identity, 
+    		    headers: {'Content-Type': undefined} 
+    		}).success(function(response){ 
+    		    $scope.ImageSrc[idx].upload = true
+    		    $scope.upload(++$scope.idx)
+    		})
+    		.error(function(err){
+    		    if(err=='code'){
+    				Notification.error("Code already exists.")
+    			}else{
+    				Notification.error(err)
+    			}
+    		})
+    	}
+    }
 
 	$scope.read_module_columns = function(){
 		$http.post("/import/read_module_columns/"+$scope.current_module)
@@ -301,7 +384,34 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		return results;
 	}
 
+	$scope.setimage = function() {
+	    var file = $scope.record;
+	    var fayl = document.getElementById('my-file-selector').files
+	    $scope.record = []
+	    $scope.ImageSrc = []
+	    $scope.ImageSrcArr = []
+	    $scope.idx = 0
+	    for(var y in fayl){
+	    	if(typeof fayl[y] === 'object')
+	    		$scope.ImageSrcArr.push(fayl[y])
+	    }
+	    for(var z in $scope.ImageSrcArr){
+	    	var reader = new FileReader();
+		    reader.readAsDataURL($scope.ImageSrcArr[z]);
+		    reader.onload = function(e) {
+		        $scope.$apply(function(){
+        			row = {}
+		        	row['image'] = e.target.result
+		        	row['name'] = $scope.ImageSrcArr[z].name
+
+        			$scope.ImageSrc.push(row)
+		        })
+		    }
+	    }
+	}
+
 	CommonRead.get_display_terms($scope)
+	CommonRead.get_transaction_types2($scope);
 
 });
 
@@ -314,3 +424,24 @@ app.directive('customOnChange', function() {
     }
   };
 });
+
+
+app.directive('fileModel', ['$parse', function($parse) {
+    return {
+        restrict: 'A',
+        link: function($scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+            element.bind('change', function(e) {
+                $scope.$apply(function(e) {
+                    modelSetter($scope, element[0].files[0]);
+                });
+                $scope.setimage();
+            });
+        }
+    }
+}]);
+
+app.config(['$compileProvider', function($compileProvider){
+	$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|local|data):/);
+}]);

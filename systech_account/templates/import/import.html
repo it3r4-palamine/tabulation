@@ -19,7 +19,9 @@
                             <br>
                             <br>
                             <br>
-                            <a href="#" ng-click="import_dialog('questions')"><h2 align="center" style="color:#5778C9;"><b><span ng-if="!display_terms[0].questions" ng-cloak="">Questions</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></b></h2></a>
+                            <!-- <a href="#" ng-click="import_dialog('questions')"><h2 align="center" style="color:#5778C9;"><b><span ng-if="!display_terms[0].questions" ng-cloak="">Questions</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></b></h2></a> -->
+                            <center><button class="btn btn-outline btn-danger" ng-click="import_dialog('image')">Image</button>
+                            <button class="btn btn-outline btn-success" ng-click="import_dialog('questions')">Normal</button></center>
                             <p align="center">Import <span ng-if="!display_terms[0].questions" ng-cloak="">questions</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></p>
                         </div>
                     </div>

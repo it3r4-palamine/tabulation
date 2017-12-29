@@ -19,7 +19,9 @@ class Assessment_question_form(forms.ModelForm):
 			'transaction_types',
 			'has_follow_up',
 			'company',
-			'answer_type',	
+			'answer_type',
+			'has_related',
+			'uploaded_question',
 		)
 
 class Assessment_effect_form(forms.ModelForm):
@@ -56,3 +58,13 @@ class Assessment_session_form(forms.ModelForm):
 	class Meta:
 		model  = Assessment_session
 		fields = ('company_assessment','date','time_start','time_end')
+
+class Assessment_image_form(forms.ModelForm):
+	class Meta:
+		model  = Assessment_image
+		fields = ('company','is_active','image','question')
+
+class Assessment_image_answer_form(forms.ModelForm):
+	class Meta:
+		model  = Assessment_image_answer
+		fields = ('company','is_active','question','answer','item_no')

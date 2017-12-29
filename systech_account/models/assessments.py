@@ -2,7 +2,13 @@ from django.db import models
 from ..models.multiple_choice import *
 # from ..models.company_assessment import *
 from django.contrib.postgres.fields import ArrayField
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFit
+
+from django.conf import settings
 from datetime import *
+
+import base64
 
 class Assessment_question(models.Model):
 	value               = models.CharField(max_length=200,blank=True,null=True)
@@ -21,6 +27,7 @@ class Assessment_question(models.Model):
 	company 			= models.ForeignKey("Company",blank=True,null=True)
 	answer_type			= models.CharField(max_length=200,blank=True,null=True)
 	has_related			= models.BooleanField(default=0)
+	uploaded_question	= models.BooleanField(default=0)
 
 	class Meta:
 		app_label = "systech_account"
@@ -40,7 +47,7 @@ class Assessment_question(models.Model):
 			"code_value" : self.code + ": " + self.value,
 			"answer_type" : self.answer_type,
 			"has_related" : self.has_related,
-
+			"uploaded_question" : self.uploaded_question,
 		}
 		if self.parent_question:
 			if forAPI:
@@ -62,6 +69,28 @@ class Assessment_question(models.Model):
 				assessment_question['related_question'] = related_question.pk
 			# print(related_question)
 		
+		if self.uploaded_question:
+			imagesQ = []
+			answersQ = []
+			images = Assessment_image.objects.filter(question=self.pk,is_active=True)
+			for image in images:
+				imageList = image.get_dict()
+				image = open('systech_account/static/uploads/%s'%(image.image), 'rb')
+				image_read = image.read()
+				# image_64_encode = base64.encodestring(image_read)
+				image_64_encode = base64.standard_b64encode(image_read)
+				# image_64_encode = base64.b64encode(image_read)
+				imageList['converted_image'] = image_64_encode
+				imagesQ.append(imageList)
+
+			answers = Assessment_image_answer.objects.filter(question=self.pk,is_active=True).order_by("item_no")
+			for answer in answers:
+				answerList = answer.get_dict()
+				answersQ.append(answerList)
+
+			assessment_question['answers'] = answersQ
+			assessment_question['images'] = imagesQ
+
 		# Transaction Types
 		if self.is_general:
 			transaction_types = []
@@ -277,4 +306,50 @@ class Assessment_session(models.Model):
 			'date' : datetime.strptime(str(self.date), '%Y-%m-%d').date(),
 			'time_start' : self.time_start.strftime("%H:%M:%S"),
 			'time_end' : self.time_end.strftime("%H:%M:%S"),
+		}
+
+class Assessment_image(models.Model):
+	question  = models.ForeignKey("Assessment_question")
+	is_active = models.BooleanField(default=1)
+	image 	  = ProcessedImageField(upload_to='assessment/questions/',
+								   processors=[ResizeToFit(618,400)],
+								   format='PNG',
+								   options = {'quality': 80},
+								   blank=True,
+								   null=True)
+	company   = models.ForeignKey("Company",blank=True,null=True)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "assessment_images"
+
+	def get_dict(self):
+		logo = ""
+		if self.image == "" or self.image == None:
+			logo = ""
+		else:
+			logo = "/static/uploads/"+str(self.image)
+
+		return {
+			'image' : logo,
+			'id' : self.pk
+		}
+
+class Assessment_image_answer(models.Model):
+	question  = models.ForeignKey("Assessment_question")
+	is_active = models.BooleanField(default=1)
+	item_no   = models.IntegerField(blank=True, null=True)
+	answer    = models.CharField(max_length=200,blank=True,null=True)
+	company   = models.ForeignKey("Company",blank=True,null=True)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "assessment_image_answers"
+
+	def get_dict(self):
+		return {
+			'id' : self.pk,
+			'question' : self.question.pk,
+			'item_no' : self.item_no,
+			'answer' : self.answer,
 		}

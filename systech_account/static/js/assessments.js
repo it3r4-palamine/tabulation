@@ -1,4 +1,4 @@
-var app = angular.module("assessments",['common_module']);
+var app = angular.module("assessments",['common_module','file-model']);
 
 app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $controller,CommonFunc,Notification,CommonRead) {
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
@@ -9,15 +9,37 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 	$scope.choices = []
 	$scope.effects = []
 	$scope.findings = []
+	$scope.answers = []
 
-	$scope.create_dialog = function(record){
+	$scope.chooseQuestion = function(record){
+		swal({
+		  title: "",
+		  showConfirmButton: false,
+		  text: "What would you like to create?<br><button>Back</button><button style='background-color: #DD6B55;' id='ot_not_now'>Upload</button><button style='background-color: #3f51b5;' id='ot_yes_now'>Normal</button>",
+		  html: true
+		});
+
+		$("#ot_not_now").click(function(){
+		    $scope.create_dialog(record, true);
+		});
+
+		$("#ot_yes_now").click(function(){
+		    $scope.create_dialog(record, false);
+		});
+	}
+
+	$scope.create_dialog = function(record, upload){
 		$scope.edit_is_related = false
 		$scope.choices = []
 		$scope.effects = []
 		$scope.findings = []
+		$scope.answers = []
+		$scope.ImageSrc = []
+		$scope.ImageSrcUpload = []
 		$scope.choice_list = {}
 		$scope.effect_list = {}
 		$scope.finding_list = {}
+		$scope.answer_list = {}
 		$scope.record = {}
 		$scope.record['is_active'] = true
 		if(record){
@@ -25,15 +47,22 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 			$scope.choices = $scope.record.choices
 			$scope.effects = $scope.record.effects
 			$scope.findings = $scope.record.findings
+			$scope.answers = $scope.record.answers
+			$scope.ImageSrc = $scope.record.images
 		}
 		
-		me.open_dialog("/assessments/create_dialog/","dialog_whole","main")
+		if(upload) {
+			me.open_dialog("/assessments/upload_dialog/","dialog_whole","main")
+		}
+		else {
+			me.open_dialog("/assessments/create_dialog/","dialog_whole","main")
+		}
 	}
 
 	$scope.close_dialog = function(){$uibModalStack.dismissAll();}
 
 	$scope.old_is_related = null
-	$scope.create = function(){
+	$scope.create = function(not_upload){
 		if(Object.keys($scope.choice_list).length > 0) {
 			if($scope.choice_list.value){
 				$scope.choices.push(angular.copy($scope.choice_list))
@@ -47,6 +76,11 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 		if(Object.keys($scope.finding_list).length > 0) {
 			if($scope.finding_list.value){
 				$scope.findings.push(angular.copy($scope.finding_list))
+			}
+		}
+		if(Object.keys($scope.answer_list).length > 0) {
+			if($scope.answer_list.answer && $scope.answer_list.item_no){
+				$scope.answers.push(angular.copy($scope.answer_list))
 			}
 		}
 		var has_true = 0
@@ -68,47 +102,115 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 		$scope.choice_list = {}
 		$scope.effect_list = {}
 		$scope.finding_list = {}
+		$scope.answer_list = {}
 		if($scope.record.is_multiple == undefined) $scope.record.is_multiple = false;
-		if($scope.record.is_multiple){
-			if(has_true > 1){
-				$scope.record['has_multiple_answer'] = true
-			}else if(has_true == 0){
-				$scope.record['has_multiple_answer'] = false
-				return Notification.error("The question has no correct answer. Please select one.")
-			}else if(has_true == 1){
-				$scope.record['has_multiple_answer'] = false
+		if(not_upload)
+			if($scope.record.is_multiple){
+				if(has_true > 1){
+					$scope.record['has_multiple_answer'] = true
+				}else if(has_true == 0){
+					$scope.record['has_multiple_answer'] = false
+					return Notification.error("The question has no correct answer. Please select one.")
+				}else if(has_true == 1){
+					$scope.record['has_multiple_answer'] = false
+				}
+			}else{
+				if(!$scope.record.answer_type){
+					return Notification.error("Please select answer type.")	
+				}
+				if(has_true > 1){
+					$scope.record['has_multiple_answer'] = true
+				}else if(has_true == 0){
+					$scope.record['has_multiple_answer'] = false
+					return Notification.error("The question has no correct answer. Please select one.")
+				}else if(has_true == 1){
+					$scope.record['has_multiple_answer'] = false
+				}
 			}
-		}else{
-			if(!$scope.record.answer_type){
-				return Notification.error("Please select answer type.")	
-			}
-			if(has_true > 1){
-				$scope.record['has_multiple_answer'] = true
-			}else if(has_true == 0){
-				$scope.record['has_multiple_answer'] = false
-				return Notification.error("The question has no correct answer. Please select one.")
-			}else if(has_true == 1){
-				$scope.record['has_multiple_answer'] = false
-			}
-		}
 
-		if($scope.record.is_document){
-			if(has_required_document == 0){
-				return Notification.error("Please select a choice that requires document image.")
+			if($scope.record.is_document){
+				if(has_required_document == 0){
+					return Notification.error("Please select a choice that requires document image.")
+				}
 			}
-		}
 
 		if($scope.record.is_general == false) $scope.record.transaction_types = []
 
 		$scope.record['choices'] = $scope.choices
 		$scope.record['effects'] = $scope.effects
 		$scope.record['findings'] = $scope.findings
+		$scope.record['answers'] = $scope.answers
 		$scope.record['old_is_related'] = $scope.old_is_related
 		if($scope.record.parent_question){
 			$scope.record.parent_question.has_follow_up = true;
 		}
 
-		me.post_generic("/assessments/create/",$scope.record,"dialog")
+		record_data = $scope.record
+		var company_settings = new FormData();
+		var questionImg = []
+		angular.forEach(record_data, function(value, key){
+		    if(record_data[key] === undefined){
+		        value = ""
+		    }
+		    is_continue = true;
+		    if(key == 'images'){
+		    	for(var y in record_data[key]){
+					if(typeof record_data[key][y] === 'object' || typeof record_data[key][y] === 'string'){
+						company_settings.append(key,record_data[key][y])
+					}
+		    	}
+		    	is_continue = false;
+		    }
+
+		    if(is_continue){
+			    if(key == 'transaction_type'){
+			    	value = record_data[key].id
+			    }
+			    company_settings.append(key, value);
+		    }
+		})
+
+		if(not_upload){
+			me.post_generic("/assessments/create/",$scope.record,"dialog")
+			.success(function(response){
+				me.close_dialog();
+				Notification.success(response);
+				$scope.read();
+			}).error(function(err){
+				if(err=='code'){
+					Notification.error("Code already exists.")
+				}else{
+					Notification.error(err)
+				}
+			})
+		}else{
+			$http.post('/assessments/upload/', company_settings, { 
+			    method: "post", 
+			    transformRequest: angular.identity, 
+			    headers: {'Content-Type': undefined} 
+			}).success(function(response){ 
+			    // Notification.success(response)
+			    // me.close_dialog();
+			    // $scope.read();
+			    $scope.saveData($scope.record, response)
+			})
+			.error(function(err){
+			    if(err=='code'){
+					Notification.error("Code already exists.")
+				}else{
+					Notification.error(err)
+				}
+			})
+		}
+
+	}
+
+	$scope.saveData = function(record, id) {
+		var data = {
+			datus : $scope.record,
+			id : id
+		}
+		me.post_generic("/assessments/saveData/",data,"dialog")
 		.success(function(response){
 			me.close_dialog();
 			Notification.success(response);
@@ -122,8 +224,33 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 		})
 	}
 
+	$scope.setimage = function() {
+	    var file = $scope.record;
+	    var fayl = document.getElementById('my-file-selector').files
+	    $scope.ImageSrcUpload = []
+	    $scope.ImageSrcArr = []
+	    for(var y in fayl){
+	    	if(typeof fayl[y] === 'object')
+	    		$scope.ImageSrcArr.push(fayl[y])
+	    }
+
+	    for(var z in $scope.ImageSrcArr){
+	    	var reader = new FileReader();
+		    reader.readAsDataURL($scope.ImageSrcArr[z]);
+		    reader.onload = function(e) {
+		        $scope.$apply(function(){
+		        	row = {}
+		        	row['image'] = e.target.result
+		        	row['name'] = $scope.ImageSrcArr[z].name
+
+        			$scope.ImageSrcUpload.push(row)
+		        })
+		    }
+	    }
+	}
+
 	$scope.load_to_edit = function(record){
-		$scope.create_dialog(record);
+		$scope.create_dialog(record, record.uploaded_question);
 	}
 
 	$scope.filter.transaction_type = {'name':'ALL'}
@@ -191,6 +318,11 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 	    $scope.finding_list = {}
 	}
 
+	$scope.add_answer = function(list){
+		$scope.answers.push(angular.copy(list))
+	    $scope.answer_list = {}
+	}
+
 	$scope.remove_choice = function(list,index){
 		if(list.id){
 			me.post_generic("/assessments/delete_choice/"+list.id,{},"dialog")
@@ -222,6 +354,38 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 		}else{
 	    	$scope.findings.splice($scope.findings.indexOf(list), 1);
 		}
+    }
+
+    $scope.remove_answer = function(list,index){
+		if(list.id){
+			me.post_generic("/assessments/delete_answer/"+list.id,{},"dialog")
+			.success(function(response){
+	    		$scope.answers.splice($scope.answers.indexOf(list), 1);
+			})
+		}else{
+	    	$scope.answers.splice($scope.answers.indexOf(list), 1);
+		}
+    }
+
+    $scope.remove_image = function(list,index){
+    	if(list.id){
+    		me.post_generic("/assessments/delete_image/"+list.id,{}, "dialog")
+    		.success(function(response){
+    			$scope.ImageSrc.splice($scope.ImageSrc.indexOf(list), 1);
+    		})
+    	}else{
+			$scope.ImageSrcUpload.splice($scope.ImageSrcUpload.indexOf(list), 1);
+			var fayl = document.getElementById('my-file-selector').files
+			$scope.ImageSrcArr2 = []
+			for(var y in fayl){
+				if(typeof fayl[y] === 'object') {
+					if(fayl[y].name != list.name)
+						$scope.ImageSrcArr2.push(fayl[y])
+				}
+			}
+
+			$scope.record.images = $scope.ImageSrcArr2
+    	}
     }
 
     $scope.read_transaction_types = function(){
@@ -281,3 +445,24 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
     CommonRead.get_display_terms($scope);
 	// $scope.read_transaction_types();
 });
+
+
+app.directive('fileModel', ['$parse', function($parse) {
+    return {
+        restrict: 'A',
+        link: function($scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+            element.bind('change', function(e) {
+                $scope.$apply(function(e) {
+                    modelSetter($scope, element[0].files[0]);
+                });
+                $scope.setimage();
+            });
+        }
+    }
+}])
+
+app.config(['$compileProvider', function($compileProvider){
+	$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|local|data):/);
+}]);

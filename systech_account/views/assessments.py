@@ -13,6 +13,9 @@ def home(request):
 def create_dialog(request):
 	return render(request, 'assessments/dialogs/create_dialog.html')
 
+def upload_dialog(request):
+	return render(request, 'assessments/dialogs/upload_dialog.html')
+
 def read(request):
 	try:
 		data = req_data(request,True)
@@ -324,6 +327,205 @@ def create(request,results=None):
 	except Exception as err:
 		return HttpResponse(err, status = 400)
 
+def upload(request):
+	if request.method == "POST":
+		try:
+			data = request.POST
+			files = request.FILES
+			images = files.getlist("images")
+			# if len(files) == 0:
+			# 	raise_error("Kindly select a file first.")
+
+			
+			company = get_current_company(request)
+			datus = {}
+			old_is_related = data.pop('old_is_related',None)
+			datus['uploaded_question'] = True
+			datus['is_document'] = data['is_document']
+			datus['code'] = data['code']
+			datus['company'] = company
+			datus['is_active'] = True
+			datus['transaction_type'] = data['transaction_type']
+
+			effects = data.pop("effects",None)
+			findings = data.getlist("findings")
+			data.pop("images",None)
+			# data.pop("findings",None)
+			answers = data.pop("answers",None)
+
+			# data["code"] = "6666666366"
+			# datus["code"] = data["code"]
+
+			try:
+				instance = Assessment_question.objects.get(id=data.get('id',None))
+				assessment_question = Assessment_question_form(datus,instance=instance)
+			except Assessment_question.DoesNotExist:
+				create_filters = {
+					'company' : company,
+					'code' : data['code'],
+					'is_active' : True
+				}
+				if Assessment_question.objects.filter(**create_filters).exists():
+					return error("Code already exists.")
+				assessment_question = Assessment_question_form(datus)
+
+			if assessment_question.is_valid():
+				assessment_save = assessment_question.save()
+				for image in images:
+					image_F = {}
+					image_F["image"] = image
+					image_F["filename"] = image
+					image_F["filelocation"] = image
+
+					image_Q = {}
+					image_Q['question'] = assessment_save.pk
+					image_Q['is_active'] = True
+					image_Q['company'] = company
+					image_Q['image'] = image
+
+					image_question = Assessment_image_form(image_Q, image_F)
+
+					if image_question.is_valid():
+						image_question.save()
+			# saveData(request, data, assessment_save.pk)
+			return success(assessment_save.pk)
+		except Exception as e:
+			return error(e)
+	else: return error('method error')
+
+def multiple_upload(request):
+	if request.method == "POST":
+		try:
+			data = request.POST
+			files = request.FILES
+			images = files.getlist("images")
+			company = get_current_company(request)
+
+			data.pop("images",None)
+			datus = {}
+			datus['is_active'] = True
+
+			t_term = "Transaction Type"
+			q_term = "Question"
+			terms = get_display_terms(request)
+
+			if terms:
+				if terms.transaction_types:
+					t_term = terms.transaction_types
+
+				if terms.questions:
+					q_term = terms.questions
+
+			if 'code' not in data:
+				return error("Code is required.")
+			else:
+				# if Assessment_question.objects.filter(code=data['code'],is_active=True).exists():
+				# 	return error("Code already exists.")
+				# else:
+				datus['code'] = data['code']
+
+			# datus['is_document'] = data['is_document']
+			datus['company'] = company
+			datus['uploaded_question'] = True
+			datus['transaction_type'] = data['transaction_type']
+			try:
+				instance = Assessment_question.objects.get(code=data['code'],transaction_type=data['transaction_type'])
+				assessment_question = Assessment_question_form(datus,instance=instance)
+			except Assessment_question.DoesNotExist:
+				assessment_question = Assessment_question_form(datus)
+
+			if assessment_question.is_valid():
+				assessment_save = assessment_question.save()
+				for image in images:
+					image_F = {}
+					image_F["image"] = image
+					image_F["filename"] = image
+					image_F["filelocation"] = image
+
+					image_Q = {
+						'question' : assessment_save.pk,
+						'is_active' : True,
+						'company' : company,
+						'image' : image
+					}
+
+					image_question = Assessment_image_form(image_Q, image_F)
+					if image_question.is_valid():
+						image_question.save()
+						return success()
+					else: raise_error(json.dumps(image_question.errors))
+			else: raise_error(json.dumps(assessment_question.errors))
+		except Exception as e:
+			return error(e)
+	else: return error("method error")
+
+
+def saveData(request):
+	try:
+		postdatus = req_data(request,True)
+		postdata = postdatus['datus']
+		company = get_current_company(request)
+		q_id = postdatus['id']
+		answers = postdata.pop("answers",None)
+		effects = postdata.pop("effects",None)
+		findings = postdata.pop("findings",None)
+
+		for effect in effects:
+			effect['question'] = q_id
+			effect['is_active'] = True
+			effect['company'] = company
+			try:
+				instance_effect = Assessment_effect.objects.get(id=effect.get('id',None))
+				result = sentence_matching(effect.get('value',None),"Assessment_effect",q_id,instance_effect.pk)
+				effect_question = Assessment_effect_form(effect,instance=instance_effect)
+			except Assessment_effect.DoesNotExist:
+				result = sentence_matching(effect.get('value',None),"Assessment_effect",q_id)
+
+				effect_question = Assessment_effect_form(effect)
+
+			if result:
+				return error("Effect already exists: '" + result + "'")
+
+			if effect_question.is_valid():
+				effect_question.save()
+
+		for finding in findings:
+			finding['question'] = q_id
+			finding['is_active'] = True
+			finding['company'] = company
+			try:
+				instance_finding = Assessment_finding.objects.get(id=finding.get('id',None))
+				result = sentence_matching(finding.get('value',None),"Assessment_finding",q_id,instance_finding.pk)
+				finding_question = Assessment_finding_form(finding,instance=instance_finding)
+			except Assessment_finding.DoesNotExist:
+				result = sentence_matching(finding.get('value',None),"Assessment_finding",q_id)
+				
+				finding_question = Assessment_finding_form(finding)
+			
+			if result:
+				return error("Findings already exists: '" + result + "'")
+
+			if finding_question.is_valid():
+				finding_question.save()
+
+		for answer in answers:
+			answer['question'] = q_id
+			answer['is_active'] = True
+			answer['company'] = company
+
+			try:
+				instance_answer = Assessment_image_answer.objects.get(id=answer.get('id',None))
+				answer_question = Assessment_image_answer_form(answer,instance=instance_answer)
+			except Assessment_image_answer.DoesNotExist:
+				answer_question = Assessment_image_answer_form(answer)
+
+			if answer_question.is_valid():
+				answer_question.save()
+
+		return HttpResponse("Successfully saved.", status = 200)
+	except Exception as err:
+		return HttpResponse(err, status = 400)
+
 def delete(request,id = None):
 	try:
 		try:
@@ -375,6 +577,30 @@ def delete_finding(request,id = None):
 			return success("Successfully deleted.")
 		except Assessment_finding.DoesNotExist:
 			raise_error("Finding doesn't exist.")
+	except Exception as e:
+		return HttpResponse(e, status = 400)
+
+def delete_image(request,id = None):
+	try:
+		try:
+			image = Assessment_image.objects.get(pk = id)
+			image.is_active = False
+			image.save()
+			return success("Successfully deleted.")
+		except Assessment_image.DoesNotExist:
+			raise_error("Image doesn't exist.")
+	except Exception as e:
+		return HttpResponse(e, status = 400)
+
+def delete_answer(request,id = None):
+	try:
+		try:
+			answer = Assessment_image_answer.objects.get(pk = id)
+			answer.is_active = False
+			answer.save()
+			return success("Successfully deleted.")
+		except Assessment_image_answer.DoesNotExist:
+			raise_error("Answer doesn't exist.")
 	except Exception as e:
 		return HttpResponse(e, status = 400)
 
