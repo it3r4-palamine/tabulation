@@ -291,6 +291,8 @@ class Assessment_score(models.Model):
 			'score' : self.score,
 			'transaction_type' : self.transaction_type.get_dict(),
 			'company_assessment' : self.company_assessment.get_dict(),
+			'question' : self.question.pk,
+			'uploaded_question' : self.uploaded_question,
 		}
 
 class Assessment_session(models.Model):

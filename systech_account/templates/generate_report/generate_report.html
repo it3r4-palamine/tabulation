@@ -56,14 +56,19 @@
                                 <h5 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#accordion" href="#collapse_{$key$}">
                                         {$ transaction_type.name $}
-                                        <span ng-repeat="score in scores" ng-if="score.transaction_type.id == transaction_type.id">
+                                        <!-- <span ng-repeat="score in scores" ng-if="score.transaction_type.id == transaction_type.id">
                                          - SCORE: {$score.score$}
-                                        </span>
+                                        </span> -->
                                     </a>
                                 </h5>
                             </div>
                             <div id="collapse_{$key$}" class="panel-collapse collapse" ng-class="{'in' : $first}">
                                 <div class="panel-body" ng-repeat="(record_key, record) in records" ng-if="record.transaction_type.id == transaction_type.id">
+                                    <h2>
+                                        <span ng-repeat="score in scores" ng-if="score.transaction_type.id == transaction_type.id && score.uploaded_question && score.question == record.id">
+                                        SCORE: {$score.score$}
+                                        </span>
+                                    </h2>
                                     {$ record.value $}
                                     <span ng-if="record.images">{$ record.code_value $}</span>
                                     <div align="center" class="carousel slide" id="carousel{$ record_key+1 $}" ng-if="record.images">
