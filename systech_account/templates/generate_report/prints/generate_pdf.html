@@ -47,7 +47,6 @@
             </tr>
             <tr ng-repeat-end ng-repeat="(record_key, record) in records" ng-if="record.transaction_type.id == transaction_type.id && record.dupes">
                 <td></td>
-                <!-- <td><b>{$record.code$}</b> - {$record.value$}</td>
                 <td>
                     <div>
                         
@@ -59,8 +58,8 @@
                             </li>
                         </ul>
                     </span>
-                <!-- </td> -->
-                <!-- <td> -->
+              <!--   </td>
+                <td> -->
                     <span ng-if="record.effects.length > 0">
                         <b>EFFECT:</b>
                         <ul>
@@ -69,8 +68,8 @@
                             </li>
                         </ul>
                     </span>
-                <!-- </td> -->
-                <!-- <td> -->
+                <!-- </td>
+                <td> -->
                     <!-- <img src="/static/images/picture.png"  class="img-rounded pull-right" style="height:100px;width:100px;"> -->
                     <img ng-if="record.image" src="/static/uploads/{$record.image$}"  class="img-rounded pull-right" style="height:300px;width:300px;">
                     </div>

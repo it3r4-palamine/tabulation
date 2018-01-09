@@ -162,6 +162,7 @@ class Assessment_answer(models.Model):
 	company 		   = models.ForeignKey("Company",blank=True,null=True)
 	created_on 		   = models.DateTimeField(auto_now_add=True,null=True,blank=True)
 	is_deleted		   = models.BooleanField(default=0)
+	uploaded_question  = models.BooleanField(default=0)
 
 	class Meta:
 		app_label = "systech_account"
@@ -278,6 +279,8 @@ class Assessment_score(models.Model):
 	transaction_type   = models.ForeignKey("Transaction_type")
 	is_active 		   = models.BooleanField(default=1)
 	score 			   = models.IntegerField(blank=True, null=True)
+	question 		   = models.ForeignKey("Assessment_question",blank=True,null=True)
+	uploaded_question  = models.BooleanField(default=0)
 
 	class Meta:
 		app_label = "systech_account"
@@ -352,4 +355,27 @@ class Assessment_image_answer(models.Model):
 			'question' : self.question.pk,
 			'item_no' : self.item_no,
 			'answer' : self.answer,
+		}
+
+class Assessment_upload_answer(models.Model):
+	question = models.ForeignKey("Assessment_question")
+	is_active = models.BooleanField(default=1)
+	item_no = models.IntegerField(blank=True,null=True)
+	answer = models.CharField(max_length=200,blank=True,null=True)
+	transaction_type = models.ForeignKey("Transaction_type")
+	company_assessment = models.ForeignKey("Company_assessment")
+	is_deleted = models.BooleanField(default=0)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "assessment_upload_answers"
+
+	def get_dict(self):
+		return {
+			'id' : self.pk,
+			'answer' : self.answer,
+			'item_no' : self.item_no,
+			'question' : self.question.pk,
+			'transaction_type' : self.transaction_type.pk,
+			'company_assessment' : self.company_assessment.pk,
 		}

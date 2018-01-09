@@ -8,4 +8,4 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Assessment_answer
-		fields = ('id', 'question', 'company_assessment', 'choice', 'text_answer', 'document_image', 'transaction_type')
+		fields = ('id', 'question', 'company_assessment', 'choice', 'text_answer', 'document_image', 'transaction_type', 'uploaded_question')

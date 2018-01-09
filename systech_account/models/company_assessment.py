@@ -50,9 +50,19 @@ class Company_assessment(models.Model):
 
 					if not transaction_type_instance.is_active: continue
 					t_type = transaction_type_instance.get_dict()
-					score = str2model("Assessment_score").objects.filter(company_assessment=self.pk,is_active=True,transaction_type=transaction_type_id).first()
+					score = str2model("Assessment_score").objects.filter(company_assessment=self.pk,is_active=True,transaction_type=transaction_type_id)
 					if score:
-						t_type['score'] = score.score
+						scores = []
+						for questionScore in score:
+							if questionScore.uploaded_question:
+								row = {}
+								row['id'] = questionScore.question.pk
+								row['score'] = questionScore.score
+
+								scores.append(row)
+
+								t_type['scores'] = scores
+							else: t_type['score'] = questionScore.score
 					transaction_type_list.append(t_type)
 					
 				except Transaction_type.DoesNotExist:

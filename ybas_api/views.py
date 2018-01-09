@@ -37,6 +37,8 @@ class GetData(APIView):
 		answerList = []
 		generalQuestionList = []
 		relatedQuestionList = []
+		imageAnswerList = []
+		uploadedQuestionList = []
 
 		i = datetime.today()
 		date_now = i.strftime('%Y-%m-%d')
@@ -86,6 +88,8 @@ class GetData(APIView):
 						"question": question.id,
 						"transaction_type": transaction_type,
 					})
+			uploadedQuestionList.append(question.pk)
+
 			questionsList = question.get_dict(True)
 			questionsList['findings'] = findingsList
 			questionsList['effects'] = effectsList
@@ -110,15 +114,22 @@ class GetData(APIView):
 		# 		row['question_id'] = ids
 
 		# 		relatedQuestionList.append(row) 
-
-
+		assessmentIds = []
 		for assessment in assessmentQs:
+			assessmentIds.append(assessment.pk)
 			response["assessmentList"].append(assessment.get_dict(True))
 
 			answersQs = Assessment_answer.objects.filter(company_assessment=assessment.pk, question__is_active=True, is_deleted=False)
 			for answers in answersQs:
 				row = answers.get_dict(True)
 				answerList.append(row)
+
+		# print(assessmentIds)
+		# print(transactionTypeIdList)
+
+		image_answers = Assessment_upload_answer.objects.filter(is_deleted=False,question__in=uploadedQuestionList,transaction_type__in=transactionTypeIdList,company_assessment__in=assessmentIds)
+		for score in image_answers:
+			imageAnswerList.append(score.get_dict())
 
 		related_questions = Related_question.objects.filter(is_active=True)
 		for related_question in related_questions:
@@ -140,6 +151,7 @@ class GetData(APIView):
 		response["generalQuestionList"] = generalQuestionList
 		response["relatedQuestionList"] = relatedQuestionList
 		response["answerList"] = answerList
+		response["imageAnswerList"] = imageAnswerList
 		return Response(response)
 
 
@@ -173,22 +185,44 @@ class SyncAssessments(APIView):
 			assessmentInstance.save()
 
 			for t_type in assessment['t_types']:
-				if 'score' in t_type:
-					datus = {
-						'transaction_type' : t_type['transactionType'],
-						'company_assessment' : t_type['assessment'],
-						'is_active' : True,
-						'score' : t_type['score'],
-					}
-					try:
-						instance = Assessment_score.objects.get(company_assessment=t_type['assessment'],transaction_type=t_type['transactionType'],is_active=True)
-						assessment_score_form = Assessment_score_form(datus, instance=instance)
-					except Assessment_score.DoesNotExist:
-						assessment_score_form = Assessment_score_form(datus)
+				datus = {
+					'transaction_type' : t_type['transactionType'],
+					'company_assessment' : t_type['assessment'],
+					'is_active' : True,
+					# 'score' : t_type['score'],
+				}
 
-					if assessment_score_form.is_valid():
-						assessment_score_form.save()
-					else: Response(assessment_score_form.errors,status=status.HTTP_400_BAD_REQUEST)
+
+				if 'score' in t_type:
+					# datus['score'] = t_type['score']
+					
+					if 'scores' in t_type and t_type['scores']:
+						for score in t_type['scores']:
+							datus['question'] = score['id']
+							datus['score'] = score['score']
+							datus['uploaded_question'] = True
+
+							try:
+								instance = Assessment_score.objects.get(company_assessment=t_type['assessment'],transaction_type=t_type['transactionType'],is_active=True,question=score['id'],uploaded_question=True)
+								assessment_score_form = Assessment_score_form(datus, instance=instance)
+							except Assessment_score.DoesNotExist:
+								assessment_score_form = Assessment_score_form(datus)
+
+							if assessment_score_form.is_valid():
+								assessment_score_form.save()
+							else: Response(assessment_score_form.errors,status=status.HTTP_400_BAD_REQUEST)
+					else:
+						datus['score'] = t_type['score']
+						datus['uploaded_question'] = False
+						try:
+							instance = Assessment_score.objects.get(company_assessment=t_type['assessment'],transaction_type=t_type['transactionType'],is_active=True,uploaded_question=False)
+							assessment_score_form = Assessment_score_form(datus, instance=instance)
+						except Assessment_score.DoesNotExist:
+							assessment_score_form = Assessment_score_form(datus)
+
+						if assessment_score_form.is_valid():
+							assessment_score_form.save()
+						else: Response(assessment_score_form.errors,status=status.HTTP_400_BAD_REQUEST)
 
 			sessionsQs = Assessment_session.objects.filter(company_assessment=assessmentInstance.id)
 			for sessionsQ in sessionsQs:
@@ -215,11 +249,36 @@ class SyncAssessments(APIView):
 			# if answersQs.exists():
 				# answersQs.delete()
 
+			imageAnswersQs = Assessment_upload_answer.objects.filter(company_assessment=assessmentInstance.id)
+			for imageAnswersQ in imageAnswersQs:
+				imageAnswersQ.is_deleted = True
+				imageAnswersQ.save()
+
 			# Save Assessment Answers
+			arrayAns = []
 			for answer in assessment["answerArr"]:
-				serializer = AnswerSerializer(data=answer)
-				if serializer.is_valid():
-					serializer.save()
-				else: Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+				if 'answers' in answer:
+					for ans in answer['answers']:
+						answerObj = {}
+						answerObj['is_active'] = True
+						answerObj['item_no'] = ans['item_no']
+						answerObj['answer'] = ans['answer_text'] if 'answer_text' in ans else None
+						answerObj['question'] = ans['question']
+						answerObj['company_assessment'] = answer['company_assessment']
+						answerObj['transaction_type'] = answer['transaction_type']
+
+						if answerObj not in arrayAns:
+							arrayAns.append(answerObj)
+
+							answer_form = Assessment_upload_answer_form(answerObj)
+
+					# cprint(arrayAns)
+							if answer_form.is_valid():
+								answer_form.save()
+				if 'uploaded_question' not in answer:
+					serializer = AnswerSerializer(data=answer)
+					if serializer.is_valid():
+						serializer.save()
+					else: Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 		return Response("Syncing Success")

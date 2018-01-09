@@ -2,6 +2,7 @@
 root/local_settings.py
 .gitignore.save
 systech_account/static/uploads/assessment/document_images/
+systech_account/static/uploads/assessment/questions/
 
 systech_account/static/images/
 

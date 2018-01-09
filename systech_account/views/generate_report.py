@@ -56,89 +56,200 @@ def read_assessments(request):
 
 			for question in questions:
 				row = question.get_dict()
-				findings = Assessment_finding.objects.filter(is_active=True,question=question.pk)
-				possible_finding = []
-				if row['is_general'] == True and row['transaction_types']:
-					for types in row['transaction_types']:
-						if types['id'] == transaction_type.pk:
-							row['transaction_type'] = types
 
-				try:
-					answers_chosen = Assessment_answer.objects.get(company_assessment=data['id'],question=question.pk,is_deleted=False)
-				except Assessment_answer.DoesNotExist:
-					continue
-				wrong_answer = Decimal(0)
-				chosen = [] 
-				if answers_chosen.choice:
-					for choices in answers_chosen.choice:
-						choices = Choice.objects.get(pk=choices)
-						if choices.is_answer == False:
-							wrong_answer += 1
-						answer_dict = {'id':choices.pk,'value':choices.value,'is_answer':choices.is_answer}
-						chosen.append(answer_dict)
-					row['answers'] = chosen
-				else:
-					row['answers'] = answers_chosen.text_answer
+				if not question.uploaded_question:
+					findings = Assessment_finding.objects.filter(is_active=True,question=question.pk)
+					possible_finding = []
+					if row['is_general'] == True and row['transaction_types']:
+						for types in row['transaction_types']:
+							if types['id'] == transaction_type.pk:
+								row['transaction_type'] = types
 
-				if answers_chosen.document_image:
-					row['image'] = str(answers_chosen.document_image)
-				else:
-					row['image'] = None
+					answers_chosen = None
+					try:
+						answers_chosen = Assessment_answer.objects.get(company_assessment=data['id'],question=question.pk,is_deleted=False)
+					except Assessment_answer.DoesNotExist:
+						# continue
+						pass
+					wrong_answer = Decimal(0)
+					chosen = [] 
+					if answers_chosen.choice:
+						for choices in answers_chosen.choice:
+							choices = Choice.objects.get(pk=choices)
+							if choices.is_answer == False:
+								wrong_answer += 1
+							answer_dict = {'id':choices.pk,'value':choices.value,'is_answer':choices.is_answer}
+							chosen.append(answer_dict)
+						row['answers'] = chosen
+					else:
+						row['answers'] = answers_chosen.text_answer
 
-				if data['type'] == 'pdf' and wrong_answer > 0:
-					for finding in findings:
-						row['dupes'] = False
-						if finding.value not in all_findings:
-							row['dupes'] = True
+					if answers_chosen.document_image:
+						row['image'] = str(answers_chosen.document_image)
+					else:
+						row['image'] = None
+
+					if data['type'] == 'pdf' and wrong_answer > 0:
+						for finding in findings:
+							row['dupes'] = False
+							if finding.value not in all_findings:
+								row['dupes'] = True
+								finding_question = finding.get_dict()
+								possible_finding.append(finding_question)
+								row['findings'] = possible_finding
+								
+								effects = Assessment_effect.objects.filter(question=question.pk,is_active=True)
+								possible_effect = []
+								for effect in effects:
+									effect_question = effect.get_dict()
+									possible_effect.append(effect_question)
+								row['effects'] = possible_effect
+								
+								choices = Choice.objects.filter(question=question.pk,is_active=True)
+								answers = []
+								for choice in choices:
+									answer_choice = choice.get_dict()
+									answers.append(answer_choice)
+								row['choices'] = answers
+						datus.append(row)
+
+						for all_finding in findings:
+							if wrong_answer > 0:
+								all_findings.append(all_finding.value)
+					elif data['type'] == 'ppt':
+						for finding in findings:
+							# if finding.value not in all_findings:
 							finding_question = finding.get_dict()
 							possible_finding.append(finding_question)
 							row['findings'] = possible_finding
-							
-							effects = Assessment_effect.objects.filter(question=question.pk,is_active=True)
-							possible_effect = []
-							for effect in effects:
-								effect_question = effect.get_dict()
-								possible_effect.append(effect_question)
-							row['effects'] = possible_effect
-							
-							choices = Choice.objects.filter(question=question.pk,is_active=True)
-							answers = []
-							for choice in choices:
-								answer_choice = choice.get_dict()
-								answers.append(answer_choice)
-							row['choices'] = answers
-					datus.append(row)
+								
+						effects = Assessment_effect.objects.filter(question=question.pk,is_active=True)
+						possible_effect = []
+						for effect in effects:
+							effect_question = effect.get_dict()
+							possible_effect.append(effect_question)
+						row['effects'] = possible_effect
+						
+						choices = Choice.objects.filter(question=question.pk,is_active=True)
+						answers = []
+						for choice in choices:
+							answer_choice = choice.get_dict()
+							answers.append(answer_choice)
+						row['choices'] = answers
+						datus.append(row)
 
-					for all_finding in findings:
+						for all_finding in findings:
+							if wrong_answer > 0:
+								all_findings.append(all_finding.value)
+				else:
+					findings = Assessment_finding.objects.filter(is_active=True,question=question.pk)
+					possible_finding = []
+					if row['is_general'] == True and row['transaction_types']:
+						for types in row['transaction_types']:
+							if types['id'] == transaction_type.pk:
+								row['transaction_type'] = types
+
+					answers_chosen = None
+					try:
+						answers_chosen = Assessment_answer.objects.get(company_assessment=data['id'],question=question.pk,is_deleted=False)
+					except Assessment_answer.DoesNotExist:
+						# continue
+						pass
+					wrong_answer = Decimal(0)
+
+					image_answers = Assessment_upload_answer.objects.filter(is_deleted=False,question=question.pk,transaction_type=transaction_type.pk,company_assessment=data['id'])
+					imageAnswersArr = []
+
+					for image_answer in image_answers:
+						for correct_answers in row['answers']:
+							if image_answer.item_no == correct_answers['item_no']:
+								if image_answer.answer != correct_answers['answer']:
+									wrong_answer += 1
+					# chosen = [] 
+					# if answers_chosen.choice:
+					# 	for choices in answers_chosen.choice:
+					# 		choices = Choice.objects.get(pk=choices)
+					# 		if choices.is_answer == False:
+					# 			wrong_answer += 1
+					# 		answer_dict = {'id':choices.pk,'value':choices.value,'is_answer':choices.is_answer}
+					# 		chosen.append(answer_dict)
+					# 	row['answers'] = chosen
+					# else:
+					# 	row['answers'] = answers_chosen.text_answer
+
+					# if answers_chosen.document_image:
+					# 	row['image'] = str(answers_chosen.document_image)
+					# else:
+					# 	row['image'] = None
+
+					if data['type'] == 'pdf':
 						if wrong_answer > 0:
-							all_findings.append(all_finding.value)
-				elif data['type'] == 'ppt':
-					for finding in findings:
-						# if finding.value not in all_findings:
-						finding_question = finding.get_dict()
-						possible_finding.append(finding_question)
-						row['findings'] = possible_finding
-							
-					effects = Assessment_effect.objects.filter(question=question.pk,is_active=True)
-					possible_effect = []
-					for effect in effects:
-						effect_question = effect.get_dict()
-						possible_effect.append(effect_question)
-					row['effects'] = possible_effect
-					
-					choices = Choice.objects.filter(question=question.pk,is_active=True)
-					answers = []
-					for choice in choices:
-						answer_choice = choice.get_dict()
-						answers.append(answer_choice)
-					row['choices'] = answers
-					datus.append(row)
+							for finding in findings:
+								row['dupes'] = False
+								if finding.value not in all_findings:
+									row['dupes'] = True
+									finding_question = finding.get_dict()
+									possible_finding.append(finding_question)
+									row['findings'] = possible_finding
+									
+									effects = Assessment_effect.objects.filter(question=question.pk,is_active=True)
+									possible_effect = []
+									for effect in effects:
+										effect_question = effect.get_dict()
+										possible_effect.append(effect_question)
+									row['effects'] = possible_effect
+									
+									choices = Choice.objects.filter(question=question.pk,is_active=True)
+									answers = []
+									for choice in choices:
+										answer_choice = choice.get_dict()
+										answers.append(answer_choice)
+									row['choices'] = answers
 
-					for all_finding in findings:
-						if wrong_answer > 0:
-							all_findings.append(all_finding.value)
+									image_answers = Assessment_upload_answer.objects.filter(is_deleted=False,question=question.pk,transaction_type=transaction_type.pk,company_assessment=data['id'])
+									imageAnswersArr = []
+									for image_answer in image_answers:
+										imageAnswersArr.append(image_answer.get_dict())
+									row['image_answers'] = imageAnswersArr
+						cprint("AAAAAAAAAAAAAAAAAAA")
+						datus.append(row)
 
-		results['scores'] = scoresArr 
+						for all_finding in findings:
+							if wrong_answer > 0:
+								all_findings.append(all_finding.value)
+					elif data['type'] == 'ppt':
+						for finding in findings:
+							# if finding.value not in all_findings:
+							finding_question = finding.get_dict()
+							possible_finding.append(finding_question)
+							row['findings'] = possible_finding
+								
+						effects = Assessment_effect.objects.filter(question=question.pk,is_active=True)
+						possible_effect = []
+						for effect in effects:
+							effect_question = effect.get_dict()
+							possible_effect.append(effect_question)
+						row['effects'] = possible_effect
+						
+						choices = Choice.objects.filter(question=question.pk,is_active=True)
+						answers = []
+						for choice in choices:
+							answer_choice = choice.get_dict()
+							answers.append(answer_choice)
+						row['choices'] = answers
+
+						image_answers = Assessment_upload_answer.objects.filter(is_deleted=False,question=question.pk,transaction_type=transaction_type.pk,company_assessment=data['id'])
+						imageAnswersArr = []
+						for image_answer in image_answers:
+							imageAnswersArr.append(image_answer.get_dict())
+						row['image_answers'] = imageAnswersArr
+						datus.append(row)
+
+						for all_finding in findings:
+							if wrong_answer > 0:
+								all_findings.append(all_finding.value)
+
+		results['scores'] = scoresArr
 		results['data'] = datus
 		return success_list(results,False)
 	except Exception as e:
@@ -186,74 +297,153 @@ def generate(request):
 				findings = Assessment_finding.objects.filter(is_active=True,question=question.pk)
 				choices = Choice.objects.filter(is_active=True,question=question.pk)
 
-				try:
-					answers_chosen = Assessment_answer.objects.get(company_assessment=data['datus']['id'],question=question.pk)
-				except Assessment_answer.DoesNotExist:
-					continue
-				wrong_answer = Decimal(0)
+				if not question.uploaded_question:
+					try:
+						answers_chosen = Assessment_answer.objects.get(company_assessment=data['datus']['id'],question=question.pk)
+					except Assessment_answer.DoesNotExist:
+						continue
+					wrong_answer = Decimal(0)
 
-				if answers_chosen.choice:
-					for choices in answers_chosen.choice:
-						choices = Choice.objects.get(pk=choices)
-						if choices.is_answer == False:
-							wrong_answer += 1
+					if answers_chosen.choice:
+						for choices in answers_chosen.choice:
+							choices = Choice.objects.get(pk=choices)
+							if choices.is_answer == False:
+								wrong_answer += 1
 
 
-				if wrong_answer > 0:
-					for finding in findings:
-						if finding.value not in all_findings:
-							slide2 = prs.slides.add_slide(bullet_slide_layout)
+					if wrong_answer > 0:
+						for finding in findings:
+							if finding.value not in all_findings:
+								slide2 = prs.slides.add_slide(bullet_slide_layout)
 
-							### HEADER
-							top2 = Inches(0)
-							width2 = Inches(10)
-							left2 = height2 = Inches(0)
-							txBox2 = slide2.shapes.add_textbox(left2, top2, width2, height2)
-							tf2 = txBox2.text_frame
-							tf2.word_wrap = True
+								### HEADER
+								top2 = Inches(0)
+								width2 = Inches(10)
+								left2 = height2 = Inches(0)
+								txBox2 = slide2.shapes.add_textbox(left2, top2, width2, height2)
+								tf2 = txBox2.text_frame
+								tf2.word_wrap = True
 
-							q = tf2.add_paragraph()
-							q.alignment = PP_ALIGN.CENTER
-							run2 = q.add_run()
-							run2.text = question.transaction_type.name
-							font2 = run2.font
-							font2.size = Pt(30)
-							font2.bold = True
-							####
+								q = tf2.add_paragraph()
+								q.alignment = PP_ALIGN.CENTER
+								run2 = q.add_run()
+								run2.text = question.transaction_type.name
+								font2 = run2.font
+								font2.size = Pt(30)
+								font2.bold = True
+								####
 
-							top = Inches(1)
-							width = Inches(8)
-							left = height = Inches(1)
-							txBox = slide2.shapes.add_textbox(left, top, width, height)
-							tf = txBox.text_frame
-							tf.word_wrap = True
+								top = Inches(1)
+								width = Inches(8)
+								left = height = Inches(1)
+								txBox = slide2.shapes.add_textbox(left, top, width, height)
+								tf = txBox.text_frame
+								tf.word_wrap = True
 
-							o = tf.add_paragraph()
-							o.alignment = PP_ALIGN.JUSTIFY
-							run = o.add_run()
-							digit += 1
-							run.text = str(digit) + ". FINDING: " + finding.value
-							font = run.font
-							font.name = 'Calibri'
-							font.size = Pt(18)
-							font.bold = True
-							font.color.theme_color = MSO_THEME_COLOR.ACCENT_1
+								o = tf.add_paragraph()
+								o.alignment = PP_ALIGN.JUSTIFY
+								run = o.add_run()
+								digit += 1
+								run.text = str(digit) + ". FINDING: " + finding.value
+								font = run.font
+								font.name = 'Calibri'
+								font.size = Pt(18)
+								font.bold = True
+								font.color.theme_color = MSO_THEME_COLOR.ACCENT_1
 
-							for effect in effects:
-								p = tf.add_paragraph()
-								p.alignment = PP_ALIGN.JUSTIFY
-								p.text = "POSSIBLE EFFECT: " + effect.value
+								for effect in effects:
+									p = tf.add_paragraph()
+									p.alignment = PP_ALIGN.JUSTIFY
+									p.text = "POSSIBLE EFFECT: " + effect.value
 
-							if answers_chosen.document_image:
-								# img_slide = prs.slides.add_slide(bullet_slide_layout)
-								img_path = 'systech_account'+settings.STATIC_URL+'uploads/'+str(answers_chosen.document_image)
-								picture_top = Inches(4)
-								picture_left = Inches(6)
+								if answers_chosen.document_image:
+									# img_slide = prs.slides.add_slide(bullet_slide_layout)
+									img_path = 'systech_account'+settings.STATIC_URL+'uploads/'+str(answers_chosen.document_image)
+									picture_top = Inches(4)
+									picture_left = Inches(6)
 
-								pic = slide2.shapes.add_picture(img_path, picture_left, picture_top)
+									pic = slide2.shapes.add_picture(img_path, picture_left, picture_top)
 
-					for all_finding in findings:
-						all_findings.append(all_finding.value)
+						for all_finding in findings:
+							all_findings.append(all_finding.value)
+				else:
+					try:
+						answers_chosen = Assessment_answer.objects.get(uploaded_question=True,company_assessment=data['datus']['id'],question=question.pk)
+					except Assessment_answer.DoesNotExist:
+						pass
+					wrong_answer = Decimal(0)
+
+					# if answers_chosen.choice:
+					# 	for choices in answers_chosen.choice:
+					# 		choices = Choice.objects.get(pk=choices)
+					# 		if choices.is_answer == False:
+					# 			wrong_answer += 1
+
+					image_answers = Assessment_upload_answer.objects.filter(is_deleted=False,question=question.pk,transaction_type=transaction_type.pk,company_assessment=data['datus']['id'])
+					imageAnswersArr = []
+					row = question.get_dict()
+
+					for image_answer in image_answers:
+						for correct_answers in row['answers']:
+							if image_answer.item_no == correct_answers['item_no']:
+								if image_answer.answer != correct_answers['answer']:
+									wrong_answer += 1
+						# imageAnswersArr.append(image_answer.get_dict())
+
+					if wrong_answer > 0:
+						for finding in findings:
+							if finding.value not in all_findings:
+								slide2 = prs.slides.add_slide(bullet_slide_layout)
+
+								### HEADER
+								top2 = Inches(0)
+								width2 = Inches(10)
+								left2 = height2 = Inches(0)
+								txBox2 = slide2.shapes.add_textbox(left2, top2, width2, height2)
+								tf2 = txBox2.text_frame
+								tf2.word_wrap = True
+
+								q = tf2.add_paragraph()
+								q.alignment = PP_ALIGN.CENTER
+								run2 = q.add_run()
+								run2.text = question.transaction_type.name
+								font2 = run2.font
+								font2.size = Pt(30)
+								font2.bold = True
+								####
+
+								top = Inches(1)
+								width = Inches(8)
+								left = height = Inches(1)
+								txBox = slide2.shapes.add_textbox(left, top, width, height)
+								tf = txBox.text_frame
+								tf.word_wrap = True
+
+								o = tf.add_paragraph()
+								o.alignment = PP_ALIGN.JUSTIFY
+								run = o.add_run()
+								digit += 1
+								run.text = str(digit) + ". FINDING: " + finding.value
+								font = run.font
+								font.name = 'Calibri'
+								font.size = Pt(18)
+								font.bold = True
+								font.color.theme_color = MSO_THEME_COLOR.ACCENT_1
+
+								for effect in effects:
+									p = tf.add_paragraph()
+									p.alignment = PP_ALIGN.JUSTIFY
+									p.text = "POSSIBLE EFFECT: " + effect.value
+
+								# if answers_chosen.document_image:
+								# 	img_path = 'systech_account'+settings.STATIC_URL+'uploads/'+str(answers_chosen.document_image)
+								# 	picture_top = Inches(4)
+								# 	picture_left = Inches(6)
+
+								# 	pic = slide2.shapes.add_picture(img_path, picture_left, picture_top)
+
+						for all_finding in findings:
+							all_findings.append(all_finding.value)
 
 		##################### SAVE CHOSEN RECOMMENDATION
 		chosen_recommendations = []

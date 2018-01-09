@@ -52,7 +52,7 @@ class Related_question_form(forms.ModelForm):
 class Assessment_score_form(forms.ModelForm):
 	class Meta:
 		model  = Assessment_score
-		fields = ('transaction_type','is_active','company_assessment','score') 
+		fields = ('transaction_type','is_active','company_assessment','score','question','uploaded_question') 
 
 class Assessment_session_form(forms.ModelForm):
 	class Meta:
@@ -68,3 +68,8 @@ class Assessment_image_answer_form(forms.ModelForm):
 	class Meta:
 		model  = Assessment_image_answer
 		fields = ('company','is_active','question','answer','item_no')
+
+class Assessment_upload_answer_form(forms.ModelForm):
+	class Meta:
+		model  = Assessment_upload_answer
+		fields = ('question','is_active','is_deleted','answer','item_no','company_assessment','transaction_type')
