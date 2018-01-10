@@ -310,7 +310,7 @@ class Assessment_session(models.Model):
 		return {
 			'date' : datetime.strptime(str(self.date), '%Y-%m-%d').date(),
 			'time_start' : self.time_start.strftime("%H:%M:%S"),
-			'time_end' : self.time_end.strftime("%H:%M:%S"),
+			'time_end' : self.time_end.strftime("%H:%M:%S") if self.time_end else None,
 		}
 
 class Assessment_image(models.Model):
