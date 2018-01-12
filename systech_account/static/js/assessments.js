@@ -104,7 +104,8 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 		$scope.finding_list = {}
 		$scope.answer_list = {}
 		if($scope.record.is_multiple == undefined) $scope.record.is_multiple = false;
-		if(not_upload)
+		if(not_upload){
+
 			if($scope.record.is_multiple){
 				if(has_true > 1){
 					$scope.record['has_multiple_answer'] = true
@@ -133,6 +134,7 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 					return Notification.error("Please select a choice that requires document image.")
 				}
 			}
+		}
 
 		if($scope.record.is_general == false) $scope.record.transaction_types = []
 

@@ -25,7 +25,7 @@
                         </div>
                         <div class="col-sm-12"><br>
                             <div class="lightBoxGallery">
-                                <div class="col-sm-3" ng-hide="image.upload" ng-repeat="image in ImageSrc">
+                                <div class="col-sm-4" ng-hide="image.upload" ng-repeat="image in ImageSrc">
                                     Image {$ $index +1 $}<br>
                                     <a href="{$ image.image $}" title="" data-gallery="">
                                         <img src="{$ image.image $}"  class="img-rounded" style="height:100px;width:100px;"><br>
@@ -40,7 +40,41 @@
                                     <!-- <div class="checkbox checkbox-success">
                                         <input type="checkbox" id="is_document_{$$index$}" name="is_document_{$$index$}" ng-model="record.is_document[$index]" ng-click="isMultiple()"><label for="is_document_{$$index$}">Needs document image</label>
                                     </div> -->
-                                    <button class="btn bt-outline btn-danger" ng-click="remove_image(image, $index)"><i class="fa fa-trash-o"></i></button>
+                                    <div class="col-sm-12">
+                                        <table class="table">
+                                            <thead>
+                                                <th>Item #</th>
+                                                <th>Answer</th>
+                                                <th></th>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="(key, answer) in record.answer_keys[$index]">
+                                                    <td>
+                                                        <input type="number" min="0" name="item" ng-model="answer.item_no" class="form-control">
+                                                    </td>
+                                                    <td>
+                                                        <textarea ng-model="answer.answer" class="form-control"></textarea>
+                                                    </td>
+                                                    <td>
+                                                        <a href="" class="btn bt-outline btn-danger" ng-click="remove_answer(answer, key, $index)"><i class="fa fa-trash-o"></i></a> 
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input type="number" min="0" name="item" ng-model="answer_list[$index].item_no" class="form-control">
+                                                    </td>
+                                                    <td>
+                                                        <textarea ng-model="answer_list[$index].answer" class="form-control"></textarea>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-white" ng-click="add_answer(answer_list[$index], $index)" ng-disabled="!answer_list[$index].answer && !answer_list[$index].item_no"><i class="fa fa-plus"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <br>
+                                    <button class="btn bt-outline btn-danger" ng-click="remove_image(image, record, $index)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                                 <div id="blueimp-gallery" class="blueimp-gallery">
                                     <div class="slides"></div>

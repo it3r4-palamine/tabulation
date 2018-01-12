@@ -276,9 +276,15 @@ class SyncAssessments(APIView):
 							if answer_form.is_valid():
 								answer_form.save()
 				if 'uploaded_question' not in answer:
+					if 'uploaded_document' in answer:
+						answer['choice'] = []
+						answer['uploaded_question'] = True
+
 					serializer = AnswerSerializer(data=answer)
 					if serializer.is_valid():
 						serializer.save()
-					else: Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+					else: 
+						raise_error(json.dumps(serializer.errors))
+						# Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 		return Response("Syncing Success")

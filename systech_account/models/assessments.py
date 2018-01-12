@@ -317,9 +317,9 @@ class Assessment_image(models.Model):
 	question  = models.ForeignKey("Assessment_question")
 	is_active = models.BooleanField(default=1)
 	image 	  = ProcessedImageField(upload_to='assessment/questions/',
-								   processors=[ResizeToFit(618,400)],
+								   processors=[ResizeToFit(1000,1000)],
 								   format='PNG',
-								   options = {'quality': 80},
+								   options = {'quality': 100},
 								   blank=True,
 								   null=True)
 	company   = models.ForeignKey("Company",blank=True,null=True)

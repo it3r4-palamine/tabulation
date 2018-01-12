@@ -20,6 +20,7 @@ urlpatterns = [
 	url(r'^assessments/saveData/$', assessments.saveData),
 	url(r'^assessments/upload/$', assessments.upload),
 	url(r'^assessments/multiple_upload/$', assessments.multiple_upload),
+	url(r'^assessments/multiple_upload_answer_keys/$', assessments.multiple_upload_answer_keys),
 	url(r'^assessments/read/$', assessments.read),
 	url(r'^assessments/generate_code/$', assessments.generate_code),
 	url(r'^assessments/delete/(?P<id>[0-9]+)$', assessments.delete),

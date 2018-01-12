@@ -452,7 +452,7 @@ def multiple_upload(request):
 					image_question = Assessment_image_form(image_Q, image_F)
 					if image_question.is_valid():
 						image_question.save()
-						return success()
+						return success(assessment_save.pk)
 					else: raise_error(json.dumps(image_question.errors))
 			else: raise_error(json.dumps(assessment_question.errors))
 		except Exception as e:
@@ -525,6 +525,27 @@ def saveData(request):
 		return HttpResponse("Successfully saved.", status = 200)
 	except Exception as err:
 		return HttpResponse(err, status = 400)
+
+def multiple_upload_answer_keys(request):
+	try:
+		postdatus = req_data(request,True)
+		postdata = postdatus['datus']
+		company = get_current_company(request)
+		q_id = postdatus['id']
+		answer_keys = postdata
+
+		for answer_key in answer_keys:
+			answer_key['question'] = q_id
+			answer_key['is_active'] = True
+			answer_key['company'] = company
+
+			answer_key_form = Assessment_image_answer_form(answer_key)
+			if answer_key_form.is_valid():
+				answer_key_form.save()
+
+		return success()
+	except Exception as err:
+		return HttpResponse(err,status=400)
 
 def delete(request,id = None):
 	try:

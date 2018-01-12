@@ -157,15 +157,23 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		if(type == "image"){
 			$scope.ImageSrc = []
 			$scope.record = []
-			$scope.record['images'] = []
 			me.open_dialog("/import/upload_dialog/","dialog_whole","main")
 		}else{
 			me.open_dialog("/import/create_dialog/","dialog_whole","main")
 		}
 
 	}
+	$scope.add_answer = function(list,arrIdx){
+		$scope.record.answer_keys[arrIdx].push(angular.copy(list))
+	    $scope.answer_list[arrIdx] = {}
+	}
 
-	$scope.remove_image = function(list,index){
+	$scope.remove_answer = function(list,index,arrIdx){
+    	$scope.record.answer_keys[arrIdx].splice($scope.record.answer_keys[arrIdx].indexOf(list), 1);
+    }
+
+	$scope.remove_image = function(list,data,index){
+		// $scope.record.code.splice($scope.record.code.indexOf(data.code[index]), 1);
 		$scope.ImageSrc.splice($scope.ImageSrc.indexOf(list), 1);
 		var fayl = document.getElementById('my-file-selector').files
 		$scope.ImageSrcArr2 = []
@@ -189,6 +197,23 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
     		me.close_dialog()
     	}else{
     		var number = idx + 1;
+    		if(Object.keys($scope.answer_list[idx]).length > 0) {
+    			if($scope.answer_list[idx].answer && $scope.answer_list[idx].item_no){
+    				$scope.record.answer_keys[idx].push(angular.copy($scope.answer_list[idx]))
+    			}
+    		}
+    		$scope.answer_list[idx] = {}
+
+    		for(var ans in $scope.record.answer_keys[idx]){
+    			if(!$scope.record.answer_keys[idx][ans].item_no || $scope.record.answer_keys[idx][ans].item_no == ""){
+    				return Notification.error("An item no. is missing for Image "+number+".")
+    			}
+
+    			if(!$scope.record.answer_keys[idx][ans].answer || $scope.record.answer_keys[idx][ans].answer == ""){
+    				return Notification.error("An answer is missing for Image "+number+".")
+    			}
+    		}
+
     		if(!$scope.record.code)
     			return Notification.error("Code is required for Image "+number+".")
 			else{
@@ -202,11 +227,12 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
     			if(!$scope.record.transaction_type[idx])
     				return Notification.error("Transaction type is required for Image "+number+".")
     		}
-
+    		// console.log($scope.record.answer_keys[idx])
     		var datus = {
     			images : $scope.record.images[idx],
     			code : $scope.record.code[idx],
     			transaction_type : $scope.record.transaction_type[idx].id,
+    			// answer_keys : $scope.record.answer_keys[idx]
     			// is_document : $scope.record.is_document[idx]
     		}
 
@@ -223,8 +249,9 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
     		    transformRequest: angular.identity, 
     		    headers: {'Content-Type': undefined} 
     		}).success(function(response){ 
-    		    $scope.ImageSrc[idx].upload = true
-    		    $scope.upload(++$scope.idx)
+    		    // $scope.ImageSrc[idx].upload = true
+    		    // $scope.upload(++$scope.idx)
+    		    $scope.saveData($scope.record.answer_keys[idx], response, idx)
     		})
     		.error(function(err){
     		    if(err=='code'){
@@ -234,6 +261,27 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
     			}
     		})
     	}
+    }
+
+    $scope.saveData = function(record, id, arrIdx) {
+    	var data = {
+    		datus : record,
+    		id : id
+    	}
+    	me.post_generic("/assessments/multiple_upload_answer_keys/",data,"dialog")
+    	.success(function(response){
+    		// me.close_dialog();
+    		// Notification.success(response);
+    		// $scope.read();
+    		$scope.ImageSrc[arrIdx].upload = true
+		    $scope.upload(++$scope.idx)
+    	}).error(function(err){
+    		if(err=='code'){
+    			Notification.error("Code already exists.")
+    		}else{
+    			Notification.error(err)
+    		}
+    	})
     }
 
 	$scope.read_module_columns = function(){
@@ -388,6 +436,8 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 	    var file = $scope.record;
 	    var fayl = document.getElementById('my-file-selector').files
 	    $scope.record = []
+	    $scope.record['answer_keys'] = []
+	    $scope.answer_list = []
 	    $scope.ImageSrc = []
 	    $scope.ImageSrcArr = []
 	    $scope.idx = 0
@@ -396,6 +446,7 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 	    		$scope.ImageSrcArr.push(fayl[y])
 	    }
 	    for(var z in $scope.ImageSrcArr){
+	    	$scope.record.answer_keys[z] = []
 	    	var reader = new FileReader();
 		    reader.readAsDataURL($scope.ImageSrcArr[z]);
 		    reader.onload = function(e) {
