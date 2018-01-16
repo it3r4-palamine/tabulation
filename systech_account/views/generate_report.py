@@ -166,21 +166,22 @@ def read_assessments(request):
 								if image_answer.answer != correct_answers['answer']:
 									wrong_answer += 1
 					# chosen = [] 
-					# if answers_chosen.choice:
-					# 	for choices in answers_chosen.choice:
-					# 		choices = Choice.objects.get(pk=choices)
-					# 		if choices.is_answer == False:
-					# 			wrong_answer += 1
-					# 		answer_dict = {'id':choices.pk,'value':choices.value,'is_answer':choices.is_answer}
-					# 		chosen.append(answer_dict)
-					# 	row['answers'] = chosen
-					# else:
-					# 	row['answers'] = answers_chosen.text_answer
+					if answers_chosen:
+						if answers_chosen.choice:
+							for choices in answers_chosen.choice:
+								choices = Choice.objects.get(pk=choices)
+								if choices.is_answer == False:
+									wrong_answer += 1
+								answer_dict = {'id':choices.pk,'value':choices.value,'is_answer':choices.is_answer}
+								chosen.append(answer_dict)
+							row['answers'] = chosen
+						else:
+							row['answers'] = answers_chosen.text_answer
 
-					# if answers_chosen.document_image:
-					# 	row['image'] = str(answers_chosen.document_image)
-					# else:
-					# 	row['image'] = None
+						if answers_chosen.document_image:
+							row['image'] = str(answers_chosen.document_image)
+						else:
+							row['image'] = None
 
 					if data['type'] == 'pdf':
 						if wrong_answer > 0:

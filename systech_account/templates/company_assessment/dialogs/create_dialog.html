@@ -10,12 +10,12 @@
                 <form class="form" name="form">
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.reference_no.$invalid && !form.reference_no.$pristine }">
                         <label>Reference No.</label>
-                        <input type="text" name="reference_no" ng-disabled="true" ng-model="record.reference_no" class="form-control">
+                        <input type="text" name="reference_no" required ng-disabled="true" ng-model="record.reference_no" class="form-control">
                     </div>
                     <div class="col-sm-12">
                         <br>
                         <label><span ng-if="!display_terms[0].company_rename" ng-cloak="">Company</span><span ng-if="display_terms[0].company_rename" ng-cloak="">{$ display_terms[0].company_rename $}</span></label> <span ng-if="!companies[0]"><i class="fa fa-spinner fa-pulse"></i></span>
-                        <ui-select ng-model="record.company_rename" ng-change="select_transaction_type(record)">
+                        <ui-select ng-model="record.company_rename" required ng-change="select_transaction_type(record)">
                             <ui-select-match placeholder="Select...">{$ $select.selected.name $}</ui-select-match>
                             <ui-select-choices repeat="company in companies | filter: $select.search | limitTo:50">
                                 <div ng-bind-html="company.name | highlight: $select.search"></div>
@@ -25,7 +25,7 @@
                     <div class="col-sm-12">
                         <br>
                         <label>Assigned To</label>
-                        <ui-select ng-model="record.consultant" ng-change="read_user_credits(record)">
+                        <ui-select ng-model="record.consultant" required ng-change="read_user_credits(record)">
                             <ui-select-match placeholder="Select...">{$ $select.selected.fullname $}</ui-select-match>
                             <ui-select-choices repeat="consultant in consultants | filter: $select.search | limitTo:50">
                                 <span ng-bind-html="consultant.fullname | highlight: $select.search"></span> - <span ng-bind-html="consultant.user_type.name | highlight: $select.search"></span>
@@ -35,7 +35,7 @@
                     <div class="col-sm-12">
                         <br>
                         <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
-                        <ui-select ng-model="record.transaction_types" ng-disabled="!record.company_rename" multiple>
+                        <ui-select ng-model="record.transaction_types" required ng-disabled="!record.company_rename" multiple>
                             <ui-select-match ng-attr-placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $item.name $}</ui-select-match>
                             <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">
                                 <div ng-bind-html="transaction_type.name | highlight: $select.search"></div>
@@ -45,18 +45,18 @@
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.date_from.$invalid && !form.date_from.$pristine }">
                         <br>
                         <label>Date From</label>
-                        <input type="date" name="date_from" ng-change="minimum_date()" ng-model="record.date_from" class="form-control">
+                        <input type="date" name="date_from" required ng-disabled="true" ng-change="minimum_date()" ng-model="record.date_from" class="form-control">
                     </div>
                     <div class="col-sm-12">
                         <br>
                         <label>Date To</label>
-                        <input type="date" name="date_to" min="{$ minimum_date_to $}" ng-model="record.date_to" class="form-control">
+                        <input type="date" name="date_to" required ng-disabled="true" min="{$ minimum_date_to $}" ng-model="record.date_to" class="form-control">
                     </div>
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.session_credits.$invalid && !form.session_credits.$pristine }">
                         <br>
                         <label>Session Credits</label>
                         <div class="input-group">
-                            <input type="number" name="session_credits" ng-model="record.session_credits" class="form-control">
+                            <input type="number" ng-disabled="true" required name="session_credits" ng-model="record.session_credits" class="form-control">
                             <div class="input-group-btn">
                                 <button type="button" class="btn btn-default btn-refresh" ng-click="read_user_credits(record)"><i class="fa fa-refresh"></i></button>
                             </div>

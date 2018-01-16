@@ -28,7 +28,7 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 
 	$scope.get_intelex_students = function()
 	{
-		me.post_generic("/users/get_intelex_students/")
+		me.post_generic("/users/get_intelex_students/","","main")
 		.success(function(data)
 		{
 			Notification.success(data)

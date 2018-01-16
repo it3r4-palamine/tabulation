@@ -172,20 +172,22 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
     	$scope.record.answer_keys[arrIdx].splice($scope.record.answer_keys[arrIdx].indexOf(list), 1);
     }
 
-	$scope.remove_image = function(list,data,index){
-		// $scope.record.code.splice($scope.record.code.indexOf(data.code[index]), 1);
-		$scope.ImageSrc.splice($scope.ImageSrc.indexOf(list), 1);
-		var fayl = document.getElementById('my-file-selector').files
-		$scope.ImageSrcArr2 = []
-		for(var y in fayl){
-			if(typeof fayl[y] === 'object') {
-				if(fayl[y].name != list.name)
-					$scope.ImageSrcArr2.push(fayl[y])
-			}
-		}
+	$scope.remove_image = function(list,data,arrIdx){
+		$scope.record.deleted[arrIdx] = true
+		$scope.ImageSrc[arrIdx].upload = true
+		// $scope.ImageSrc.splice($scope.ImageSrc.indexOf(list), 1);
+		// var fayl = document.getElementById('my-file-selector').files
+		// $scope.ImageSrcArr2 = []
+		// for(var y in fayl){
+		// 	if(typeof fayl[y] === 'object') {
+		// 		if(fayl[y].name != list.name)
+		// 			$scope.ImageSrcArr2.push(fayl[y])
+		// 	}
+		// }
 
-		$scope.record.images = $scope.ImageSrcArr2
+		// $scope.record.images = $scope.ImageSrcArr2
     }
+
     $scope.idx = 0
     $scope.create = function(){
     	$scope.upload($scope.idx)
@@ -193,73 +195,91 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 
     $scope.upload = function(idx){
     	if(idx == $scope.record.images.length){
+    		$('body').loadingModal('hide');
+    		$('body').loadingModal('destroy') ;
     		Notification.success("Successfully uploaded.")
     		me.close_dialog()
     	}else{
+    		$('body').loadingModal({text: 'Uploading...'});
+    		$('body').loadingModal('animation', 'cubeGrid');
+    		$('body').loadingModal('backgroundColor', 'green');
     		var number = idx + 1;
-    		if(Object.keys($scope.answer_list[idx]).length > 0) {
+    		if($scope.answer_list[idx] && Object.keys($scope.answer_list[idx]).length > 0) {
     			if($scope.answer_list[idx].answer && $scope.answer_list[idx].item_no){
     				$scope.record.answer_keys[idx].push(angular.copy($scope.answer_list[idx]))
     			}
     		}
     		$scope.answer_list[idx] = {}
-
-    		for(var ans in $scope.record.answer_keys[idx]){
-    			if(!$scope.record.answer_keys[idx][ans].item_no || $scope.record.answer_keys[idx][ans].item_no == ""){
-    				return Notification.error("An item no. is missing for Image "+number+".")
-    			}
-
-    			if(!$scope.record.answer_keys[idx][ans].answer || $scope.record.answer_keys[idx][ans].answer == ""){
-    				return Notification.error("An answer is missing for Image "+number+".")
-    			}
-    		}
-
-    		if(!$scope.record.code)
-    			return Notification.error("Code is required for Image "+number+".")
+    		if(!$scope.record.deleted)
+    			$scope.record['deleted'][idx] = false
 			else{
-				if(!$scope.record.code[idx])
-    				return Notification.error("Code is required for Image "+number+".")
+				if(!$scope.record.deleted[idx])
+					$scope.record.deleted[idx] = false
 			}
 
-    		if(!$scope.record.transaction_type)
-    			return Notification.error("Transaction type is required for Image "+number+".")
-    		else{
-    			if(!$scope.record.transaction_type[idx])
-    				return Notification.error("Transaction type is required for Image "+number+".")
-    		}
-    		// console.log($scope.record.answer_keys[idx])
-    		var datus = {
-    			images : $scope.record.images[idx],
-    			code : $scope.record.code[idx],
-    			transaction_type : $scope.record.transaction_type[idx].id,
-    			// answer_keys : $scope.record.answer_keys[idx]
-    			// is_document : $scope.record.is_document[idx]
-    		}
+			if($scope.record.deleted[idx] == true){
+				$scope.upload(++$scope.idx)
+			}else{
+	    		for(var ans in $scope.record.answer_keys[idx]){
+	    			if(!$scope.record.answer_keys[idx][ans].item_no || $scope.record.answer_keys[idx][ans].item_no == ""){
+	    				return Notification.error("An item no. is missing for Image "+number+".")
+	    			}
 
-    		var upload = new FormData();
+	    			if(!$scope.record.answer_keys[idx][ans].answer || $scope.record.answer_keys[idx][ans].answer == ""){
+	    				return Notification.error("An answer is missing for Image "+number+".")
+	    			}
+	    		}
 
-    		angular.forEach(datus, function(value, key){
-    			if(datus[key] === undefined){
-    			    value = ""
-    			}
-    			upload.append(key, value)
-    		});
-    		$http.post('/assessments/multiple_upload/', upload, { 
-    		    method: "post", 
-    		    transformRequest: angular.identity, 
-    		    headers: {'Content-Type': undefined} 
-    		}).success(function(response){ 
-    		    // $scope.ImageSrc[idx].upload = true
-    		    // $scope.upload(++$scope.idx)
-    		    $scope.saveData($scope.record.answer_keys[idx], response, idx)
-    		})
-    		.error(function(err){
-    		    if(err=='code'){
-    				Notification.error("Code already exists.")
-    			}else{
-    				Notification.error(err)
-    			}
-    		})
+	    		if(!$scope.record.code)
+	    			return Notification.error("Code is required for Image "+number+".")
+				else{
+					if(!$scope.record.code[idx])
+	    				return Notification.error("Code is required for Image "+number+".")
+				}
+
+	    		if(!$scope.record.transaction_type)
+	    			return Notification.error("Transaction type is required for Image "+number+".")
+	    		else{
+	    			if(!$scope.record.transaction_type[idx])
+	    				return Notification.error("Transaction type is required for Image "+number+".")
+	    		}
+
+	    		var datus = {
+	    			images : $scope.record.images[idx],
+	    			code : $scope.record.code[idx],
+	    			transaction_type : $scope.record.transaction_type[idx].id,
+	    		}
+
+	    		var upload = new FormData();
+
+	    		angular.forEach(datus, function(value, key){
+	    			if(datus[key] === undefined){
+	    			    value = ""
+	    			}
+	    			upload.append(key, value)
+	    		});
+	    		$http.post('/assessments/multiple_upload/', upload, { 
+	    		    method: "post", 
+	    		    transformRequest: angular.identity, 
+	    		    headers: {'Content-Type': undefined} 
+	    		}).success(function(response){ 
+	    		    // $scope.ImageSrc[idx].upload = true
+	    		    // $scope.upload(++$scope.idx)
+	    		    $scope.saveData($scope.record.answer_keys[idx], response, idx)
+	    		})
+	    		.error(function(err){
+	    			$('body').loadingModal('hide');
+	    			$('body').loadingModal('destroy') ;
+	    		    if(err=='code'){
+	    				Notification.error("Code already exists.")
+	    			}else{
+	    				Notification.error(err)
+	    			}
+	    		})
+			}
+
+    		// }
+
     	}
     }
 
@@ -276,6 +296,8 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
     		$scope.ImageSrc[arrIdx].upload = true
 		    $scope.upload(++$scope.idx)
     	}).error(function(err){
+    		$('body').loadingModal('hide');
+    		$('body').loadingModal('destroy') ;
     		if(err=='code'){
     			Notification.error("Code already exists.")
     		}else{
@@ -437,27 +459,39 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 	    var fayl = document.getElementById('my-file-selector').files
 	    $scope.record = []
 	    $scope.record['answer_keys'] = []
+	    $scope.record['deleted'] = []
+	    $scope.record['images'] = []
 	    $scope.answer_list = []
 	    $scope.ImageSrc = []
 	    $scope.ImageSrcArr = []
 	    $scope.idx = 0
 	    for(var y in fayl){
 	    	if(typeof fayl[y] === 'object')
-	    		$scope.ImageSrcArr.push(fayl[y])
+	    		$scope.record.images.push(fayl[y])
 	    }
-	    for(var z in $scope.ImageSrcArr){
-	    	$scope.record.answer_keys[z] = []
-	    	var reader = new FileReader();
-		    reader.readAsDataURL($scope.ImageSrcArr[z]);
-		    reader.onload = function(e) {
-		        $scope.$apply(function(){
-        			row = {}
-		        	row['image'] = e.target.result
-		        	row['name'] = $scope.ImageSrcArr[z].name
 
-        			$scope.ImageSrc.push(row)
-		        })
-		    }
+	    saveImage(0)
+
+	    function saveImage(idx){
+	    	if(idx == $scope.record.images.length){
+
+	    	}else{
+		    	$scope.record.answer_keys[idx] = []
+		    	var current_name = $scope.record.images[idx].name
+		    	var reader = new FileReader();
+			    reader.readAsDataURL($scope.record.images[idx]);
+			    reader.onload = function(e) {
+			        $scope.$apply(function(){
+	        			row = {}
+			        	row['name'] = current_name
+			        	row['image'] = e.target.result
+
+	        			$scope.ImageSrc.push(row)
+
+	        			saveImage(++idx)
+			        })
+			    }
+	    	}
 	    }
 	}
 

@@ -183,6 +183,14 @@ class Assessment_answer(models.Model):
 			assessment_answers['transaction_type'] = self.transaction_type.pk if self.transaction_type else None
 			assessment_answers['company_assessment'] = self.company_assessment.pk
 
+			if self.document_image:
+				image = open("systech_account/static/uploads/%s"%(self.document_image), 'rb')
+				image_read = image.read()
+				image_64_encode = base64.standard_b64encode(image_read)
+				assessment_answers['converted_image'] = image_64_encode
+			else:
+				assessment_answers['converted_image'] = None
+
 		choice = None
 		if self.choice:
 			# API

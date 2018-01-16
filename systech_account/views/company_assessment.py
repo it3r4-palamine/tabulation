@@ -62,6 +62,9 @@ def create(request):
 		if 'transaction_types' not in postdata:
 			return error("%s is required."%(term))
 
+		if len(postdata['transaction_types']) == 0:
+			return error("%s is required."%(term))
+
 		transaction_types = postdata.pop('transaction_types',[])
 
 		company_assessment_transaction_type = []

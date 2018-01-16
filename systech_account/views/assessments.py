@@ -429,7 +429,7 @@ def multiple_upload(request):
 			datus['uploaded_question'] = True
 			datus['transaction_type'] = data['transaction_type']
 			try:
-				instance = Assessment_question.objects.get(code=data['code'],transaction_type=data['transaction_type'])
+				instance = Assessment_question.objects.get(code=data['code'],transaction_type=data['transaction_type'],is_active=True)
 				assessment_question = Assessment_question_form(datus,instance=instance)
 			except Assessment_question.DoesNotExist:
 				assessment_question = Assessment_question_form(datus)

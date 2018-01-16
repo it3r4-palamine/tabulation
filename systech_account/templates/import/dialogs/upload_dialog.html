@@ -1,7 +1,7 @@
 <div class="wrapper wrapper-content animated fadeIn modalibox">
     <div class="ibox">
         <div class="ibox-title ibox_title_reset">
-            <h3><span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">aaaaaaaaaaaaaa{$ display_terms[0].questions $}</span></h3>
+            <h3><span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></h3>
         </div>
 
         <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
@@ -37,6 +37,7 @@
                                         </ui-select-choices>
                                     </ui-select><br><br>
                                     <input type="text" name="code" placeholder="Code" ng-model="record.code[$index]" required class="form-control">
+                                    <input type="checkbox" name="deleted" ng-hide="true" ng-model="record.deleted[$index]">Deleted
                                     <!-- <div class="checkbox checkbox-success">
                                         <input type="checkbox" id="is_document_{$$index$}" name="is_document_{$$index$}" ng-model="record.is_document[$index]" ng-click="isMultiple()"><label for="is_document_{$$index$}">Needs document image</label>
                                     </div> -->

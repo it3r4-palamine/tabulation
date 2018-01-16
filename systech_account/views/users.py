@@ -137,7 +137,7 @@ def read_user_credits(request):
 								program_id=datus['company_rename']['program_id'],
 								user=datus['consultant']['id'],
 								session_start_date__lte=date_now,
-								session_end_date__gte=date_now,
+								session_end_date__lte=date_now,
 							)
 		for user_credit in user_credits:
 			row = user_credit.get_dict()
@@ -207,7 +207,7 @@ def get_intelex_students(request):
 				student["password2"] = username
 				student["is_intelex"] = True
 				student["is_active"] = True
-				# student["session_credits"] = timedelta(milliseconds=record["session_credits"])
+				student["session_credits"] = timedelta(milliseconds=record["session_credits"])
 				student["company"] = get_current_company(request)
 
 				print student
@@ -227,7 +227,7 @@ def get_intelex_students(request):
 								'program_id' : credits['program_id'],
 								'session_start_date' : datetime.strptime(credits['session_start_date'], '%Y-%m-%d').date(),
 								'session_end_date' : datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
-								# 'session_credits' : credits['session_credits']
+								'session_credits' : credits['session_credits']
 							}
 							user_credits["session_credits"]  = timedelta(seconds=credits['session_credits'])
 							try:

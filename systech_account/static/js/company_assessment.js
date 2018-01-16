@@ -48,6 +48,10 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 		if(total_time > 0){
 			credits -= total_time
 		}
+
+		if(!$scope.record.transaction_types){
+			Notification.error("Transaction type is required.")
+		}
 		// console.log(credits)
 		$scope.record.credits_left = credits
 		me.post_generic("/company_assessment/create/",$scope.record,"dialog")
@@ -120,7 +124,6 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 	}
 
 	$scope.read_transaction_types = function(record){
-		console.log(record)
     	me.post_generic("/transaction_types/read/",{"company_rename":record.company_rename.id},"main")
     	.success(function(response){
     		$scope.transaction_types = response.data;
@@ -145,6 +148,7 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
     $scope.select_transaction_type = function(record){
     	$scope.record.transaction_types = {}
 		$scope.read_transaction_types(record);
+		$scope.read_user_credits(record);
     }
 
     $scope.select_user = function(record){
@@ -156,9 +160,16 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
     	// record.date_to = moment(new Date(record.date_to)).format('YYYY-MM-DD');
     	me.post_generic("/users/read_user_credits/",record,"dialog")
     	.success(function(response){
-    		$scope.record.session_credits = response.data[0].session_credits
-    		$scope.record.date_from = new Date(response.data[0].session_start_date)
-    		$scope.record.date_to = new Date(response.data[0].session_end_date)
+    		if(response.data.length > 0) {
+	    		$scope.record.session_credits = response.data[0].session_credits
+	    		$scope.record.date_from = new Date(response.data[0].session_start_date)
+	    		$scope.record.date_to = new Date(response.data[0].session_end_date)
+    		}else{
+    			$scope.record.session_credits = null
+    			$scope.record.date_from = null
+    			$scope.record.date_to = null
+    			Notification.error("No session credits left. Please advised!")
+    		}
     	})
     }
 
