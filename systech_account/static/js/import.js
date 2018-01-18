@@ -188,6 +188,17 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		// $scope.record.images = $scope.ImageSrcArr2
     }
 
+    $scope.insertSymbol = function(insert,record){
+    	record.answer += insert.symbol
+    }
+
+    $scope.insertSymbolList = function(insert,record,idx){
+    	if(record.answer == undefined)
+    		$scope.answer_list[idx].answer = insert.symbol
+    	else
+    		$scope.answer_list[idx].answer += insert.symbol
+    }
+
     $scope.idx = 0
     $scope.create = function(){
     	$scope.upload($scope.idx)
@@ -222,26 +233,42 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 			}else{
 	    		for(var ans in $scope.record.answer_keys[idx]){
 	    			if(!$scope.record.answer_keys[idx][ans].item_no || $scope.record.answer_keys[idx][ans].item_no == ""){
+	    				$('body').loadingModal('hide');
+	    				$('body').loadingModal('destroy') ;
 	    				return Notification.error("An item no. is missing for Image "+number+".")
 	    			}
 
 	    			if(!$scope.record.answer_keys[idx][ans].answer || $scope.record.answer_keys[idx][ans].answer == ""){
+	    				$('body').loadingModal('hide');
+	    				$('body').loadingModal('destroy') ;
 	    				return Notification.error("An answer is missing for Image "+number+".")
 	    			}
 	    		}
 
-	    		if(!$scope.record.code)
+	    		if(!$scope.record.code){
+	    			$('body').loadingModal('hide');
+	    			$('body').loadingModal('destroy') ;
 	    			return Notification.error("Code is required for Image "+number+".")
+	    		}
 				else{
 					if(!$scope.record.code[idx])
+						$('body').loadingModal('hide');
+						$('body').loadingModal('destroy') ;
 	    				return Notification.error("Code is required for Image "+number+".")
 				}
 
-	    		if(!$scope.record.transaction_type)
+	    		if(!$scope.record.transaction_type){
+	    			$('body').loadingModal('hide');
+	    			$('body').loadingModal('destroy') ;
 	    			return Notification.error("Transaction type is required for Image "+number+".")
+	    		}
 	    		else{
 	    			if(!$scope.record.transaction_type[idx])
+	    			{
+	    				$('body').loadingModal('hide');
+	    				$('body').loadingModal('destroy') ;
 	    				return Notification.error("Transaction type is required for Image "+number+".")
+	    			}
 	    		}
 
 	    		var datus = {
@@ -495,8 +522,23 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 	    }
 	}
 
+	var indexedCategories = []
+	$scope.catergoryToFilter = function(){
+    	indexedCategories = []
+    	return $scope.math_symbols
+    }
+
+    $scope.filterCategory = function(category){
+    	var categoryIsNew = indexedCategories.indexOf(category.category) == -1;
+    	if(categoryIsNew){
+    		indexedCategories.push(category.category)
+    	}
+    	return categoryIsNew;
+    }
+
 	CommonRead.get_display_terms($scope)
 	CommonRead.get_transaction_types2($scope);
+	CommonRead.get_math_symbols($scope);
 
 });
 

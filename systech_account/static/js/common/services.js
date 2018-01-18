@@ -841,6 +841,13 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
+        get_math_symbols: function(scope) {
+            var post = CommonRequests.read_common_records(scope, "math_symbols", "/settings/read_math_symbols/",{},true);
+            return post.success(function(response){
+                scope["math_symbols"] = response.data;
+            })
+        },
+
         get_questions: function(scope,transaction_types) {
             data = {"all": true}
             if(transaction_types){

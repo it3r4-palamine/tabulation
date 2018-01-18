@@ -474,3 +474,64 @@ def user_types_delete(request,id=None):
 			raise_error("Recommendation doesn't exist.")
 	except Exception as e:
 		return HttpResponse(e, status = 400)
+
+def math_symbols(request):
+	return render(request, 'settings/math_symbols.html')
+
+def math_symbols_create_dialog(request):
+	return render(request, 'settings/dialogs/math_symbols_create_dialog.html')
+
+def math_symbols_create(request):
+	try: 
+		postdata = req_data(request,True)
+		try:
+			instance = Math_symbol.objects.get(id=postdata.get('id',None))
+			math_symbols = Math_symbol_form(postdata, instance=instance)
+		except Math_symbol.DoesNotExist:
+			math_symbols = Math_symbol_form(postdata)
+
+		if math_symbols.is_valid():
+			math_symbols.save()
+			return HttpResponse("Successfully saved.", status = 200)
+		else:
+			return HttpResponse(math_symbols.errors, status = 400)
+	except Exception as err:
+		return HttpResponse(err, status = 400)
+
+def read_math_symbols(request):
+	try:
+		data = req_data(request,True)
+		pagination = None
+
+		if 'pagination' in data:
+			pagination = data.pop("pagination",None)
+		filters = {}
+		filters['is_active'] = True
+		filters['company'] = data['company']
+		records = Math_symbol.objects.filter(**filters).order_by("id")
+		results = {'data':[]}
+		results['total_records'] = records.count()
+
+		if pagination:
+			results.update(generate_pagination(pagination,records))
+			records = records[results['starting']:results['ending']]
+		data = []
+		for record in records:
+			row = record.get_dict()
+			data.append(row)
+		results['data'] = data
+		return success_list(results,False)
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
+def math_symbols_delete(request,id=None):
+	try:
+		try:
+			record = Math_symbol.objects.get(pk = id)
+			record.is_active = False
+			record.save()
+			return success()
+		except Math_symbol.DoesNotExist:
+			raise_error("Symbol doesn't exist.")
+	except Exception as e:
+		return HttpResponse(e, status = 400)

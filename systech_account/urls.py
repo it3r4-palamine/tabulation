@@ -101,6 +101,11 @@ urlpatterns = [
 	url(r'^settings/user_types_create_dialog/$', settings.user_types_create_dialog),
 	url(r'^settings/user_types_create/$', settings.user_types_create),
 	url(r'^settings/user_types_delete/(?P<id>[0-9]+)$', settings.user_types_delete),
+	url(r'^settings/math_symbols/$', settings.math_symbols),
+	url(r'^settings/math_symbols_create_dialog/$', settings.math_symbols_create_dialog),
+	url(r'^settings/math_symbols_create/$', settings.math_symbols_create),
+	url(r'^settings/read_math_symbols/$', settings.read_math_symbols),
+	url(r'^settings/math_symbols_delete/(?P<id>[0-9]+)$', settings.math_symbols_delete),
 ]
 urlpatterns += static(root_settings.STATIC_URL,document_root=root_settings.STATIC_ROOT)
 urlpatterns += static(root_settings.MEDIA_URL,document_root=root_settings.MEDIA_ROOT)

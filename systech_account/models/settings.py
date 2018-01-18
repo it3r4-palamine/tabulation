@@ -20,3 +20,23 @@ class Display_setting(models.Model):
 			"questions" : self.questions,
 			"company_rename" : self.company_rename,
 		}
+
+class Math_symbol(models.Model):
+	symbol    = models.TextField(blank=True,null=True)
+	name      = models.TextField(blank=True,null=True)
+	company   = models.ForeignKey("Company")
+	is_active = models.BooleanField(default=1)
+	category  = models.TextField(blank=True,null=True)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "math_symbols"
+
+	def get_dict(self):
+		return {
+			"id" : self.pk,
+			"symbol" : self.symbol,
+			"name" : self.name,
+			"is_active" : self.is_active,
+			"category" : self.category,
+		}

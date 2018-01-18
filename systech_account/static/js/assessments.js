@@ -186,6 +186,9 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 				}
 			})
 		}else{
+			$('body').loadingModal({text: 'Saving...'});
+			$('body').loadingModal('animation', 'cubeGrid');
+			$('body').loadingModal('backgroundColor', 'green');
 			$http.post('/assessments/upload/', company_settings, { 
 			    method: "post", 
 			    transformRequest: angular.identity, 
@@ -197,6 +200,8 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 			    $scope.saveData($scope.record, response)
 			})
 			.error(function(err){
+				$('body').loadingModal('hide');
+				$('body').loadingModal('destroy') ;
 			    if(err=='code'){
 					Notification.error("Code already exists.")
 				}else{
@@ -214,10 +219,14 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 		}
 		me.post_generic("/assessments/saveData/",data,"dialog")
 		.success(function(response){
+			$('body').loadingModal('hide');
+    		$('body').loadingModal('destroy') ;
 			me.close_dialog();
 			Notification.success(response);
 			$scope.read();
 		}).error(function(err){
+			$('body').loadingModal('hide');
+			$('body').loadingModal('destroy') ;
 			if(err=='code'){
 				Notification.error("Code already exists.")
 			}else{
@@ -436,6 +445,32 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 		})
     }
 
+    $scope.insertSymbol = function(idx,insert,record){
+    	record.answer += insert.symbol
+    	// var text = $('#answer_'+idx);
+	    // text.val(text.val() + insert.symbol);
+    }
+    var indexedCategories = []
+    $scope.insertSymbolList = function(insert,record){
+    	if(record.answer == undefined)
+    		record.answer = insert.symbol
+    	else
+    		record.answer += insert.symbol
+    }
+
+    $scope.catergoryToFilter = function(){
+    	indexedCategories = []
+    	return $scope.math_symbols
+    }
+
+    $scope.filterCategory = function(category){
+    	var categoryIsNew = indexedCategories.indexOf(category.category) == -1;
+    	if(categoryIsNew){
+    		indexedCategories.push(category.category)
+    	}
+    	return categoryIsNew;
+    }
+
     // $scope.isGeneral = function(){
     // 	$scope.record = {};	
     // }
@@ -445,6 +480,7 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
     CommonRead.get_transaction_types($scope);
     CommonRead.get_transaction_types2($scope);
     CommonRead.get_display_terms($scope);
+    CommonRead.get_math_symbols($scope);
 	// $scope.read_transaction_types();
 });
 

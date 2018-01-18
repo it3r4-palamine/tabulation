@@ -29,12 +29,14 @@ class GetData(APIView):
 			'relatedQuestionList': [],
 			'choiceList': [],
 			'answerList': [],
+			'symbolList': [],
 		}
 		transactionTypeIdList = []
 		questionList = []
 		findingsList = []
 		effectsList = []
 		answerList = []
+		symbolList = []
 		generalQuestionList = []
 		relatedQuestionList = []
 		imageAnswerList = []
@@ -145,7 +147,13 @@ class GetData(APIView):
 
 				relatedQuestionList.append(row)
 
+		symbols = Math_symbol.objects.filter(is_active=True)
+		for symbol in symbols:
+			row_symbol = symbol.get_dict()
+			symbolList.append(row_symbol)
+
 		response["questionList"] = questionList
+		response["symbolList"] = symbolList
 		# response["effectsList"] = effectsList
 		# response["findingsList"] = findingsList
 		response["generalQuestionList"] = generalQuestionList

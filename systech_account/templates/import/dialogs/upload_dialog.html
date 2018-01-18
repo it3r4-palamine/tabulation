@@ -25,7 +25,7 @@
                         </div>
                         <div class="col-sm-12"><br>
                             <div class="lightBoxGallery">
-                                <div class="col-sm-4" ng-hide="image.upload" ng-repeat="image in ImageSrc">
+                                <div class="col-sm-4" ng-hide="image.upload" ng-repeat="(index, image) in ImageSrc">
                                     Image {$ $index +1 $}<br>
                                     <a href="{$ image.image $}" title="" data-gallery="">
                                         <img src="{$ image.image $}"  class="img-rounded" style="height:100px;width:100px;"><br>
@@ -54,10 +54,24 @@
                                                         <input type="number" min="0" name="item" ng-model="answer.item_no" class="form-control">
                                                     </td>
                                                     <td>
+                                                        <div class="btn-group">
+                                                            <div class="btn-group" uib-dropdown>
+                                                                <button type="button" class="btn btn-outline btn-primary btn-xs" uib-dropdown-toggle>
+                                                                    Insert <span class="caret"></span>
+                                                                </button>
+                                                                <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()">
+                                                                    <input type="text" name="search" style="margin: 5px;width: 94%;" ng-model="searchText" class="form-control" placeholder="Search...">
+                                                                    <div ng-repeat="symbolPerCategory in catergoryToFilter() | filter:filterCategory">
+                                                                        <label style="margin: 5px;">{$ symbolPerCategory.category $}</label><br>
+                                                                        <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbol(symbol,answer)">{$ symbol.symbol $}</button>
+                                                                    </div>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
                                                         <textarea ng-model="answer.answer" class="form-control"></textarea>
                                                     </td>
                                                     <td>
-                                                        <a href="" class="btn bt-outline btn-danger" ng-click="remove_answer(answer, key, $index)"><i class="fa fa-trash-o"></i></a> 
+                                                        <a href="" class="btn bt-outline btn-danger" ng-click="remove_answer(answer, key, $index)"><i class="fa fa-minus"></i></a> 
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -65,10 +79,24 @@
                                                         <input type="number" min="0" name="item" ng-model="answer_list[$index].item_no" class="form-control">
                                                     </td>
                                                     <td>
+                                                        <div class="btn-group">
+                                                            <div class="btn-group" uib-dropdown>
+                                                                <button ng-disabled="!answer_list[$index].item_no" type="button" class="btn btn-outline btn-primary btn-xs" uib-dropdown-toggle>
+                                                                    Insert <span class="caret"></span>
+                                                                </button>
+                                                                <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()">
+                                                                    <input type="text" name="search" style="margin: 5px;width: 94%;" ng-model="searchText" class="form-control" placeholder="Search...">
+                                                                    <div ng-repeat="symbolPerCategory in catergoryToFilter() | filter:filterCategory">
+                                                                        <label style="margin: 5px;">{$ symbolPerCategory.category $}</label><br>
+                                                                        <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbolList(symbol,answer_list[index],index)">{$ symbol.symbol $}</button>
+                                                                    </div>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
                                                         <textarea ng-model="answer_list[$index].answer" class="form-control"></textarea>
                                                     </td>
                                                     <td>
-                                                        <button class="btn btn-white" ng-click="add_answer(answer_list[$index], $index)" ng-disabled="!answer_list[$index].answer && !answer_list[$index].item_no"><i class="fa fa-plus"></i></button>
+                                                        <button class="btn btn-white" ng-click="add_answer(answer_list[$index], $index)" ng-disabled="!answer_list[$index].answer || !answer_list[$index].item_no"><i class="fa fa-plus"></i></button>
                                                     </td>
                                                 </tr>
                                             </tbody>

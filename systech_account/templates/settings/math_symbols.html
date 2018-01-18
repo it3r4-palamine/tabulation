@@ -1,4 +1,4 @@
-<div class="panel-body" ng-controller="usertypesCtrl as main">
+<div class="panel-body" ng-controller="mathsymbolsCtrl as main">
     <div class="ibox-content" layout="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
         {% include "common/loader.html" %} 
         <div class="row">
@@ -10,12 +10,16 @@
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
+                        <th>Symbol</th>
                         <th>Name</th>
+                        <th>Category</th>
                         <th>Action</th>
                     </thead>
                     <tbody>
                         <tr ng-repeat="record in records" class="hand_cursor">
+                            <td ng-click="load_to_edit(record)">{$ record.symbol $}</td>
                             <td ng-click="load_to_edit(record)">{$ record.name $}</td>
+                            <td ng-click="load_to_edit(record)">{$ record.category $}</td>
                             <td><button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button></td>
                         </tr>
                     </tbody>
