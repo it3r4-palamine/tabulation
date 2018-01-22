@@ -71,14 +71,14 @@ def create(request):
 
 			if terms.company_rename:
 				c_term = terms.company_rename
-		if 'transaction_types' not in postdata or not postdata['transaction_types']:
+		if 'updated_transaction_types' not in postdata or not postdata['updated_transaction_types']:
 			return error("%s is required."%(t_term))
 
-		transaction_types = postdata.pop('transaction_types',[])
+		transaction_types = postdata.pop('updated_transaction_types',[])
 		
 		company_transaction_type = []
 		for transaction_type in transaction_types:
-			company_transaction_type.append(transaction_type['id'])
+			company_transaction_type.append(transaction_type)
 
 		postdata['transaction_type'] = list_to_string(company_transaction_type)
 		try:

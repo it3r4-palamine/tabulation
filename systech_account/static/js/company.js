@@ -21,11 +21,17 @@ app.controller('companyCtrl', function($scope, $http, $timeout, $element, $contr
 	}
 
 	$scope.create = function(){
+		$scope.record['updated_transaction_types'] = []
+		for(var ids in $scope.record.transaction_types){
+			$scope.record.updated_transaction_types.push($scope.record.transaction_types[ids].id)
+		}
 		if($scope.record.new_transaction_types){
 			for(var t_type in $scope.record.new_transaction_types){
-				$scope.record.transaction_types.push($scope.record.new_transaction_types[t_type])
+				$scope.record.updated_transaction_types.push($scope.record.new_transaction_types[t_type].id)
 			}
 		}
+		$scope.record.transaction_type = []
+		$scope.record.transaction_types = []
 		me.post_generic("/company/create/",$scope.record,"dialog")
 		.success(function(response){
 			me.close_dialog();
@@ -115,7 +121,7 @@ app.controller('companyCtrl', function($scope, $http, $timeout, $element, $contr
 	}
 
 	$scope.read_transaction_types = function(){
-    	me.post_generic("/transaction_types/read/","","main")
+    	me.post_generic("/transaction_types/read/","","")
     	.success(function(response){
     		$scope.transaction_types = response.data;
     	})
@@ -130,7 +136,7 @@ app.controller('companyCtrl', function($scope, $http, $timeout, $element, $contr
     	var datus = {
     		program_id: transaction_typesArr
     	}
-    	me.post_generic("/transaction_types/read/",datus,"main")
+    	me.post_generic("/transaction_types/read/",datus,"")
     	.success(function(response){
     		$scope.old_subject_transaction_types = response.data;
     	})
