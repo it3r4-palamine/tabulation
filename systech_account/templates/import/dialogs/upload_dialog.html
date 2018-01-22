@@ -59,8 +59,8 @@
                                                                 <button type="button" class="btn btn-outline btn-primary btn-xs" uib-dropdown-toggle>
                                                                     Insert <span class="caret"></span>
                                                                 </button>
-                                                                <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()">
-                                                                    <input type="text" name="search" style="margin: 5px;width: 94%;" ng-model="searchText" class="form-control" placeholder="Search...">
+                                                                <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()" style="width: 500px;height: 250px;overflow: auto;">
+                                                                    <input type="text" name="search" style="margin: 5px;width: 98%;" ng-model="searchText" class="form-control" placeholder="Search...">
                                                                     <div ng-repeat="symbolPerCategory in catergoryToFilter() | filter:filterCategory">
                                                                         <label style="margin: 5px;">{$ symbolPerCategory.category $}</label><br>
                                                                         <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbol(symbol,answer)">{$ symbol.symbol $}</button>
@@ -84,8 +84,8 @@
                                                                 <button ng-disabled="!answer_list[$index].item_no" type="button" class="btn btn-outline btn-primary btn-xs" uib-dropdown-toggle>
                                                                     Insert <span class="caret"></span>
                                                                 </button>
-                                                                <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()">
-                                                                    <input type="text" name="search" style="margin: 5px;width: 94%;" ng-model="searchText" class="form-control" placeholder="Search...">
+                                                                <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()" style="width: 500px;height: 250px;overflow: auto;">
+                                                                    <input type="text" name="search" style="margin: 5px;width: 98%;" ng-model="searchText" class="form-control" placeholder="Search...">
                                                                     <div ng-repeat="symbolPerCategory in catergoryToFilter() | filter:filterCategory">
                                                                         <label style="margin: 5px;">{$ symbolPerCategory.category $}</label><br>
                                                                         <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbolList(symbol,answer_list[index],index)">{$ symbol.symbol $}</button>
