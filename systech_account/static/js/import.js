@@ -252,9 +252,11 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 	    		}
 				else{
 					if(!$scope.record.code[idx])
+					{
 						$('body').loadingModal('hide');
 						$('body').loadingModal('destroy') ;
 	    				return Notification.error("Code is required for Image "+number+".")
+					}
 				}
 
 	    		if(!$scope.record.transaction_type){
