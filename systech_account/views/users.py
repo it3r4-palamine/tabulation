@@ -5,6 +5,7 @@ from ..models.user import *
 from ..views.common import *
 from datetime import *
 import requests
+import sys,os,re,unicodedata
 
 
 def users(request):
@@ -137,7 +138,7 @@ def read_user_credits(request):
 								program_id=datus['company_rename']['program_id'],
 								user=datus['consultant']['id'],
 								session_start_date__lte=date_now,
-								session_end_date__lte=date_now,
+								session_end_date__gte=date_now,
 							)
 		for user_credit in user_credits:
 			row = user_credit.get_dict()
@@ -146,6 +147,10 @@ def read_user_credits(request):
 		return success_list(results,False)
 	except Exception as e:
 		return HttpResponse(e,status=400)
+
+def elimina_tildes(cadena):
+    s = ''.join((c for c in unicodedata.normalize('NFD',unicode(cadena)) if unicodedata.category(c) != 'Mn'))
+    return s.decode()
 
 def get_intelex_students(request):
 	try:
@@ -159,13 +164,16 @@ def get_intelex_students(request):
 
 		for record in records["records"]:
 			cprint(record)
-			student = record.pop("student", None)
-			first_name = student.get("first_name", "student_")
-			last_name = student.get("last_name", "code")
+			first_name = record.get("first_name", "student_")
+			last_name = record.get("last_name", "code")
+
+			last_name = last_name.encode('UTF-8').strip()
+			last_name = last_name.decode('UTF-8')
+
+			last_name = elimina_tildes(last_name)
 			username = '%s%s' % (first_name.lower(), last_name.lower()) 
 			username = username.replace(" ", "")
 			
-
 			email_add = username + "@gmail.com"
 			user_id = None
 			user_exists = User.objects.filter(email__iexact=email_add,is_active=True).first()
@@ -182,7 +190,7 @@ def get_intelex_students(request):
 							'session_end_date' : datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
 							# 'session_credits' : credits['session_credits']
 						}
-						user_credits["session_credits"]  = timedelta(seconds=credits['session_credits'])
+						user_credits["session_credits"]  = timedelta(seconds=credits['total_time_left_seconds']) if credits['total_time_left_seconds'] > 0 else timedelta(seconds=credits['session_credits'])
 						try:
 							instance = User_credit.objects.get(enrollment_id=credits['enrollment_id'])
 							user_credits_form = User_credit_form(user_credits,instance=instance)
@@ -197,25 +205,22 @@ def get_intelex_students(request):
 			else:
 				student_user = User_type.objects.filter(is_active=True,company=datus['company'],name="Student").first()
 				if student_user:
-					student['user_type'] = student_user.pk
+					record['user_type'] = student_user.pk
 				else:
 					return error("No Student user type. Please go to User Types Settings.")
-				student["email"] = email_add
-				student["fullname"] = student["full_name"]
-				student["user_intelex_id"] = student["id"]
-				student["password1"] = username
-				student["password2"] = username
-				student["is_intelex"] = True
-				student["is_active"] = True
-				student["session_credits"] = timedelta(milliseconds=record["session_credits"])
-				student["company"] = get_current_company(request)
+				record["email"] = email_add
+				record["fullname"] = record["first_name"] + record["last_name"]
+				record["user_intelex_id"] = record["id"]
+				record["password1"] = username
+				record["password2"] = username
+				record["is_intelex"] = True
+				record["is_active"] = True
+				record["session_credits"] = timedelta(milliseconds=record["session_credits"]) if "session_credits" in record and record["session_credits"] else 0
+				record["company"] = get_current_company(request)
 
-				print student
-
-				user_type = StudentUserForm(student)
+				user_type = StudentUserForm(record)
 
 				if user_type.is_valid():
-					print "test"
 					user_account = user_type.save()
 					user_id = user_account.pk
 					if 'enrollments' in record:
@@ -227,9 +232,9 @@ def get_intelex_students(request):
 								'program_id' : credits['program_id'],
 								'session_start_date' : datetime.strptime(credits['session_start_date'], '%Y-%m-%d').date(),
 								'session_end_date' : datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
-								'session_credits' : credits['session_credits']
+								# 'session_credits' : credits['session_credits']
 							}
-							user_credits["session_credits"]  = timedelta(seconds=credits['session_credits'])
+							user_credits["session_credits"]  = timedelta(seconds=credits['total_time_left_seconds']) if credits['total_time_left_seconds'] > 0 else timedelta(seconds=credits['session_credits'])
 							try:
 								instance = User_credit.objects.get(enrollment_id=credits['enrollment_id'])
 								user_credits_form = User_credit_form(user_credits,instance=instance)
@@ -245,4 +250,7 @@ def get_intelex_students(request):
 		return HttpResponse("Successfully saved.", status=200)
 	except Exception as e:
 		print e
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		print(exc_type, fname, exc_tb.tb_lineno)
 		return HttpResponse(e,status=400)
