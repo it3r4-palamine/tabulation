@@ -12,6 +12,15 @@
                         <label class="required">Symbol</label>
                         <input type="text" ng-model="record.symbol" name="symbol" required class="form-control">
                     </div>
+                    <div class="col-sm-12">
+                        <div class="checkbox checkbox-success">
+                            <input type="checkbox" id="above_text" name="above_text" ng-model="record.above_text"><label for="above_text">Above Text</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" ng-if="record.above_text" ng-class="{ 'has-error' : form.syntax.$invalid && !form.syntax.$pristine }">
+                        <label class="required">Syntax</label>
+                        <input type="text" ng-model="record.syntax" name="syntax" required class="form-control">
+                    </div>
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.name.$invalid && !form.name.$pristine }">
                         <label class="required">Name</label>
                         <input type="text" ng-model="record.name" name="name" required class="form-control">

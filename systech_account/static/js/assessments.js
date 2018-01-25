@@ -1,6 +1,6 @@
 var app = angular.module("assessments",['common_module','file-model']);
 
-app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $controller,CommonFunc,Notification,CommonRead) {
+app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCache, $timeout, $element, $controller,CommonFunc,Notification,CommonRead) {
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
 	var me = this;
 	$scope.record = {}
@@ -52,11 +52,16 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 		}
 		
 		if(upload) {
-			me.open_dialog("/assessments/upload_dialog/","dialog_whole","main")
+			// me.open_dialog("/assessments/upload_dialog/","dialog_whole","main")
+			$("#myModal").modal('toggle');
 		}
 		else {
 			me.open_dialog("/assessments/create_dialog/","dialog_whole","main")
 		}
+	}
+
+	$scope.upload_close_dialog = function(){
+		$("#myModal").modal('toggle');
 	}
 
 	$scope.close_dialog = function(){$uibModalStack.dismissAll();}
@@ -221,7 +226,8 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
 		.success(function(response){
 			$('body').loadingModal('hide');
     		$('body').loadingModal('destroy') ;
-			me.close_dialog();
+			// me.close_dialog();
+			$("#myModal").modal('toggle');
 			Notification.success(response);
 			$scope.read();
 		}).error(function(err){
@@ -446,16 +452,62 @@ app.controller('assessmentsCtrl', function($scope, $http, $timeout, $element, $c
     }
 
     $scope.insertSymbol = function(idx,insert,record){
-    	record.answer += insert.symbol
+		var cursorPosStart = $('#answer_'+idx).prop('selectionStart');
+		var cursorPosEnd = $('#answer_'+idx).prop('selectionEnd');
+		var text = $('#answer_'+idx).val();
+		var textBefore = text.substring(0, cursorPosStart);
+		var textAfter = text.substring(cursorPosEnd, text.length);
+    	if(insert.above_text){
+    		var format = /[$]+/;
+
+    		if(format.test(record.answer)){
+    			// record.answer += record.answer
+	    		record.answer = textBefore + insert.syntax + textAfter
+
+    		} else {
+    			record.answer = "$$"
+	    		record.answer += textBefore + insert.syntax + textAfter
+    		}
+    	}else{
+	    	record.answer = textBefore + insert.symbol + textAfter
+    	}
+
     	// var text = $('#answer_'+idx);
 	    // text.val(text.val() + insert.symbol);
     }
     var indexedCategories = []
     $scope.insertSymbolList = function(insert,record){
-    	if(record.answer == undefined)
-    		record.answer = insert.symbol
-    	else
-    		record.answer += insert.symbol
+    	var cursorPosStart = $('#answer_list_id').prop('selectionStart');
+    	var cursorPosEnd = $('#answer_list_id').prop('selectionEnd');
+    	var text = $('#answer_list_id').val();
+    	var textBefore = text.substring(0, cursorPosStart);
+    	var textAfter = text.substring(cursorPosEnd, text.length);
+    	if(insert.above_text){
+    		var format = /[$]+/;
+
+    		if(format.test(record.answer)){
+    			if(record.answer == undefined){
+    				record.answer = textBefore + insert.syntax + textAfter
+    			}
+    			else{
+    				record.answer = textBefore + insert.syntax + textAfter
+    			}
+    		}else{
+    			if(record.answer == undefined){
+    				record.answer = "$$"
+    				record.answer += textBefore + insert.syntax + textAfter
+    			}
+    			else{
+    				record.answer = "$$"
+    				record.answer += textBefore + insert.syntax + textAfter
+    			}
+    		}
+    	}else{
+	    	if(record.answer == undefined)
+	    		record.answer = textBefore + insert.symbol + textAfter
+	    	else
+	    		record.answer = textBefore + insert.symbol + textAfter
+    	}
     }
 
     $scope.catergoryToFilter = function(){
@@ -504,3 +556,15 @@ app.directive('fileModel', ['$parse', function($parse) {
 app.config(['$compileProvider', function($compileProvider){
 	$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|local|data):/);
 }]);
+
+app.directive("mathjaxBind", function() {
+    return {
+        restrict: "A",
+        controller: ["$scope", "$element", "$attrs", function($scope, $element, $attrs) {
+            $scope.$watch($attrs.mathjaxBind, function(value) {
+                $element.text(value == undefined ? "" : value);
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, $element[0]]);
+            });
+        }]
+    };
+});

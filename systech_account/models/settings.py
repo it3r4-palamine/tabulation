@@ -22,11 +22,13 @@ class Display_setting(models.Model):
 		}
 
 class Math_symbol(models.Model):
-	symbol    = models.TextField(blank=True,null=True)
-	name      = models.TextField(blank=True,null=True)
-	company   = models.ForeignKey("Company")
-	is_active = models.BooleanField(default=1)
-	category  = models.TextField(blank=True,null=True)
+	symbol     = models.TextField(blank=True,null=True)
+	name       = models.TextField(blank=True,null=True)
+	company    = models.ForeignKey("Company")
+	is_active  = models.BooleanField(default=1)
+	category   = models.TextField(blank=True,null=True)
+	above_text = models.BooleanField(default=0)
+	syntax	   = models.TextField(blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -39,4 +41,6 @@ class Math_symbol(models.Model):
 			"name" : self.name,
 			"is_active" : self.is_active,
 			"category" : self.category,
+			"above_text" : self.above_text,
+			"syntax" : self.syntax,
 		}

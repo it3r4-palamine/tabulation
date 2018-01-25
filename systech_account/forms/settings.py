@@ -10,4 +10,4 @@ class Display_setting_form(forms.ModelForm):
 class Math_symbol_form(forms.ModelForm):
 	class Meta:
 		model  = Math_symbol
-		fields = ('symbol','name','is_active','company','category')
+		fields = ('symbol','name','is_active','company','category','above_text','syntax')
