@@ -157,12 +157,18 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		if(type == "image"){
 			$scope.ImageSrc = []
 			$scope.record = []
-			me.open_dialog("/import/upload_dialog/","dialog_whole","main")
+			// me.open_dialog("/import/upload_dialog/","dialog_whole","main")
+			$("#myModal").modal('toggle');
 		}else{
 			me.open_dialog("/import/create_dialog/","dialog_whole","main")
 		}
 
 	}
+
+	$scope.upload_close_dialog = function(){
+		$("#myModal").modal('toggle');
+	}
+
 	$scope.add_answer = function(list,arrIdx){
 		$scope.record.answer_keys[arrIdx].push(angular.copy(list))
 	    $scope.answer_list[arrIdx] = {}
@@ -189,14 +195,22 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
     }
 
     $scope.insertSymbol = function(insert,record){
-    	record.answer += insert.symbol
+    	var syntax_symbol = insert.above_text ? insert.syntax : insert.symbol
+    	record.answer += syntax_symbol
+    	record.answer_display = "\\(" + record.answer + "\\)"
     }
 
     $scope.insertSymbolList = function(insert,record,idx){
     	if(record.answer == undefined)
-    		$scope.answer_list[idx].answer = insert.symbol
-    	else
-    		$scope.answer_list[idx].answer += insert.symbol
+    		$scope.answer_list[idx].answer = ""
+
+    	var syntax_symbol = insert.above_text ? insert.syntax : insert.symbol
+    	$scope.answer_list[idx].answer += syntax_symbol
+    	$scope.answer_list[idx].answer_display = "\\(" + $scope.answer_list[idx].answer + "\\)"
+    }
+
+    $scope.answerDisplay = function(record){
+    	record.answer_display = "\\(" + record.answer + "\\)"
     }
 
     $scope.idx = 0
@@ -574,3 +588,15 @@ app.directive('fileModel', ['$parse', function($parse) {
 app.config(['$compileProvider', function($compileProvider){
 	$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|local|data):/);
 }]);
+
+app.directive("mathjaxBind", function() {
+    return {
+        restrict: "A",
+        controller: ["$scope", "$element", "$attrs", function($scope, $element, $attrs) {
+            $scope.$watch($attrs.mathjaxBind, function(value) {
+                $element.text(value == undefined ? "" : value);
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, $element[0]]);
+            });
+        }]
+    };
+});
