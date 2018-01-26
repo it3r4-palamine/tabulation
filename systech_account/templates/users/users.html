@@ -26,7 +26,13 @@
         <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
             {% include "common/loader.html" %} 
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model="filter.code" placeholder="Search..." name="">
+                </div>
+                <div class="col-sm-4">
+                    <button class="btn btn-default" ng-click="read()"><i class="fa fa-search"></i> SEARCH</button><br>
+                </div>
+                <div class="col-sm-4">
                     <div class="btn-group pull-right">
                         <button class="btn btn-primary" ng-click="create_dialog()">CREATE</button>
                         <div class="btn-group pull-right" uib-dropdown>

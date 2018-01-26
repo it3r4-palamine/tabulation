@@ -22,12 +22,17 @@ def read(request):
 		data = req_data(request,True)
 		pagination = None
 
+		code = data.pop("code","")
+
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
-		filters = {}
-		filters['is_active'] = True
-		filters['company'] = data['company']
-		records = User.objects.filter(**filters).order_by("id")
+
+		filters = (Q(company=data['company'],is_active=True))
+
+		if code:
+			filters &= (Q(email__icontains=code) | Q(fullname__icontains=code))
+
+		records = User.objects.filter(filters).order_by("id")
 		results = {'data':[]}
 		results['total_records'] = records.count()
 
