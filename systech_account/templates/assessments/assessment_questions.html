@@ -224,8 +224,9 @@
                                                                     </ul>
                                                                 </div>
                                                             </div>
-                                                            <textarea id="answer_{$key+1$}" ng-model="answer.answer" class="form-control"></textarea><br>
-                                                            Preview: <span mathjax-bind="answer.answer"></span>
+                                                            <textarea id="answer_{$key+1$}" ng-change="answerDisplay(answer)" ng-model="answer.answer" class="form-control"></textarea><br>
+                                                            <textarea ng-hide="true" ng-model="answer.answer_display" class="form-control"></textarea>
+                                                            Preview: <span mathjax-bind="answer.answer_display"></span>
                                                         </td>
                                                         <td>
                                                             <a href="" class="btn bt-outline btn-danger" ng-click="remove_answer(answer, $index)"><i class="fa fa-trash-o"></i></a> 
@@ -250,8 +251,9 @@
                                                                     </ul>
                                                                 </div>
                                                             </div>
-                                                            <textarea id="answer_list_id" ng-model="answer_list.answer" class="form-control"></textarea><br>
-                                                            Preview: <span mathjax-bind="answer_list.answer"></span>
+                                                            <textarea id="answer_list_id" ng-change="answerDisplay(answer_list)" ng-model="answer_list.answer" class="form-control"></textarea><br>
+                                                            <textarea ng-hide="true" ng-model="answer_list.answer_display" class="form-control"></textarea>
+                                                            Preview: <span mathjax-bind="answer_list.answer_display"></span>
                                                         </td>
                                                         <td>
                                                             <button class="btn btn-white" ng-click="add_answer(answer_list)" ng-disabled="!answer_list.answer || !answer_list.item_no"><i class="fa fa-plus"></i></button>

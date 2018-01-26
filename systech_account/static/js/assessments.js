@@ -48,6 +48,9 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 			$scope.effects = $scope.record.effects
 			$scope.findings = $scope.record.findings
 			$scope.answers = $scope.record.answers
+			for(var ans in $scope.answers){
+				$scope.answers[ans].answer_display = "\\(" + $scope.answers[ans].answer + "\\)"
+			}
 			$scope.ImageSrc = $scope.record.images
 		}
 		
@@ -457,20 +460,10 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 		var text = $('#answer_'+idx).val();
 		var textBefore = text.substring(0, cursorPosStart);
 		var textAfter = text.substring(cursorPosEnd, text.length);
-    	if(insert.above_text){
-    		var format = /[$]+/;
-
-    		if(format.test(record.answer)){
-    			// record.answer += record.answer
-	    		record.answer = textBefore + insert.syntax + textAfter
-
-    		} else {
-    			record.answer = "$$"
-	    		record.answer += textBefore + insert.syntax + textAfter
-    		}
-    	}else{
-	    	record.answer = textBefore + insert.symbol + textAfter
-    	}
+    	
+		var syntax_symbol = insert.above_text ? insert.syntax : insert.symbol
+		record.answer = textBefore + syntax_symbol + textAfter
+		record.answer_display = "\\(" + textBefore + syntax_symbol + textAfter + "\\)"
 
     	// var text = $('#answer_'+idx);
 	    // text.val(text.val() + insert.symbol);
@@ -482,32 +475,17 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
     	var text = $('#answer_list_id').val();
     	var textBefore = text.substring(0, cursorPosStart);
     	var textAfter = text.substring(cursorPosEnd, text.length);
-    	if(insert.above_text){
-    		var format = /[$]+/;
 
-    		if(format.test(record.answer)){
-    			if(record.answer == undefined){
-    				record.answer = textBefore + insert.syntax + textAfter
-    			}
-    			else{
-    				record.answer = textBefore + insert.syntax + textAfter
-    			}
-    		}else{
-    			if(record.answer == undefined){
-    				record.answer = "$$"
-    				record.answer += textBefore + insert.syntax + textAfter
-    			}
-    			else{
-    				record.answer = "$$"
-    				record.answer += textBefore + insert.syntax + textAfter
-    			}
-    		}
-    	}else{
-	    	if(record.answer == undefined)
-	    		record.answer = textBefore + insert.symbol + textAfter
-	    	else
-	    		record.answer = textBefore + insert.symbol + textAfter
-    	}
+    	if(record.answer == undefined)
+    		record.answer = ""
+
+    	var syntax_symbol = insert.above_text ? insert.syntax : insert.symbol
+    	record.answer = textBefore + syntax_symbol + textAfter
+    	record.answer_display = "\\(" + textBefore + syntax_symbol + textAfter + "\\)"
+    }
+
+    $scope.answerDisplay = function(record){
+    	record.answer_display = "\\(" + record.answer + "\\)"
     }
 
     $scope.catergoryToFilter = function(){
