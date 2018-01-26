@@ -57,7 +57,7 @@ class Assessment_score_form(forms.ModelForm):
 class Assessment_session_form(forms.ModelForm):
 	class Meta:
 		model  = Assessment_session
-		fields = ('company_assessment','date','time_start','time_end')
+		fields = ('company_assessment','date','time_start','time_end','is_deleted')
 
 class Assessment_image_form(forms.ModelForm):
 	class Meta:
