@@ -341,6 +341,7 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 	$scope.add_answer = function(list){
 		$scope.answers.push(angular.copy(list))
 	    $scope.answer_list = {}
+	    $scope.answer_list['item_no'] = $scope.answers.length + 1
 	}
 
 	$scope.remove_choice = function(list,index){
