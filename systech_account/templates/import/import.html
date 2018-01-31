@@ -163,7 +163,7 @@
                                                                             </ul>
                                                                         </div>
                                                                     </div>
-                                                                    <textarea ng-model="answer_list[$index].answer" ng-change="answerDisplay(answer_list[$index])" class="form-control"></textarea>
+                                                                    <textarea ng-model="answer_list[$index].answer" ng-enter="onEnter(answer_list[$index], $index)" ng-change="answerDisplay(answer_list[$index])" class="form-control"></textarea>
                                                                     <textarea ng-hide="true" ng-model="answer_list[$index].answer_display" class="form-control"></textarea><br>
                                                                     Preview: <span mathjax-bind="answer_list[$index].answer_display"></span>
                                                                 </td>

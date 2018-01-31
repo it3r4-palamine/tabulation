@@ -214,6 +214,10 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
     	record.answer_display = "\\(" + record.answer + "\\)"
     }
 
+    $scope.onEnter = function(list,arrIdx){
+    	$scope.add_answer(list,arrIdx)
+    }
+
     $scope.idx = 0
     $scope.create = function(){
     	$scope.upload($scope.idx)
@@ -604,3 +608,21 @@ app.directive("mathjaxBind", function() {
         }]
     };
 });
+
+app.directive('ngEnter', function() {
+    return function(scope, elem, attrs) {
+      elem.bind("keydown keypress", function(event) {
+        // 13 represents enter button
+        if(event.which === 13 && event.shiftKey){
+        	event.stopPropagation();
+        }
+        else if (event.which === 13) {
+          scope.$apply(function() {
+            scope.$eval(attrs.ngEnter);
+          });
+
+          event.preventDefault();
+        }
+      });
+    };
+  });
