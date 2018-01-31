@@ -172,6 +172,7 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 	$scope.add_answer = function(list,arrIdx){
 		$scope.record.answer_keys[arrIdx].push(angular.copy(list))
 	    $scope.answer_list[arrIdx] = {}
+	    $scope.answer_list[arrIdx]['item_no'] = $scope.record.answer_keys[arrIdx].length + 1
 	}
 
 	$scope.remove_answer = function(list,index,arrIdx){
@@ -224,6 +225,7 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
     		$('body').loadingModal('destroy') ;
     		Notification.success("Successfully uploaded.")
     		me.close_dialog()
+    		$("#myModal").modal('toggle');
     	}else{
     		$('body').loadingModal({text: 'Uploading...'});
     		$('body').loadingModal('animation', 'cubeGrid');
@@ -520,6 +522,8 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 
 	    	}else{
 		    	$scope.record.answer_keys[idx] = []
+		    	$scope.answer_list[idx] = {}
+		    	$scope.answer_list[idx]['item_no'] = 1
 		    	var current_name = $scope.record.images[idx].name
 		    	var reader = new FileReader();
 			    reader.readAsDataURL($scope.record.images[idx]);
