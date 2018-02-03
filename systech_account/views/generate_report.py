@@ -40,10 +40,13 @@ def download_dialog(request):
 def read_assessments(request):
 	try:
 		data = req_data(request)
-		results = {'data':[],'scores':[]}
+		results = {'company_assessment':[],'data':[],'scores':[]}
 		transaction_types = Transaction_type.objects.filter(id__in=data['transaction_type'])
 		datus = []
 		scoresArr = []
+
+		company_assessment_data = Company_assessment.objects.get(id=data['id'])
+		results['company_assessment'] = company_assessment_data.get_dict()
 
 		for transaction_type in transaction_types:
 			scores = Assessment_score.objects.filter(transaction_type=transaction_type.pk,company_assessment=data['id'])

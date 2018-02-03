@@ -26,16 +26,82 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 		if(print){
 			data['type'] = 'pdf'
 		}
+			$('body').loadingModal({text: 'Generating report...'});
+			$('body').loadingModal('animation', 'cubeGrid');
+			$('body').loadingModal('backgroundColor', 'green');
 		me.post_generic(url,data,'main')
 		.success(function(response){
 			$scope.records = response.data;
 			$scope.scores = response.scores;
+			$scope.company_assessment = response.company_assessment
+			$scope.time_in = convertSecondstoHours($scope.company_assessment.session_credits)
+			$scope.time_out = convertSecondstoHours($scope.company_assessment.credits_left)
+			$scope.time_consumed = convertSecondstoHours($scope.company_assessment.session_credits - $scope.company_assessment.credits_left)
+
+    		for(var x in $scope.records){
+    			for(var y in $scope.scores){
+    				if($scope.scores[y].question == $scope.records[x].id){
+    					var z = ($scope.scores[y].score / $scope.records[x].answers.length)
+    					$scope.records[x].percentage = z
+    					$scope.records[x].score = $scope.scores[y].score
+    				}
+    			}
+    		}
+
+    		$('body').loadingModal('hide');
+    		$('body').loadingModal('destroy') ;
+			if(print){
+				setTimeout(function(){
+                	if($scope.records){
+                		check_table_height()
+                		// window.print();
+                	}
+                },1000)
+			}
 		}).error(function(err){
+			$('body').loadingModal('hide');
+			$('body').loadingModal('destroy') ;
 			if(err == "Assessment_answer matching query does not exist."){
 				Notification.error("Some answers are not yet sycned.")
 			}
 		})
 	};
+
+	convertSecondstoHours = function(d){
+			d = Number(d);
+		    var h = Math.floor(d / 3600);
+		    var m = Math.floor(d % 3600 / 60);
+		    var s = Math.floor(d % 3600 % 60);
+
+		    var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+		    var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+		    var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+		    return hDisplay + mDisplay + sDisplay; 
+	}
+
+	function check_table_height()
+	{
+		$timeout(function(){
+			var table = document.getElementById("table-data");
+			$scope.table_height = table.offsetHeight;
+
+			if($scope.table_height >= 500)
+			{
+				$scope.hidethis = true;
+			}
+
+			if ($scope.table_height >= 490 || $scope.table_height <= 500) 
+			{
+				$scope.footer_position_absolute = true;
+			} else {
+				$scope.footer_position_absolute = false;
+			}
+
+			$scope.$apply();
+			window.print();
+			
+		},400)
+	}
 
 	$scope.generate = function(){
 		var data = {
@@ -92,11 +158,11 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 					}
 				}
 			}
-			if(print){
-				setTimeout(function(){
-                	window.print();
-                },1000)
-			}
+			// if(print){
+			// 	setTimeout(function(){
+   //              	window.print();
+   //              },1000)
+			// }
 		})
 	}
 
@@ -106,3 +172,9 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 		$scope.read_recommendations(print);
 	}
 });
+
+app.filter('percentage', ['$filter', function ($filter) {
+  return function (input, decimals) {
+    return $filter('number')(input * 100, decimals) + '%';
+  };
+}]);

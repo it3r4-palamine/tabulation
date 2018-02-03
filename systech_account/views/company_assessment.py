@@ -50,6 +50,7 @@ def create(request):
 		# postdata['transaction_type'] = postdata['transaction_type']['id']
 		postdata['company'] = postdata['company']
 		postdata['consultant'] = postdata['consultant']['id']
+		postdata['facilitator'] = postdata['facilitator']['id']
 		postdata['company_rename'] = postdata['company_rename']['id']
 		postdata['session_credits'] = timedelta(seconds=postdata['session_credits'])
 		postdata['credits_left'] = timedelta(seconds=postdata['credits_left'])

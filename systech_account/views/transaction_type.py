@@ -141,7 +141,6 @@ def get_intelex_exercises(request):
 		records = result.json()
 
 		for record in records["records"]:
-			print(record)
 			if Transaction_type.objects.filter(set_no=record['set_no'],transaction_code__iexact=record['exercise_code'],name__iexact=record['exercise_name'],exercise_id=record['id'],is_intelex=True,is_active=True,company=datus['company']).exists():
 				continue
 			else:
