@@ -16,6 +16,10 @@
                         <label class="required">Code</label> <small class="text-danger"><b>(Must be at least 4 characters)</b></small>
                         <input type="text" ng-minlength="4" ng-model="record.transaction_code" name="transaction_code" required class="form-control" ng-disabled="record.code_exist">
                     </div>
+                    <div class="col-sm-12">
+                        <label>Set No.</label>
+                        <input type="text" ng-maxlength="4" ng-model="record.set_no" name="set_no" class="form-control">
+                    </div>
                     <div class="col-sm-12" ng-hide="true">
                         <br>
                         <input type="checkbox" id="is_active" name="is_active" ng-model="record.is_active"><label for="is_active">Active</label>
