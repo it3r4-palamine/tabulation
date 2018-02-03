@@ -14,11 +14,12 @@ class Company_assessment(models.Model):
 	is_synced        = models.BooleanField(default=0)
 	is_complete      = models.BooleanField(default=0)
 	reference_no     = models.CharField(max_length=200,blank=True,null=True,unique=True)
-	consultant       = models.ForeignKey("User",blank=True,null=True)
+	consultant       = models.ForeignKey("User",blank=True,null=True,related_name="consultant")
 	is_generated     = models.BooleanField(default=0)
 	company_rename	 = models.ForeignKey("Company_rename",blank=True,null=True)
 	session_credits	 = models.DurationField(blank=True, null=True)
 	credits_left	 = models.DurationField(blank=True, null=True)
+	facilitator      = models.ForeignKey("User",blank=True,null=True,related_name="facilitator")
 
 
 	class Meta:
@@ -88,6 +89,7 @@ class Company_assessment(models.Model):
 			company_assessment["company_rename"] = self.company_rename.get_dict() if self.company_rename else None
 			company_assessment["transaction_type"] = transaction_type_list
 			company_assessment["is_synced"] = self.is_synced
+			company_assessment["facilitator"] = self.facilitator.get_dict()
 			# company_assessment["sessions"] = json.dumps(sessions_list)
 			company_assessment["sessions"] = sessions_list
 

@@ -34,6 +34,16 @@
                     </div>
                     <div class="col-sm-12">
                         <br>
+                        <label>Facilitated By</label>
+                        <ui-select ng-model="record.facilitator" required>
+                            <ui-select-match placeholder="Select...">{$ $select.selected.fullname $}</ui-select-match>
+                            <ui-select-choices repeat="facilitator in consultants | filter: $select.search | limitTo:50">
+                                <span ng-bind-html="facilitator.fullname | highlight: $select.search"></span> - <span ng-bind-html="facilitator.user_type.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-sm-12">
+                        <br>
                         <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
                         <ui-select ng-model="record.transaction_types" required ng-disabled="!record.company_rename" multiple>
                             <ui-select-match ng-attr-placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $item.name $}</ui-select-match>

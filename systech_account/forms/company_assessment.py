@@ -18,4 +18,5 @@ class Company_assessment_form(forms.ModelForm):
 			'company_rename',
 			'session_credits',
 			'credits_left',
+			'facilitator',
 		)
