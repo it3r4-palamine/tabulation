@@ -89,7 +89,7 @@ class Company_assessment(models.Model):
 			company_assessment["company_rename"] = self.company_rename.get_dict() if self.company_rename else None
 			company_assessment["transaction_type"] = transaction_type_list
 			company_assessment["is_synced"] = self.is_synced
-			company_assessment["facilitator"] = self.facilitator.get_dict()
+			company_assessment["facilitator"] = self.facilitator.get_dict() if self.facilitator else None
 			# company_assessment["sessions"] = json.dumps(sessions_list)
 			company_assessment["sessions"] = sessions_list
 
