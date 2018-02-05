@@ -251,7 +251,7 @@
                                                                     </ul>
                                                                 </div>
                                                             </div>
-                                                            <textarea id="answer_list_id" ng-change="answerDisplay(answer_list)" ng-model="answer_list.answer" class="form-control"></textarea><br>
+                                                            <textarea id="answer_list_id" ng-enter="onEnter(answer_list, $index)" ng-change="answerDisplay(answer_list)" ng-model="answer_list.answer" class="form-control"></textarea><br>
                                                             <textarea ng-hide="true" ng-model="answer_list.answer_display" class="form-control"></textarea>
                                                             Preview: <span mathjax-bind="answer_list.answer_display"></span>
                                                         </td>

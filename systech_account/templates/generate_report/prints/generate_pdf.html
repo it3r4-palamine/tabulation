@@ -189,7 +189,6 @@
                             <th style="font-size: 8px">Score</th>
                             <th style="font-size: 8px">Total</th>
                             <th style="font-size: 8px" class="text-center">%</th>
-                            <th class="text-center" style="font-size: 8px">Note</th>
                             <th class="text-center" style="font-size: 8px">Facilitator</th> 
                         </tr>
                     </thead>
@@ -202,24 +201,6 @@
                             <td class="text-center" style="vertical-align: middle;"> {$ record.score $}</td>
                             <td class="text-center" style="vertical-align: middle;"> {$ record.answers.length $}</td>
                             <td class="text-center" style="vertical-align: middle;"> {$ record.percentage | percentage : 2 $} </td>
-                            <td style="vertical-align: middle; font-size: 9px;"> 
-                                <span ng-if="record.findings.length > 0">
-                                    <b>FINDING:</b>
-                                    <ul>
-                                        <li ng-repeat="finding in record.findings">
-                                            {$ finding.value $}
-                                        </li>
-                                    </ul>
-                                </span>
-                                <span ng-if="record.effects.length > 0">
-                                    <b>EFFECT:</b>
-                                    <ul>
-                                        <li ng-repeat="effect in record.effects">
-                                            {$ effect.value $}
-                                        </li>
-                                    </ul>
-                                </span>
-                            </td>
                             <td style="vertical-align: middle; font-size: 9px;"> {$ company_assessment.facilitator.fullname $}</td> 
                         </tr>
                         

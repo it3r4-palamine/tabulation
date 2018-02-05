@@ -489,6 +489,10 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
     	record.answer_display = "\\(" + record.answer + "\\)"
     }
 
+    $scope.onEnter = function(list,arrIdx){
+    	$scope.add_answer(list)
+    }
+
     $scope.catergoryToFilter = function(){
     	indexedCategories = []
     	return $scope.math_symbols
@@ -545,5 +549,23 @@ app.directive("mathjaxBind", function() {
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, $element[0]]);
             });
         }]
+    };
+});
+
+app.directive('ngEnter', function() {
+    return function(scope, elem, attrs) {
+      elem.bind("keydown keypress", function(event) {
+        // 13 represents enter button
+        if(event.which === 13 && event.shiftKey){
+        	event.stopPropagation();
+        }
+        else if (event.which === 13) {
+          scope.$apply(function() {
+            scope.$eval(attrs.ngEnter);
+          });
+
+          event.preventDefault();
+        }
+      });
     };
 });
