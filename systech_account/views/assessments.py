@@ -36,7 +36,7 @@ def read(request):
 			# records = Assessment_question.objects.filter(Q(is_active=True,transaction_type=data['transaction_type']) | Q(is_active=True,transaction_types__overlap=[data['transaction_type']])).order_by("id")
 		
 		if code:
-			filters &= (Q(code__icontains=code) | Q(value__icontains=code))
+			filters &= (Q(code__icontains=code) | Q(value__icontains=code) | Q(transaction_type__name__icontains=code))
 
 		sort_by = generate_sorting(data.pop("sort",None))
 		questionsIds = []

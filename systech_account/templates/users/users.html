@@ -34,7 +34,9 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="btn-group pull-right">
+                        {% if request.user.user_type.name == 'Technical' %}
                         <button class="btn btn-primary" ng-click="create_dialog()">CREATE</button>
+                        {% endif %}
                         <div class="btn-group pull-right" uib-dropdown>
                             <button type="button" class="btn btn-outline btn-primary" uib-dropdown-toggle>
                                 <span class="caret"></span>
@@ -53,17 +55,21 @@
                             <th>Fullname</th>
                             <th>Email</th>
                             <th>User Type</th>
+                            {% if request.user.user_type.name == 'Technical' %}
                             <th>Action</th>
+                            {% endif %}
                         </thead>
                         <tbody>
                             <tr ng-repeat="record in records" class="hand_cursor">
-                                <td ng-click="load_to_edit(record)">{$ record.fullname $}</td>
-                                <td ng-click="load_to_edit(record)">{$ record.email $}</td>
-                                <td ng-click="load_to_edit(record)">{$ record.user_type.name $}</td>
+                                <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.fullname $}</td>
+                                <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.email $}</td>
+                                <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.user_type.name $}</td>
+                                {% if request.user.user_type.name == 'Technical' %}
                                 <td>
                                     <button class="btn btn-primary btn-sm" ng-click="change_pass_dialog(record)">Change Password</button>
                                     <button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button>
                                 </td>
+                                {% endif %}
                             </tr>
                         </tbody>
                     </table>

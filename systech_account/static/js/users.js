@@ -38,8 +38,9 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 
 	}
 
-	$scope.load_to_edit = function(record){
-		$scope.create_dialog(record);
+	$scope.load_to_edit = function(record, type){
+		if(type == 'Technical')
+			$scope.create_dialog(record);
 	}
 
 	$scope.change_pass_dialog = function(record){
