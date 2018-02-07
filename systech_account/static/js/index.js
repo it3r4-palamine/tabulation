@@ -14,10 +14,15 @@ app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,Sweet
 	$scope.login = function(credentials){
 		$http.post('/login/',credentials)
 		.success(function(response){
-			toastr.success(response)
+			toastr.success("Loggin In...")
 			$scope.credentials = {};
+			console.log(response)
+			var redirect = "/company_assessment"
+			if(response == 'Technical'){
+				redirect = "/assessments"
+			}
 			setTimeout(function(){
-			    window.location.href = "/assessments";
+			    window.location.href = redirect;
 			}, 500);
 		}).error(function(err){
 			toastr.error(err)

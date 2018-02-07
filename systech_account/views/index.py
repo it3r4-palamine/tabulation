@@ -35,7 +35,7 @@ def log_in(request):
 			if not user.is_active:
 				return error("Account Inactive. Please activate your account.")
 
-			if not user.is_admin:
+			if not user.is_admin or not user.user_type:
 				return error("Invalid account..")
 
 			login(request, user)
@@ -45,7 +45,7 @@ def log_in(request):
 			if user.is_admin: # USER ACCOUNTS
 				request.session['admin'] = True
 
-			return success("Logging In...")
+			return success(request.user.user_type.name)
 		else: return error("Invalid username or password")
 	else:
 		return redirect("loginpage")
