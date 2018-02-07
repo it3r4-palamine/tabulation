@@ -469,7 +469,7 @@ def user_types_delete(request,id=None):
 			record = User_type.objects.get(pk = id)
 			record.is_active = False
 			record.save()
-			return success()
+			return success("Successfully deleted.")
 		except User_type.DoesNotExist:
 			raise_error("Recommendation doesn't exist.")
 	except Exception as e:
@@ -530,7 +530,7 @@ def math_symbols_delete(request,id=None):
 			record = Math_symbol.objects.get(pk = id)
 			record.is_active = False
 			record.save()
-			return success()
+			return success("Successfully deleted.")
 		except Math_symbol.DoesNotExist:
 			raise_error("Symbol doesn't exist.")
 	except Exception as e:

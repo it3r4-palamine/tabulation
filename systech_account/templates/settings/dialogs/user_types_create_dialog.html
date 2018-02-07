@@ -10,7 +10,7 @@
                 <form class="form" name="form">
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.name.$invalid && !form.name.$pristine }">
                         <label class="required">User Type</label>
-                        <input type="text" ng-model="record.name" name="name" required class="form-control">
+                        <input type="text" ng-disabled="record.is_default" ng-model="record.name" name="name" required class="form-control">
                     </div>
                     <div class="col-sm-12" ng-hide="true">
                         <br>

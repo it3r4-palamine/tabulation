@@ -58,16 +58,17 @@ class User(AbstractBaseUser):
 		return True
 
 class User_type(models.Model):
-	name      = models.CharField(max_length=200,blank=True,null=True)
-	is_active = models.BooleanField(default=1)
-	company   = models.ForeignKey("Company",blank=True,null=True)
+	name       = models.CharField(max_length=200,blank=True,null=True)
+	is_active  = models.BooleanField(default=1)
+	is_default = models.BooleanField(default=0)
+	company    = models.ForeignKey("Company",blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
 		db_table  = "user_type"
 
 	def get_dict(self):
-		return {"id" : self.pk,"name" : self.name,"is_active" : self.is_active}
+		return {"id" : self.pk,"name" : self.name,"is_active" : self.is_active,"is_default" : self.is_default}
 
 class User_credit(models.Model):
 	user 			   = models.ForeignKey("User")

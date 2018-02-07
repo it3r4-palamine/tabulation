@@ -11,7 +11,7 @@ class Transaction_type_form(forms.ModelForm):
 	def clean(self,):
 		raw_data = self.cleaned_data
 
-		transaction_code = (Q(transaction_code = raw_data["transaction_code"]) & Q(is_active = True))
+		transaction_code = (Q(transaction_code = raw_data["transaction_code"]) & Q(is_active = True) & Q(company = raw_data["company"]))
 
 		instance = Transaction_type.objects.filter(transaction_code)
 		if instance.exists():

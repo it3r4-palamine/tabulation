@@ -11,6 +11,7 @@ from django.contrib.auth import update_session_auth_hash
 
 from ..forms.transaction_types import *
 from ..forms.company import *
+from ..forms.user_type import *
 from ..models.transaction_types import *
 from ..models.assessments import *
 from ..models.company import *
@@ -73,6 +74,21 @@ def register(request):
 			if company_form.is_valid():
 				company_data = company_form.save()
 
+				user_types = ['Technical','Facilitator','Student']
+				user_type_id = None
+				for user_type in user_types:
+					datus = {}
+					datus['name'] = user_type
+					datus['is_active'] = True
+					datus['is_default'] = True
+					datus['company'] = company_data.id
+					user_type_form = User_type_form(datus)
+
+					if user_type_form.is_valid():
+						user_type_data = user_type_form.save()
+						if user_type == 'Technical':
+							user_type_id = user_type_data.id
+
 				user_email = data['email']
 				user_fullname = data['fullname']
 				password1 = data['password1']
@@ -84,6 +100,7 @@ def register(request):
 				data['fullname'] = user_fullname
 				data['password1'] = password1
 				data['password2'] = password2
+				data['user_type'] = user_type_id
 
 				user_form = CustomUserCreationForm(data)
 				if user_form.is_valid():
