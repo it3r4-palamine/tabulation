@@ -74,7 +74,9 @@ class Company_assessment(models.Model):
 			rowSession = session.get_dict()
 			if forAPI:
 				rowSession['assessment_id'] = session.company_assessment.pk
-			# sessions_list.append(rowSession)
+				sessions_list.append(rowSession)
+			else:
+				sessions_list.append(rowSession)
 
 		if forAPI:
 			company_assessment["company_name"] = self.company.name

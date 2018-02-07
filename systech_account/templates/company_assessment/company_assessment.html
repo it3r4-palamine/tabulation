@@ -42,8 +42,8 @@
                             <th>Assigned To</th>
                             <th>Assessment Status</th>
                             <th>Status</th>
-                            <!-- <th>Session Credits</th> -->
-                            <!-- <th>Session Consumed</th> -->
+                            <th>Session Credits</th>
+                            <th>Credits Left</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
@@ -62,8 +62,15 @@
                                 <td ng-click="load_to_edit(record)">{$ record.consultant.fullname $}</td>
                                 <td ng-click="load_to_edit(record)"><span style="color: red;" ng-if="!record.is_complete">Incomplete</span><span style="color: green;" ng-if="record.is_complete">Complete</span></td>
                                 <td ng-click="load_to_edit(record)"><span style="color: red;" ng-if="!record.is_synced">Unsynced</span><span style="color: green;" ng-if="record.is_synced">Synced</span></td>
-                                <!-- <td ng-click="load_to_edit(record)">{$ record.session_credits_seconds $}</td> -->
-                                <!-- <td ng-click="load_to_edit(record)">{$ record.credits_left_seconds $}</td> -->
+                                <td ng-click="load_to_edit(record)">{$ record.session_credits_seconds $}</td>
+                                <td ng-click="load_to_edit(record)">
+                                    <span ng-if="record.credits_left_seconds">
+                                        {$ record.credits_left_seconds $}
+                                    </span>
+                                    <span ng-if="!record.credits_left_seconds">
+                                        No credits left
+                                    </span>
+                                </td>
                                 <td>
                                     <a href="/generate_report/{$ record.id $}"><button class="btn btn-primary btn-sm" ng-if="record.is_synced">Generate</button></a>
                                     <!-- <a href="/generate_report/{$ record.id $}"><button class="btn btn-primary btn-sm">Generate</button></a> -->

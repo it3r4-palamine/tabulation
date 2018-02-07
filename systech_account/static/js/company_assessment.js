@@ -73,9 +73,12 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 		.success(function(response){
 			$scope.records = response.data;
 			for(var record in $scope.records){
-				$scope.records[record]['credits_left_seconds'] = convertSecondstoHours($scope.records[record].credits_left);
-				$scope.records[record]['session_credits_seconds'] = convertSecondstoHours($scope.records[record].session_credits);
+				var credits_left = $scope.records[record].credits_left ? $scope.records[record].credits_left : 0 
+				var session_credits = $scope.records[record].session_credits
+				$scope.records[record]['credits_left_seconds'] = convertSecondstoHours(credits_left);
+				$scope.records[record]['session_credits_seconds'] = convertSecondstoHours(session_credits);
 			}
+			console.log($scope.records)
 			me.starting = response.starting;
 			me.ending = response.data.length;
 			me.pagination.limit_options = angular.copy(me.pagination.limit_options_orig);
@@ -94,7 +97,7 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 		    var hDisplay = h > 0 ? h + (h == 1 ? " hour" : " hours, ") : "";
 		    var mDisplay = m > 0 ? m + (m == 1 ? " minute" : " minutes, ") : "";
 		    var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-		    return "Time left: " + hDisplay + mDisplay + sDisplay; 
+		    return hDisplay + mDisplay + sDisplay; 
 	}
 
 	$scope.minimum_date = function(){

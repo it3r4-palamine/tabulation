@@ -189,6 +189,9 @@ class SyncAssessments(APIView):
 			assessmentInstance.is_complete = assessment['is_complete']
 			if assessment['credits_left']:
 				assessmentInstance.credits_left = timedelta(seconds=assessment['credits_left'])
+			else:
+				if assessment['credits_left'] == 0:
+					assessmentInstance.credits_left = timedelta(seconds=assessment['credits_left'])
 			
 			assessmentInstance.save()
 
