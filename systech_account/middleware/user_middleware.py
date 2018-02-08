@@ -17,6 +17,18 @@ class User_middleware(object):
 			"logout",
 		]
 
+		modules = [
+			"assessments",
+			"related_questions",
+			"recommendations",
+			"company_assessments",
+			"transaction_types",
+			"company",
+			"import",
+			"users",
+			"settings",
+		]
+
 		no_action = [
 			"logout",
 			"/",
@@ -35,5 +47,34 @@ class User_middleware(object):
 			if request.method == "GET":
 				if first_url not in no_action:
 					return redirect("home")
+
+		if first_url in modules and request.user.id:
+			if "assessments" == first_url:
+				if request.user.user_type.name.lower() != 'technical':				
+					return redirect("company_assessment_redirect")
+
+			if "related_questions" == first_url:
+				if request.user.user_type.name.lower() != 'technical':
+					return redirect("company_assessment_redirect")
+
+			if "recommendations" == first_url:
+				if request.user.user_type.name.lower() != 'technical':
+					return redirect("company_assessment_redirect")
+
+			if "transaction_types" == first_url:
+				if request.user.user_type.name.lower() != 'technical':
+					return redirect("company_assessment_redirect")
+
+			if "company" == first_url:
+				if request.user.user_type.name.lower() != 'technical':
+					return redirect("company_assessment_redirect")
+
+			if "import" == first_url:
+				if request.user.user_type.name.lower() != 'technical':
+					return redirect("company_assessment_redirect")
+
+			if "settings" == first_url:
+				if request.user.user_type.name.lower() != 'technical':
+					return redirect("company_assessment_redirect")
 
 		return None

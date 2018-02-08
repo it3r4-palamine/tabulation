@@ -16,7 +16,7 @@
                     <tbody>
                         <tr ng-repeat="record in records" class="hand_cursor">
                             <td ng-click="load_to_edit(record)">{$ record.name $}</td>
-                            <td><button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button></td>
+                            <td><button class="btn btn-danger btn-sm" ng-disabled="record.is_default" ng-click="delete(record)">Delete</button></td>
                         </tr>
                     </tbody>
                 </table>

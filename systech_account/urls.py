@@ -44,7 +44,7 @@ urlpatterns = [
 	url(r'^company/delete/(?P<id>[0-9]+)$', company.delete),
 	url(r'^company/get_intelex_subjects/$', company.get_intelex_subjects),
 
-	url(r'^company_assessment/$', company_assessment.company_assessment, name='company_assessment'),
+	url(r'^company_assessment/$', company_assessment.company_assessment, name='company_assessment_redirect'),
 	url(r'^company_assessment/read/$', company_assessment.read),
 	url(r'^company_assessment/create_dialog/$', company_assessment.create_dialog),
 	url(r'^company_assessment/create/$', company_assessment.create),
