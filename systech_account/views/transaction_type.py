@@ -92,7 +92,7 @@ def create(request):
 				transaction_type = Transaction_type_form(postdata, instance=instance)
 		except Transaction_type.DoesNotExist:
 			try:
-				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],name__iexact=postdata['name'],is_active=True)
+				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],transaction_code__iexact=postdata['transaction_code'],is_active=True)
 				return error(check_transaction_type.name + " already exists.")
 			except Transaction_type.DoesNotExist:
 				transaction_type = Transaction_type_form(postdata)

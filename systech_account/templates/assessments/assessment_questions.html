@@ -132,7 +132,7 @@
                                             <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $item.name $}</ui-select-match>
                                             <ui-select-choices repeat="transaction_type in transaction_types2 | filter: $select.search | limitTo:50">
                                                 <!-- <div ng-bind-html="transaction_type.name | highlight: $select.search"></div> -->
-                                                <span ng-bind-html="transaction_type.name | highlight: $select.search"></span> - Set <span ng-bind-html="transaction_type.set_no | highlight: $select.search"></span>
+                                                <span ng-bind-html="transaction_type.name | highlight: $select.search"></span> - Set <span ng-bind-html="transaction_type.set_no | highlight: $select.search"></span> - <span ng-bind-html="transaction_type.transaction_code | highlight: $select.search"></span>
                                             </ui-select-choices>
                                         </ui-select>
                                     </div>
@@ -141,7 +141,7 @@
                                         <ui-select ng-model="record.transaction_type" ng-change="generate_code()">
                                             <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $} - {$ $select.selected.set_no $}</ui-select-match>
                                             <ui-select-choices repeat="transaction_type in transaction_types2 | filter: $select.search | limitTo:50">
-                                                <span ng-bind-html="transaction_type.name | highlight: $select.search"></span> - Set <span ng-bind-html="transaction_type.set_no | highlight: $select.search"></span>
+                                                <span ng-bind-html="transaction_type.name | highlight: $select.search"></span> - Set <span ng-bind-html="transaction_type.set_no | highlight: $select.search"></span> - <span ng-bind-html="transaction_type.transaction_code | highlight: $select.search"></span>
                                             </ui-select-choices>
                                         </ui-select>
                                     </div>

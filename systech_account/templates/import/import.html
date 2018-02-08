@@ -104,7 +104,7 @@
                                                 <ui-select ng-model="record.transaction_type[$index]">
                                                     <ui-select-match placeholder="{$ transaction_types2[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $} - {$ $select.selected.set_no $}</ui-select-match>
                                                     <ui-select-choices repeat="transaction_type in transaction_types2 | filter: $select.search | limitTo:50">
-                                                        <span ng-bind-html="transaction_type.name | highlight: $select.search"></span> - Set <span ng-bind-html="transaction_type.set_no | highlight: $select.search"></span>
+                                                        <span ng-bind-html="transaction_type.name | highlight: $select.search"></span> - Set <span ng-bind-html="transaction_type.set_no | highlight: $select.search"></span> - <span ng-bind-html="transaction_type.transaction_code | highlight: $select.search"></span>
                                                     </ui-select-choices>
                                                 </ui-select><br><br>
                                                 <input type="text" name="code" placeholder="Code" ng-model="record.code[$index]" required class="form-control">
