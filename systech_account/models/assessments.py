@@ -34,7 +34,7 @@ class Assessment_question(models.Model):
 		db_table  = "assessment_questions"
 
 
-	def get_dict(self, forAPI=False):
+	def get_dict(self, forAPI=False, imagesArr = None):
 		assessment_question = {
 			"id": self.pk,
 			"code": self.code,
@@ -72,7 +72,13 @@ class Assessment_question(models.Model):
 		if self.uploaded_question:
 			imagesQ = []
 			answersQ = []
-			images = Assessment_image.objects.filter(question=self.pk,is_active=True)
+
+			ids = []
+			if imagesArr:
+				for excludeImages in imagesArr:
+					ids.append(excludeImages['id'])
+
+			images = Assessment_image.objects.filter(question=self.pk,is_active=True).exclude(pk__in=ids)
 			for image in images:
 				imageList = image.get_dict()
 				image = open('systech_account/static/uploads/%s'%(image.image), 'rb')
@@ -82,6 +88,19 @@ class Assessment_question(models.Model):
 				# image_64_encode = base64.b64encode(image_read)
 				imageList['converted_image'] = image_64_encode
 				imagesQ.append(imageList)
+
+			if imagesArr:
+				for importImage in imagesArr:
+					old_image = {}
+					old_image['id'] = importImage['id']
+					old_image['image'] = importImage['image']
+
+					get_image = open('systech_account%s'%(importImage['image']), 'rb')
+					get_image_read = get_image.read()
+
+					get_image_64 = base64.standard_b64encode(get_image_read)
+					old_image['converted_image'] = get_image_64
+					imagesQ.append(old_image)
 
 			answers = Assessment_image_answer.objects.filter(question=self.pk,is_active=True).order_by("item_no")
 			for answer in answers:

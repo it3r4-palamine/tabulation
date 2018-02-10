@@ -42,6 +42,8 @@ class GetData(APIView):
 		imageAnswerList = []
 		uploadedQuestionList = []
 
+		existing_images = request.data
+
 		i = datetime.today()
 		date_now = i.strftime('%Y-%m-%d')
 		assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True, is_generated=False, date_to__gte=date_now)
@@ -92,7 +94,13 @@ class GetData(APIView):
 					})
 			uploadedQuestionList.append(question.pk)
 
-			questionsList = question.get_dict(True)
+			imagesArr = None
+			if existing_images['data']:
+				for image in existing_images['data']:
+					if image['question'] == question.id:
+						imagesArr = image['images']
+
+			questionsList = question.get_dict(True, imagesArr)
 			questionsList['findings'] = findingsList
 			questionsList['effects'] = effectsList
 			questionList.append(questionsList)
