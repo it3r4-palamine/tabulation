@@ -92,7 +92,7 @@ def read_assessments(request):
 					else:
 						row['image'] = None
 
-					if data['type'] == 'pdf' and wrong_answer > 0:
+					if data['type'] == 'pdf':
 						for finding in findings:
 							row['dupes'] = False
 							if finding.value not in all_findings:
@@ -185,7 +185,6 @@ def read_assessments(request):
 							row['image'] = str(answers_chosen.document_image)
 						else:
 							row['image'] = None
-
 					if data['type'] == 'pdf':
 						if wrong_answer > 0:
 							for finding in findings:
@@ -215,7 +214,6 @@ def read_assessments(request):
 									for image_answer in image_answers:
 										imageAnswersArr.append(image_answer.get_dict())
 									row['image_answers'] = imageAnswersArr
-						cprint("AAAAAAAAAAAAAAAAAAA")
 						datus.append(row)
 
 						for all_finding in findings:
@@ -303,7 +301,7 @@ def generate(request):
 
 				if not question.uploaded_question:
 					try:
-						answers_chosen = Assessment_answer.objects.get(company_assessment=data['datus']['id'],question=question.pk)
+						answers_chosen = Assessment_answer.objects.get(company_assessment=data['datus']['id'],question=question.pk,is_deleted=False)
 					except Assessment_answer.DoesNotExist:
 						continue
 					wrong_answer = Decimal(0)
@@ -372,7 +370,7 @@ def generate(request):
 							all_findings.append(all_finding.value)
 				else:
 					try:
-						answers_chosen = Assessment_answer.objects.get(uploaded_question=True,company_assessment=data['datus']['id'],question=question.pk)
+						answers_chosen = Assessment_answer.objects.get(uploaded_question=True,company_assessment=data['datus']['id'],question=question.pk,is_deleted=False)
 					except Assessment_answer.DoesNotExist:
 						pass
 					wrong_answer = Decimal(0)

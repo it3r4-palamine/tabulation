@@ -46,7 +46,8 @@ class GetData(APIView):
 
 		i = datetime.today()
 		date_now = i.strftime('%Y-%m-%d')
-		assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True, is_generated=False, date_to__gte=date_now)
+		# assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True, is_generated=False, date_to__gte=date_now)
+		assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True, date_to__gte=date_now) ### commented the old code bcoz pwd na mg generate maski wala pa na complete ang assessment
 		# assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True)
 
 		transactionTypeArrsQs = assessmentQs.values_list('transaction_type', flat=True)
@@ -219,7 +220,7 @@ class SyncAssessments(APIView):
 						for score in t_type['scores']:
 							datus['question'] = score['id']
 							datus['score'] = score['score']
-							datus['uploaded_question'] = True
+							datus['uploaded_question'] = False if 'not_uploaded_question' in score else True
 
 							try:
 								instance = Assessment_score.objects.get(company_assessment=t_type['assessment'],transaction_type=t_type['transactionType'],is_active=True,question=score['id'],uploaded_question=True)
