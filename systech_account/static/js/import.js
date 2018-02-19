@@ -211,7 +211,11 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
     }
 
     $scope.answerDisplay = function(record){
-    	record.answer_display = "\\(" + record.answer + "\\)"
+    	record.answer = record.answer.toLowerCase().replace(/\si\s/g, ' I ');
+		record.answer = record.answer.charAt(0).toUpperCase() + record.answer.slice(1);
+		record.answer_display = "\\(" + record.answer + "\\)"
+		return record.answer
+    	// record.answer_display = "\\(" + record.answer + "\\)"
     }
 
     $scope.onEnter = function(list,arrIdx){
@@ -625,4 +629,4 @@ app.directive('ngEnter', function() {
         }
       });
     };
-  });
+});

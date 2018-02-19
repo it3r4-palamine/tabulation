@@ -19,6 +19,8 @@ def read(request):
 		filters = {}
 		filters['is_active'] = True
 		filters['company'] = data['company']
+
+		exclude = data.pop("exclude",None)
 		# has_transaction = data.get("transaction_type",None)
 		# if has_transaction:
 		# 	filters['transaction_type'] = has_transaction
@@ -40,18 +42,19 @@ def read(request):
 			row = record.get_dict()
 
 			if record.transaction_type:
-				for t_types in record.transaction_type:
-					try:
-						t_type = Transaction_type.objects.get(id=t_types,is_active=True,company=data['company'])
-					except Transaction_type.DoesNotExist:
-						continue
-					transaction_type_dict = {'id':t_type.pk,
-											'name':t_type.name,
-											'is_active':t_type.is_active,
-											'code':t_type.transaction_code,
-											'set_no':t_type.set_no,
-										}
-					company_transaction_type.append(transaction_type_dict)
+				if not exclude:
+					for t_types in record.transaction_type:
+						try:
+							t_type = Transaction_type.objects.get(id=t_types,is_active=True,company=data['company'])
+						except Transaction_type.DoesNotExist:
+							continue
+						transaction_type_dict = {'id':t_type.pk,
+												'name':t_type.name,
+												'is_active':t_type.is_active,
+												'code':t_type.transaction_code,
+												'set_no':t_type.set_no,
+											}
+						company_transaction_type.append(transaction_type_dict)
 			row['transaction_type'] = company_transaction_type
 			datus.append(row)
 		results['data'] = datus

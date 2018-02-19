@@ -142,7 +142,10 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 
 	$scope.read_companies = function(record){
 		$scope.record.company = {}
-    	me.post_generic("/company/read/","","main")
+		var data = {
+			exclude : true
+		}
+    	me.post_generic("/company/read/",data,"main")
     	.success(function(response){
     		$scope.companies = response.data;
     	})
