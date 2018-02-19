@@ -10,7 +10,10 @@ from ..views.sentence_matching import *
 
 
 def import_default(request):
-	return render(request, 'import/import.html')
+	if request.user.user_type.name.lower() != "technical":
+		return redirect("company_assessment_redirect")
+	else:
+		return render(request, 'import/import.html')
 
 def read_module_columns(request, module_type):
 	fields = get_fields(request, module_type)
@@ -375,7 +378,10 @@ def import_recommendations(request):
 		return HttpResponse(e,status=400)
 
 def settings(request):
-	return render(request, 'settings/settings.html')
+	if request.user.user_type.name.lower() != "technical":
+		return redirect("company_assessment_redirect")
+	else:
+		return render(request, 'settings/settings.html')
 
 def display_settings(request):
 	return render(request, 'settings/display_settings.html')

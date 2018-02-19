@@ -8,7 +8,10 @@ from ..views.sentence_matching import *
 
 
 def home(request):
-	return render(request, 'assessments/assessment_questions.html')
+	if request.user.user_type.name.lower() != "technical":
+		return redirect("company_assessment_redirect")
+	else:
+		return render(request, 'assessments/assessment_questions.html')
 
 def create_dialog(request):
 	return render(request, 'assessments/dialogs/create_dialog.html')
@@ -626,7 +629,10 @@ def delete_answer(request,id = None):
 		return HttpResponse(e, status = 400)
 
 def related_questions(request):
-	return render(request, 'assessments/related_questions.html')
+	if request.user.user_type.name.lower() != "technical":
+		return redirect("company_assessment_redirect")
+	else:
+		return render(request, 'assessments/related_questions.html')
 
 def read_related_questions(request):
 	try:

@@ -8,7 +8,10 @@ import requests
 
 
 def transaction_type(request):
-	return render(request, 'transaction_type/transaction_type.html')
+	if request.user.user_type.name.lower() != "technical":
+		return redirect("company_assessment_redirect")
+	else:
+		return render(request, 'transaction_type/transaction_type.html')
 
 def create_dialog(request):
 	return render(request, 'transaction_type/dialogs/create_dialog.html')

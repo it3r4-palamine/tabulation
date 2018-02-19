@@ -8,7 +8,10 @@ import requests
 
 
 def company(request):
-	return render(request, 'company/company.html')
+	if request.user.user_type.name.lower() != "technical":
+		return redirect("company_assessment_redirect")
+	else:
+		return render(request, 'company/company.html')
 
 def create_dialog(request):
 	return render(request, 'company/dialogs/create_dialog.html')

@@ -78,7 +78,6 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 				$scope.records[record]['credits_left_seconds'] = convertSecondstoHours(credits_left);
 				$scope.records[record]['session_credits_seconds'] = convertSecondstoHours(session_credits);
 			}
-			console.log($scope.records)
 			me.starting = response.starting;
 			me.ending = response.data.length;
 			me.pagination.limit_options = angular.copy(me.pagination.limit_options_orig);
