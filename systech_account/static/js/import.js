@@ -157,6 +157,8 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		if(type == "image"){
 			$scope.ImageSrc = []
 			$scope.record = []
+			$scope.answer_list_arr = []
+			$scope.multiple_answer_list = []
 			// me.open_dialog("/import/upload_dialog/","dialog_whole","main")
 			$("#myModal").modal('toggle');
 		}else{
@@ -170,13 +172,42 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 	}
 
 	$scope.add_answer = function(list,arrIdx){
+		$scope.answer_list_arr[arrIdx].push(angular.copy(list))
+		var answers = []
+		for(var ans in $scope.answer_list_arr[arrIdx]){
+			if($scope.answer_list_arr[arrIdx][ans].name){
+				var row = {
+					name: $scope.answer_list_arr[arrIdx][ans].name,
+					answer_display: $scope.answer_list_arr[arrIdx][ans].answer_display
+				}
+				answers.push(row)
+			}
+		}
+		list['answer'] = answers
 		$scope.record.answer_keys[arrIdx].push(angular.copy(list))
 	    $scope.answer_list[arrIdx] = {}
 	    $scope.answer_list[arrIdx]['item_no'] = $scope.record.answer_keys[arrIdx].length + 1
+	    $scope.answer_list_arr[arrIdx] = []
+	}
+
+	$scope.add_multiple_answer = function(record,index,list){
+		record.push(angular.copy(list))
+		$scope.multiple_answer_list[index] = {}
+	}
+
+	$scope.add_multiple_list_answer = function(list,arrIdx){
+		copy_list = angular.copy(list)
+		$scope.answer_list_arr[arrIdx].push(copy_list)
+		$scope.answer_list[arrIdx] = {}
+		$scope.answer_list[arrIdx]['item_no'] = copy_list.item_no
 	}
 
 	$scope.remove_answer = function(list,index,arrIdx){
     	$scope.record.answer_keys[arrIdx].splice($scope.record.answer_keys[arrIdx].indexOf(list), 1);
+    }
+
+    $scope.remove_multiple_answer = function(record,list){
+    	record.splice(record.indexOf(list),1)
     }
 
 	$scope.remove_image = function(list,data,arrIdx){
@@ -195,6 +226,10 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		// $scope.record.images = $scope.ImageSrcArr2
     }
 
+    $scope.remove_multiple_list_answer = function(list,arrIdx){
+    	$scope.answer_list_arr[arrIdx].splice($scope.answer_list_arr[arrIdx].indexOf(list),1)
+    }
+
     $scope.insertSymbol = function(insert,record){
     	var syntax_symbol = insert.above_text ? insert.syntax : insert.symbol
     	record.answer += syntax_symbol
@@ -211,10 +246,16 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
     }
 
     $scope.answerDisplay = function(record){
-    	record.answer = record.answer.toLowerCase().replace(/\si\s/g, ' I ');
-		record.answer = record.answer.charAt(0).toUpperCase() + record.answer.slice(1);
-		record.answer_display = "\\(" + record.answer + "\\)"
-		return record.answer
+    	record.answer_display = "\\(" + record.name + "\\)"
+    	return record.name.replace(/\w\S*/g, function(txt){
+    		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    	});
+
+  //   	record.answer = record.answer.toLowerCase().replace(/\si\s/g, ' I ');
+		// record.answer = record.answer.charAt(0).toUpperCase() + record.answer.slice(1);
+		// record.answer_display = "\\(" + record.answer + "\\)"
+		// return record.answer
+
     	// record.answer_display = "\\(" + record.answer + "\\)"
     }
 
@@ -239,11 +280,30 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
     		$('body').loadingModal('animation', 'cubeGrid');
     		$('body').loadingModal('backgroundColor', 'green');
     		var number = idx + 1;
-    		if($scope.answer_list[idx] && Object.keys($scope.answer_list[idx]).length > 0) {
-    			if($scope.answer_list[idx].answer && $scope.answer_list[idx].item_no){
-    				$scope.record.answer_keys[idx].push(angular.copy($scope.answer_list[idx]))
+
+    		if($scope.answer_list[idx] && Object.keys($scope.answer_list[idx]).length > 0){
+    			if($scope.answer_list[idx].name && $scope.answer_list[idx].item_no){
+    				var new_data = {
+    					name: $scope.answer_list[idx].name,
+    					answer_display: $scope.answer_list[idx].answer_display,
+    				}
+    				$scope.answer_list_arr[idx].push(new_data)
     			}
     		}
+
+    		if($scope.answer_list_arr[idx].length > 0){
+    			var newArr = {
+    				answer : $scope.answer_list_arr[idx],
+    				item_no : $scope.answer_list[idx].item_no
+    			}
+
+    			$scope.record.answer_keys[idx].push(angular.copy(newArr))
+    		}
+    		// if($scope.answer_list[idx] && Object.keys($scope.answer_list[idx]).length > 0) {
+    		// 	if($scope.answer_list[idx].answer && $scope.answer_list[idx].item_no){
+    		// 		$scope.record.answer_keys[idx].push(angular.copy($scope.answer_list[idx]))
+    		// 	}
+    		// }
     		$scope.answer_list[idx] = {}
     		if(!$scope.record.deleted)
     			$scope.record['deleted'][idx] = false
@@ -519,8 +579,10 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 	    $scope.ImageSrcArr = []
 	    $scope.idx = 0
 	    for(var y in fayl){
-	    	if(typeof fayl[y] === 'object')
+	    	if(typeof fayl[y] === 'object'){
 	    		$scope.record.images.push(fayl[y])
+	    		$scope.answer_list_arr[y] = []
+	    	}
 	    }
 
 	    saveImage(0)

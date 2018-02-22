@@ -516,6 +516,7 @@ def saveData(request):
 			answer['is_active'] = True
 			answer['company'] = company
 
+			multiple_answers = answer.pop("answer",[])
 			try:
 				instance_answer = Assessment_image_answer.objects.get(id=answer.get('id',None))
 				answer_question = Assessment_image_answer_form(answer,instance=instance_answer)
@@ -523,7 +524,23 @@ def saveData(request):
 				answer_question = Assessment_image_answer_form(answer)
 
 			if answer_question.is_valid():
-				answer_question.save()
+				answer_pk = answer_question.save()
+
+				for multiple_answer in multiple_answers:
+					multiple_answer['image_answer'] = answer_pk.pk
+
+					try:
+						instance_multiple_answer = Multiple_image_answer.objects.get(id=multiple_answer.get('id',None))
+						multiple_answer_question = Multiple_image_answer_form(multiple_answer,instance=instance_multiple_answer)
+					except Multiple_image_answer.DoesNotExist:
+						multiple_answer['is_active'] = True
+						multiple_answer_question = Multiple_image_answer_form(multiple_answer)
+
+					if multiple_answer_question.is_valid():
+						multiple_answer_question.save()
+					else:
+						raise_error(json.dumps(multiple_answer_question.errors))
+
 
 		return HttpResponse("Successfully saved.", status = 200)
 	except Exception as err:
@@ -542,9 +559,22 @@ def multiple_upload_answer_keys(request):
 			answer_key['is_active'] = True
 			answer_key['company'] = company
 
+			multiple_answers = answer_key.pop("answer",[])
+
 			answer_key_form = Assessment_image_answer_form(answer_key)
 			if answer_key_form.is_valid():
-				answer_key_form.save()
+				answer_pk = answer_key_form.save()
+
+				for multiple_answer in multiple_answers:
+					multiple_answer['image_answer'] = answer_pk.pk
+					multiple_answer['is_active'] = True
+
+					multiple_answer_question = Multiple_image_answer_form(multiple_answer)
+
+					if multiple_answer_question.is_valid():
+						multiple_answer_question.save()
+					else:
+						raise_error(json.dumps(multiple_answer_question.errors))
 
 		return success()
 	except Exception as err:
@@ -624,6 +654,18 @@ def delete_answer(request,id = None):
 			answer.save()
 			return success("Successfully deleted.")
 		except Assessment_image_answer.DoesNotExist:
+			raise_error("Answer doesn't exist.")
+	except Exception as e:
+		return HttpResponse(e, status = 400)
+
+def delete_multiple_answer(request,id = None):
+	try:
+		try:
+			answer = Multiple_image_answer.objects.get(pk = id)
+			answer.is_active = False
+			answer.save()
+			return success("Successfully deleted.")
+		except Multiple_image_answer.DoesNotExist:
 			raise_error("Answer doesn't exist.")
 	except Exception as e:
 		return HttpResponse(e, status = 400)

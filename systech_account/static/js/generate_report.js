@@ -46,6 +46,20 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
     					$scope.records[x].score = $scope.scores[y].score
     				}
     			}
+    			if ($scope.records[x].uploaded_question){
+	    			for(var ans in $scope.records[x].answers){
+	    				$scope.records[x].answers[ans]['correct_answer'] = false
+	    				for(var answer in $scope.records[x].answers[ans].answer){
+		    				for(var images in $scope.records[x].image_answers){
+		    					if($scope.records[x].image_answers[images].item_no == $scope.records[x].answers[ans].item_no){
+			    					if($scope.records[x].answers[ans].answer[answer].name.toLowerCase().score($scope.records[x].image_answers[images].answer.toLowerCase()) >= 0.88){
+					    				$scope.records[x].answers[ans]['correct_answer'] = true
+			    					}
+		    					}
+		    				}
+	    				}
+	    			}
+    			}
     		}
 
     		$('body').loadingModal('hide');

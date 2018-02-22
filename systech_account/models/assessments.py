@@ -379,21 +379,46 @@ class Assessment_image_answer(models.Model):
 		db_table  = "assessment_image_answers"
 
 	def get_dict(self):
-		return {
+		row = {
 			'id' : self.pk,
 			'question' : self.question.pk,
 			'item_no' : self.item_no,
-			'answer' : self.answer,
+			# 'answer' : self.answer,
+		}
+
+		multiple_answers = Multiple_image_answer.objects.filter(image_answer=self.pk,is_active=True)
+		image_answer = []
+		for answers in multiple_answers:
+			answer = answers.get_dict()
+			image_answer.append(answer)
+
+		row['answer'] = image_answer
+		return row
+
+class Multiple_image_answer(models.Model):
+	image_answer = models.ForeignKey("Assessment_image_answer")
+	name 		 = models.CharField(max_length=200,blank=True,null=True)
+	is_active 	 = models.BooleanField(default=1)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "multiple_image_answers"
+
+	def get_dict(self):
+		return {
+			'id' : self.pk,
+			'name' : self.name,
+			'is_active' : self.is_active
 		}
 
 class Assessment_upload_answer(models.Model):
-	question = models.ForeignKey("Assessment_question")
-	is_active = models.BooleanField(default=1)
-	item_no = models.IntegerField(blank=True,null=True)
-	answer = models.CharField(max_length=200,blank=True,null=True)
-	transaction_type = models.ForeignKey("Transaction_type")
+	question 		   = models.ForeignKey("Assessment_question")
+	is_active 		   = models.BooleanField(default=1)
+	item_no 		   = models.IntegerField(blank=True,null=True)
+	answer 			   = models.CharField(max_length=200,blank=True,null=True)
+	transaction_type   = models.ForeignKey("Transaction_type")
 	company_assessment = models.ForeignKey("Company_assessment")
-	is_deleted = models.BooleanField(default=0)
+	is_deleted 		   = models.BooleanField(default=0)
 
 	class Meta:
 		app_label = "systech_account"

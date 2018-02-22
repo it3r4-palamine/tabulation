@@ -69,7 +69,7 @@ class Company_assessment(models.Model):
 				except Transaction_type.DoesNotExist:
 					continue
 
-		sessions = str2model("Assessment_session").objects.filter(is_deleted=False,company_assessment=self.pk)
+		sessions = str2model("Assessment_session").objects.filter(is_deleted=False,company_assessment=self.pk,time_end__isnull=False)
 		for session in sessions:
 			rowSession = session.get_dict()
 			if forAPI:

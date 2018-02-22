@@ -36,6 +36,8 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 		$scope.answers = []
 		$scope.ImageSrc = []
 		$scope.ImageSrcUpload = []
+		$scope.multiple_answer_list = []
+		$scope.answer_list_arr = []
 		$scope.choice_list = {}
 		$scope.effect_list = {}
 		$scope.finding_list = {}
@@ -49,7 +51,10 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 			$scope.findings = $scope.record.findings
 			$scope.answers = $scope.record.answers
 			for(var ans in $scope.answers){
-				$scope.answers[ans].answer_display = "\\(" + $scope.answers[ans].answer + "\\)"
+				$scope.multiple_answer_list[ans] = {}
+				for(var ans2 in $scope.answers[ans].answer){
+					$scope.answers[ans].answer[ans2].answer_display = "\\(" + $scope.answers[ans].answer[ans2].name + "\\)"
+				}
 			}
 			$scope.ImageSrc = $scope.record.images
 		}
@@ -87,10 +92,29 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 			}
 		}
 		if(Object.keys($scope.answer_list).length > 0) {
-			if($scope.answer_list.answer && $scope.answer_list.item_no){
-				$scope.answers.push(angular.copy($scope.answer_list))
+			if($scope.answer_list.name && $scope.answer_list.item_no){
+				var new_data = {
+					name : $scope.answer_list.name,
+					answer_display : $scope.answer_list.answer_display
+				}
+				$scope.answer_list_arr.push(new_data)
+				// $scope.answers.push(angular.copy($scope.answer_list))
 			}
 		}
+		console.log($scope.answer_list_arr)
+		if($scope.answer_list_arr.length > 0){
+			var newArr = {
+				answer : $scope.answer_list_arr,
+				item_no : $scope.answer_list.item_no
+			}
+
+			$scope.answers.push(angular.copy(newArr))
+		}
+		// if(Object.keys($scope.answer_list).length > 0) {
+		// 	if($scope.answer_list.answer && $scope.answer_list.item_no){
+		// 		$scope.answers.push(angular.copy($scope.answer_list))
+		// 	}
+		// }
 		var has_true = 0
 		var has_required_document = 0
 		if($scope.record.is_document == undefined) $scope.record.is_document = false;
@@ -339,9 +363,32 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 	}
 
 	$scope.add_answer = function(list){
+		$scope.answer_list_arr.push(angular.copy(list))
+		var answers = []
+		for(var ans in $scope.answer_list_arr){
+			var row = {
+				name : $scope.answer_list_arr[ans].name,
+				answer_display : $scope.answer_list_arr[ans].answer_display
+			}
+			answers.push(row)
+		}
+		list['answer'] = answers
 		$scope.answers.push(angular.copy(list))
 	    $scope.answer_list = {}
 	    $scope.answer_list['item_no'] = $scope.answers.length + 1
+	    $scope.answer_list_arr = []
+	}
+
+	$scope.add_multiple_answer = function(record,index,list){
+		record.push(angular.copy(list))
+		$scope.multiple_answer_list[index] = {}
+	}
+
+	$scope.add_multiple_list_answer = function(list){
+		copy_list = angular.copy(list)
+		$scope.answer_list_arr.push(copy_list)
+		$scope.answer_list = {}
+		$scope.answer_list['item_no'] = copy_list.item_no
 	}
 
 	$scope.remove_choice = function(list,index){
@@ -386,6 +433,21 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 		}else{
 	    	$scope.answers.splice($scope.answers.indexOf(list), 1);
 		}
+    }
+
+    $scope.remove_multiple_answer = function(record,list){
+    	if(list.id){
+    		me.post_generic("/assessments/delete_multiple_answer/"+list.id,{},"dialog")
+    		.success(function(response){
+		    	record.splice(record.indexOf(list),1)
+    		})
+    	}else{
+	    	record.splice(record.indexOf(list),1)
+    	}
+    }
+
+    $scope.remove_multiple_list_answer = function(list){
+    	$scope.answer_list_arr.splice($scope.answer_list_arr.indexOf(list),1)
     }
 
     $scope.remove_image = function(list,index){
@@ -455,15 +517,20 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 		})
     }
 
-    $scope.insertSymbol = function(idx,insert,record){
-		var cursorPosStart = $('#answer_'+idx).prop('selectionStart');
-		var cursorPosEnd = $('#answer_'+idx).prop('selectionEnd');
-		var text = $('#answer_'+idx).val();
+    $scope.insertSymbol = function(idx,insert,record,new_data){
+    	if(new_data){
+    		var variable = "#answer2_"
+    	}else{
+    		var variable = "#answer_"
+    	}
+		var cursorPosStart = $(variable+idx).prop('selectionStart');
+		var cursorPosEnd = $(variable+idx).prop('selectionEnd');
+		var text = $(variable+idx).val();
 		var textBefore = text.substring(0, cursorPosStart);
 		var textAfter = text.substring(cursorPosEnd, text.length);
     	
 		var syntax_symbol = insert.above_text ? insert.syntax : insert.symbol
-		record.answer = textBefore + syntax_symbol + textAfter
+		record.name = textBefore + syntax_symbol + textAfter
 		record.answer_display = "\\(" + textBefore + syntax_symbol + textAfter + "\\)"
 
     	// var text = $('#answer_'+idx);
@@ -477,16 +544,24 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
     	var textBefore = text.substring(0, cursorPosStart);
     	var textAfter = text.substring(cursorPosEnd, text.length);
 
-    	if(record.answer == undefined)
-    		record.answer = ""
+    	if(record.name == undefined)
+    		record.name = ""
 
     	var syntax_symbol = insert.above_text ? insert.syntax : insert.symbol
-    	record.answer = textBefore + syntax_symbol + textAfter
+    	record.name = textBefore + syntax_symbol + textAfter
     	record.answer_display = "\\(" + textBefore + syntax_symbol + textAfter + "\\)"
     }
 
     $scope.answerDisplay = function(record){
-    	record.answer_display = "\\(" + record.answer + "\\)"
+    	// record.answer_display = "\\(" + record.answer + "\\)"
+    	// return record.answer.replace(/\w\S*/g, function(txt){
+    	// 	return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    	// });
+    	
+    	record.name = record.name.toLowerCase().replace(/\si\s/g, ' I ');
+		record.name = record.name.charAt(0).toUpperCase() + record.name.slice(1);
+		record.answer_display = "\\(" + record.name + "\\)"
+		return record.name
     }
 
     $scope.onEnter = function(list,arrIdx){

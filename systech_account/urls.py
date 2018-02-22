@@ -29,6 +29,7 @@ urlpatterns = [
 	url(r'^assessments/delete_finding/(?P<id>[0-9]+)$', assessments.delete_finding),
 	url(r'^assessments/delete_image/(?P<id>[0-9]+)$', assessments.delete_image),
 	url(r'^assessments/delete_answer/(?P<id>[0-9]+)$', assessments.delete_answer),
+	url(r'^assessments/delete_multiple_answer/(?P<id>[0-9]+)$', assessments.delete_multiple_answer),
 
 	url(r'^transaction_types/$', transaction_type.transaction_type, name='transaction_type'),
 	url(r'^transaction_types/read/$', transaction_type.read),

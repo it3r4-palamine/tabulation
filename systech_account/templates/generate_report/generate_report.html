@@ -107,14 +107,17 @@
                                                 <th>Correct Answer</th>
                                             </thead>
                                             <tbody>
-                                                <tr ng-repeat="(answer_key, answer) in record.answers" ng-class="{'wrong_answer': answer.answer != record.image_answers[answer_key].answer, 'correct_answer':answer.answer == record.image_answers[answer_key].answer}">
+                                                <!-- <tr ng-repeat="(answer_key, answer) in record.answers" ng-class="{'wrong_answer': answer.answer.toLowerCase() != record.image_answers[answer_key].answer.toLowerCase(), 'correct_answer':answer.answer.toLowerCase() == record.image_answers[answer_key].answer.toLowerCase()}"> -->
+                                                <tr ng-repeat="(answer_key, answer) in record.answers" ng-class="{'wrong_answer': !answer.correct_answer, 'correct_answer':answer.correct_answer}">
                                                     <td>{$ answer.item_no $}</td>
                                                     <td>
                                                         <span ng-repeat="image_answer in record.image_answers" ng-if="image_answer.item_no == answer.item_no">
                                                             {$ image_answer.answer $}
                                                         </span>
                                                     </td>
-                                                    <td>{$ answer.answer $}</td>
+                                                    <td>
+                                                        <span ng-repeat="ans in answer.answer">{$ ans.name $}<br></span>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>

@@ -73,3 +73,8 @@ class Assessment_upload_answer_form(forms.ModelForm):
 	class Meta:
 		model  = Assessment_upload_answer
 		fields = ('question','is_active','is_deleted','answer','item_no','company_assessment','transaction_type')
+
+class Multiple_image_answer_form(forms.ModelForm):
+	class Meta:
+		model  = Multiple_image_answer
+		fields = ('image_answer','is_active','name')
