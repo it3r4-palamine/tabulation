@@ -223,12 +223,12 @@
                                                                             <input type="text" name="search" style="margin: 5px;width: 98%;" ng-model="searchText" class="form-control" placeholder="Search...">
                                                                             <div ng-repeat="symbolPerCategory in catergoryToFilter() | filter:filterCategory">
                                                                                 <label style="margin: 5px;">{$ symbolPerCategory.category $}</label><br>
-                                                                                <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbol(key2+1,symbol,multiple,false)">{$ symbol.symbol $}</button>
+                                                                                <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbol(key2+1,symbol,multiple,false,key+1)">{$ symbol.symbol $}</button>
                                                                             </div>
                                                                         </ul>
                                                                     </div>
                                                                 </div>
-                                                                <textarea id="answer_{$key2+1$}" ng-change="answerDisplay(multiple)" ng-model="multiple.name" class="form-control"></textarea><br>
+                                                                <textarea id="answer_{$key+1$}_{$key2+1$}" ng-change="answerDisplay(multiple)" ng-model="multiple.name" class="form-control"></textarea><br>
                                                                 <textarea ng-hide="true" ng-model="multiple.answer_display" class="form-control"></textarea>
                                                                 Preview: <span mathjax-bind="multiple.answer_display"></span>
                                                             </div>
@@ -294,12 +294,12 @@
                                                                             <input type="text" name="search" style="margin: 5px;width: 98%;" ng-model="searchText" class="form-control" placeholder="Search...">
                                                                             <div ng-repeat="symbolPerCategory in catergoryToFilter() | filter:filterCategory">
                                                                                 <label style="margin: 5px;">{$ symbolPerCategory.category $}</label><br>
-                                                                                <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbol(key2+1,symbol,multiple_list,false)">{$ symbol.symbol $}</button>
+                                                                                <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbol(key3+1,symbol,multiple_list,false,null,true)">{$ symbol.symbol $}</button>
                                                                             </div>
                                                                         </ul>
                                                                     </div>
                                                                 </div>
-                                                                <textarea id="answer_{$key2+1$}" ng-change="answerDisplay(multiple_list)" ng-model="multiple_list.name" class="form-control"></textarea><br>
+                                                                <textarea id="answer_{$key3+1$}" ng-change="answerDisplay(multiple_list)" ng-model="multiple_list.name" class="form-control"></textarea><br>
                                                                 <textarea ng-hide="true" ng-model="multiple_list.answer_display" class="form-control"></textarea>
                                                                 Preview: <span mathjax-bind="multiple_list.answer_display"></span>
                                                             </div>

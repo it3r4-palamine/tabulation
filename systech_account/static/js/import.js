@@ -200,6 +200,7 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		$scope.answer_list_arr[arrIdx].push(copy_list)
 		$scope.answer_list[arrIdx] = {}
 		$scope.answer_list[arrIdx]['item_no'] = copy_list.item_no
+		$scope.answer_list[arrIdx]['name'] = ""
 	}
 
 	$scope.remove_answer = function(list,index,arrIdx){
@@ -232,17 +233,17 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 
     $scope.insertSymbol = function(insert,record){
     	var syntax_symbol = insert.above_text ? insert.syntax : insert.symbol
-    	record.answer += syntax_symbol
-    	record.answer_display = "\\(" + record.answer + "\\)"
+    	record.name += syntax_symbol
+    	record.answer_display = "\\(" + record.name + "\\)"
     }
 
     $scope.insertSymbolList = function(insert,record,idx){
-    	if(record.answer == undefined)
-    		$scope.answer_list[idx].answer = ""
+    	if(record.name == undefined)
+    		$scope.answer_list[idx].name = ""
 
     	var syntax_symbol = insert.above_text ? insert.syntax : insert.symbol
-    	$scope.answer_list[idx].answer += syntax_symbol
-    	$scope.answer_list[idx].answer_display = "\\(" + $scope.answer_list[idx].answer + "\\)"
+    	$scope.answer_list[idx].name += syntax_symbol
+    	$scope.answer_list[idx].answer_display = "\\(" + $scope.answer_list[idx].name + "\\)"
     }
 
     $scope.answerDisplay = function(record){
@@ -594,6 +595,7 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		    	$scope.record.answer_keys[idx] = []
 		    	$scope.answer_list[idx] = {}
 		    	$scope.answer_list[idx]['item_no'] = 1
+		    	$scope.multiple_answer_list[idx] = []
 		    	var current_name = $scope.record.images[idx].name
 		    	var reader = new FileReader();
 			    reader.readAsDataURL($scope.record.images[idx]);

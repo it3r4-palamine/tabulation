@@ -517,11 +517,15 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 		})
     }
 
-    $scope.insertSymbol = function(idx,insert,record,new_data){
+    $scope.insertSymbol = function(idx,insert,record,new_data,idx2,new_list){
     	if(new_data){
     		var variable = "#answer2_"
     	}else{
-    		var variable = "#answer_"
+    		if(new_list){
+    			var variable = "#answer_"
+    		}else{
+	    		var variable = "#answer_"+idx2+"_"
+    		}
     	}
 		var cursorPosStart = $(variable+idx).prop('selectionStart');
 		var cursorPosEnd = $(variable+idx).prop('selectionEnd');

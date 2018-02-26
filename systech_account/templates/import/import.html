@@ -135,7 +135,7 @@
                                                                                     <input type="text" name="search" style="margin: 5px;width: 98%;" ng-model="searchText" class="form-control" placeholder="Search...">
                                                                                     <div ng-repeat="symbolPerCategory in catergoryToFilter() | filter:filterCategory">
                                                                                         <label style="margin: 5px;">{$ symbolPerCategory.category $}</label><br>
-                                                                                        <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbol(symbol,number)">{$ symbol.symbol $}</button>
+                                                                                        <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbol(symbol,multiple)">{$ symbol.symbol $}</button>
                                                                                     </div>
                                                                                 </ul>
                                                                             </div>
@@ -150,21 +150,21 @@
                                                                                 <button type="button" class="btn btn-outline btn-primary btn-xs" uib-dropdown-toggle>
                                                                                     Insert <span class="caret"></span>
                                                                                 </button>
-                                                                                <button type="button" ng-click="add_multiple_answer(answer.answer,key+1,multiple_answer_list[key+1])" class="btn btn-outline btn-primary btn-xs">
+                                                                                <button type="button" ng-click="add_multiple_answer(answer.answer,key+1,multiple_answer_list[index][key+1])" class="btn btn-outline btn-primary btn-xs">
                                                                                     <i class="fa fa-plus"></i>
                                                                                 </button>
                                                                                 <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()" style="width: 500px;height: 250px;overflow: auto;">
                                                                                     <input type="text" name="search" style="margin: 5px;width: 98%;" ng-model="searchText" class="form-control" placeholder="Search...">
                                                                                     <div ng-repeat="symbolPerCategory in catergoryToFilter() | filter:filterCategory">
                                                                                         <label style="margin: 5px;">{$ symbolPerCategory.category $}</label><br>
-                                                                                        <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbol(key+1,symbol,multiple_answer_list[key+1],true)">{$ symbol.symbol $}</button>
+                                                                                        <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbol(key+1,symbol,multiple_answer_list[index][key+1],true)">{$ symbol.symbol $}</button>
                                                                                     </div>
                                                                                 </ul>
                                                                             </div>
                                                                         </div>
-                                                                        <textarea id="answer2_{$key+1$}" ng-change="answerDisplay(multiple_answer_list[key+1])" ng-model="multiple_answer_list[key+1].name" class="form-control"></textarea><br>
-                                                                        <textarea ng-hide="true" ng-model="multiple_answer_list[key+1].answer_display" class="form-control"></textarea>
-                                                                        Preview: <span mathjax-bind="multiple_answer_list[key+1].answer_display"></span>
+                                                                        <textarea ng-change="answerDisplay(multiple_answer_list[index][key+1])" ng-model="multiple_answer_list[index][key+1].name" class="form-control"></textarea><br>
+                                                                        <textarea ng-hide="true" ng-model="multiple_answer_list[index][key+1].answer_display" class="form-control"></textarea>
+                                                                        Preview: <span mathjax-bind="multiple_answer_list[index][key+1].answer_display"></span>
                                                                     </div>
                                                                     <!-- <div class="btn-group">
                                                                         <div class="btn-group" uib-dropdown>
@@ -206,12 +206,12 @@
                                                                                     <input type="text" name="search" style="margin: 5px;width: 98%;" ng-model="searchText" class="form-control" placeholder="Search...">
                                                                                     <div ng-repeat="symbolPerCategory in catergoryToFilter() | filter:filterCategory">
                                                                                         <label style="margin: 5px;">{$ symbolPerCategory.category $}</label><br>
-                                                                                        <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbol(key2+1,symbol,multiple_list,false)">{$ symbol.symbol $}</button>
+                                                                                        <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbol(symbol,multiple_list,false)">{$ symbol.symbol $}</button>
                                                                                     </div>
                                                                                 </ul>
                                                                             </div>
                                                                         </div>
-                                                                        <textarea id="answer_{$key2+1$}" ng-change="answerDisplay(multiple_list)" ng-model="multiple_list.name" class="form-control"></textarea><br>
+                                                                        <textarea ng-change="answerDisplay(multiple_list)" ng-model="multiple_list.name" class="form-control"></textarea><br>
                                                                         <textarea ng-hide="true" ng-model="multiple_list.answer_display" class="form-control"></textarea>
                                                                         Preview: <span mathjax-bind="multiple_list.answer_display"></span>
                                                                     </div>
@@ -228,7 +228,7 @@
                                                                                     <input type="text" name="search" style="margin: 5px;width: 98%;" ng-model="searchText" class="form-control" placeholder="Search...">
                                                                                     <div ng-repeat="symbolPerCategory in catergoryToFilter() | filter:filterCategory">
                                                                                         <label style="margin: 5px;">{$ symbolPerCategory.category $}</label><br>
-                                                                                        <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbolList(symbol,answer_list[$index])">{$ symbol.symbol $}</button>
+                                                                                        <button style="margin: 5px;" title="{$symbol.name$}" ng-repeat="symbol in math_symbols | filter:{category:symbolPerCategory.category} | filter:searchText" class="btn btn-primary btn-outline btn-sm" ng-click="insertSymbolList(symbol,answer_list[index],index)">{$ symbol.symbol $}</button>
                                                                                     </div>
                                                                                 </ul>
                                                                             </div>
