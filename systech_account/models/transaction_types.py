@@ -19,11 +19,11 @@ class Transaction_type(models.Model):
 
 	def get_dict(self):
 		return {
-			"id" : self.pk,
-			"name" : self.name,
+			"id" 			   : self.pk,
+			"name" 			   : self.name,
 			"transaction_code" : self.transaction_code,
-			"is_active" : self.is_active,
-			"exercise_id" : self.exercise_id,
-			"set_no" : self.set_no,
-			"total_items" : self.total_items,
+			"is_active" 	   : self.is_active,
+			"exercise_id" 	   : self.exercise_id,
+			"set_no" 		   : self.set_no,
+			"total_items" 	   : self.total_items,
 		}

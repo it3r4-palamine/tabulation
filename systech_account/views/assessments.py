@@ -356,6 +356,9 @@ def upload(request):
 			# data.pop("findings",None)
 			answers = data.pop("answers",None)
 
+			timer = data['timer'] if 'timer' in data else None
+			datus['timer'] = timer
+
 			# data["code"] = "6666666366"
 			# datus["code"] = data["code"]
 

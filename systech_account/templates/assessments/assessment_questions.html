@@ -196,6 +196,17 @@
                                                 <input type="checkbox" id="is_document" name="is_document" ng-model="record.is_document" ng-click="isMultiple()"><label for="is_document">Needs document image</label>
                                             </div>
                                         </div>
+                                        <div class="col-sm-12">
+                                            <br>
+                                            <div class="checkbox checkbox-success">
+                                                <input type="checkbox" id="has_timer" name="has_timer" ng-model="record.has_timer"><label for="has_timer">Has timer</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12" ng-if="record.has_timer">
+                                            <br>
+                                            <label>Timer</label>
+                                            <input type="number" required name="timer" ng-model="record.timer" class="form-control">
+                                        </div>
                                         <div class="clearfix"></div>
                                         <div class="col-sm-12">
                                             <table class="table">

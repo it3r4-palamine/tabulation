@@ -29,14 +29,14 @@ class Company_assessment(models.Model):
 
 	def get_dict(self, forAPI=False):
 		company_assessment = {
-			"id": self.pk,
-			"reference_no": self.reference_no,
-			"is_complete": self.is_complete,
-			"date_from": self.date_from,
-			"date_to": self.date_to,
+			"id"			 : self.pk,
+			"reference_no"	 : self.reference_no,
+			"is_complete"	 : self.is_complete,
+			"date_from"		 : self.date_from,
+			"date_to" 		 : self.date_to,
 			"session_credits": self.session_credits.total_seconds() if self.session_credits else None,
-			"credits_left": self.credits_left.total_seconds() if self.credits_left else None,
-			"consultant": self.consultant.id if forAPI else self.consultant.get_dict(),
+			"credits_left"	 : self.credits_left.total_seconds() if self.credits_left else None,
+			"consultant" 	 : self.consultant.id if forAPI else self.consultant.get_dict(),
 			# "transaction_type": [],
 		}
 
@@ -79,20 +79,20 @@ class Company_assessment(models.Model):
 				sessions_list.append(rowSession)
 
 		if forAPI:
-			company_assessment["company_name"] = self.company.name
-			company_assessment["company_rename_name"] = self.company_rename.name
-			company_assessment["consultant_fullname"] = self.consultant.fullname
+			company_assessment["company_name"] 		   = self.company.name
+			company_assessment["company_rename_name"]  = self.company_rename.name
+			company_assessment["consultant_fullname"]  = self.consultant.fullname
 			company_assessment["transaction_type_arr"] = transaction_type_list
-			company_assessment["is_synced"] = self.is_synced
-			company_assessment["sessions"] = sessions_list
+			company_assessment["is_synced"] 		   = self.is_synced
+			company_assessment["sessions"] 			   = sessions_list
 		else:
-			company_assessment["is_active"] = self.is_active
-			company_assessment["company"] = self.company.get_dict()
-			company_assessment["company_rename"] = self.company_rename.get_dict() if self.company_rename else None
+			company_assessment["is_active"] 	   = self.is_active
+			company_assessment["company"] 		   = self.company.get_dict()
+			company_assessment["company_rename"]   = self.company_rename.get_dict() if self.company_rename else None
 			company_assessment["transaction_type"] = transaction_type_list
-			company_assessment["is_synced"] = self.is_synced
-			company_assessment["facilitator"] = self.facilitator.get_dict() if self.facilitator else None
+			company_assessment["is_synced"]   	   = self.is_synced
+			company_assessment["facilitator"] 	   = self.facilitator.get_dict() if self.facilitator else None
 			# company_assessment["sessions"] = json.dumps(sessions_list)
-			company_assessment["sessions"] = sessions_list
+			company_assessment["sessions"]	  	   = sessions_list
 
 		return company_assessment

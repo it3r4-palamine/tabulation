@@ -41,14 +41,30 @@ def read_assessments(request):
 	try:
 		data = req_data(request)
 		results = {'company_assessment':[],'data':[],'scores':[]}
-		transaction_types = Transaction_type.objects.filter(id__in=data['transaction_type'])
+
+		transactionTypeArr = []
+		if 'date_from' in data and 'date_to' in data:
+			filters = {}
+			filters['date__range'] = data['date_from'], data['date_to']
+			filters['company_assessment'] = data['id']
+			filters['is_deleted'] = False
+
+			assessment_sessions = Assessment_session.objects.filter(**filters)
+			for sessions in assessment_sessions:
+				if sessions.transaction_type and sessions.transaction_type.pk not in transactionTypeArr:
+					transactionTypeArr.append(sessions.transaction_type.pk)
+			transaction_types = Transaction_type.objects.filter(id__in=transactionTypeArr)
+		else:
+			transaction_types = Transaction_type.objects.filter(id__in=data['transaction_type'])
 		datus = []
 		scoresArr = []
 
 		company_assessment_data = Company_assessment.objects.get(id=data['id'])
 		results['company_assessment'] = company_assessment_data.get_dict()
 
+		transactionTypesArr = []
 		for transaction_type in transaction_types:
+			transactionTypesRow = transaction_type.get_dict()
 			scores = Assessment_score.objects.filter(transaction_type=transaction_type.pk,company_assessment=data['id'])
 			for score in scores:
 				score_list = score.get_dict()
@@ -251,6 +267,9 @@ def read_assessments(request):
 							if wrong_answer > 0:
 								all_findings.append(all_finding.value)
 
+			transactionTypesArr.append(transactionTypesRow)	
+
+		results['transaction_types'] = transactionTypesArr
 		results['scores'] = scoresArr
 		results['data'] = datus
 		return success_list(results,False)

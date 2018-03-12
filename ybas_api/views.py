@@ -256,6 +256,8 @@ class SyncAssessments(APIView):
 					'date' : session['date'],
 					'time_start' : session['time_start'],
 					'time_end' : session['time_end'],
+					'transaction_type' : session['transactionType'],
+					'question' : session['question'] if 'question' in session else None
 				}
 
 				session_form = Assessment_session_form(sessions)

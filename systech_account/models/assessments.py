@@ -17,7 +17,6 @@ class Assessment_question(models.Model):
 	is_multiple 	    = models.BooleanField(default=0)
 	is_document         = models.BooleanField(default=0)
 	parent_question     = models.ForeignKey("Assessment_question",null=True,blank=True)
-	# parent_question		= models.ForeignKey("Assessment_question", null=True, blank=True)
 	has_follow_up		= models.BooleanField(default=0)
 	code                = models.CharField(max_length=200,blank=True,null=True)
 	is_import   	    = models.BooleanField(default=0)
@@ -28,6 +27,7 @@ class Assessment_question(models.Model):
 	answer_type			= models.CharField(max_length=200,blank=True,null=True)
 	has_related			= models.BooleanField(default=0)
 	uploaded_question	= models.BooleanField(default=0)
+	timer 				= models.DurationField(blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -36,27 +36,28 @@ class Assessment_question(models.Model):
 
 	def get_dict(self, forAPI=False, imagesArr = None):
 		assessment_question = {
-			"id": self.pk,
-			"code": self.code,
-			"value": self.value,
-			"is_multiple": self.is_multiple,
-			"is_document": self.is_document,
+			"id"				  : self.pk,
+			"code"	  			  : self.code,
+			"value"				  : self.value,
+			"is_multiple"		  : self.is_multiple,
+			"is_document"		  : self.is_document,
 			"has_multiple_answer" : self.has_multiple_answer,
-			"is_general" : self.is_general,
-			"has_follow_up" : self.has_follow_up,
-			"code_value" : self.code + ": " + self.value,
-			"answer_type" : self.answer_type,
-			"has_related" : self.has_related,
-			"uploaded_question" : self.uploaded_question,
+			"is_general" 		  : self.is_general,
+			"has_follow_up" 	  : self.has_follow_up,
+			"code_value" 		  : self.code + ": " + self.value,
+			"answer_type" 		  : self.answer_type,
+			"has_related" 		  : self.has_related,
+			"uploaded_question"   : self.uploaded_question,
+			"timer"				  : self.timer.total_seconds() if self.timer else None,
 		}
 		if self.parent_question:
 			if forAPI:
 				assessment_question["parent_question"] = self.parent_question.id
 			else:
 				assessment_question["parent_question"] = {
-					'id' : self.parent_question.id,
-					'code' : self.parent_question.code,
-					'value' : self.parent_question.value,
+					'id' 	  	 : self.parent_question.id,
+					'code' 		 : self.parent_question.code,
+					'value' 	 : self.parent_question.value,
 					'code_value' :  self.parent_question.code + ": " + self.parent_question.value,
 				}
 
@@ -67,7 +68,6 @@ class Assessment_question(models.Model):
 			related_questions = Related_question.objects.filter(related_questions__overlap=[self.pk],is_active=True)
 			for related_question in related_questions:
 				assessment_question['related_question'] = related_question.pk
-			# print(related_question)
 		
 		if self.uploaded_question:
 			imagesQ = []
@@ -146,9 +146,9 @@ class Assessment_effect(models.Model):
 
 	def get_dict(self,forAPI=False):
 		return {
-			"id" : self.pk,
-			"value" : self.value,
-			"question" : self.question.pk if forAPI else self.question.get_dict(),
+			"id" 		: self.pk,
+			"value" 	: self.value,
+			"question"  : self.question.pk if forAPI else self.question.get_dict(),
 			"is_active" : self.is_active,
 			"is_import" : self.is_import,
 		}
@@ -165,8 +165,8 @@ class Assessment_recommendation(models.Model):
 
 	def get_dict(self):
 		return {
-			"id" : self.pk,
-			"value" : self.value,
+			"id" 		: self.pk,
+			"value" 	: self.value,
 			"is_active" : self.is_active,
 			"is_import" : self.is_import,
 		}
@@ -189,7 +189,7 @@ class Assessment_answer(models.Model):
 
 	def get_dict(self,forAPI = False):
 		assessment_answers = {
-			"id" : self.pk,
+			"id" 		  : self.pk,
 			"text_answer" : self.text_answer,
 			# "document_image" : self.document_image if self.document_image else None
 		}
@@ -255,9 +255,9 @@ class Assessment_finding(models.Model):
 
 	def get_dict(self,forAPI=False):
 		return {
-			"id" : self.pk,
-			"value" : self.value,
-			"question" : self.question.pk if forAPI else self.question.get_dict(),
+			"id" 		: self.pk,
+			"value" 	: self.value,
+			"question"  : self.question.pk if forAPI else self.question.get_dict(),
 			"is_active" : self.is_active,
 			"is_import" : self.is_import,
 		}
@@ -283,7 +283,7 @@ class Related_question(models.Model):
 
 	def get_dict(self):
 		related_questions = {
-			'id' : self.pk,
+			'id' 		: self.pk,
 			'is_active' : self.is_active
 		}
 
@@ -315,11 +315,11 @@ class Assessment_score(models.Model):
 
 	def get_dict(self):
 		return {
-			'score' : self.score,
-			'transaction_type' : self.transaction_type.get_dict(),
+			'score' 			 : self.score,
+			'transaction_type' 	 : self.transaction_type.get_dict(),
 			'company_assessment' : self.company_assessment.get_dict(),
-			'question' : self.question.pk,
-			'uploaded_question' : self.uploaded_question,
+			'question' 			 : self.question.pk,
+			'uploaded_question'  : self.uploaded_question,
 		}
 
 class Assessment_session(models.Model):
@@ -328,6 +328,8 @@ class Assessment_session(models.Model):
 	time_start		   = models.TimeField(auto_now=False, auto_now_add=False, blank = True, null = True)
 	time_end		   = models.TimeField(auto_now=False, auto_now_add=False, blank = True, null = True)
 	is_deleted 		   = models.BooleanField(default=0)
+	transaction_type   = models.ForeignKey("Transaction_type",blank=True,null=True)
+	question 		   = models.ForeignKey("Assessment_question",blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -335,9 +337,11 @@ class Assessment_session(models.Model):
 
 	def get_dict(self):
 		return {
-			'date' : datetime.strptime(str(self.date), '%Y-%m-%d').date(),
-			'time_start' : self.time_start.strftime("%H:%M:%S"),
-			'time_end' : self.time_end.strftime("%H:%M:%S") if self.time_end else None,
+			'date' 			   : datetime.strptime(str(self.date), '%Y-%m-%d').date(),
+			'time_start' 	   : self.time_start.strftime("%H:%M:%S"),
+			'time_end' 		   : self.time_end.strftime("%H:%M:%S") if self.time_end else None,
+			'transaction_type' : self.transaction_type.pk if self.transaction_type else None,
+			'question' 		   : self.question.pk if self.question else None,
 		}
 
 class Assessment_image(models.Model):
@@ -380,9 +384,9 @@ class Assessment_image_answer(models.Model):
 
 	def get_dict(self):
 		row = {
-			'id' : self.pk,
+			'id' 	   : self.pk,
 			'question' : self.question.pk,
-			'item_no' : self.item_no,
+			'item_no'  : self.item_no,
 			# 'answer' : self.answer,
 		}
 
@@ -406,8 +410,8 @@ class Multiple_image_answer(models.Model):
 
 	def get_dict(self):
 		return {
-			'id' : self.pk,
-			'name' : self.name,
+			'id' 		: self.pk,
+			'name' 		: self.name,
 			'is_active' : self.is_active
 		}
 
@@ -426,10 +430,10 @@ class Assessment_upload_answer(models.Model):
 
 	def get_dict(self):
 		return {
-			'id' : self.pk,
-			'answer' : self.answer,
-			'item_no' : self.item_no,
-			'question' : self.question.pk,
-			'transaction_type' : self.transaction_type.pk,
+			'id' 				 : self.pk,
+			'answer' 			 : self.answer,
+			'item_no' 			 : self.item_no,
+			'question' 			 : self.question.pk,
+			'transaction_type' 	 : self.transaction_type.pk,
 			'company_assessment' : self.company_assessment.pk,
 		}

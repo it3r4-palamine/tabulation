@@ -7,6 +7,10 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 	$scope.generate_report = {}
 	$scope.generated_recommendations = {}
 
+	$scope.filter = {}
+	// $scope.filter.date_from = new Date()
+	// $scope.filter.date_to = new Date()
+
 	$scope.recommendation = []
 	$scope.create_dialog = function(record){
 		$scope.download_link = record
@@ -15,20 +19,40 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 
 	$scope.close_dialog = function(){$uibModalStack.dismissAll();}
 
-	$scope.read = function(print){
+	$scope.read = function(print,searchFilter){
 		// var url = "/assessments/read/" 
 		// var data = {
 		// 	"type" : "generate_report"
 		// }
-			var url = "/generate_report/read_assessments/"
-			var data = $scope.generate_report
+		var url = "/generate_report/read_assessments/"
+		var data = $scope.generate_report
 		data['type'] = 'ppt'
+
 		if(print){
 			data['type'] = 'pdf'
 		}
-			$('body').loadingModal({text: 'Generating report...'});
-			$('body').loadingModal('animation', 'cubeGrid');
-			$('body').loadingModal('backgroundColor', 'green');
+
+		$('body').loadingModal({text: 'Generating report...'});
+		$('body').loadingModal('animation', 'cubeGrid');
+		$('body').loadingModal('backgroundColor', 'green');
+
+		if($scope.filter.date_from && $scope.filter.date_to){
+			data['date_from'] = moment($scope.filter.date_from).format("YYYY-MM-DD")
+			data['date_to'] = moment($scope.filter.date_to).format("YYYY-MM-DD")
+		}
+
+		$scope.date_from = $scope.getQueryVariable('date_from');
+		$scope.date_to = $scope.getQueryVariable('date_to');
+
+		if($scope.date_from != ""){
+			$scope.d_from = moment(JSON.parse($scope.date_from)).format("YYYY-MM-DD")
+			data['date_from'] = $scope.d_from
+		}
+		if($scope.date_to != ""){
+			$scope.d_to = moment(JSON.parse($scope.date_to)).format("YYYY-MM-DD")
+			data['date_to'] = $scope.d_to
+		}
+
 		me.post_generic(url,data,'main')
 		.success(function(response){
 			$scope.records = response.data;
@@ -37,6 +61,10 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 			$scope.time_in = convertSecondstoHours($scope.company_assessment.session_credits)
 			$scope.time_out = convertSecondstoHours($scope.company_assessment.credits_left)
 			$scope.time_consumed = convertSecondstoHours($scope.company_assessment.session_credits - $scope.company_assessment.credits_left)
+
+			if(searchFilter){
+				$scope.transaction_types = response.transaction_types
+			}
 
     		for(var x in $scope.records){
     			for(var y in $scope.scores){
@@ -52,14 +80,60 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 	    				for(var answer in $scope.records[x].answers[ans].answer){
 		    				for(var images in $scope.records[x].image_answers){
 		    					if($scope.records[x].image_answers[images].item_no == $scope.records[x].answers[ans].item_no){
+		    						var string1 = $scope.records[x].answers[ans].answer[answer].name.toLowerCase()
+		    						var string2 = $scope.records[x].image_answers[images].answer.toLowerCase()
+
+		    						var perc = Math.round($scope.similarity(string1,string2)*10000)/100;
 			    					if($scope.records[x].answers[ans].answer[answer].name.toLowerCase().score($scope.records[x].image_answers[images].answer.toLowerCase()) >= 0.88){
 					    				$scope.records[x].answers[ans]['correct_answer'] = true
+			    					}else if(perc >= 80.00){
+			    						$scope.records[x].answers[ans]['correct_answer'] = true
 			    					}
 		    					}
 		    				}
 	    				}
 	    			}
     			}
+    		}
+
+    		// if(print && ($scope.date_from != "" && $scope.date_to != "")){
+    		if(data['date_from'] != "" && data['date_to'] != ""){
+    			for(var t_type in $scope.records){
+    				var total_seconds = 0
+    				var total_time =0
+	    			for(var session in $scope.company_assessment.sessions){
+	    				if($scope.company_assessment.sessions[session].date >= data['date_from'] && $scope.company_assessment.sessions[session].date <= data['date_to']){
+		    				if($scope.records[t_type].id == $scope.company_assessment.sessions[session].question){
+		    					var start_hms = $scope.company_assessment.sessions[session].time_start
+		    					var end_hms = $scope.company_assessment.sessions[session].time_end
+
+		    					var a = start_hms.split(':')
+		    					var b = end_hms.split(':')
+
+		    					var start_seconds = (+a[0])*60*60+(+a[1])*60+(+a[2])
+		    					var end_seconds = (+b[0])*60*60+(+b[1])*60+(+b[2])
+
+		    					total_seconds += (end_seconds - start_seconds)
+		    				}	
+		    			}else{
+		    				if($scope.records[t_type].id == $scope.company_assessment.sessions[session].question){
+		    					var start_hms = $scope.company_assessment.sessions[session].time_start
+		    					var end_hms = $scope.company_assessment.sessions[session].time_end
+
+		    					var a = start_hms.split(':')
+		    					var b = end_hms.split(':')
+
+		    					var start_seconds = (+a[0])*60*60+(+a[1])*60+(+a[2])
+		    					var end_seconds = (+b[0])*60*60+(+b[1])*60+(+b[2])
+
+		    					total_seconds += (end_seconds - start_seconds)
+		    				}	
+		    			}
+	    			}
+
+	    			total_time += total_seconds
+	    			$scope.records[t_type]['time_consumed'] = convertSecondstoHours(total_time)
+	    		}
     		}
 
     		$('body').loadingModal('hide');
@@ -81,6 +155,47 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 		})
 	};
 
+	$scope.similarity = function(s1, s2) {
+		var longer = s1;
+		var shorter = s2;
+		if (s1.length < s2.length) {
+			longer = s2;
+			shorter = s1;
+		}
+		var longerLength = longer.length;
+		if (longerLength === 0) {
+			return 1.0;
+		}
+		return (longerLength - $scope.editDistance(longer, shorter)) / parseFloat(longerLength);
+	}
+
+	$scope.editDistance = function(s1, s2) {
+		s1 = s1.toLowerCase();
+		s2 = s2.toLowerCase();
+
+		var costs = new Array();
+		for (var i = 0; i <= s1.length; i++) {
+			var lastValue = i;
+			for (var j = 0; j <= s2.length; j++) {
+				if (i == 0)
+					costs[j] = j;
+				else {
+					if (j > 0) {
+						var newValue = costs[j - 1];
+						if (s1.charAt(i - 1) != s2.charAt(j - 1))
+							newValue = Math.min(Math.min(newValue, lastValue),
+								costs[j]) + 1;
+						costs[j - 1] = lastValue;
+						lastValue = newValue;
+					}
+				}
+			}
+			if (i > 0)
+				costs[s2.length] = lastValue;
+		}
+		return costs[s2.length];
+	}
+
 	convertSecondstoHours = function(d){
 			d = Number(d);
 		    var h = Math.floor(d / 3600);
@@ -91,6 +206,17 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 		    var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
 		    var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
 		    return hDisplay + mDisplay + sDisplay; 
+	}
+
+	$scope.getQueryVariable = function(variable)
+	{
+	   var query = window.location.search.substring(1);
+	   var vars = query.split("&");
+	   for (var i=0;i<vars.length;i++) {
+	           var pair = vars[i].split("=");
+	           if(pair[0] == variable){return decodeURIComponent(pair[1]);}
+	   }
+	   return(false);
 	}
 
 	function check_table_height()

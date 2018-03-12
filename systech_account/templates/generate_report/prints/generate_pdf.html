@@ -145,7 +145,7 @@
                     <thead>
                         <tr>
                             <td>
-                                <p class="header-text">Time In </p>
+                                <p class="header-text">Credits enrolled </p>
                             </td>
                             <td>
                                 <p class="header-value"> {$ time_in $}</p>
@@ -153,7 +153,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <p class="header-text">Time Out </p>
+                                <p class="header-text">Credits left </p>
                             </td>
                             <td>
                                 <p class="header-value"> {$ time_out $}</p>
@@ -161,7 +161,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <p class="header-text">Time Consumed </p>
+                                <p class="header-text">Credits consumed </p>
                             </td>
                             <td>
                                 <p class="header-value"> {$ time_consumed $}</p>
@@ -178,7 +178,7 @@
 
         <div id="main-box" class="row">
             <div class="col-xs-12" style="padding-left:0px; padding-right:0px;">
-
+                <p style="font-size: 9px;" ng-if="d_from && d_to"><br>Date range: {$ d_from | date $} - {$ d_to | date $}</p>
                 <table id="table-data" class="table table-bordered table-condensed">
                     
                     <thead class="thead-inverse">
@@ -189,6 +189,7 @@
                             <th style="font-size: 8px">Score</th>
                             <th style="font-size: 8px">Total</th>
                             <th style="font-size: 8px" class="text-center">%</th>
+                            <th style="font-size: 8px" class="text-center">Time consumed</th>
                             <th class="text-center" style="font-size: 8px">Facilitator</th> 
                         </tr>
                     </thead>
@@ -201,6 +202,7 @@
                             <td class="text-center" style="vertical-align: middle;"> {$ record.score $}</td>
                             <td class="text-center" style="vertical-align: middle;"> {$ record.answers.length $}</td>
                             <td class="text-center" style="vertical-align: middle;"> {$ record.percentage | percentage : 2 $} </td>
+                            <td class="text-center" style="vertical-align: middle;"> {$ record.time_consumed $} </td>
                             <td style="vertical-align: middle; font-size: 9px;"> {$ company_assessment.facilitator.fullname $}</td> 
                         </tr>
                         
