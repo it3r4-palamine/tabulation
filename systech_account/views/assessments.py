@@ -6,6 +6,8 @@ from django.db.models import *
 from ..views.common import *
 from ..views.sentence_matching import *
 
+import sys, traceback, os
+
 
 def home(request):
 	if request.user.user_type.name.lower() != "technical":
@@ -396,6 +398,12 @@ def upload(request):
 			# saveData(request, data, assessment_save.pk)
 			return success(assessment_save.pk)
 		except Exception as e:
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			linenum = sys.exc_traceback.tb_lineno,
+			print(filename)
+			print(linenum)
+			print(e)
 			return error(e)
 	else: return error('method error')
 
