@@ -21,9 +21,20 @@ def read(request):
 		data = req_data(request,True)
 		pagination = None
 
+		filters = (Q(company=data['company'],is_active=True))
+
+		if 'transaction_type' in data and data['transaction_type']:
+			filters &= (Q(is_active=True,transaction_type__overlap=[data['transaction_type']]))
+
+		if 'company_rename' in data and data['company_rename']:
+			filters &= (Q(is_active=True,company_rename=data['company_rename']))
+
+		if 'user' in data and data['user']:
+			filters &= (Q(is_active=True,consultant=data['user']))
+
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
-		records = Company_assessment.objects.filter(company=data['company'],is_active=True).order_by("id")
+		records = Company_assessment.objects.filter(filters).order_by("id")
 		results = {'data':[]}
 		results['total_records'] = records.count()
 

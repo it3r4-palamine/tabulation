@@ -26,7 +26,39 @@
         <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
             {% include "common/loader.html" %}
             <div class="row">
-                <div class="col-sm-12 pull-right">
+                <div class="col-sm-3">
+                    <label><span ng-if="!display_terms[0].company_rename" ng-cloak="">Company</span><span ng-if="display_terms[0].company_rename" ng-cloak="">{$ display_terms[0].company_rename $}</span></label> <span ng-if="!company[0]"><i class="fa fa-spinner fa-pulse"></i></span>
+                    <ui-select ng-model="filter.company">
+                        <ui-select-match placeholder="{$ company[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $}</ui-select-match>
+                        <ui-select-choices repeat="company in company | filter: $select.search | limitTo:50">
+                            <div ng-bind-html="company.name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-sm-3">
+                    <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
+                    <ui-select ng-model="filter.transaction_type">
+                        <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $}</ui-select-match>
+                        <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">
+                            <div ng-bind-html="transaction_type.name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-sm-3">
+                    <label>User</label>
+                    <ui-select ng-model="filter.user">
+                        <ui-select-match placeholder="{$ users[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.fullname $}</ui-select-match>
+                        <ui-select-choices repeat="user in users | filter: $select.search | limitTo:50">
+                            <div ng-bind-html="user.fullname | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-sm-2">
+                    <label>&nbsp;</label><br>
+                    <button class="btn btn-default" ng-click="read()"><i class="fa fa-search"></i> SEARCH</button><br>
+                </div>
+                <div class="col-sm-1 pull-right">
+                    <label>&nbsp;</label>
                     <button class="btn btn-primary pull-right" ng-click="create_dialog()">CREATE</button>
                 </div>
                 <div class="clearfix"></div>
@@ -37,7 +69,7 @@
                             <th>Reference No.</th>
                             <th>Date From</th>
                             <th>Date To</th>
-                            <th><span ng-if="!display_terms[0].company_rename" ng-cloak="">Subjects</span><span ng-if="display_terms[0].company_rename" ng-cloak="">{$ display_terms[0].company_rename $}</span></th>
+                            <th><span ng-if="!display_terms[0].company_rename" ng-cloak="">Company</span><span ng-if="display_terms[0].company_rename" ng-cloak="">{$ display_terms[0].company_rename $}</span></th>
                             <th><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></th>
                             <th>Assigned To</th>
                             <th>Assessment Status</th>
