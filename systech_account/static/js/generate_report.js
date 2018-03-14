@@ -17,6 +17,12 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 		me.open_dialog("/generate_report/download_dialog/","","main")
 	}
 
+	$scope.minimum_date = function(){
+        $scope.filter.option_to = {
+            minDate : new Date($scope.filter.date_from)
+        }
+	}
+
 	$scope.close_dialog = function(){$uibModalStack.dismissAll();}
 
 	$scope.read = function(print,searchFilter){
