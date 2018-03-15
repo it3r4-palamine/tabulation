@@ -329,8 +329,15 @@ def create(request,results=None):
 			return HttpResponse("Successfully saved.", status = 200)
 		else:
 			return HttpResponse(assessment_question.errors, status = 400)
-	except Exception as err:
-		return HttpResponse(err, status = 400)
+	except Exception as e:
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		linenum = sys.exc_traceback.tb_lineno,
+		print(filename)
+		print(linenum)
+		print(e)
+		return error(e)
+		return HttpResponse(e, status = 400)
 
 def upload(request):
 	if request.method == "POST":

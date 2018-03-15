@@ -122,7 +122,8 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 		var has_true = 0
 		var has_required_document = 0
 		if($scope.record.is_document == undefined) $scope.record.is_document = false;
-		if($scope.record.has_timer == undefined || $scope.record.has_timer == false) $scope.record.timer = 0;
+		if(!not_upload)
+			if($scope.record.has_timer == undefined || $scope.record.has_timer == false) $scope.record.timer = 0;
 		for(x in $scope.choices){
 			if($scope.choices[x].is_answer == true){
 				has_true++

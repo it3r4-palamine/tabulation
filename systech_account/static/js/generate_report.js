@@ -75,7 +75,10 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
     		for(var x in $scope.records){
     			for(var y in $scope.scores){
     				if($scope.scores[y].question == $scope.records[x].id){
-    					var z = ($scope.scores[y].score / $scope.records[x].answers.length)
+    					var percnt = 0
+    					if($scope.records[x].answers)
+    						percnt = $scope.records[x].answers.length
+    					var z = ($scope.scores[y].score / percnt)
     					$scope.records[x].percentage = z
     					$scope.records[x].score = $scope.scores[y].score
     				}

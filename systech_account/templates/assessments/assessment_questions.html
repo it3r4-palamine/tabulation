@@ -84,7 +84,7 @@
                                     </div>
                                 </td>
                                 <td ng-click="load_to_edit(record)">
-                                    <span ng-if="record.transaction_types.length == 0">{$ record.transaction_type.name $}</span>
+                                    <span ng-if="record.transaction_types.length == 0">{$ record.transaction_type.name $} <span ng-if="record.transaction_type.set_no">- Set {$ record.transaction_type.set_no $}</span></span>
                                     <span ng-if="record.transaction_types">
                                         <ul>
                                             <li ng-repeat="type in record.transaction_types">
