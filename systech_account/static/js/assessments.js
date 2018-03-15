@@ -251,8 +251,13 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 	}
 
 	$scope.saveData = function(record, id) {
+		var datus = {
+			answers: $scope.record.answers
+			effects: $scope.record.effects
+			findings: $scope.record.findings
+		}
 		var data = {
-			datus : $scope.record,
+			datus : datus,
 			id : id
 		}
 		me.post_generic("/assessments/saveData/",data,"dialog")
