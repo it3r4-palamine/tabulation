@@ -252,9 +252,9 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 
 	$scope.saveData = function(record, id) {
 		var datus = {
-			answers: $scope.record.answers
-			effects: $scope.record.effects
-			findings: $scope.record.findings
+			answers: $scope.record.answers,
+			effects: $scope.record.effects,
+			findings: $scope.record.findings,
 		}
 		var data = {
 			datus : datus,
