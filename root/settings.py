@@ -27,7 +27,7 @@ DESIGN_STATE = 1 #1 for default and 2 for inspinia
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +40,7 @@ INSTALLED_APPS = (
     'ybas_api',
     'rest_framework.authtoken',
     'corsheaders',
-)
+]
 
 #INTERNAL_IPS = ('127.0.0.1','127.0.0.1:9000',)
 
@@ -53,7 +53,7 @@ REST_FRAMEWORK = {
     )
 }
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,7 +64,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'systech_account.middleware.user_middleware.User_middleware',
-)   
+]
 
 ROOT_URLCONF = 'root.urls'
 
