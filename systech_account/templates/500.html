@@ -1,0 +1,12 @@
+{% extends "base.html" %} {% load static %} {% block title %}System Error {% endblock %}
+{% block content_body %}
+<div class="middle-box text-center animated fadeInDown">
+    <h1>500</h1>
+    <h3 class="font-bold">Internal Server Error</h3>
+
+    <div class="error-desc">
+		The server encountered something unexpected that didn't allow it to complete the request. We apologize. <br>
+		Click <a href="/">HERE</a> to return to the homepage.
+    </div>
+</div>
+{% endblock %}

@@ -15,7 +15,7 @@ import os
 # from cloghandler import ConcurrentRotatingFileHandler
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+from .local_settings import *
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ew*32x_+=b-g=4g%)111o2isb+)zn(^$6b#wtq_geuf9fy8@jocc%='
 PRECISION = 2
 DESIGN_STATE = 1 #1 for default and 2 for inspinia
-
+ENVIRONMENT = env
 # Application definition
 
 INSTALLED_APPS = [
@@ -91,9 +91,6 @@ AUTH_USER_MODEL = "systech_account.User"
 
 WSGI_APPLICATION = 'root.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-from .local_settings import *
 """Make a file called 'local_settings.py' in the same folder as 'settings.py' and have this as its contents:
 
 name = "accounting"
@@ -111,24 +108,6 @@ DATABASES = {
         'PORT' : '',
     }
 }
-# env = None
-# Use the commented out values when its time to go production. Or when testing a custom 400, 403, 404, etc.
-ENVIRONMENT = env
-if env == "staging":
-    DEBUG = False
-    ALLOWED_HOSTS = []
-elif env == "production":
-    DEBUG = True
-    ALLOWED_HOSTS = []
-else:
-    INSTALLED_APPS += ["debug_toolbar","debug_panel",]
-    MIDDLEWARE_CLASSES += ('debug_panel.middleware.DebugPanelMiddleware',)
-    INTERNAL_IPS = ('localhost','127.0.0.1','127.0.0.1:8000','127.0.0.1:9000')
-    DEBUG = True
-    ALLOWED_HOSTS = []
-
-
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -200,3 +179,21 @@ ERROR_LEVEL = 'WARNING' # DEBUG -> INFO -> WARNING -> ERROR -> CRITICAL
 # }
 CORS_ORIGIN_ALLOW_ALL = True
 
+if env == "staging":
+    DEBUG = False
+    ALLOWED_HOSTS = []
+elif env == "production":
+    DEBUG = False
+    ALLOWED_HOSTS = [
+        "localhost",
+        "yahshuaintelex.com",
+        "www.yahshuaintelex.com",
+        "https://www.yahshuaintelex.com",
+        "https://yahshuaintelex.com",
+    ]
+else:
+    INSTALLED_APPS += ["debug_toolbar","debug_panel",]
+    MIDDLEWARE_CLASSES += ('debug_panel.middleware.DebugPanelMiddleware',)
+    INTERNAL_IPS = ('localhost','127.0.0.1','127.0.0.1:8000','127.0.0.1:9000')
+    DEBUG = True
+    ALLOWED_HOSTS = []

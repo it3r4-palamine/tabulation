@@ -1,4 +1,13 @@
-<div style="text-align:center">
-	<h1>404: Page not found</h1>
-	<h3>The requested page was not found. Click <a href="/">HERE</a> to return to the homepage.</h3>
+{% extends "base.html" %} {% load static %} {% block title %}Page Not Found {% endblock %}
+{% block content_body %}
+
+<div class="middle-box text-center animated fadeInDown">
+    <h1>404</h1>
+    <h3 class="font-bold">Page Not Found</h3>
+
+    <div class="error-desc">
+        Sorry, but the page you are looking for has not been found. <br>
+        Click <a href="/">HERE</a> to return to the homepage.
+    </div>
 </div>
+{% endblock %}
