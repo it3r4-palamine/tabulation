@@ -72,7 +72,7 @@
                                     <div align="center" class="carousel slide" id="carousel{$ key+1 $}" ng-if="record.images">
                                         <div ng-click="load_to_edit(record)" class="carousel-inner">
                                             <div class="item" ng-class="{'active': key1 == 0 }" ng-repeat="(key1,image) in record.images">
-                                                <img style="height:100px;width:100px;" src="http://35.196.233.235{$image.image$}" class="img-responsive img-rounded" alt="image">
+                                                <img style="height:100px;width:100px;" src="http://35.196.186.121{$image.image$}" class="img-responsive img-rounded" alt="image">
                                             </div>
                                         </div>
                                         <a data-slide="prev" href="#carousel{$ key+1 $}" class="left carousel-control">
@@ -84,7 +84,7 @@
                                     </div>
                                 </td>
                                 <td ng-click="load_to_edit(record)">
-                                    <span ng-if="record.transaction_types.length == 0">{$ record.transaction_type.name $}</span>
+                                    <span ng-if="record.transaction_types.length == 0">{$ record.transaction_type.name $} <span ng-if="record.transaction_type.set_no">- Set {$ record.transaction_type.set_no $}</span></span>
                                     <span ng-if="record.transaction_types">
                                         <ul>
                                             <li ng-repeat="type in record.transaction_types">
@@ -195,6 +195,17 @@
                                             <div class="checkbox checkbox-success">
                                                 <input type="checkbox" id="is_document" name="is_document" ng-model="record.is_document" ng-click="isMultiple()"><label for="is_document">Needs document image</label>
                                             </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <br>
+                                            <div class="checkbox checkbox-success">
+                                                <input type="checkbox" id="has_timer" name="has_timer" ng-model="record.has_timer"><label for="has_timer">Has timer</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12" ng-if="record.has_timer">
+                                            <br>
+                                            <label>Timer</label>
+                                            <input type="number" required name="timer" ng-model="record.timer" class="form-control">
                                         </div>
                                         <div class="clearfix"></div>
                                         <div class="col-sm-12">

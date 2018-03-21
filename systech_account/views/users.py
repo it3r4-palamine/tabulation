@@ -160,7 +160,7 @@ def elimina_tildes(cadena):
 def get_intelex_students(request):
 	try:
 		datus = req_data(request,True)
-		url = 'http://35.196.247.86/api/read_enrolled_students/'
+		url = 'http://35.196.206.62/api/read_enrolled_students/'
 		headers = {'content-type': 'application/json'}
 		data = {"complete_detail": True}
 		result = requests.post(url, data=json.dumps(data), headers=headers)

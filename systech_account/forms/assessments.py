@@ -22,6 +22,7 @@ class Assessment_question_form(forms.ModelForm):
 			'answer_type',
 			'has_related',
 			'uploaded_question',
+			'timer',
 		)
 
 class Assessment_effect_form(forms.ModelForm):
@@ -57,7 +58,7 @@ class Assessment_score_form(forms.ModelForm):
 class Assessment_session_form(forms.ModelForm):
 	class Meta:
 		model  = Assessment_session
-		fields = ('company_assessment','date','time_start','time_end','is_deleted')
+		fields = ('company_assessment','date','time_start','time_end','is_deleted','transaction_type','question')
 
 class Assessment_image_form(forms.ModelForm):
 	class Meta:

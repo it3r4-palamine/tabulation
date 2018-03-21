@@ -18,6 +18,7 @@
     <link href="{% static 'css/common/lib_common.css'%}" rel="stylesheet">
     <link href="{% static 'inspinia/css/plugins/toastr/angular-toaster.css'%}" rel="stylesheet">
     <link href="{% static 'css/common/site.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/jquery.loadingModal.css'%}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
     <style>
@@ -145,7 +146,7 @@
                     <thead>
                         <tr>
                             <td>
-                                <p class="header-text">Time In </p>
+                                <p class="header-text">Credits enrolled </p>
                             </td>
                             <td>
                                 <p class="header-value"> {$ time_in $}</p>
@@ -153,7 +154,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <p class="header-text">Time Out </p>
+                                <p class="header-text">Credits left </p>
                             </td>
                             <td>
                                 <p class="header-value"> {$ time_out $}</p>
@@ -161,7 +162,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <p class="header-text">Time Consumed </p>
+                                <p class="header-text">Credits consumed </p>
                             </td>
                             <td>
                                 <p class="header-value"> {$ time_consumed $}</p>
@@ -178,7 +179,7 @@
 
         <div id="main-box" class="row">
             <div class="col-xs-12" style="padding-left:0px; padding-right:0px;">
-
+                <p style="font-size: 9px;" ng-if="d_from && d_to"><br>Date range: {$ d_from | date $} - {$ d_to | date $}</p>
                 <table id="table-data" class="table table-bordered table-condensed">
                     
                     <thead class="thead-inverse">
@@ -189,7 +190,8 @@
                             <th style="font-size: 8px">Score</th>
                             <th style="font-size: 8px">Total</th>
                             <th style="font-size: 8px" class="text-center">%</th>
-                            <th class="text-center" style="font-size: 8px">Facilitator</th> 
+                            <th style="font-size: 8px" class="text-center">Time consumed</th>
+                            <th class="text-center" style="font-size: 8px">Effects</th> 
                         </tr>
                     </thead>
                     <tbody>
@@ -201,7 +203,16 @@
                             <td class="text-center" style="vertical-align: middle;"> {$ record.score $}</td>
                             <td class="text-center" style="vertical-align: middle;"> {$ record.answers.length $}</td>
                             <td class="text-center" style="vertical-align: middle;"> {$ record.percentage | percentage : 2 $} </td>
-                            <td style="vertical-align: middle; font-size: 9px;"> {$ company_assessment.facilitator.fullname $}</td> 
+                            <td class="text-center" style="vertical-align: middle;"> {$ record.time_consumed $} </td>
+                            <td style="vertical-align: middle; font-size: 9px;">
+                                <span ng-if="record.effects.length > 0 && !record.has_findings">
+                                    <ul>
+                                        <li ng-repeat="effect in record.effects">
+                                            {$ effect.value $}
+                                        </li>
+                                    </ul>
+                                </span>
+                            </td> 
                         </tr>
                         
                         
@@ -221,6 +232,10 @@
                     {$recommendation.value$}
                 </p>
             </div>
+        </div>
+
+        <div class="row">
+            <p style="font-size: 9px;">FACILITATED BY: {$ company_assessment.facilitator.fullname $}</p>
         </div><br><br><br>
 
         <div class="row" ng-class="(hidethis ? 'footer' : 'footer1')+' '+(footer_position_absolute ? 'position_absolute' : 'position_fixed')">

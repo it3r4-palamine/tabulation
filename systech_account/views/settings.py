@@ -8,6 +8,7 @@ from ..views.assessments import *
 from ..views.common import *
 from ..views.sentence_matching import *
 
+import sys, traceback, os
 
 def import_default(request):
 	if request.user.user_type.name.lower() != "technical":
@@ -35,14 +36,15 @@ def get_fields(request, module_type):
 			"code" : {"display" : "Code", "sort" : 1},
 			"question" : {"display" : q_term, "sort" : 2},
 			"transaction_type" : {"display" : t_term, "sort" : 3},
-			"is_multiple" : {"display" : "Is Multiple Choice", "sort" : 4},
-			"answer_type" : {"display" : "Answer Type", "sort" : 5},
-			"is_document" : {"display" : "Is Document", "sort" : 6},
-			"parent_question" : {"display" : "Is Follow up", "sort" : 7},
-			"has_multiple_answer" : {"display" : "Has Multiple Answer", "sort" : 8},
-			"is_general" : {"display" : "Is General", "sort" : 9},
-			"transaction_types" : {"display" : "General %s"%(t_term), "sort" : 10},
-			"has_follow_up" : {"display" : "Has Follow up", "sort" : 11},
+			"set_no" : {"display" : t_term + " Set No.", "sort" : 4},
+			"is_multiple" : {"display" : "Is Multiple Choice", "sort" : 5},
+			"answer_type" : {"display" : "Answer Type", "sort" : 6},
+			"is_document" : {"display" : "Is Document", "sort" : 7},
+			"parent_question" : {"display" : "Is Follow up", "sort" : 8},
+			"has_multiple_answer" : {"display" : "Has Multiple Answer", "sort" : 9},
+			"is_general" : {"display" : "Is General", "sort" : 10},
+			"transaction_types" : {"display" : "General %s"%(t_term), "sort" : 11},
+			"has_follow_up" : {"display" : "Has Follow up", "sort" : 12},
 		},
 		"choices" : {
 			"question" : {"display" : "%s Code"%(q_term), "sort" : 1},
@@ -181,7 +183,7 @@ def import_questions(request):
 					transaction_types_id = []
 					for transaction_type in transaction_types:
 						try:
-							data_transaction_type = Transaction_type.objects.get(name__iexact=transaction_type,is_active=True)
+							data_transaction_type = Transaction_type.objects.get(name__iexact=transaction_type,is_active=True,set_no=data['set_no'])
 							transaction_types_id.append(data_transaction_type.pk)
 						except Transaction_type.DoesNotExist:
 							return error("%s: "%(t_term)+transaction_type + " does not exists.")
@@ -196,7 +198,7 @@ def import_questions(request):
 				else:
 					import_transaction_type = clean_string(data['transaction_type'])
 					try:
-						transaction_type = Transaction_type.objects.get(name__iexact=import_transaction_type,is_active=True)
+						transaction_type = Transaction_type.objects.get(name__iexact=import_transaction_type,is_active=True,set_no=data['set_no'])
 						data['transaction_type'] = transaction_type.pk
 					except Transaction_type.DoesNotExist:
 						return error("%s: "%(t_term)+data['transaction_type'] + " does not exists.")
@@ -210,7 +212,7 @@ def import_questions(request):
 			else:
 				import_transaction_type = clean_string(data['transaction_type'])
 				try:
-					transaction_type = Transaction_type.objects.get(name__iexact=import_transaction_type,is_active=True)
+					transaction_type = Transaction_type.objects.get(name__iexact=import_transaction_type,is_active=True,set_no=data['set_no'])
 					data['transaction_type'] = transaction_type.pk
 				except Transaction_type.DoesNotExist:
 					return error("%s: "%(t_term)+data['transaction_type'] + " does not exists.")
@@ -229,6 +231,12 @@ def import_questions(request):
 
 		return success("Successfully Imported.")
 	except Exception as e:
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		linenum = sys.exc_traceback.tb_lineno,
+		print(filename)
+		print(linenum)
+		print(e)
 		return HttpResponse(e,status=400)
 
 def import_choices(request):

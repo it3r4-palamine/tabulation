@@ -45,7 +45,7 @@ class User(AbstractBaseUser):
 
 	def get_dict(self):
 		return {
-			"id" : self.pk,
+			"id" 	   : self.pk,
 			"fullname" : self.fullname,
 		}
 
@@ -68,7 +68,12 @@ class User_type(models.Model):
 		db_table  = "user_type"
 
 	def get_dict(self):
-		return {"id" : self.pk,"name" : self.name,"is_active" : self.is_active,"is_default" : self.is_default}
+		return {
+			"id" 		 : self.pk,
+			"name" 		 : self.name,
+			"is_active"  : self.is_active,
+			"is_default" : self.is_default
+		}
 
 class User_credit(models.Model):
 	user 			   = models.ForeignKey("User")
@@ -84,11 +89,11 @@ class User_credit(models.Model):
 
 	def get_dict(self):
 		return {
-			'id' : self.pk,
-			'user' : self.user.get_dict(),
-			'enrollment_id' : self.enrollment_id,
-			'session_credits' : self.session_credits.total_seconds(),
+			'id' 				 : self.pk,
+			'user' 				 : self.user.get_dict(),
+			'enrollment_id' 	 : self.enrollment_id,
+			'session_credits' 	 : self.session_credits.total_seconds(),
 			'session_start_date' : self.session_start_date,
-			'session_end_date' : self.session_end_date,
-			'program_id' : self.program_id,
+			'session_end_date'   : self.session_end_date,
+			'program_id' 		 : self.program_id,
 		}

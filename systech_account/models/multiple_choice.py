@@ -16,12 +16,12 @@ class Choice(models.Model):
 
 	def get_dict(self):
 		return {
-			"id" : self.pk,
-			"value" : self.value,
-			"question" : self.question.get_dict(),
-			"is_answer" : self.is_answer,
-			"is_active" : self.is_active,
-			"is_import" : self.is_import,
-			"follow_up_required" : self.follow_up_required,
+			"id" 					  : self.pk,
+			"value" 				  : self.value,
+			"question" 				  : self.question.get_dict(),
+			"is_answer" 			  : self.is_answer,
+			"is_active" 			  : self.is_active,
+			"is_import" 			  : self.is_import,
+			"follow_up_required" 	  : self.follow_up_required,
 			"required_document_image" : self.required_document_image,
 		}

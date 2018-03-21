@@ -4,6 +4,11 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
 	var me = this;
 	$scope.record = {}
+	$scope.filter = {}
+
+	$scope.filter.transaction_type = {'name':'ALL'}
+	$scope.filter.company = {'name':'ALL'}
+	$scope.filter.user = {'fullname':'ALL'}
 	$scope.create_dialog = function(record){
 		$scope.record = {}
 		$scope.record['is_active'] = true
@@ -69,7 +74,13 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 	}
 
 	$scope.read = function(){
-		me.post_generic("/company_assessment/read/",{'pagination':me.pagination},"main")
+		var data = {
+			pagination: me.pagination,
+			transaction_type:$scope.filter.transaction_type['id'] ? $scope.filter.transaction_type['id'] : null,
+			company_rename:$scope.filter.company['id'] ? $scope.filter.company['id'] : null,
+			user:$scope.filter.user['id'] ? $scope.filter.user['id'] : null,
+		}
+		me.post_generic("/company_assessment/read/",data,"main")
 		.success(function(response){
 			$scope.records = response.data;
 			for(var record in $scope.records){
@@ -183,4 +194,7 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 	$scope.read_companies();
 	$scope.read_users();
 	CommonRead.get_display_terms($scope)
+	CommonRead.get_transaction_types($scope);
+	CommonRead.get_company($scope);
+	CommonRead.get_users($scope);
 });

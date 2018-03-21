@@ -6,6 +6,8 @@ from django.db.models import *
 from ..views.common import *
 from ..views.sentence_matching import *
 
+import sys, traceback, os
+
 
 def home(request):
 	if request.user.user_type.name.lower() != "technical":
@@ -327,8 +329,15 @@ def create(request,results=None):
 			return HttpResponse("Successfully saved.", status = 200)
 		else:
 			return HttpResponse(assessment_question.errors, status = 400)
-	except Exception as err:
-		return HttpResponse(err, status = 400)
+	except Exception as e:
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		linenum = sys.exc_traceback.tb_lineno,
+		print(filename)
+		print(linenum)
+		print(e)
+		return error(e)
+		return HttpResponse(e, status = 400)
 
 def upload(request):
 	if request.method == "POST":
@@ -355,6 +364,9 @@ def upload(request):
 			data.pop("images",None)
 			# data.pop("findings",None)
 			answers = data.pop("answers",None)
+
+			timer = data['timer'] if 'timer' in data else None
+			datus['timer'] = timer
 
 			# data["code"] = "6666666366"
 			# datus["code"] = data["code"]
@@ -393,6 +405,12 @@ def upload(request):
 			# saveData(request, data, assessment_save.pk)
 			return success(assessment_save.pk)
 		except Exception as e:
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			linenum = sys.exc_traceback.tb_lineno,
+			print(filename)
+			print(linenum)
+			print(e)
 			return error(e)
 	else: return error('method error')
 

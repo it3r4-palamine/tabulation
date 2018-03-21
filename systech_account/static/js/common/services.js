@@ -841,6 +841,23 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
+        get_company: function(scope) {
+            data = {"exclude":true}
+            var post = CommonRequests.read_common_records(scope, "company", "/company/read/",data,true);
+            return post.success(function(response){
+                response.data.unshift({'name' : 'ALL'});
+                scope["company"] = response.data;
+            })
+        },
+
+        get_users: function(scope) {
+            var post = CommonRequests.read_common_records(scope, "users", "/users/read/",{},true);
+            return post.success(function(response){
+                response.data.unshift({'fullname' : 'ALL'});
+                scope["users"] = response.data;
+            })
+        },
+
         get_math_symbols: function(scope) {
             var post = CommonRequests.read_common_records(scope, "math_symbols", "/settings/read_math_symbols/",{},true);
             return post.success(function(response){

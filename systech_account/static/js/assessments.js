@@ -50,6 +50,10 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 			$scope.effects = $scope.record.effects
 			$scope.findings = $scope.record.findings
 			$scope.answers = $scope.record.answers
+			if($scope.record.timer){
+				$scope.record.has_timer = true
+			}
+
 			for(var ans in $scope.answers){
 				$scope.multiple_answer_list[ans] = {}
 				for(var ans2 in $scope.answers[ans].answer){
@@ -118,6 +122,8 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 		var has_true = 0
 		var has_required_document = 0
 		if($scope.record.is_document == undefined) $scope.record.is_document = false;
+		if(!not_upload)
+			if($scope.record.has_timer == undefined || $scope.record.has_timer == false) $scope.record.timer = 0;
 		for(x in $scope.choices){
 			if($scope.choices[x].is_answer == true){
 				has_true++
@@ -245,8 +251,13 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 	}
 
 	$scope.saveData = function(record, id) {
+		var datus = {
+			answers: $scope.record.answers,
+			effects: $scope.record.effects,
+			findings: $scope.record.findings,
+		}
 		var data = {
-			datus : $scope.record,
+			datus : datus,
 			id : id
 		}
 		me.post_generic("/assessments/saveData/",data,"dialog")

@@ -12,8 +12,8 @@ class Company(models.Model):
 
 	def get_dict(self):
 		return {
-			"id" : self.pk,
-			"name" : self.name,
+			"id" 		: self.pk,
+			"name" 		: self.name,
 			# "transaction_type" : self.transaction_type.get_dict(),
 			"is_active" : self.is_active
 		}
@@ -32,8 +32,8 @@ class Company_rename(models.Model):
 
 	def get_dict(self):
 		return {
-			"id" : self.pk,
-			"name" : self.name,
-			"is_active" : self.is_active,
+			"id" 		 : self.pk,
+			"name" 		 : self.name,
+			"is_active"  : self.is_active,
 			"program_id" : self.program_id,
 		}

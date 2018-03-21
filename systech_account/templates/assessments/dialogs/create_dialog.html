@@ -15,7 +15,7 @@
                     <div class="col-sm-12" ng-if="record.is_general">
                         <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
                         <ui-select ng-model="record.transaction_types" multiple ng-change="generate_code()">
-                            <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $item.name $}</ui-select-match>
+                            <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $item.name $} - Set {$ $item.set_no $}</ui-select-match>
                             <ui-select-choices repeat="transaction_type in transaction_types2 | filter: $select.search | limitTo:50">
                                 <!-- <div ng-bind-html="transaction_type.name | highlight: $select.search"></div> -->
                                 <span ng-bind-html="transaction_type.name | highlight: $select.search"></span> - Set <span ng-bind-html="transaction_type.set_no | highlight: $select.search"></span> - <span ng-bind-html="transaction_type.transaction_code"></span>
@@ -25,7 +25,7 @@
                     <div class="col-sm-12" ng-if="!record.is_general">
                         <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
                         <ui-select ng-model="record.transaction_type" ng-change="generate_code()">
-                            <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $}</ui-select-match>
+                            <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $} - Set {$ $select.selected.set_no $}</ui-select-match>
                             <ui-select-choices repeat="transaction_type in transaction_types2 | filter: $select.search | limitTo:50">
                                 <!-- <div ng-bind-html="transaction_type.name | highlight: $select.search"></div> -->
                                 <span ng-bind-html="transaction_type.name | highlight: $select.search"></span> - Set <span ng-bind-html="transaction_type.set_no | highlight: $select.search"></span>

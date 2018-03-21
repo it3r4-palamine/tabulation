@@ -220,7 +220,8 @@ class SyncAssessments(APIView):
 						for score in t_type['scores']:
 							datus['question'] = score['id']
 							datus['score'] = score['score']
-							datus['uploaded_question'] = False if 'not_uploaded_question' in score else True
+							# datus['uploaded_question'] = False if 'not_uploaded_question' in score else True
+							datus['uploaded_question'] = True
 
 							try:
 								instance = Assessment_score.objects.get(company_assessment=t_type['assessment'],transaction_type=t_type['transactionType'],is_active=True,question=score['id'],uploaded_question=True)
@@ -255,6 +256,8 @@ class SyncAssessments(APIView):
 					'date' : session['date'],
 					'time_start' : session['time_start'],
 					'time_end' : session['time_end'],
+					'transaction_type' : session['transactionType'],
+					'question' : session['question'] if 'question' in session else None
 				}
 
 				session_form = Assessment_session_form(sessions)

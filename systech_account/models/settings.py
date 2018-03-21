@@ -14,11 +14,11 @@ class Display_setting(models.Model):
 
 	def get_dict(self):
 		return {
-			"id" : self.pk,
+			"id" 				  : self.pk,
 			"company_assessments" : self.company_assessments,
-			"transaction_types" : self.transaction_types,
-			"questions" : self.questions,
-			"company_rename" : self.company_rename,
+			"transaction_types"   : self.transaction_types,
+			"questions" 		  : self.questions,
+			"company_rename" 	  : self.company_rename,
 		}
 
 class Math_symbol(models.Model):
@@ -36,11 +36,11 @@ class Math_symbol(models.Model):
 
 	def get_dict(self):
 		return {
-			"id" : self.pk,
-			"symbol" : self.symbol,
-			"name" : self.name,
-			"is_active" : self.is_active,
-			"category" : self.category,
+			"id" 		 : self.pk,
+			"symbol" 	 : self.symbol,
+			"name" 		 : self.name,
+			"is_active"  : self.is_active,
+			"category" 	 : self.category,
 			"above_text" : self.above_text,
-			"syntax" : self.syntax,
+			"syntax" 	 : self.syntax,
 		}
