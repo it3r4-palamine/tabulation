@@ -110,3 +110,11 @@ urlpatterns = [
 ]
 urlpatterns += static(root_settings.STATIC_URL,document_root=root_settings.STATIC_ROOT)
 urlpatterns += static(root_settings.MEDIA_URL,document_root=root_settings.MEDIA_ROOT)
+
+
+if root_settings.ENVIRONMENT == "localhost":
+	from django.conf.urls import patterns
+	import debug_toolbar
+	urlpatterns += patterns('',
+	    url(r'^__debug__/', include(debug_toolbar.urls)),
+	)

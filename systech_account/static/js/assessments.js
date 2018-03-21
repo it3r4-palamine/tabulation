@@ -472,10 +472,17 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
     }
 
     $scope.read_transaction_types = function(){
-    	me.post_generic("/transaction_types/read/","","main")
+    	var post = CommonRead.get_transaction_types2($scope);
+    	post.success(function(response){
+    		var records = response.data;
+    		$scope.transaction_types2 = angular.copy(records);
+    		$scope.transaction_types = angular.copy(records);
+    		$scope.transaction_types.unshift({'name' : 'ALL'});
+    	})
+    	/*me.post_generic("/transaction_types/read/","","main")
     	.success(function(response){
     		$scope.transaction_types = response.data;
-    	})
+    	})*/
     }
 
     $scope.edit_is_related = false;
@@ -591,11 +598,9 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 
 	$scope.read();
     me.main_loader = function(){$scope.read();}
-    CommonRead.get_transaction_types($scope);
-    CommonRead.get_transaction_types2($scope);
     CommonRead.get_display_terms($scope);
     CommonRead.get_math_symbols($scope);
-	// $scope.read_transaction_types();
+	$scope.read_transaction_types();
 });
 
 

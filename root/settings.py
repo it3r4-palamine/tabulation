@@ -42,7 +42,7 @@ INSTALLED_APPS = (
     'corsheaders',
 )
 
-INTERNAL_IPS = ('127.0.0.1','127.0.0.1:9000',)
+#INTERNAL_IPS = ('127.0.0.1','127.0.0.1:9000',)
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -118,12 +118,12 @@ if env == "staging":
     DEBUG = False
     ALLOWED_HOSTS = []
 elif env == "production":
-    DEBUG = False
+    DEBUG = True
     ALLOWED_HOSTS = []
-
-    # DEBUG = False
-    # ALLOWED_HOSTS = ['localhost', 'https://www.yahshuabooksonline.com/']
 else:
+    INSTALLED_APPS += ["debug_toolbar","debug_panel",]
+    MIDDLEWARE_CLASSES += ('debug_panel.middleware.DebugPanelMiddleware',)
+    INTERNAL_IPS = ('localhost','127.0.0.1','127.0.0.1:8000','127.0.0.1:9000')
     DEBUG = True
     ALLOWED_HOSTS = []
 
