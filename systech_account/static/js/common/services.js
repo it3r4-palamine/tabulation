@@ -834,8 +834,11 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
-        get_transaction_types2: function(scope) {
-            var post = CommonRequests.read_common_records(scope, "transaction_types2", "/transaction_types/read/",{},true);
+        get_transaction_types2: function(scope,params) {
+            if(!params){
+                params = {}
+            }
+            var post = CommonRequests.read_common_records(scope, "transaction_types2", "/transaction_types/read/",params,true);
             return post.success(function(response){
                 scope["transaction_types2"] = response.data;
             })

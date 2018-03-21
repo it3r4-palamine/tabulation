@@ -24,6 +24,7 @@ def read(request):
 		filters['company'] = data['company']
 		name_search = data.pop("name","")
 		has_company = data.get("company_rename",None)
+		bypass_code_exists = data.get("bypass_code_exists",False)
 		c_term = "Company"
 		terms = get_display_terms(request)
 		if terms:
@@ -60,14 +61,16 @@ def read(request):
 		if pagination:
 			results.update(generate_pagination(pagination,records))
 			records = records[results['starting']:results['ending']]
+
 		data = []
 		for record in records:
 			row = record.get_dict()
-			row['code_exist'] = False
-			if row['transaction_code']:
-				questions = Assessment_question.objects.filter(code__startswith=row['transaction_code'])
-				if questions:
-					row['code_exist'] = True
+			if not bypass_code_exists:
+				row['code_exist'] = False
+				if row['transaction_code']:
+					questions = Assessment_question.objects.filter(code__startswith=row['transaction_code'])
+					if questions:
+						row['code_exist'] = True
 			
 			data.append(row)
 

@@ -477,13 +477,12 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 						$scope.ImageSrcArr2.push(fayl[y])
 				}
 			}
-
 			$scope.record.images = $scope.ImageSrcArr2
     	}
     }
 
     $scope.read_transaction_types = function(){
-    	var post = CommonRead.get_transaction_types2($scope);
+    	var post = CommonRead.get_transaction_types2($scope,{"bypass_code_exists": true});
     	post.success(function(response){
     		var records = response.data;
     		$scope.transaction_types2 = angular.copy(records);
