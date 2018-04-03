@@ -12,6 +12,10 @@
                         <label class="required">Fullname</label>
                         <input type="text" ng-model="record.fullname" name="fullname" required class="form-control">
                     </div>
+                    <div class="col-sm-12" ng-class="{ 'has-error' : form.username.$invalid && !form.username.$pristine }">
+                        <label class="required">Username</label>
+                        <input type="text" ng-model="record.username" name="username" required class="form-control">
+                    </div>
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.email.$invalid && !form.email.$pristine }">
                         <label class="required">Email</label>
                         <input type="email" ng-model="record.email" name="email" required class="form-control">

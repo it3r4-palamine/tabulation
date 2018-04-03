@@ -57,20 +57,22 @@ def read(request):
 
 def create(request):
 	try: 
-		postdata = req_data(request,True)
+		postdata 					= req_data(request,True)
 		# postdata['transaction_type'] = postdata['transaction_type']['id']
-		postdata['company'] = postdata['company']
-		postdata['consultant'] = postdata['consultant']['id']
-		postdata['facilitator'] = postdata['facilitator']['id']
-		postdata['company_rename'] = postdata['company_rename']['id']
+		postdata['company'] 		= postdata['company']
+		postdata['consultant'] 		= postdata['consultant']['id']
+		postdata['facilitator'] 	= postdata['facilitator']['id']
+		postdata['company_rename'] 	= postdata['company_rename']['id']
 		postdata['session_credits'] = timedelta(seconds=postdata['session_credits'])
-		postdata['credits_left'] = timedelta(seconds=postdata['credits_left'])
+		postdata['credits_left'] 	= timedelta(seconds=postdata['credits_left'])
 
-		term = "Transaction Type"
+		term  = "Transaction Type"
 		terms = get_display_terms(request)
+
 		if terms:
 			if terms.transaction_types:
 				term = terms.transaction_types
+
 		if 'transaction_types' not in postdata:
 			return error("%s is required."%(term))
 
@@ -86,24 +88,24 @@ def create(request):
 			checkQuestion = Assessment_question.objects.filter(company=postdata['company'],is_active=True,transaction_type=transaction_type['id'])
 			if len(checkQuestion) < 1:
 				t_type = Transaction_type.objects.get(id=transaction_type['id'])
-				return error(t_type.name + " doesn't have any questions. Please advised!")
+				return error(t_type.name + " doesn't have any questions. Please be advised!")
 
 		postdata['transaction_type'] = list_to_string(company_assessment_transaction_type)
 		try:
-			instance = Company_assessment.objects.get(id=postdata.get('id',None))
+			instance 		   = Company_assessment.objects.get(id=postdata.get('id',None))
 			company_assessment = Company_assessment_form(postdata, instance=instance)
 		except Company_assessment.DoesNotExist:
 			company_assessment = Company_assessment_form(postdata)
 
 		if company_assessment.is_valid():
-			assessment_id = company_assessment.save()
+			assessment_id 	= company_assessment.save()
 			total_questions = Decimal(0)
-			total_answers = Decimal(0)
+			total_answers 	= Decimal(0)
 			for transaction_type in company_assessment_transaction_type:
-				questions = Assessment_question.objects.filter(Q(company=postdata['company'],transaction_types__contains=[transaction_type],is_active=True) | Q(company=postdata['company'],transaction_type=transaction_type,is_active=True))
-				answers = Assessment_answer.objects.filter(company=postdata['company'],transaction_type=transaction_type,company_assessment=assessment_id.pk)
+				questions 		= Assessment_question.objects.filter(Q(company=postdata['company'],transaction_types__contains=[transaction_type],is_active=True) | Q(company=postdata['company'],transaction_type=transaction_type,is_active=True))
+				answers 		= Assessment_answer.objects.filter(company=postdata['company'],transaction_type=transaction_type,company_assessment=assessment_id.pk)
 				total_questions += len(questions)
-				total_answers += len(answers)
+				total_answers 	+= len(answers)
 
 			if not assessment_id.is_generated:
 				if total_questions == total_answers:

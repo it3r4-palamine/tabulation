@@ -53,6 +53,7 @@
                     <table class="table table-bordered">
                         <thead>
                             <th>Fullname</th>
+                            <th>Username</th>
                             <th>Email</th>
                             <th>User Type</th>
                             {% if request.user.user_type.name == 'Technical' %}
@@ -62,6 +63,7 @@
                         <tbody>
                             <tr ng-repeat="record in records" class="hand_cursor">
                                 <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.fullname $}</td>
+                                <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.username $}</td>
                                 <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.email $}</td>
                                 <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.user_type.name $}</td>
                                 {% if request.user.user_type.name == 'Technical' %}

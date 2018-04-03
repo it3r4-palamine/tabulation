@@ -36,4 +36,5 @@ class Company_rename(models.Model):
 			"name" 		 : self.name,
 			"is_active"  : self.is_active,
 			"program_id" : self.program_id,
+			"is_intelex" : self.is_intelex,
 		}

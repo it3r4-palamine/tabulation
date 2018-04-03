@@ -36,8 +36,9 @@ class User(AbstractBaseUser):
 	objects          = User_Manager()
 	is_intelex       = models.BooleanField(default=False)
 	user_intelex_id	 = models.IntegerField(blank=True,null=True)
+	username 		 = models.CharField(max_length=100,unique=True,null=True,blank=True)
 
-	USERNAME_FIELD = 'email'
+	USERNAME_FIELD = 'username'
 
 	class Meta:
 		app_label = "systech_account"

@@ -18,10 +18,10 @@ def create_dialog(request):
 
 def read(request):
 	try:
-		data = req_data(request,True)
-		filters = {}
+		data 				 = req_data(request,True)
+		filters 			 = {}
 		filters['is_active'] = True
-		filters['company'] = data['company']
+		filters['company'] 	 = data['company']
 
 		exclude = data.pop("exclude",None)
 		# has_transaction = data.get("transaction_type",None)
@@ -51,11 +51,12 @@ def read(request):
 							t_type = Transaction_type.objects.get(id=t_types,is_active=True,company=data['company'])
 						except Transaction_type.DoesNotExist:
 							continue
-						transaction_type_dict = {'id':t_type.pk,
-												'name':t_type.name,
-												'is_active':t_type.is_active,
-												'code':t_type.transaction_code,
-												'set_no':t_type.set_no,
+						transaction_type_dict = {
+												'id'		: t_type.pk,
+												'name'		: t_type.name,
+												'is_active' : t_type.is_active,
+												'code'		: t_type.transaction_code,
+												'set_no'	: t_type.set_no,
 											}
 						company_transaction_type.append(transaction_type_dict)
 			row['transaction_type'] = company_transaction_type
@@ -68,9 +69,10 @@ def read(request):
 def create(request):
 	try: 
 		postdata = req_data(request,True)
-		t_term = "Transaction Type"
-		c_term = "Company"
-		terms = get_display_terms(request)
+		t_term 	 = "Transaction Type"
+		c_term 	 = "Company"
+		terms 	 = get_display_terms(request)
+
 		if terms:
 			if terms.transaction_types:
 				t_term = terms.transaction_types
@@ -89,7 +91,7 @@ def create(request):
 		postdata['transaction_type'] = list_to_string(company_transaction_type)
 		try:
 			instance = Company_rename.objects.get(id=postdata.get('id',None))
-			company = Company_rename_form(postdata, instance=instance)
+			company  = Company_rename_form(postdata, instance=instance)
 		except Company_rename.DoesNotExist:
 			if not Company_rename.objects.filter(name=postdata['name']).exists():
 				company = Company_rename_form(postdata)
@@ -106,7 +108,7 @@ def create(request):
 def delete(request,id = None):
 	try:
 		c_term = "Company"
-		terms = get_display_terms(request)
+		terms  = get_display_terms(request)
 		if terms:
 			if terms.company_rename:
 				c_term = terms.company_rename
@@ -125,27 +127,48 @@ def delete(request,id = None):
 
 def get_intelex_subjects(request):
 	try:
-		datus = req_data(request,True)
-		url = 'http://35.196.206.62/api/read_programs/'
-		headers = {'content-type': 'application/json'}
-		data = {'complete_detail': True}
-		result = requests.post(url,data=json.dumps(data),headers=headers)
+		datus 			= req_data(request,True)
+		url 			= 'http://35.196.206.62/api/read_programs/'
+		headers 		= {'content-type': 'application/json'}
+		data 			= {'complete_detail': True}
+		result 			= requests.post(url,data=json.dumps(data),headers=headers)
 		result.encoding = 'ISO-8859-1'
-		records = result.json()
+		records 		= result.json()
 
 		for record in records['records']:
 			print record
-			if Company_rename.objects.filter(name__iexact=record['name'],program_id=record['id'],is_intelex=True,is_active=True,company=datus['company']).exists():
-				continue
-			else:
-				program = {}
-				program['program_id'] = record['id']
-				program['is_active'] = True
-				program['is_intelex'] = True
-				program['company'] = datus['company']
-				program['name'] = record['name']
-
+			has_exists = Company_rename.objects.filter(name__iexact=record['name'],program_id=record['id'],is_active=True,company=datus['company']).first()
+			if has_exists:
+				t_type 			  = has_exists.transaction_type
 				transaction_types = Transaction_type.objects.filter(program_id=record['id'],is_active=True,is_intelex=True)
+
+				for transaction_type in transaction_types:
+					if transaction_type.pk not in t_type:
+						t_type.append(transaction_type.pk)
+
+				t_types 					= {}
+				t_types['program_id'] 		= record['id']
+				t_types['is_active'] 		= True
+				t_types['is_intelex'] 		= True
+				t_types['company'] 			= datus['company']
+				t_types['name'] 			= record['name']
+				t_types['transaction_type'] = list_to_string(t_type)
+
+				company_rename_form = Company_rename_form(t_types,instance=has_exists)
+
+				if company_rename_form.is_valid():
+					company_rename_form.save()
+				else:
+					return HttpResponse(company_rename_form.errors, status = 400)
+			else:
+				program 			  = {}
+				program['program_id'] = record['id']
+				program['is_active']  = True
+				program['is_intelex'] = True
+				program['company'] 	  = datus['company']
+				program['name'] 	  = record['name']
+
+				transaction_types 	 = Transaction_type.objects.filter(program_id=record['id'],is_active=True,is_intelex=True)
 				transaction_typesArr = []
 				for transaction_type in transaction_types:
 					transaction_typesArr.append(transaction_type.pk)
@@ -157,7 +180,7 @@ def get_intelex_subjects(request):
 				if company_rename_form.is_valid():
 					company_rename_form.save()
 				else:
-					return HttpResponse(transaction_type_form.errors, status = 400)
+					return HttpResponse(company_rename_form.errors, status = 400)
 		return HttpResponse("Successfully saved.", status = 200)
 	except Exception as e:
 		return HttpResponse(e,status=400)

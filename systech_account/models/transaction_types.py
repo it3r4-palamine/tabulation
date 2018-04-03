@@ -24,6 +24,8 @@ class Transaction_type(models.Model):
 			"transaction_code" : self.transaction_code,
 			"is_active" 	   : self.is_active,
 			"exercise_id" 	   : self.exercise_id,
+			"program_id" 	   : self.program_id,
 			"set_no" 		   : self.set_no,
 			"total_items" 	   : self.total_items,
+			"is_intelex" 	   : self.is_intelex,
 		}

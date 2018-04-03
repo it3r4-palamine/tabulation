@@ -87,7 +87,7 @@
                                 <td ng-click="load_to_edit(record)">
                                     <ul>
                                         <li ng-repeat="transaction_type in record.transaction_type">
-                                            {$transaction_type.name$}    
+                                            {$transaction_type.name$} <span ng-if="transaction_type.set_no">- Set {$ transaction_type.set_no $}</span>    
                                         </li>
                                     </ul>
                                 </td>

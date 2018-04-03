@@ -44,6 +44,7 @@ def read(request):
 			row = {}
 			row['id'] = record.pk
 			row['email'] = record.email
+			row['username'] = record.username
 			row['fullname'] = record.fullname
 			row['is_active'] = record.is_active
 			row['is_admin'] = record.is_admin
@@ -181,7 +182,7 @@ def get_intelex_students(request):
 			
 			email_add = username + "@gmail.com"
 			user_id = None
-			user_exists = User.objects.filter(email__iexact=email_add,is_active=True).first()
+			user_exists = User.objects.filter(username__iexact=username,is_active=True).first()
 			if user_exists:
 				user_id = user_exists.pk
 				if 'enrollments' in record:
@@ -216,6 +217,7 @@ def get_intelex_students(request):
 				record["email"] = email_add
 				record["fullname"] = record["first_name"] + record["last_name"]
 				record["user_intelex_id"] = record["id"]
+				record["username"] = username
 				record["password1"] = username
 				record["password2"] = username
 				record["is_intelex"] = True

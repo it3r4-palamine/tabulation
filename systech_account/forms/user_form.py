@@ -15,17 +15,21 @@ class CustomUserCreationForm(UserCreationForm):
 
 	class Meta:
 		model  = User
-		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company")
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","username")
 
 
 	def clean(self):
 		raw_data = self.cleaned_data
-		email = (Q(email = raw_data["email"]) & Q(is_active = True))
+		email = (Q(is_active = True))
+		email &= (Q(username=raw_data["username"]) | Q(email = raw_data["email"]))
 		instance = User.objects.filter(email)
 		if instance.exists():
 			instance = instance.first()
 			if instance.pk != self.instance.pk and raw_data["email"]:	
-				raise ValueError("Email address already in use.")
+				raise ValueError("Email address/Username already in use.")
+
+			if instance.pk != self.instance.pk and raw_data["username"]:
+				raise ValueError("Email address/Username already in use.")
 
 		return raw_data
 
@@ -41,17 +45,21 @@ class StudentUserForm(UserCreationForm):
 
 	class Meta:
 		model  = User
-		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","is_intelex","user_intelex_id")
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","is_intelex","user_intelex_id","username")
 
 
 	def clean(self):
 		raw_data = self.cleaned_data
-		email = (Q(email = raw_data["email"]) & Q(is_active = True))
+		email = (Q(is_active = True))
+		email &= (Q(username=raw_data["username"]) | Q(email = raw_data["email"]))
 		instance = User.objects.filter(email)
 		if instance.exists():
 			instance = instance.first()
 			if instance.pk != self.instance.pk and raw_data["email"]:	
-				print "Email Already Exists"
+				raise ValueError("Email address/Username already in use.")
+
+			if instance.pk != self.instance.pk and raw_data["username"]:
+				raise ValueError("Email address/Username already in use.")
 
 		return raw_data
 
@@ -59,16 +67,21 @@ class CustomUserChangeForm(forms.ModelForm):
 
 	class Meta:
 		model  = User
-		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company")
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","username")
 
 	def clean(self):
 		raw_data = self.cleaned_data
-		email = (Q(email = raw_data["email"]) & Q(is_active = True))
+		# email = (Q(email = raw_data["email"]) & Q(is_active = True))
+		email = (Q(is_active = True))
+		email &= (Q(username=raw_data["username"]) | Q(email = raw_data["email"]))
 		instance = User.objects.filter(email)
 		if instance.exists():
 			instance = instance.first()
 			if instance.pk != self.instance.pk and raw_data["email"]:	
-				raise ValueError("Email address already in use.")
+				raise ValueError("Email address/Username already in use.")
+
+			if instance.pk != self.instance.pk and raw_data["username"]:
+				raise ValueError("Email address/Username already in use.")
 
 		return raw_data
 

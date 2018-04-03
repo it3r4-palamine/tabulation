@@ -18,21 +18,22 @@ def create_dialog(request):
 
 def read(request):
 	try:
-		data = req_data(request,True)
-		filters = {}
+		data 				 = req_data(request,True)
+		filters 			 = {}
 		filters['is_active'] = True
-		filters['company'] = data['company']
-		name_search = data.pop("name","")
-		has_company = data.get("company_rename",None)
-		bypass_code_exists = data.get("bypass_code_exists",False)
-		c_term = "Company"
-		terms = get_display_terms(request)
+		filters['company'] 	 = data['company']
+		name_search 	   	 = data.pop("name","")
+		has_company 	   	 = data.get("company_rename",None)
+		bypass_code_exists 	 = data.get("bypass_code_exists",False)
+		c_term 			   	 = "Company"
+		terms 				 = get_display_terms(request)
+
 		if terms:
 			if terms.company_rename:
 				c_term = terms.company_rename
 		if has_company:
 			try:
-				company = Company_rename.objects.get(id=has_company)
+				company 		  = Company_rename.objects.get(id=has_company)
 				filters['id__in'] = company.transaction_type
 			except Company_rename.DoesNotExist:
 				raise_error("%s doesn't exist."%(c_term))
@@ -55,6 +56,7 @@ def read(request):
 			records = Transaction_type.objects.filter(**filters).exclude(id__in=data['program_id']).order_by(*sort_by)
 		else:
 			records = Transaction_type.objects.filter(**filters).order_by(*sort_by)
+
 		results = {'data':[]}
 		results['total_records'] = records.count()
 
@@ -89,7 +91,7 @@ def create(request):
 		try:
 			instance = Transaction_type.objects.get(company=postdata['company'],id=postdata.get('id',None),is_active=True)
 			try:
-				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],name__iexact=postdata['name'],is_active=True)
+				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],name__iexact=postdata['name'],is_active=True,set_no=postdata['set_no'])
 				if check_transaction_type.pk != postdata['id']: 
 					return error(check_transaction_type.name + " already exists.")
 
@@ -98,7 +100,7 @@ def create(request):
 				transaction_type = Transaction_type_form(postdata, instance=instance)
 		except Transaction_type.DoesNotExist:
 			try:
-				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],transaction_code__iexact=postdata['transaction_code'],is_active=True)
+				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],transaction_code__iexact=postdata['transaction_code'],is_active=True,set_no=postdata['set_no'])
 				return error(check_transaction_type.name + " already exists.")
 			except Transaction_type.DoesNotExist:
 				transaction_type = Transaction_type_form(postdata)
@@ -137,28 +139,29 @@ def delete(request,id = None):
 def get_intelex_exercises(request):
 
 	try:
-		datus = req_data(request,True)
-		url = 'http://35.196.206.62/api/read_exercises/'
+		datus 	= req_data(request,True)
+		url 	= 'http://35.196.206.62/api/read_exercises/'
 		headers = {'content-type': 'application/json'}
-		data = {"complete_detail": True}
+		data 	= {"complete_detail": True}
 
-		result = requests.post(url, data=json.dumps(data), headers=headers)
+		result 			= requests.post(url, data=json.dumps(data), headers=headers)
 		result.encoding = 'ISO-8859-1'
-		records = result.json()
+		records 	    = result.json()
 
 		for record in records["records"]:
+			cprint(record)
 			if Transaction_type.objects.filter(set_no=record['set_no'],transaction_code__iexact=record['exercise_code'],name__iexact=record['exercise_name'],exercise_id=record['id'],is_intelex=True,is_active=True,company=datus['company']).exists():
 				continue
 			else:
 				datus['transaction_code'] = record['exercise_code']
-				datus['name'] = record['exercise_name']
-				datus['exercise_id'] = record['id']
-				datus['program_id'] = record['program_id']
-				datus['is_active'] = True
-				datus['is_intelex'] = True
-				datus['set_no'] = record['set_no']
-				datus['total_items'] = record['total_items']
-				datus['company'] = datus['company']
+				datus['name'] 			  = record['exercise_name']
+				datus['exercise_id'] 	  = record['id']
+				datus['program_id'] 	  = record['program_id']
+				datus['is_active'] 		  = True
+				datus['is_intelex'] 	  = True
+				datus['set_no'] 		  = record['set_no']
+				datus['total_items'] 	  = record['total_items']
+				datus['company'] 		  = datus['company']
 
 				transaction_type_form = Transaction_type_form(datus)
 

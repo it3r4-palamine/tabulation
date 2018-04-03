@@ -57,12 +57,12 @@ class Company_assessment(models.Model):
 						for questionScore in score:
 							if questionScore.uploaded_question:
 								row = {}
-								row['id'] = questionScore.question.pk
+								row['id'] 	 = questionScore.question.pk
 								row['score'] = questionScore.score
 
 								scores.append(row)
 
-								t_type['scores'] = scores
+								t_type['scores']  = scores
 							else: t_type['score'] = questionScore.score
 					transaction_type_list.append(t_type)
 					
