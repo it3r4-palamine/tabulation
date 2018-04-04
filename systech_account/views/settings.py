@@ -3,7 +3,9 @@ from ..forms.multiple_choice import *
 from ..models.assessments import *
 from ..models.settings import *
 from ..forms.settings import *
+from ..forms.company import *
 from ..forms.user_type import *
+from ..forms.transaction_types import *
 from ..views.assessments import *
 from ..views.common import *
 from ..views.sentence_matching import *
@@ -24,6 +26,7 @@ def read_module_columns(request, module_type):
 def get_fields(request, module_type):
 	t_term = "Transaction Type"
 	q_term = "Question"
+	p_term = "Company"
 	terms = get_display_terms(request)
 	if terms:
 		if terms.transaction_types:
@@ -31,6 +34,9 @@ def get_fields(request, module_type):
 
 		if terms.questions:
 			q_term = terms.questions
+
+		if terms.company_rename:
+			p_term = terms.company_rename
 	fields = {
 		"questions" : {
 			"code" : {"display" : "Code", "sort" : 1},
@@ -63,6 +69,12 @@ def get_fields(request, module_type):
 		},
 		"recommendations" : {
 			"value" : {"display" : "Recommendation", "sort" : 1},
+		},
+		"transaction_types" : {
+			"name" : {"display" : "Name", "sort" : 1},
+			"transaction_code" : {"display" : "Code", "sort" : 2},
+			"set_no" : {"display" : "Set No.", "sort" : 3},
+			"program_assigned" : {"display" : p_term, "sort" : 4},
 		}
 	}
 	return fields.get(module_type,{})
@@ -381,6 +393,59 @@ def import_recommendations(request):
 		if recommendation_question.is_valid():
 			recommendation_question.save()
 
+		return success("Successfully Imported.")
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
+def import_transaction_types(request):
+	try:
+		data = req_data(request,True)
+		data['is_active'] = True
+
+		if 'name' not in data:
+			return error("Name is requried.")
+
+		if 'transaction_code' not in data:
+			return error("Code is required.")
+
+		if 'set_no' not in data:
+			return error("Set No. is required.")
+
+		check_transaction_type = Transaction_type.objects.filter(company=data['company'],transaction_code__iexact=data['transaction_code'],name__iexact=data['name'],is_active=True,set_no=data['set_no']).first()
+		if check_transaction_type:
+			return error(data['name'] + " already exists.")
+
+		transaction_code_form = Transaction_type_form(data)
+
+		if transaction_code_form.is_valid():
+			transaction_type_save = transaction_code_form.save()
+
+			if 'program_assigned' in data:
+				import_programs = clean_string(data['program_assigned'])
+				programs = import_programs.split(",")
+
+				for program in programs:
+					try:
+						has_program = Company_rename.objects.get(company=data['company'],name__iexact=str(program),is_active=True)
+
+						t_type = has_program.transaction_type
+						t_type.append(transaction_type_save.pk)
+
+						t_types 					= {}
+						t_types['program_id'] 		= has_program.program_id
+						t_types['is_active'] 		= has_program.is_active
+						t_types['is_intelex'] 		= has_program.is_intelex
+						t_types['company'] 			= data['company']
+						t_types['name'] 			= has_program.name
+						t_types['transaction_type'] = list_to_string(t_type)
+
+						company_rename_form = Company_rename_form(t_types,instance=has_program)
+
+						if company_rename_form.is_valid():
+							company_rename_form.save()
+
+					except Company_rename.DoesNotExist:
+						raise_error(program + " does not exists.")
 		return success("Successfully Imported.")
 	except Exception as e:
 		return HttpResponse(e,status=400)

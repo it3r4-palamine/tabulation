@@ -140,6 +140,12 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 		}else if($scope.current_module == "image"){
 			$scope.current_url = "/import/import_questions/";
 			$scope.title = "Questions"
+		}else if($scope.current_module == "transaction_types"){
+			$scope.current_url = "/import/import_transaction_types/";
+			$scope.title = "Transaction Types"
+			if($scope.display_terms.length > 0 && $scope.display_terms[0].transaction_types){
+				$scope.title = $scope.display_terms[0].transaction_types
+			}
 		}else{
 			return false;
 		}

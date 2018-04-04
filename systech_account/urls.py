@@ -61,6 +61,7 @@ urlpatterns = [
 	url(r'^import/import_effects/$', settings.import_effects),
 	url(r'^import/import_recommendations/$', settings.import_recommendations),
 	url(r'^import/import_findings/$', settings.import_findings),
+	url(r'^import/import_transaction_types/$', settings.import_transaction_types),
 	
 	url(r'^users/$', users.users, name='users'),
 	url(r'^users/read/$', users.read),

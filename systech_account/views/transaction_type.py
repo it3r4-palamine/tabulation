@@ -91,16 +91,17 @@ def create(request):
 		try:
 			instance = Transaction_type.objects.get(company=postdata['company'],id=postdata.get('id',None),is_active=True)
 			try:
-				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],name__iexact=postdata['name'],is_active=True,set_no=postdata['set_no'])
-				if check_transaction_type.pk != postdata['id']: 
-					return error(check_transaction_type.name + " already exists.")
+				check_transaction_type = Transaction_type.objects.filter(company=postdata['company'],transaction_code__iexact=postdata['transaction_code'],name__iexact=postdata['name'],is_active=True,set_no=postdata['set_no']).first()
+				if check_transaction_type:
+					if check_transaction_type.pk != postdata['id']: 
+						return error(check_transaction_type.name + " already exists.")
 
 				transaction_type = Transaction_type_form(postdata, instance=instance)
 			except Transaction_type.DoesNotExist:
 				transaction_type = Transaction_type_form(postdata, instance=instance)
 		except Transaction_type.DoesNotExist:
 			try:
-				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],transaction_code__iexact=postdata['transaction_code'],is_active=True,set_no=postdata['set_no'])
+				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],transaction_code__iexact=postdata['transaction_code'],name__iexact=postdata['name'],is_active=True,set_no=postdata['set_no'])
 				return error(check_transaction_type.name + " already exists.")
 			except Transaction_type.DoesNotExist:
 				transaction_type = Transaction_type_form(postdata)
