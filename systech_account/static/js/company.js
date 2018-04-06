@@ -6,6 +6,7 @@ app.controller('companyCtrl', function($scope, $http, $timeout, $element, $contr
 	$scope.record = {}
 	$scope.subject_transaction_types = []
 	$scope.new_transaction_types = []
+	$scope.filter = {}
 	$scope.create_dialog = function(record){
 		$scope.record = {}
 		$scope.record['is_active'] = true
@@ -47,7 +48,12 @@ app.controller('companyCtrl', function($scope, $http, $timeout, $element, $contr
 	}
 
 	$scope.read = function(){
-		me.post_generic("/company/read/",{'pagination':me.pagination},"main")
+		var data = {
+			name : $scope.filter.name,
+			pagination : me.pagination,
+			sort : me.sort,
+		}
+		me.post_generic("/company/read/",data,"main")
 		.success(function(response){
 			$scope.records = response.data;
 			me.starting = response.starting;

@@ -136,6 +136,31 @@ def delete(request,id = None):
 	except Exception as e:
 		return HttpResponse(e, status = 400)
 
+def delete_selected(request):
+	try:
+		data = req_data(request,True)
+
+		t_term = "Transaction Type"
+		terms = get_display_terms(request)
+		if terms:
+			if terms.transaction_types:
+				t_term = terms.transaction_types
+
+		for ids in data['ids']:
+			use_in_questions = Assessment_question.objects.filter(company=data['company'],transaction_type=ids,is_active=True).first()
+			if use_in_questions:
+				raise_error("%s is currently in use."%(use_in_questions.transaction_type.name))
+			try:
+				record = Transaction_type.objects.get(pk = ids)
+				record.is_active = False
+				record.save()
+			except Transaction_type.DoesNotExist:
+				raise_error("%s doesn't exist."%(t_term))
+		
+		return success("Successfully deleted.")
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
 
 def get_intelex_exercises(request):
 

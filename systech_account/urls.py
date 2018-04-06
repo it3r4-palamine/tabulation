@@ -36,6 +36,7 @@ urlpatterns = [
 	url(r'^transaction_types/create_dialog/$', transaction_type.create_dialog),
 	url(r'^transaction_types/create/$', transaction_type.create),
 	url(r'^transaction_types/delete/(?P<id>[0-9]+)$', transaction_type.delete),
+	url(r'^transaction_types/delete_selected/$', transaction_type.delete_selected),
 	url(r'^transaction_types/get_intelex_exercises/$', transaction_type.get_intelex_exercises),
 
 	url(r'^company/$', company.company, name='company'),

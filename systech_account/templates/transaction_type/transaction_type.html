@@ -43,7 +43,8 @@
                                 <span class="caret"></span>
                             </button>
                             <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()">
-                                <li><a href="#" ng-click="get_intelex_exercises()"><i class="fa fa-upload"></i> Get Intelex Exercises</a></li>
+                                <li><a href="#"><button ng-click="get_intelex_exercises()" class="btn btn-outline btn-link"><i class="fa fa-upload"></i> Get Intelex Exercises</button></a></li>
+                                <li><a href="#"><button ng-click="delete_selected()" ng-disabled="selected == 0" class="btn btn-outline btn-link"><i class="fa fa-trash"></i> Delete Selected</button></a></li>
                             </ul>
                         </div>
                     </div>
@@ -53,17 +54,29 @@
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
-                            <th custom-sort order="name">Name</th>
-                            <th custom-sort order="transaction_code">Code</th>
-                            <th>Set No.</th>
-                            <th>Action</th>
+                            <tr>
+                                <th>
+                                    <div class="checkbox checkbox-success">
+                                        <input ng-click="selectAll()" type="checkbox" id="select_all" class="checkAll" name="select_all" ng-model="select_all"><label for="select_all">&nbsp;</label>
+                                    </div>
+                                </th>
+                                <th custom-sort order="name">Name</th>
+                                <th custom-sort order="transaction_code">Code</th>
+                                <th>Set No.</th>
+                                <th>Action</th>
+                            </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="record in records" class="hand_cursor">
+                            <tr ng-repeat="(key, record) in records" class="hand_cursor">
+                                <td align="center">
+                                    <div class="checkbox checkbox-success">
+                                        <input ng-click="select()" type="checkbox" id="is_selected_{$key$}" name="is_selected" ng-model="record.is_selected"><label for="is_selected_{$key$}">&nbsp;</label>
+                                    </div>
+                                </td>
                                 <td ng-click="load_to_edit(record)">{$ record.name $}</td>
                                 <td ng-click="load_to_edit(record)">{$ record.transaction_code $}</td>
                                 <td ng-click="load_to_edit(record)">{$ record.set_no $}</td>
-                                <td><button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button></td>
+                                <td><button ng-disabled="selected > 0" class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button></td>
                             </tr>
                         </tbody>
                     </table>

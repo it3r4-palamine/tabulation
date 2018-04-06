@@ -23,10 +23,15 @@ def read(request):
 		filters['is_active'] = True
 		filters['company'] 	 = data['company']
 
+		name_search 	   	 = data.pop("name","")
+
 		exclude = data.pop("exclude",None)
 		# has_transaction = data.get("transaction_type",None)
 		# if has_transaction:
 		# 	filters['transaction_type'] = has_transaction
+
+		if name_search:
+			filters['name__icontains'] = name_search
 
 		pagination = None
 
