@@ -24,6 +24,12 @@ def loginpage(request):
 	if request.user.id:
 		return redirect("home")
 	else:
+		return render(request, 'login/landing_page.html')
+
+def signin(request):
+	if request.user.id:
+		return redirect("home")
+	else:
 		return render(request, 'login/login.html')
 
 def log_in(request):

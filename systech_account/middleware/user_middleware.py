@@ -15,6 +15,7 @@ class User_middleware(object):
 		not_required_session = [
 			"login",
 			"logout",
+			"signin",
 		]
 
 		modules = [

@@ -11,6 +11,7 @@ urlpatterns = [
 	# url(r'^$', assessments.home, name='home'),
 	url(r'^$', index.loginpage, name='loginpage'),
 	url(r'^login/$',index.log_in),
+	url(r'^signin/$',index.signin),
 	url(r'^logout/$',index.log_out,name="logout"),
 	url(r'^register/$',index.register,name="register"),
 	url(r'^assessments/$', assessments.home, name='home'),
