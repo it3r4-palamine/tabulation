@@ -6,6 +6,41 @@
  *   version 2.7
  *
 */
+
+.collapsible {
+    background-color: none;
+    color: black;
+    cursor: pointer;
+    width: 550px;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 24px;
+    font-style: "Helvetica Neue;"
+    font-weight:100px;
+}
+
+.active, .collapsible:hover {
+    background-color: none;
+    color: #ff4602;
+}
+
+.content {
+    display: none;
+    overflow: hidden;
+    background-color:   #FFEFD5;
+    text-color: white;
+    text-align: left;
+    width: 550px;
+}
+
+button{
+  background-color:     #FFE5B4;
+;
+}
+
+/*END ASK QUESTION STYLE*/
+
 h1,
 h2,
 h3,
@@ -7198,9 +7233,9 @@ body.landing-page {
 }
 
 .testimonials-text{
-	font-weight: bold;
-	font-family: "Helvetica";
-	font-size: 16px;
+  font-weight: bold;
+  font-family: "Helvetica";
+  font-size: 16px;
 }
 
 .landing-page .gray-section {
@@ -8570,6 +8605,11 @@ body.md-skin {
     position: relative;
     padding-top: 30px;
   }
+
+  .small-contact{
+    float:right;
+  }
+
   .timeline-item .date i {
     position: absolute;
     top: 0;
