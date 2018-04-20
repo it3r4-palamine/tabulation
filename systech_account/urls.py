@@ -45,6 +45,7 @@ urlpatterns = [
 	url(r'^company/create_dialog/$', company.create_dialog),
 	url(r'^company/create/$', company.create),
 	url(r'^company/delete/(?P<id>[0-9]+)$', company.delete),
+    url(r'^company/load_to_edit_company/(?P<company_id>[0-9]+)$',company.load_to_edit_company),
 	url(r'^company/get_intelex_subjects/$', company.get_intelex_subjects),
 
 	url(r'^company_assessment/$', company_assessment.company_assessment, name='company_assessment_redirect'),

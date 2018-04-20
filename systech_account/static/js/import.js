@@ -319,6 +319,13 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 					$scope.record.deleted[idx] = false
 			}
 
+			if(!$scope.record.is_document)
+    			$scope.record['is_document'][idx] = false
+			else{
+				if(!$scope.record.is_document[idx])
+					$scope.record.is_document[idx] = false
+			}
+
 			if($scope.record.deleted[idx] == true){
 				$scope.upload(++$scope.idx)
 			}else{
@@ -367,6 +374,7 @@ app.controller('importCtrl', function($scope, $http, $timeout, $element, $contro
 	    		var datus = {
 	    			images : $scope.record.images[idx],
 	    			code : $scope.record.code[idx],
+	    			is_document : $scope.record.is_document[idx],
 	    			transaction_type : $scope.record.transaction_type[idx].id,
 	    		}
 

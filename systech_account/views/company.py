@@ -49,21 +49,21 @@ def read(request):
 			company_transaction_type = []
 			row = record.get_dict()
 
-			if record.transaction_type:
-				if not exclude:
-					for t_types in record.transaction_type:
-						try:
-							t_type = Transaction_type.objects.get(id=t_types,is_active=True,company=data['company'])
-						except Transaction_type.DoesNotExist:
-							continue
-						transaction_type_dict = {
-												'id'		: t_type.pk,
-												'name'		: t_type.name,
-												'is_active' : t_type.is_active,
-												'code'		: t_type.transaction_code,
-												'set_no'	: t_type.set_no,
-											}
-						company_transaction_type.append(transaction_type_dict)
+			# if record.transaction_type:
+			# 	if not exclude:
+			# 		for t_types in record.transaction_type:
+			# 			try:
+			# 				t_type = Transaction_type.objects.get(id=t_types,is_active=True,company=data['company'])
+			# 			except Transaction_type.DoesNotExist:
+			# 				continue
+			# 			transaction_type_dict = {
+			# 									'id'		: t_type.pk,
+			# 									'name'		: t_type.name,
+			# 									'is_active' : t_type.is_active,
+			# 									'code'		: t_type.transaction_code,
+			# 									'set_no'	: t_type.set_no,
+			# 								}
+			# 			company_transaction_type.append(transaction_type_dict)
 			row['transaction_type'] = company_transaction_type
 			datus.append(row)
 		results['data'] = datus
@@ -126,9 +126,23 @@ def delete(request,id = None):
 			record.save()
 			return success("Successfully deleted.")
 		except Company_rename.DoesNotExist:
-			raise_error("Company doesn't exist.")
+			raise_error("%s doesn't exists."%(c_term))
 	except Exception as e:
 		return HttpResponse(e, status = 400)
+
+def load_to_edit_company(request,company_id=None):
+	try:
+		c_term = "Company"
+		terms  = get_display_terms(request)
+		if terms:
+			if terms.company_rename:
+				c_term = terms.company_rename
+		try:
+			cprint("QWQ")
+		except Company_rename.DoesNotExist:
+			raise_error("%s doesn't exists."%(c_term))
+	except Exception as e:
+		return HttpResponse(e,status=400)
 
 def get_intelex_subjects(request):
 	try:

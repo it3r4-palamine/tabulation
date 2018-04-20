@@ -11,11 +11,19 @@ app.controller('companyCtrl', function($scope, $http, $timeout, $element, $contr
 		$scope.record = {}
 		$scope.record['is_active'] = true
 		if(record){
-			$scope.record = angular.copy(record);
-			$scope.record['transaction_types'] = $scope.record.transaction_type
-			$scope.t_types_total_records = $scope.record.transaction_type.length
-			$scope.setPagingData($scope.currentPage);
-			$scope.read_subject_transaction_types($scope.record)
+			me.post_generic("/company/load_to_edit_company/"+record.id,"","dialog")
+			.success(function(response){
+				me.close_dialog();
+				Notification.success(response);
+				$scope.read();
+			}).error(function(err){
+				Notification.error(err)
+			})
+			// $scope.record = angular.copy(record);
+			// $scope.record['transaction_types'] = $scope.record.transaction_type
+			// $scope.t_types_total_records = $scope.record.transaction_type.length
+			// $scope.setPagingData($scope.currentPage);
+			// $scope.read_subject_transaction_types($scope.record)
 		}
 		
 		me.open_dialog("/company/create_dialog/","","main")

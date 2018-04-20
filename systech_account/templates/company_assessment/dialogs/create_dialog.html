@@ -55,18 +55,18 @@
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.date_from.$invalid && !form.date_from.$pristine }">
                         <br>
                         <label>Date From</label>
-                        <input type="date" name="date_from" required ng-disabled="true" ng-change="minimum_date()" ng-model="record.date_from" class="form-control">
+                        <input type="date" name="date_from" required ng-change="minimum_date()" ng-model="record.date_from" class="form-control">
                     </div>
                     <div class="col-sm-12">
                         <br>
                         <label>Date To</label>
-                        <input type="date" name="date_to" required ng-disabled="true" min="{$ minimum_date_to $}" ng-model="record.date_to" class="form-control">
+                        <input type="date" name="date_to" required min="{$ minimum_date_to $}" ng-model="record.date_to" class="form-control">
                     </div>
                     <div class="col-sm-12" ng-class="{ 'has-error' : form.session_credits.$invalid && !form.session_credits.$pristine }">
                         <br>
                         <label>Session Credits</label>
                         <div class="input-group">
-                            <input type="number" ng-disabled="true" required name="session_credits" ng-model="record.session_credits" class="form-control">
+                            <input type="number" required name="session_credits" ng-model="record.session_credits" class="form-control">
                             <div class="input-group-btn">
                                 <button type="button" class="btn btn-default btn-refresh" ng-click="read_user_credits(record)"><i class="fa fa-refresh"></i></button>
                             </div>

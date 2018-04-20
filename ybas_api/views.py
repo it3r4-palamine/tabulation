@@ -15,6 +15,42 @@ from systech_account.models.multiple_choice import *
 from datetime import datetime, timedelta
 
 
+
+
+
+
+class GetPhoto(APIView):
+
+	def post(self, request):
+		try:
+			print("IMNG MAMA")
+			images = Assessment_image.objects.filter(question=1,is_active=True).first()
+			image = open('systech_account/static/uploads/%s'%(images.image), 'rb')
+			image_read = image.read()
+			image_64_encode = base64.standard_b64encode(image_read)
+
+			image = {}
+			image['data'] = image_64_encode
+			return Response(image)
+		except Exception as e:
+			return Response(str(e), status = 500)
+
+class GetImage2(APIView):
+	def post(self, request):
+		try:
+			print("BAHUG DUGA")
+			images = Assessment_image.objects.filter(question=1,is_active=True).first()
+			image = open('systech_account/static/uploads/%s'%(images.image), 'rb')
+
+			image_data = {}
+			image_data['image'] = image
+			image_data['location'] = images.image
+			return HttpResponse(image, content_type="image/png", status = 200)
+			# return Response(image_data)
+		except Exception as e:
+			print(e)
+			return Response(str(e), status = 500)
+
 # GET/UPDATE DATA
 class GetData(APIView):
 	def post(self, request, *args, **kwargs):
@@ -96,7 +132,7 @@ class GetData(APIView):
 			uploadedQuestionList.append(question.pk)
 
 			imagesArr = None
-			if existing_images['data']:
+			if 'data' in existing_images and len(existing_images['data']) > 0:
 				for image in existing_images['data']:
 					if image['question'] == question.id:
 						imagesArr = image['images']
