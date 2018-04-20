@@ -119,10 +119,6 @@
                                                     </ui-select-choices>
                                                 </ui-select><br><br>
                                                 <input type="text" name="code" placeholder="Code" ng-model="record.code[$index]" required class="form-control">
-                                                <div class="checkbox checkbox-success">
-                                                    <!-- <input type="checkbox" id="is_document" name="is_document" ng-model="record.is_document" ng-click="isMultiple()"><label for="is_document">Needs document image</label> -->
-                                                <input type="checkbox" id="is_document_{$ $index $}" name="is_document" ng-model="record.is_document[$index]"> <label for="is_document_{$ $index $}">Needs document image</label>
-                                                </div>
                                                 <input type="checkbox" ng-hide="true" name="deleted" ng-model="record.deleted[$index]">
                                                 <div class="col-sm-12">
                                                     <table class="table">

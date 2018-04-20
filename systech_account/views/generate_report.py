@@ -92,24 +92,20 @@ def read_assessments(request):
 						pass
 					wrong_answer = Decimal(0)
 					chosen = [] 
-
-					if answers_chosen:
-						if answers_chosen.choice:
-							for choices in answers_chosen.choice:
-								choices = Choice.objects.get(pk=choices)
-								if choices.is_answer == False:
-									wrong_answer += 1
-								answer_dict = {'id':choices.pk,'value':choices.value,'is_answer':choices.is_answer}
-								chosen.append(answer_dict)
-							row['answers'] = chosen
-						else:
-							row['answers'] = answers_chosen.text_answer
-							
-						if answers_chosen.document_image:
-							row['image'] = str(answers_chosen.document_image)
+					if answers_chosen.choice:
+						for choices in answers_chosen.choice:
+							choices = Choice.objects.get(pk=choices)
+							if choices.is_answer == False:
+								wrong_answer += 1
+							answer_dict = {'id':choices.pk,'value':choices.value,'is_answer':choices.is_answer}
+							chosen.append(answer_dict)
+						row['answers'] = chosen
 					else:
+						row['answers'] = answers_chosen.text_answer
 
-					# else:
+					if answers_chosen.document_image:
+						row['image'] = str(answers_chosen.document_image)
+					else:
 						row['image'] = None
 
 					if data['type'] == 'pdf':
