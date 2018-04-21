@@ -7,17 +7,38 @@
  *
 */
 
+#nav {
+  background-color:#fff;height:auto;width:670px;border-radius:5px;opacity: 0.8;
+}
+
 .collapsible {
-    background-color: none;
     color: black;
     cursor: pointer;
-    width: 550px;
+    width: 530px;
     border: none;
     text-align: left;
     outline: none;
     font-size: 24px;
     font-style: "Helvetica Neue;"
     font-weight:100px;
+    background-color: #FFE5B4;
+}
+
+@media only screen and (max-width: 768px) {
+  button.collapsible {
+    font-size: 19px;
+    width: 100%;
+    margin: 0;
+  } 
+  
+}
+
+@media only screen and (max-width: 768px) {
+  div.content {
+    width: 100%;
+    height: auto;
+
+  } 
 }
 
 .active, .collapsible:hover {
@@ -31,12 +52,7 @@
     background-color:   #FFEFD5;
     text-color: white;
     text-align: left;
-    width: 550px;
-}
-
-button{
-  background-color:     #FFE5B4;
-;
+    width: 530px;
 }
 
 /*END ASK QUESTION STYLE*/
