@@ -98,11 +98,11 @@ class Assessment_question(models.Model):
 
 				if isV2:
 					assessmentImageDict['questionId'] = assessment_question['id']
-				# else:
-				# 	image = open('systech_account/static/uploads/%s'%(image.image), 'rb')
-				# 	image_read = image.read()
-				# 	image_64_encode = base64.standard_b64encode(image_read)
-				# 	assessmentImageDict['converted_image'] = image_64_encode
+				else:
+					image = open('systech_account/static/uploads/%s'%(image.image), 'rb')
+					image_read = image.read()
+					image_64_encode = base64.standard_b64encode(image_read)
+					assessmentImageDict['converted_image'] = image_64_encode
 				
 				imagesQ.append(assessmentImageDict)
 
