@@ -6,6 +6,71 @@
  *   version 2.7
  *
 */
+
+#nav {
+  background-color:#fff;height:auto;width:670px;border-radius:5px;opacity: 0.8;
+}
+
+.collapsible {
+    color: black;
+    cursor: pointer;
+    width: 530px;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 24px;
+    font-style: "Helvetica Neue;"
+    font-weight:100px;
+    background-color: #FFE5B4;
+}
+
+@media only screen and (max-width: 768px) {
+  button.collapsible {
+    font-size: 19px;
+    width: 100%;
+    margin: 0;
+  } 
+  
+}
+
+@media only screen and (max-width: 768px) {
+  div.content {
+    width: 100%;
+    height: auto;
+
+  } 
+}
+
+@media only screen and (max-width: 768px) {
+  .carousel-caption {
+    font-size: 19px;
+    background-color:#fff;
+    height:auto;
+    width:auto;
+    border-radius:5px;
+    opacity: 0.8;
+    margin-right: 15px;
+    color:black;
+    padding: 30px;
+  } 
+}
+
+.active, .collapsible:hover {
+    background-color: none;
+    color: #ff4602;
+}
+
+.content {
+    display: none;
+    overflow: hidden;
+    background-color:   #FFEFD5;
+    text-color: white;
+    text-align: left;
+    width: 530px;
+}
+
+/*END ASK QUESTION STYLE*/
+
 h1,
 h2,
 h3,
@@ -7198,9 +7263,9 @@ body.landing-page {
 }
 
 .testimonials-text{
-	font-weight: bold;
-	font-family: "Helvetica";
-	font-size: 16px;
+  font-weight: bold;
+  font-family: "Helvetica";
+  font-size: 16px;
 }
 
 .landing-page .gray-section {
@@ -8570,6 +8635,11 @@ body.md-skin {
     position: relative;
     padding-top: 30px;
   }
+
+  .small-contact{
+    float:right;
+  }
+
   .timeline-item .date i {
     position: absolute;
     top: 0;
