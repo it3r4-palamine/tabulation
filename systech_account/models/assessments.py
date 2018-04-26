@@ -1,14 +1,16 @@
 from django.db import models
-from ..models.multiple_choice import *
-# from ..models.company_assessment import *
+from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
+
+from ..models.multiple_choice import *
+
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFit
 
-from django.conf import settings
 from datetime import *
-
+import sys, traceback, os
 import base64
+
 
 class Assessment_question(models.Model):
 	value               = models.CharField(max_length=200,blank=True,null=True)
@@ -34,7 +36,8 @@ class Assessment_question(models.Model):
 		db_table  = "assessment_questions"
 
 
-	def get_dict(self, forAPI=False, imagesArr = None):
+	def get_dict(self, forAPI=False, imagesArr=None, isV2=False):
+		# try:
 		assessment_question = {
 			"id"				  : self.pk,
 			"code"	  			  : self.code,
@@ -49,46 +52,61 @@ class Assessment_question(models.Model):
 			"has_related" 		  : self.has_related,
 			"uploaded_question"   : self.uploaded_question,
 			"timer"				  : self.timer.total_seconds() if self.timer else None,
+			"answers"			  : [],
+			"images"			  : [],
+			"transaction_type"	  : None,
 		}
-		if self.parent_question:
-			if forAPI:
-				assessment_question["parent_question"] = self.parent_question.id
-			else:
-				assessment_question["parent_question"] = {
-					'id' 	  	 : self.parent_question.id,
-					'code' 		 : self.parent_question.code,
-					'value' 	 : self.parent_question.value,
-					'code_value' :  self.parent_question.code + ": " + self.parent_question.value,
-				}
 
-		else:
-			assessment_question["parent_question"] = None
+		# if self.parent_question:
+		# 	if forAPI:
+		# 		assessment_question["parent_question"] = self.parent_question.id
+		# 	else:
+		# 		assessment_question["parent_question"] = {
+		# 			'id' 	  	 : self.parent_question.id,
+		# 			'code' 		 : self.parent_question.code,
+		# 			'value' 	 : self.parent_question.value,
+		# 			'code_value' :  self.parent_question.code + ": " + self.parent_question.value,
+		# 		}
+		# else:
+		# 	assessment_question["parent_question"] = None
 
-		if self.has_related:
-			related_questions = Related_question.objects.filter(related_questions__overlap=[self.pk],is_active=True)
-			for related_question in related_questions:
-				assessment_question['related_question'] = related_question.pk
+		assessment_question["parent_question"] = None
+
+		# if self.has_related:
+		# 	related_questions = Related_question.objects.filter(related_questions__overlap=[self.pk],is_active=True)
+		# 	for related_question in related_questions:
+		# 		assessment_question['related_question'] = related_question.pk
 		
 		if self.uploaded_question:
 			imagesQ = []
 			answersQ = []
 
-			ids = []
-			if imagesArr:
-				for excludeImages in imagesArr:
-					ids.append(excludeImages['id'])
+			if isV2:
+				images = Assessment_image.objects.filter(question=self.pk, is_active=True)
+			else:
+				ids = []
+				if imagesArr:
+					for excludeImages in imagesArr:
+						ids.append(excludeImages['id'])
 
-			images = Assessment_image.objects.filter(question=self.pk,is_active=True).exclude(pk__in=ids)
+				# Get new images and convert to base64
+				images = Assessment_image.objects.filter(question=self.pk, is_active=True).exclude(pk__in=ids)
+				
+			
 			for image in images:
-				imageList = image.get_dict()
-				image = open('systech_account/static/uploads/%s'%(image.image), 'rb')
-				image_read = image.read()
-				# image_64_encode = base64.encodestring(image_read)
-				image_64_encode = base64.standard_b64encode(image_read)
-				# image_64_encode = base64.b64encode(image_read)
-				imageList['converted_image'] = image_64_encode
-				imagesQ.append(imageList)
+				assessmentImageDict = image.get_dict(True)
 
+				if isV2:
+					assessmentImageDict['questionId'] = assessment_question['id']
+				# else:
+				# 	image = open('systech_account/static/uploads/%s'%(image.image), 'rb')
+				# 	image_read = image.read()
+				# 	image_64_encode = base64.standard_b64encode(image_read)
+				# 	assessmentImageDict['converted_image'] = image_64_encode
+				
+				imagesQ.append(assessmentImageDict)
+
+			# Convert old images to base64
 			if imagesArr:
 				for importImage in imagesArr:
 					old_image = {}
@@ -102,35 +120,49 @@ class Assessment_question(models.Model):
 					old_image['converted_image'] = get_image_64
 					imagesQ.append(old_image)
 
-			answers = Assessment_image_answer.objects.filter(question=self.pk,is_active=True).order_by("item_no")
-			for answer in answers:
-				answerList = answer.get_dict()
-				answersQ.append(answerList)
-
-			assessment_question['answers'] = answersQ
 			assessment_question['images'] = imagesQ
 
-		# Transaction Types
-		if self.is_general:
-			transaction_types = []
-			for transaction_type_id in self.transaction_types:
-				# try:
-				# 	transaction_type = Transaction_type.objects.get(id=transaction_type_id, is_active=True)
-				# except Transaction_type.DoesNotExist:
-				# 	continue
+			# Get image question answers
+			answers = Assessment_image_answer.objects.filter(question=self.pk,is_active=True).order_by("item_no")
+			for answer in answers:
+				answerDict = answer.get_dict()
+				answersQ.append(answerDict)
 
-				# transaction_type = transaction_type.id if forAPI else transaction_type.get_dict()
-				# print(transaction_type)
-				transaction_types.append(transaction_type_id)
-			assessment_question['transaction_types'] = transaction_types
-		else:
-			assessment_question["transaction_type"] = self.transaction_type.id if forAPI else self.transaction_type.get_dict() if self.transaction_type else None
+
+			assessment_question['answers'] = answersQ
+
+		# # Transaction Types
+		# if self.is_general:
+		# 	transaction_types = []
+		# 	for transaction_type_id in self.transaction_types:
+		# 		# try:
+		# 		# 	transaction_type = Transaction_type.objects.get(id=transaction_type_id, is_active=True)
+		# 		# except Transaction_type.DoesNotExist:
+		# 		# 	continue
+
+		# 		# transaction_type = transaction_type.id if forAPI else transaction_type.get_dict()
+		# 		# print(transaction_type)
+		# 		transaction_types.append(transaction_type_id)
+		# 	assessment_question['transaction_types'] = transaction_types
+		# else:
+		# 	assessment_question["transaction_type"] = self.transaction_type.id if forAPI else self.transaction_type.get_dict() if self.transaction_type else None
+
+		assessment_question["transaction_type"] = self.transaction_type.id if forAPI else self.transaction_type.get_dict() if self.transaction_type else None
 
 		if not forAPI:
 			assessment_question["is_active"] = self.is_active
 			assessment_question["is_import"] = self.is_import
 
 		return assessment_question
+		# except Exception as e:
+		# 	exc_type, exc_obj, exc_tb = sys.exc_info()
+		# 	fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+
+		# 	print(e)
+		# 	print(fname)
+		# 	print(sys.exc_traceback.tb_lineno)
+
+		# 	return {}
 
 
 class Assessment_effect(models.Model):
@@ -359,17 +391,23 @@ class Assessment_image(models.Model):
 		app_label = "systech_account"
 		db_table  = "assessment_images"
 
-	def get_dict(self):
+	def get_dict(self, isV2=False):
 		logo = ""
+
 		if self.image == "" or self.image == None:
 			logo = ""
 		else:
 			logo = "/static/uploads/"+str(self.image)
 
-		return {
-			'image' : logo,
-			'id' : self.pk
-		}
+		questionImage = { 'id' : self.pk }
+
+		questionImage['image'] = logo
+
+		if isV2:
+			imageList = logo.rsplit('/', 1)
+			questionImage['imageName'] = imageList[1]
+
+		return questionImage
 
 class Assessment_image_answer(models.Model):
 	question  = models.ForeignKey("Assessment_question")
@@ -393,7 +431,7 @@ class Assessment_image_answer(models.Model):
 		multiple_answers = Multiple_image_answer.objects.filter(image_answer=self.pk,is_active=True)
 		image_answer = []
 		for answers in multiple_answers:
-			answer = answers.get_dict()
+			answer = answers.get_dict(True)
 			image_answer.append(answer)
 
 		row['answer'] = image_answer
@@ -408,12 +446,16 @@ class Multiple_image_answer(models.Model):
 		app_label = "systech_account"
 		db_table  = "multiple_image_answers"
 
-	def get_dict(self):
-		return {
-			'id' 		: self.pk,
-			'name' 		: self.name,
-			'is_active' : self.is_active
+	def get_dict(self, isV2=False):
+		possibleAnswer = {
+			'id' 			: self.pk,
+			'name' 			: self.name,
+			'is_active' 	: self.is_active,
 		}
+
+		if isV2: possibleAnswer['image_answer'] = self.image_answer.pk
+
+		return possibleAnswer
 
 class Assessment_upload_answer(models.Model):
 	question 		   = models.ForeignKey("Assessment_question")

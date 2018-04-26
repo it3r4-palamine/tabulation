@@ -27,7 +27,7 @@ class Company_assessment(models.Model):
 		db_table  = "company_assessment"
 
 
-	def get_dict(self, forAPI=False):
+	def get_dict(self, forAPI=False, isV2=False):
 		company_assessment = {
 			"id"			 : self.pk,
 			"reference_no"	 : self.reference_no,
@@ -50,7 +50,11 @@ class Company_assessment(models.Model):
 					transaction_type_instance = Transaction_type.objects.get(id=transaction_type_id)
 
 					if not transaction_type_instance.is_active: continue
-					t_type = transaction_type_instance.get_dict()
+
+					t_type = transaction_type_instance.get_dict(isV2)
+					
+					if isV2: t_type['assessmentId'] = company_assessment['id']
+
 					score = str2model("Assessment_score").objects.filter(company_assessment=self.pk,is_active=True,transaction_type=transaction_type_id)
 					if score:
 						scores = []
@@ -68,6 +72,9 @@ class Company_assessment(models.Model):
 					
 				except Transaction_type.DoesNotExist:
 					continue
+
+		print isV2
+		print transaction_type_list
 
 		sessions = str2model("Assessment_session").objects.filter(is_deleted=False,company_assessment=self.pk,time_end__isnull=False)
 		for session in sessions:

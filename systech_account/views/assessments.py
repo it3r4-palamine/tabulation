@@ -105,7 +105,12 @@ def read(request):
 		results['data'] = datus
 		return success_list(results,False)
 	except Exception as e:
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+
 		cprint(e)
+		cprint(fname)
+		cprint(sys.exc_traceback.tb_lineno)
 		return HttpResponse(e, status = 400)
 
 def generate_code(request):

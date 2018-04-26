@@ -7,4 +7,8 @@ urlpatterns = [
     url(r'^api-auth', obtain_auth_token), # Refactor
     url(r'^get-data', views.GetData.as_view()),
     url(r'^sync-assessments', views.SyncAssessments.as_view()),
+
+    url(r'^get-base64-photo', views.GetBase64Photo.as_view()),
+    url(r'^get-photo', views.GetPhoto.as_view()),
+    url(r'^get-question-photo', views.GetQuestionPhoto.as_view()),
 ]

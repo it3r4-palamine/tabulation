@@ -17,15 +17,21 @@ class Transaction_type(models.Model):
 		db_table  = "transaction_types"
 
 
-	def get_dict(self):
-		return {
-			"id" 			   : self.pk,
-			"name" 			   : self.name,
-			"transaction_code" : self.transaction_code,
-			"is_active" 	   : self.is_active,
-			"exercise_id" 	   : self.exercise_id,
-			"program_id" 	   : self.program_id,
-			"set_no" 		   : self.set_no,
-			"total_items" 	   : self.total_items,
-			"is_intelex" 	   : self.is_intelex,
-		}
+	def get_dict(self, isV2=False):
+		transaction_type = {}
+
+		if isV2:
+			transaction_type['transactionTypeId'] = self.pk
+			transaction_type['transactionTypeName'] = self.name
+		else:
+			transaction_type['id'] = self.pk
+			transaction_type['name'] = self.name
+			transaction_type['transaction_code'] = self.transaction_code
+			transaction_type['is_active'] = self.is_active
+			transaction_type['exercise_id'] = self.exercise_id
+			transaction_type['program_id'] = self.program_id
+			transaction_type['set_no'] = self.set_no
+			transaction_type['total_items'] = self.total_items
+			transaction_type['is_intelex'] = self.is_intelex
+
+		return transaction_type
