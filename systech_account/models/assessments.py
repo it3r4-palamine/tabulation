@@ -82,7 +82,7 @@ class Assessment_question(models.Model):
 			answersQ = []
 
 			if isV2:
-				images = Assessment_image.objects.filter(question=self.pk, is_active=True)
+				images = Assessment_image.objects.filter(question=self.pk, is_active=True).order_by("-id")
 			else:
 				ids = []
 				if imagesArr:
@@ -90,7 +90,7 @@ class Assessment_question(models.Model):
 						ids.append(excludeImages['id'])
 
 				# Get new images and convert to base64
-				images = Assessment_image.objects.filter(question=self.pk, is_active=True).exclude(pk__in=ids)
+				images = Assessment_image.objects.filter(question=self.pk, is_active=True).exclude(pk__in=ids).order_by("-id")
 				
 			
 			for image in images:
