@@ -270,63 +270,69 @@ class GetData(APIView):
 class SyncAssessments(APIView):
 
 	def post(self, request, *args, **kwargs):
+		try:
+			if 'isV2' in request.data and request.data['isV2']:
+				isV2 = request.data['isV2']
+				completedAssessments = request.data['data']
+			else:
+				isV2= False
+				completedAssessments = request.data
 
-		if 'isV2' in request.data and request.data['isV2']:
-			isV2 = request.data['isV2']
-			completedAssessments = request.data['data']
-		else:
-			isV2= False
-			completedAssessments = request.data
+			for assessment in completedAssessments:
 
-		# print completedAssessments
+				# Update Assessment Status
+				assessmentInstance = Company_assessment.objects.get(id=assessment["id"])
 
-		for assessment in completedAssessments:
-
-			# print assessment
-			# assessment = dict(assessment)
-			# print assessment
-
-			# Update Assessment Status
-			assessmentInstance = Company_assessment.objects.get(id=assessment["id"])
-
-			if assessment['sync'] == False:
-				if assessmentInstance.is_synced == False:
-					assessmentInstance.is_synced = False
+				if assessment['sync'] == False:
+					if assessmentInstance.is_synced == False:
+						assessmentInstance.is_synced = False
+					else:
+						assessmentInstance.is_synced = True
 				else:
 					assessmentInstance.is_synced = True
-			else:
-				assessmentInstance.is_synced = True
 
-			assessmentInstance.is_complete = assessment['is_complete']
+				assessmentInstance.is_complete = assessment['is_complete']
 
-			# Credits Left
-			if assessment['credits_left']:
-				assessmentInstance.credits_left = timedelta(seconds=assessment['credits_left'])
-			else:
-				if assessment['credits_left'] == 0:
+				# Credits Left
+				if assessment['credits_left']:
 					assessmentInstance.credits_left = timedelta(seconds=assessment['credits_left'])
-			
+				else:
+					if assessment['credits_left'] == 0:
+						assessmentInstance.credits_left = timedelta(seconds=assessment['credits_left'])
+				
 
-			assessmentInstance.save()
+				assessmentInstance.save()
 
+				for t_type in assessment['t_types']:
+					datus = {
+						'transaction_type' : t_type['transactionType'],
+						'company_assessment' : t_type['assessment'],
+						'is_active' : True,
+					}
 
-			for t_type in assessment['t_types']:
-				datus = {
-					'transaction_type' : t_type['transactionType'],
-					'company_assessment' : t_type['assessment'],
-					'is_active' : True,
-				}
+					# if 'score' in t_type:
+					if 'scores' in t_type and t_type['scores']:
+						for score in t_type['scores']:
+							datus['question'] = score['id']
+							datus['score'] = score['score']
+							# datus['uploaded_question'] = False if 'not_uploaded_question' in score else True
+							datus['uploaded_question'] = True
 
-				# if 'score' in t_type:
-				if 'scores' in t_type and t_type['scores']:
-					for score in t_type['scores']:
-						datus['question'] = score['id']
-						datus['score'] = score['score']
-						# datus['uploaded_question'] = False if 'not_uploaded_question' in score else True
-						datus['uploaded_question'] = True
+							try:
+								instance = Assessment_score.objects.get(company_assessment=t_type['assessment'],transaction_type=t_type['transactionType'],is_active=True,question=score['id'],uploaded_question=True)
+								assessment_score_form = Assessment_score_form(datus, instance=instance)
+							except Assessment_score.DoesNotExist:
+								assessment_score_form = Assessment_score_form(datus)
 
+							if assessment_score_form.is_valid():
+								assessment_score_form.save()
+							else: Response(assessment_score_form.errors,status=status.HTTP_400_BAD_REQUEST)
+
+					elif 'score' in t_type and t_type['score']:
+						datus['score'] = t_type['score']
+						datus['uploaded_question'] = False
 						try:
-							instance = Assessment_score.objects.get(company_assessment=t_type['assessment'],transaction_type=t_type['transactionType'],is_active=True,question=score['id'],uploaded_question=True)
+							instance = Assessment_score.objects.get(company_assessment=t_type['assessment'],transaction_type=t_type['transactionType'],is_active=True,uploaded_question=False)
 							assessment_score_form = Assessment_score_form(datus, instance=instance)
 						except Assessment_score.DoesNotExist:
 							assessment_score_form = Assessment_score_form(datus)
@@ -335,90 +341,84 @@ class SyncAssessments(APIView):
 							assessment_score_form.save()
 						else: Response(assessment_score_form.errors,status=status.HTTP_400_BAD_REQUEST)
 
-				elif 'score' in t_type and t_type['score']:
-					datus['score'] = t_type['score']
-					datus['uploaded_question'] = False
-					try:
-						instance = Assessment_score.objects.get(company_assessment=t_type['assessment'],transaction_type=t_type['transactionType'],is_active=True,uploaded_question=False)
-						assessment_score_form = Assessment_score_form(datus, instance=instance)
-					except Assessment_score.DoesNotExist:
-						assessment_score_form = Assessment_score_form(datus)
+				sessionsQs = Assessment_session.objects.filter(company_assessment=assessmentInstance.id,is_deleted=False)
 
-					if assessment_score_form.is_valid():
-						assessment_score_form.save()
-					else: Response(assessment_score_form.errors,status=status.HTTP_400_BAD_REQUEST)
+				for sessionsQ in sessionsQs:
+					sessionsQ.is_deleted = True
+					sessionsQ.save()
 
+				for session in assessment['session']:
+					sessions = {
+						'company_assessment' : session['assessment_id'],
+						'date' : session['date'],
+						'time_start' : session['time_start'],
+						'time_end' : session['time_end'],
+						'transaction_type' : session['transactionType'],
+						'question' : session['question'] if 'question' in session else None
+					}
 
-			sessionsQs = Assessment_session.objects.filter(company_assessment=assessmentInstance.id)
-			for sessionsQ in sessionsQs:
-				sessionsQ.is_deleted = True
-				sessionsQ.save()
+					session_form = Assessment_session_form(sessions)
+					if session_form.is_valid():
+						session_form.save()
+					else: Response(session_form.errors,status=status.HTTP_400_BAD_REQUEST)
 
-			for session in assessment['session']:
-				# print assessment['session']
-				# print ""
+				answersQs = Assessment_answer.objects.filter(company_assessment=assessmentInstance.id)
+				for answersQ in answersQs:
+					answersQ.is_deleted = True
+					answersQ.save()
 
-				sessions = {
-					'company_assessment' : session['assessment_id'],
-					'date' : session['date'],
-					'time_start' : session['time_start'],
-					'time_end' : session['time_end'],
-					'transaction_type' : session['transactionType'],
-					'question' : session['question'] if 'question' in session else None
-				}
+				imageAnswersQs = Assessment_upload_answer.objects.filter(company_assessment=assessmentInstance.id,is_deleted=False)
 
-				session_form = Assessment_session_form(sessions)
-				if session_form.is_valid():
-					session_form.save()
-				else: Response(session_form.errors,status=status.HTTP_400_BAD_REQUEST)
+				for imageAnswersQ in imageAnswersQs:
+					imageAnswersQ.is_deleted = True
+					imageAnswersQ.save()
 
-			answersQs = Assessment_answer.objects.filter(company_assessment=assessmentInstance.id)
-			for answersQ in answersQs:
-				answersQ.is_deleted = True
-				answersQ.save()
+				# Save Assessment Answers
+				arrayAns = []
+				for answer in assessment["answerArr"]:
 
-			imageAnswersQs = Assessment_upload_answer.objects.filter(company_assessment=assessmentInstance.id)
-			for imageAnswersQ in imageAnswersQs:
-				imageAnswersQ.is_deleted = True
-				imageAnswersQ.save()
+					answerObj = {}
+					answerObj['is_active'] = True
+					answerObj['company_assessment'] = answer['company_assessment']
+					answerObj['transaction_type'] = answer['transaction_type']
+					if not isV2:
+						if 'answers' in answer:
+							for ans in answer['answers']:
+								answerObj['item_no'] = ans['item_no']
+								answerObj['answer'] = ans['answer_text'] if 'answer_text' in ans else None
+								answerObj['question'] = ans['question']
+					else:
+						answerObj['item_no'] = answer['item_no']
+						answerObj['answer'] = answer['answer_text'] if 'answer_text' in answer else None
+						answerObj['question'] = answer['question']
 
-			# Save Assessment Answers
-			arrayAns = []
-			for answer in assessment["answerArr"]:
+					if answerObj not in arrayAns:
+						arrayAns.append(answerObj)
 
-				answerObj = {}
-				answerObj['is_active'] = True
-				answerObj['company_assessment'] = answer['company_assessment']
-				answerObj['transaction_type'] = answer['transaction_type']
+						answer_form = Assessment_upload_answer_form(answerObj)
 
-				if not isV2:
-					if 'answers' in answer:
-						for ans in answer['answers']:
-							answerObj['item_no'] = ans['item_no']
-							answerObj['answer'] = ans['answer_text'] if 'answer_text' in ans else None
-							answerObj['question'] = ans['question']
-				else:
-					answerObj['item_no'] = answer['item_no']
-					answerObj['answer'] = answer['answer_text'] if 'answer_text' in answer else None
-					answerObj['question'] = answer['question']
+						# if answer_form.is_valid():
+						# 	answer_form.save()
 
-				if answerObj not in arrayAns:
-					arrayAns.append(answerObj)
+					if 'uploaded_question' not in answer:
+						if 'uploaded_document' in answer:
+							answer['choice'] = []
+							answer['uploaded_question'] = True
 
-					answer_form = Assessment_upload_answer_form(answerObj)
+						serializer = AnswerSerializer(data=answer)
+						if serializer.is_valid():
+							serializer.save()
+						else: 
+							raise_error(json.dumps(serializer.errors))
 
-					if answer_form.is_valid():
-						answer_form.save()
+				print 7
 
-				if 'uploaded_question' not in answer:
-					if 'uploaded_document' in answer:
-						answer['choice'] = []
-						answer['uploaded_question'] = True
+			return Response({"Temporary": "Status Okay"})
+		except Exception as e:
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
 
-					serializer = AnswerSerializer(data=answer)
-					if serializer.is_valid():
-						serializer.save()
-					else: 
-						raise_error(json.dumps(serializer.errors))
-
-		return Response({"Temporary": "Status Okay"})
+			cprint(e)
+			cprint(fname)
+			cprint(sys.exc_traceback.tb_lineno)
+			return HttpResponse(e, status = 400)
