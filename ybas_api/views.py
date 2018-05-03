@@ -119,7 +119,7 @@ class GetData(APIView):
 		today = datetime.today()
 		date_now = today.strftime('%Y-%m-%d')
 
-		assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True, date_to__gte=date_now) ### commented the old code bcoz pwd na mg generate maski wala pa na complete ang assessment
+		assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True, date_to__gte=date_now).order_by("id") ### commented the old code bcoz pwd na mg generate maski wala pa na complete ang assessment
 		# assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True, is_generated=False, date_to__gte=date_now)
 		# assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True)
 
