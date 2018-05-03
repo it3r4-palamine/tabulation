@@ -397,8 +397,8 @@ class SyncAssessments(APIView):
 
 						answer_form = Assessment_upload_answer_form(answerObj)
 
-						# if answer_form.is_valid():
-						# 	answer_form.save()
+						if answer_form.is_valid():
+							answer_form.save()
 
 					if 'uploaded_question' not in answer:
 						if 'uploaded_document' in answer:
