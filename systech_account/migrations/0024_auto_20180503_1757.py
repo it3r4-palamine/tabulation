@@ -11,10 +11,10 @@ def delete_data(apps,schema_editor):
 	Assessment_upload_answer = apps.get_model("systech_account", "Assessment_upload_answer")
 	Assessment_score = apps.get_model("systech_account", "Assessment_score")
 
-	Company_assessment.objects.filter(consultant=215).update(credits_left = F("session_credits"))
-	Assessment_session.objects.filter(company_assessment__consultant=215).delete()
-	Assessment_upload_answer.objects.filter(company_assessment__consultant=215).delete()
-	Assessment_score.objects.filter(company_assessment__consultant=215).delete()
+	Company_assessment.objects.filter(consultant=176).update(credits_left = F("session_credits"))
+	Assessment_session.objects.filter(company_assessment__consultant=176).delete()
+	Assessment_upload_answer.objects.filter(company_assessment__consultant=176).delete()
+	Assessment_score.objects.filter(company_assessment__consultant=176).delete()
 
 
 
