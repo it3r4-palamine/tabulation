@@ -79,10 +79,6 @@ class GetData(APIView):
 		else:
 			isV2= False
 
-		print request.data
-		print 'isV2' in request.data
-		print isV2
-
 		response = {
 			'userId': request.user.id,
 			'consultantName': request.user.fullname,
@@ -135,7 +131,6 @@ class GetData(APIView):
 		# filters = (Q(transaction_type__in = transactionTypeIdList) | Q(transaction_types__contains = transactionTypeIdList)) & Q(is_active=True)
 		filters = (Q(transaction_type__in = transactionTypeIdList) | Q(transaction_types__overlap = transactionTypeIdList)) & Q(is_active=True)
 		questionQs = Assessment_question.objects.filter(filters).order_by('id')
-
 
 		choiceFields = ['id', 'value', 'question', 'is_answer', 'required_document_image', 'follow_up_required']
 		questionsIds = []
@@ -212,8 +207,6 @@ class GetData(APIView):
 
 					relatedQuestionList.append(row)
 
-		print isV2
-
 		# Get assessment ids
 		assessmentIds = []
 		for assessment in assessmentQs:
@@ -247,11 +240,10 @@ class GetData(APIView):
 					relatedQuestionList.append(row)
 
 		# Get math symbols
-		if not isV2:
-			symbols = Math_symbol.objects.filter(is_active=True)
-			for symbol in symbols:
-				row_symbol = symbol.get_dict()
-				symbolList.append(row_symbol)
+		symbols = Math_symbol.objects.filter(is_active=True)
+		for symbol in symbols:
+			row_symbol = symbol.get_dict()
+			symbolList.append(row_symbol)
 
 
 		response["questionList"] = questionList
@@ -278,13 +270,9 @@ class SyncAssessments(APIView):
 			isV2= False
 			completedAssessments = request.data
 
-		# print completedAssessments
+		print json.dumps(completedAssessments)
 
 		for assessment in completedAssessments:
-
-			# print assessment
-			# assessment = dict(assessment)
-			# print assessment
 
 			# Update Assessment Status
 			assessmentInstance = Company_assessment.objects.get(id=assessment["id"])
@@ -421,4 +409,4 @@ class SyncAssessments(APIView):
 					else: 
 						raise_error(json.dumps(serializer.errors))
 
-		return Response({"Temporary": "Status Okay"})
+		return Response({})
