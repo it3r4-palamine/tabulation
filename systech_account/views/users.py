@@ -173,10 +173,14 @@ def get_intelex_students(request):
 			first_name = record.get("first_name", "student_")
 			last_name = record.get("last_name", "code")
 
+			first_name = first_name.encode('UTF-8').strip()
+			first_name = first_name.decode('UTF-8')
+
 			last_name = last_name.encode('UTF-8').strip()
 			last_name = last_name.decode('UTF-8')
 
 			last_name = elimina_tildes(last_name)
+			first_name = elimina_tildes(first_name)
 			username = '%s%s' % (first_name.lower(), last_name.lower()) 
 			username = username.replace(" ", "")
 			
