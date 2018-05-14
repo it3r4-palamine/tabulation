@@ -383,7 +383,9 @@ class SyncAssessments(APIView):
 								answerObj['question'] = ans['question']
 					else:
 						answerObj['item_no'] = answer['item_no']
-						answerObj['answer'] = answer['answer_text'].encode('utf-8').strip() if 'answer_text' in answer else None
+						# cprint(answer['answer_text'].encode('utf-8').strip());
+						# cprint(urllib.unquote(answer['answer_text'].encode('utf-8').strip()).decode('utf8'));
+						answerObj['answer'] = urllib.unquote(answer['answer_text'].encode('utf-8').strip()).decode('utf8') if 'answer_text' in answer else None
 						# answerObj['answer'] = urllib.unquote(answer['answer_text']).decode('utf8') if 'answer_text' in answer else None
 						answerObj['question'] = answer['question']
 
