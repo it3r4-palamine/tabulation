@@ -383,7 +383,8 @@ class SyncAssessments(APIView):
 								answerObj['question'] = ans['question']
 					else:
 						answerObj['item_no'] = answer['item_no']
-						answerObj['answer'] = urllib.unquote(answer['answer_text']).decode('utf8') if 'answer_text' in answer else None
+						answerObj['answer'] = answer['answer_text'].encode('utf-8').strip() if 'answer_text' in answer else None
+						# answerObj['answer'] = urllib.unquote(answer['answer_text']).decode('utf8') if 'answer_text' in answer else None
 						answerObj['question'] = answer['question']
 
 					if answerObj not in arrayAns:
@@ -404,8 +405,6 @@ class SyncAssessments(APIView):
 							serializer.save()
 						else: 
 							raise_error(json.dumps(serializer.errors))
-
-				print 7
 
 			return Response({})
 		except Exception as e:
