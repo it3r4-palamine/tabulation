@@ -462,6 +462,7 @@ class Assessment_upload_answer(models.Model):
 	is_active 		   = models.BooleanField(default=1)
 	item_no 		   = models.IntegerField(blank=True,null=True)
 	answer 			   = models.CharField(max_length=200,blank=True,null=True)
+	answer_syntax	   = models.CharField(max_length=200,blank=True,null=True)
 	transaction_type   = models.ForeignKey("Transaction_type")
 	company_assessment = models.ForeignKey("Company_assessment")
 	is_deleted 		   = models.BooleanField(default=0)
@@ -474,6 +475,7 @@ class Assessment_upload_answer(models.Model):
 		return {
 			'id' 				 : self.pk,
 			'answer' 			 : self.answer,
+			'answer_syntax'		 : self.answer_syntax,
 			'item_no' 			 : self.item_no,
 			'question' 			 : self.question.pk,
 			'transaction_type' 	 : self.transaction_type.pk,
