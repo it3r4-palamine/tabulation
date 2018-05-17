@@ -182,7 +182,7 @@ def get_intelex_students(request):
 			last_name = elimina_tildes(last_name)
 			first_name = elimina_tildes(first_name)
 			username = '%s%s' % (first_name.lower(), last_name.lower()) 
-			username = username.replace(" ", "")
+			username = username.replace(" ", "").replace(".","")
 			
 			email_add = username + "@gmail.com"
 			user_id = None
