@@ -78,11 +78,11 @@ class Assessment_question(models.Model):
 		# 		assessment_question['related_question'] = related_question.pk
 		
 		if self.uploaded_question:
-			imagesQ = []
-			answersQ = []
+			imagesQ 	= []
+			answersQ 	= []
 
 			if isV2:
-				images = Assessment_image.objects.filter(question=self.pk, is_active=True).order_by("-id")
+				images = Assessment_image.objects.filter(question=self.pk, is_active=True).order_by("order")
 			else:
 				ids = []
 				if imagesArr:
@@ -90,7 +90,7 @@ class Assessment_question(models.Model):
 						ids.append(excludeImages['id'])
 
 				# Get new images and convert to base64
-				images = Assessment_image.objects.filter(question=self.pk, is_active=True).exclude(pk__in=ids).order_by("-id")
+				images = Assessment_image.objects.filter(question=self.pk, is_active=True).exclude(pk__in=ids).order_by("order")
 				
 			
 			for image in images:
@@ -103,21 +103,22 @@ class Assessment_question(models.Model):
 					image_read = image.read()
 					image_64_encode = base64.standard_b64encode(image_read)
 					assessmentImageDict['converted_image'] = image_64_encode
+					assessmentImageDict['question'] = assessment_question['id']
 				
 				imagesQ.append(assessmentImageDict)
 
 			# Convert old images to base64
 			if imagesArr:
 				for importImage in imagesArr:
-					old_image = {}
-					old_image['id'] = importImage['id']
-					old_image['image'] = importImage['image']
+					old_image 			= {}
+					old_image['id'] 	= importImage['id']
+					old_image['image'] 	= importImage['image']
 
-					get_image = open('systech_account%s'%(importImage['image']), 'rb')
-					get_image_read = get_image.read()
+					get_image 		= open('systech_account%s'%(importImage['image']), 'rb')
+					get_image_read 	= get_image.read()
 
-					get_image_64 = base64.standard_b64encode(get_image_read)
-					old_image['converted_image'] = get_image_64
+					get_image_64 					= base64.standard_b64encode(get_image_read)
+					old_image['converted_image'] 	= get_image_64
 					imagesQ.append(old_image)
 
 			assessment_question['images'] = imagesQ
@@ -386,6 +387,7 @@ class Assessment_image(models.Model):
 								   blank=True,
 								   null=True)
 	company   = models.ForeignKey("Company",blank=True,null=True)
+	order 	  = models.IntegerField(blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -402,6 +404,7 @@ class Assessment_image(models.Model):
 		questionImage = { 'id' : self.pk }
 
 		questionImage['image'] = logo
+		questionImage['order'] = self.order
 
 		if isV2:
 			imageList = logo.rsplit('/', 1)

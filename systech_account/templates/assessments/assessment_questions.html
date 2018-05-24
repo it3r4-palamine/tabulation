@@ -161,12 +161,14 @@
                                         <div class="col-sm-12">
                                             <div class="lightBoxGallery">
                                                 <div class="col-sm-2" ng-repeat="image in ImageSrc">
+                                                    <input type="number" ng-change="checkOrder(image)" name="order" ng-model="image.order" class="form-control">
                                                     <a href="{$ image.image $}" title="" data-gallery="">
                                                         <img src="{$ image.image $}"  class="img-rounded" style="height:100px;width:100px;"><br>
                                                     </a>
                                                     <button class="btn bt-outline btn-danger" ng-click="remove_image(image, $index)"><i class="fa fa-trash-o"></i></button>
                                                 </div>
                                                 <div class="col-sm-2" ng-repeat="imageUpload in ImageSrcUpload">
+                                                    <input type="number" ng-change="checkOrder(imageUpload)" name="order" ng-model="imageUpload.order" class="form-control">
                                                     <a href="{$ imageUpload.image $}" title="" data-gallery="">
                                                         <img src="{$ imageUpload.image $}"  class="img-rounded" style="height:100px;width:100px;"><br>
                                                     </a>
@@ -401,7 +403,7 @@
                         </div>
                         <div class="ibox-footer">
                             <div class="pull-right">
-                                <button type="button" class="btn btn-sm btn-primary btn-w-m" ng-click="create(false)" ng-disabled="form.$invalid">Save</button>
+                                <button type="button" class="btn btn-sm btn-primary btn-w-m" ng-click="create(false)" id="saveBtn" ng-disabled="form.$invalid">Save</button>
                                 <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="upload_close_dialog()">Close</button>
                             </div>
                         </div>

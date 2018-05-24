@@ -110,7 +110,7 @@ def read(request):
 
 		cprint(e)
 		cprint(fname)
-		cprint(sys.exc_traceback.tb_lineno)
+		# cprint(sys.exc_traceback.tb_lineno)
 		return HttpResponse(e, status = 400)
 
 def generate_code(request):
@@ -403,6 +403,12 @@ def upload(request):
 					image_Q['company'] = company
 					image_Q['image'] = image
 
+					get_last_question_image = Assessment_image.objects.filter(is_active=True,question=assessment_save.pk).last()
+					if get_last_question_image:
+						image_Q['order'] = get_last_question_image.order + 1
+					else:
+						image_Q['order'] = 1
+
 					image_question = Assessment_image_form(image_Q, image_F)
 
 					if image_question.is_valid():
@@ -475,6 +481,12 @@ def multiple_upload(request):
 						'image' : image
 					}
 
+					get_last_question_image = Assessment_image.objects.filter(is_active=True,question=assessment_save.pk).last()
+					if get_last_question_image:
+						image_Q['order'] = get_last_question_image.order + 1
+					else:
+						image_Q['order'] = 1
+
 					image_question = Assessment_image_form(image_Q, image_F)
 					if image_question.is_valid():
 						image_question.save()
@@ -488,18 +500,20 @@ def multiple_upload(request):
 
 def saveData(request):
 	try:
-		postdatus = req_data(request,True)
-		postdata = postdatus['datus']
-		company = get_current_company(request)
-		q_id = postdatus['id']
-		answers = postdata.pop("answers",None)
-		effects = postdata.pop("effects",None)
-		findings = postdata.pop("findings",None)
+		postdatus  = req_data(request,True)
+		postdata   = postdatus['datus']
+		company    = get_current_company(request)
+		q_id 	   = postdatus['id']
+		answers    = postdata.pop("answers",None)
+		effects    = postdata.pop("effects",None)
+		findings   = postdata.pop("findings",None)
+		old_images = postdata.pop("old_images",None)
+		new_images = postdata.pop("new_images",None)
 
 		for effect in effects:
-			effect['question'] = q_id
+			effect['question']  = q_id
 			effect['is_active'] = True
-			effect['company'] = company
+			effect['company'] 	= company
 			try:
 				instance_effect = Assessment_effect.objects.get(id=effect.get('id',None))
 				result = sentence_matching(effect.get('value',None),"Assessment_effect",q_id,instance_effect.pk)
@@ -516,9 +530,9 @@ def saveData(request):
 				effect_question.save()
 
 		for finding in findings:
-			finding['question'] = q_id
+			finding['question']  = q_id
 			finding['is_active'] = True
-			finding['company'] = company
+			finding['company'] 	 = company
 			try:
 				instance_finding = Assessment_finding.objects.get(id=finding.get('id',None))
 				result = sentence_matching(finding.get('value',None),"Assessment_finding",q_id,instance_finding.pk)
@@ -535,9 +549,9 @@ def saveData(request):
 				finding_question.save()
 
 		for answer in answers:
-			answer['question'] = q_id
+			answer['question']  = q_id
 			answer['is_active'] = True
-			answer['company'] = company
+			answer['company']   = company
 
 			multiple_answers = answer.pop("answer",[])
 			try:
@@ -564,6 +578,21 @@ def saveData(request):
 					else:
 						raise_error(json.dumps(multiple_answer_question.errors))
 
+		for old_image in old_images:
+			old_image['order']		= old_image['order']
+			old_image['company']	= company
+			old_image['question']	= q_id
+			old_image['is_active']	= True
+
+			try:
+				instance_old_image = Assessment_image.objects.get(id=old_image.get("id",None))
+				old_image_question = Assessment_image_form(old_image,instance=instance_old_image)
+			except Assessment_image.DoesNotExist:
+				old_image['image'] 	= old_image['image']
+				old_image_question = Assessment_image_form(old_image)
+
+			if old_image_question.is_valid():
+				old_image_question.save()
 
 		return HttpResponse("Successfully saved.", status = 200)
 	except Exception as err:

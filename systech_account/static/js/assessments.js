@@ -36,8 +36,10 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 		$scope.answers = []
 		$scope.ImageSrc = []
 		$scope.ImageSrcUpload = []
+		$scope.ImageSrcUpload2 = []
 		$scope.multiple_answer_list = []
 		$scope.answer_list_arr = []
+		$scope.orderArr = []
 		$scope.choice_list = {}
 		$scope.effect_list = {}
 		$scope.finding_list = {}
@@ -61,8 +63,12 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 				}
 			}
 			$scope.ImageSrc = $scope.record.images
+			var imgCount = 0
+			for(var img in $scope.ImageSrc){
+				$scope.orderArr.push(++imgCount)
+			}
 		}
-		
+
 		if(upload) {
 			// me.open_dialog("/assessments/upload_dialog/","dialog_whole","main")
 			$("#myModal").modal('toggle');
@@ -252,9 +258,11 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 
 	$scope.saveData = function(record, id) {
 		var datus = {
-			answers: $scope.record.answers,
-			effects: $scope.record.effects,
-			findings: $scope.record.findings,
+			answers 	: $scope.record.answers,
+			effects 	: $scope.record.effects,
+			findings 	: $scope.record.findings,
+			old_images 	: $scope.ImageSrc,
+			new_images 	: $scope.ImageSrcUpload2
 		}
 		var data = {
 			datus : datus,
@@ -283,25 +291,89 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 	    var file = $scope.record;
 	    var fayl = document.getElementById('my-file-selector').files
 	    $scope.ImageSrcUpload = []
+	    $scope.ImageSrcUpload2 = []
 	    $scope.ImageSrcArr = []
 	    for(var y in fayl){
 	    	if(typeof fayl[y] === 'object')
 	    		$scope.ImageSrcArr.push(fayl[y])
 	    }
+	    var img = 0
 
-	    for(var z in $scope.ImageSrcArr){
-	    	var reader = new FileReader();
-		    reader.readAsDataURL($scope.ImageSrcArr[z]);
-		    reader.onload = function(e) {
-		        $scope.$apply(function(){
-		        	row = {}
-		        	row['image'] = e.target.result
-		        	row['name'] = $scope.ImageSrcArr[z].name
+	    sampleRecursion(0)
 
-        			$scope.ImageSrcUpload.push(row)
-		        })
-		    }
+	    function sampleRecursion(iddx) {
+	    	if (iddx == $scope.ImageSrcArr.length) {
+
+	    	}else {
+		    	var reader = new FileReader();
+				// img = $scope.ImageSrc.length + (parseInt(z) + 1);
+			    reader.readAsDataURL($scope.ImageSrcArr[iddx]);
+			    reader.onload = function(e) {
+			        $scope.$apply(function(){
+			        	row = {}
+			        	row2 = {}
+			        	row['image'] = e.target.result
+
+			        	if ($scope.ImageSrc.length > 0) {
+			        		var s = $scope.ImageSrcArr[iddx].name
+			        		var name2 = s.indexOf('.')
+			        		s = s.substring(0, name2 != -1 ? name2 : s.length)
+				        	for (var g in $scope.ImageSrc) {
+				        		var name1 = $scope.ImageSrc[g].imageName.indexOf('.')
+				        		$scope.ImageSrc[g].imageName = $scope.ImageSrc[g].imageName.substring(0, name1 != -1 ? name1 : $scope.ImageSrc[g].imageName.length)
+
+				        		if ($scope.ImageSrc[g].imageName == s) {
+				        			row['name'] = $scope.ImageSrcArr[iddx].name
+				        			row2['name'] = s + "_1.png"
+				        			break;
+				        		} else {
+						        	row['name'] = $scope.ImageSrcArr[iddx].name
+						        	row2['name'] = $scope.ImageSrcArr[iddx].name
+				        		}
+				        	}
+			        	} else {
+				        	row['name'] = $scope.ImageSrcArr[iddx].name
+				        	row2['name'] = $scope.ImageSrcArr[iddx].name
+			        	}
+
+			        	row['order'] = ($scope.ImageSrc.length + (iddx + 1))
+			        	row2['order'] = ($scope.ImageSrc.length + (iddx + 1))
+
+	        			$scope.ImageSrcUpload.push(row)
+	        			$scope.ImageSrcUpload2.push(row2)
+
+			    		sampleRecursion(++iddx)
+			        })
+			    }
+
+	    	}
 	    }
+
+	  //   for(var z in $scope.ImageSrcArr){
+	  //   	var reader = new FileReader();
+		 //    reader.readAsDataURL($scope.ImageSrcArr[z]);
+		 //    reader.onload = function(e) {
+		 //        $scope.$apply(function(){
+		 //        	row = {}
+		 //        	row['image'] = e.target.result
+		 //        	row['name'] = $scope.ImageSrcArr[z].name
+
+
+   //      			$scope.ImageSrcUpload.push(row)
+		 //        })
+		 //    }
+	  //   }
+	}
+
+	$scope.checkOrder = function(data) {
+		for (var x = 0; x < $scope.ImageSrc.length; x++) {
+			if ($scope.ImageSrc[x].order == data.order && $scope.ImageSrc[x].id != data.id) {
+				Notification.error("Image order already used.")
+				$("#saveBtn").prop('disabled', true);
+			}else if ($scope.ImageSrc[x].order == data.order && $scope.ImageSrc[x].id == data.id) {
+				$("#saveBtn").prop('disabled', false);
+			}
+		}
 	}
 
 	$scope.load_to_edit = function(record){
@@ -466,6 +538,7 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
     		me.post_generic("/assessments/delete_image/"+list.id,{}, "dialog")
     		.success(function(response){
     			$scope.ImageSrc.splice($scope.ImageSrc.indexOf(list), 1);
+    			Notification.success("Deleted successfully!")
     		})
     	}else{
 			$scope.ImageSrcUpload.splice($scope.ImageSrcUpload.indexOf(list), 1);

@@ -63,7 +63,7 @@ class Assessment_session_form(forms.ModelForm):
 class Assessment_image_form(forms.ModelForm):
 	class Meta:
 		model  = Assessment_image
-		fields = ('company','is_active','image','question')
+		fields = ('company','is_active','image','question', 'order')
 
 class Assessment_image_answer_form(forms.ModelForm):
 	class Meta:
