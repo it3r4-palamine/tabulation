@@ -215,14 +215,18 @@ class GetData(APIView):
 			assessmentIds.append(assessment.pk)
 			response["assessmentList"].append(assessment.get_dict(True, isV2))
 
-			if not isV2:
-				answersQs = Assessment_answer.objects.filter(company_assessment=assessment.pk, question__is_active=True, is_deleted=False)
-				for answers in answersQs:
-					row = answers.get_dict(True)
+			# if not isV2:
+			answersQs = Assessment_answer.objects.filter(company_assessment=assessment.pk, question__is_active=True, is_deleted=False)
+			for answers in answersQs:
+				row = answers.get_dict(True)
+				if isV2:
+					row['answer'] = row['text_answer']
+					imageAnswerList.append(row)
+				else:
 					answerList.append(row)
 
 		# Get score
-		image_answers = Assessment_upload_answer.objects.filter(is_deleted=False, question__in=questionIdList, transaction_type__in=transactionTypeIdList, company_assessment__in=assessmentIds)
+		image_answers = Assessment_upload_answer.objects.filter(is_deleted=False, question__in=questionIdList, question__uploaded_question=True, transaction_type__in=transactionTypeIdList, company_assessment__in=assessmentIds)
 		for score in image_answers:
 			imageAnswerList.append(score.get_dict())
 
