@@ -397,16 +397,40 @@ class SyncAssessments(APIView):
 						if answer_form.is_valid():
 							answer_form.save()
 
-					if 'uploaded_question' not in answer:
-						if 'uploaded_document' in answer:
-							answer['choice'] = []
-							answer['uploaded_question'] = True
+					if isV2:
+						if not answer['uploaded_question']:
+							answerNormal = {}
+							choiceArr = []
+							answerNormal['is_active'] = True
+							answerNormal['company_assessment'] = answer['company_assessment']
+							answerNormal['transaction_type'] = answer['transaction_type']
+							answerNormal['uploaded_question'] = False
+							answerNormal['question'] = answer['question']
 
-						serializer = AnswerSerializer(data=answer)
-						if serializer.is_valid():
-							serializer.save()
-						else: 
-							raise_error(json.dumps(serializer.errors))
+							if 'choice' in answer:
+								choiceArr.append(answer['choice'])
+							elif 'answer_text' in answer:
+								answerNormal['text_answer'] = answer['answer_text']
+
+							answerNormal['choice'] = choiceArr
+
+							serializer = AnswerSerializer(data=answerNormal)
+							if serializer.is_valid():
+								serializer.save()
+							else: 
+								raise_error(json.dumps(serializer.errors))
+
+					else:
+						if 'uploaded_question' not in answer:
+							if 'uploaded_document' in answer:
+								answer['choice'] = []
+								answer['uploaded_question'] = True
+
+							serializer = AnswerSerializer(data=answer)
+							if serializer.is_valid():
+								serializer.save()
+							else: 
+								raise_error(json.dumps(serializer.errors))
 
 			return Response({})
 		except Exception as e:
