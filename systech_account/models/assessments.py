@@ -37,133 +37,135 @@ class Assessment_question(models.Model):
 
 
 	def get_dict(self, forAPI=False, imagesArr=None, isV2=False):
-		# try:
-		assessment_question = {
-			"id"				  : self.pk,
-			"code"	  			  : self.code,
-			"value"				  : self.value,
-			"is_multiple"		  : self.is_multiple,
-			"is_document"		  : self.is_document,
-			"has_multiple_answer" : self.has_multiple_answer,
-			"is_general" 		  : self.is_general,
-			"has_follow_up" 	  : self.has_follow_up,
-			"code_value" 		  : self.code + ": " + self.value,
-			"answer_type" 		  : self.answer_type,
-			"has_related" 		  : self.has_related,
-			"uploaded_question"   : self.uploaded_question,
-			"timer"				  : self.timer.total_seconds() if self.timer else None,
-			"answers"			  : [],
-			"images"			  : [],
-			"transaction_type"	  : None,
-		}
+		try:
+			assessment_question = {
+				"id"				  : self.pk,
+				"code"	  			  : self.code,
+				"value"				  : self.value,
+				"is_multiple"		  : self.is_multiple,
+				"is_document"		  : self.is_document,
+				"has_multiple_answer" : self.has_multiple_answer,
+				"is_general" 		  : self.is_general,
+				"has_follow_up" 	  : self.has_follow_up,
+				"code_value" 		  : self.code + ": " + self.value,
+				"answer_type" 		  : self.answer_type,
+				"has_related" 		  : self.has_related,
+				"uploaded_question"   : self.uploaded_question,
+				"timer"				  : self.timer.total_seconds() if self.timer else None,
+				"answers"			  : [],
+				"images"			  : [],
+				"transaction_type"	  : None,
+			}
 
-		# if self.parent_question:
-		# 	if forAPI:
-		# 		assessment_question["parent_question"] = self.parent_question.id
-		# 	else:
-		# 		assessment_question["parent_question"] = {
-		# 			'id' 	  	 : self.parent_question.id,
-		# 			'code' 		 : self.parent_question.code,
-		# 			'value' 	 : self.parent_question.value,
-		# 			'code_value' :  self.parent_question.code + ": " + self.parent_question.value,
-		# 		}
-		# else:
-		# 	assessment_question["parent_question"] = None
+			# if self.parent_question:
+			# 	if forAPI:
+			# 		assessment_question["parent_question"] = self.parent_question.id
+			# 	else:
+			# 		assessment_question["parent_question"] = {
+			# 			'id' 	  	 : self.parent_question.id,
+			# 			'code' 		 : self.parent_question.code,
+			# 			'value' 	 : self.parent_question.value,
+			# 			'code_value' :  self.parent_question.code + ": " + self.parent_question.value,
+			# 		}
+			# else:
+			# 	assessment_question["parent_question"] = None
 
-		assessment_question["parent_question"] = None
+			assessment_question["parent_question"] = None
 
-		# if self.has_related:
-		# 	related_questions = Related_question.objects.filter(related_questions__overlap=[self.pk],is_active=True)
-		# 	for related_question in related_questions:
-		# 		assessment_question['related_question'] = related_question.pk
-		
-		if self.uploaded_question:
-			imagesQ 	= []
-			answersQ 	= []
-
-			if isV2:
-				images = Assessment_image.objects.filter(question=self.pk, is_active=True).order_by("order")
-			else:
-				ids = []
-				if imagesArr:
-					for excludeImages in imagesArr:
-						ids.append(excludeImages['id'])
-
-				# Get new images and convert to base64
-				images = Assessment_image.objects.filter(question=self.pk, is_active=True).exclude(pk__in=ids).order_by("order")
-				
+			# if self.has_related:
+			# 	related_questions = Related_question.objects.filter(related_questions__overlap=[self.pk],is_active=True)
+			# 	for related_question in related_questions:
+			# 		assessment_question['related_question'] = related_question.pk
 			
-			for image in images:
-				assessmentImageDict = image.get_dict(True)
+			if self.uploaded_question:
+				imagesQ 	= []
+				answersQ 	= []
 
-				if isV2:
-					assessmentImageDict['questionId'] = assessment_question['id']
+				# For YIAS Android or Web
+				if isV2 or not forAPI:
+					images = Assessment_image.objects.filter(question=self.pk, is_active=True).order_by("order")
 				else:
-					image = open('systech_account/static/uploads/%s'%(image.image), 'rb')
-					image_read = image.read()
-					image_64_encode = base64.standard_b64encode(image_read)
-					assessmentImageDict['converted_image'] = image_64_encode
-					assessmentImageDict['question'] = assessment_question['id']
+					ids = []
+					if imagesArr:
+						for excludeImages in imagesArr:
+							ids.append(excludeImages['id'])
+
+					# Get new images and convert to base64
+					images = Assessment_image.objects.filter(question=self.pk, is_active=True).exclude(pk__in=ids).order_by("order")
+					
 				
-				imagesQ.append(assessmentImageDict)
+				for image in images:
+					assessmentImageDict = image.get_dict(True)
 
-			# Convert old images to base64
-			if imagesArr:
-				for importImage in imagesArr:
-					old_image 			= {}
-					old_image['id'] 	= importImage['id']
-					old_image['image'] 	= importImage['image']
+					if isV2:
+						assessmentImageDict['questionId'] = assessment_question['id']
+					elif not isV2 and forAPI:
+						image = open('systech_account/static/uploads/%s'%(image.image), 'rb')
+						image_read = image.read()
+						image_64_encode = base64.standard_b64encode(image_read)
+						assessmentImageDict['converted_image'] = image_64_encode
+						assessmentImageDict['question'] = assessment_question['id']
+					
+					imagesQ.append(assessmentImageDict)
 
-					get_image 		= open('systech_account%s'%(importImage['image']), 'rb')
-					get_image_read 	= get_image.read()
+				# Convert old images to base64
+				if imagesArr:
+					for importImage in imagesArr:
+						old_image 			= {}
+						old_image['id'] 	= importImage['id']
+						old_image['image'] 	= importImage['image']
 
-					get_image_64 					= base64.standard_b64encode(get_image_read)
-					old_image['converted_image'] 	= get_image_64
-					imagesQ.append(old_image)
+						get_image 		= open('systech_account%s'%(importImage['image']), 'rb')
+						get_image_read 	= get_image.read()
 
-			assessment_question['images'] = imagesQ
+						get_image_64 					= base64.standard_b64encode(get_image_read)
+						old_image['converted_image'] 	= get_image_64
+						imagesQ.append(old_image)
 
-			# Get image question answers
-			answers = Assessment_image_answer.objects.filter(question=self.pk,is_active=True).order_by("item_no")
-			for answer in answers:
-				answerDict = answer.get_dict()
-				answersQ.append(answerDict)
+				assessment_question['images'] = imagesQ
+
+				# Get image question answers
+				answers = Assessment_image_answer.objects.filter(question=self.pk,is_active=True).order_by("item_no")
+				for answer in answers:
+					answerDict = answer.get_dict()
+					answersQ.append(answerDict)
 
 
-			assessment_question['answers'] = answersQ
+				assessment_question['answers'] = answersQ
 
-		# # Transaction Types
-		# if self.is_general:
-		# 	transaction_types = []
-		# 	for transaction_type_id in self.transaction_types:
-		# 		# try:
-		# 		# 	transaction_type = Transaction_type.objects.get(id=transaction_type_id, is_active=True)
-		# 		# except Transaction_type.DoesNotExist:
-		# 		# 	continue
+			# # Transaction Types
+			# if self.is_general:
+			# 	transaction_types = []
+			# 	for transaction_type_id in self.transaction_types:
+			# 		# try:
+			# 		# 	transaction_type = Transaction_type.objects.get(id=transaction_type_id, is_active=True)
+			# 		# except Transaction_type.DoesNotExist:
+			# 		# 	continue
 
-		# 		# transaction_type = transaction_type.id if forAPI else transaction_type.get_dict()
-		# 		# print(transaction_type)
-		# 		transaction_types.append(transaction_type_id)
-		# 	assessment_question['transaction_types'] = transaction_types
-		# else:
-		# 	assessment_question["transaction_type"] = self.transaction_type.id if forAPI else self.transaction_type.get_dict() if self.transaction_type else None
+			# 		# transaction_type = transaction_type.id if forAPI else transaction_type.get_dict()
+			# 		# print(transaction_type)
+			# 		transaction_types.append(transaction_type_id)
+			# 	assessment_question['transaction_types'] = transaction_types
+			# else:
+			# 	assessment_question["transaction_type"] = self.transaction_type.id if forAPI else self.transaction_type.get_dict() if self.transaction_type else None
 
-		assessment_question["transaction_type"] = self.transaction_type.id if forAPI else self.transaction_type.get_dict() if self.transaction_type else None
+			assessment_question["transaction_type"] = self.transaction_type.id if forAPI else self.transaction_type.get_dict() if self.transaction_type else None
 
-		if not forAPI:
-			assessment_question["is_active"] = self.is_active
-			assessment_question["is_import"] = self.is_import
+			if not forAPI:
+				assessment_question["is_active"] = self.is_active
+				assessment_question["is_import"] = self.is_import
 
-		return assessment_question
-		# except Exception as e:
-		# 	exc_type, exc_obj, exc_tb = sys.exc_info()
-		# 	fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			return assessment_question
+			
+		except Exception as e:
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
 
-		# 	print(e)
-		# 	print(fname)
-		# 	print(sys.exc_traceback.tb_lineno)
+			print(e)
+			print(fname)
+			print(sys.exc_traceback.tb_lineno)
 
-		# 	return {}
+			raise ValueError(e)
 
 
 class Assessment_effect(models.Model):

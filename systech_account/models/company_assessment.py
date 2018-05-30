@@ -28,6 +28,7 @@ class Company_assessment(models.Model):
 
 
 	def get_dict(self, forAPI=False, isV2=False):
+
 		company_assessment = {
 			"id"			 : self.pk,
 			"reference_no"	 : self.reference_no,
@@ -72,9 +73,6 @@ class Company_assessment(models.Model):
 					
 				except Transaction_type.DoesNotExist:
 					continue
-
-		print isV2
-		print transaction_type_list
 
 		sessions = str2model("Assessment_session").objects.filter(is_deleted=False,company_assessment=self.pk,time_end__isnull=False)
 		for session in sessions:

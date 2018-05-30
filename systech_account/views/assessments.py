@@ -5,6 +5,7 @@ from ..models.multiple_choice import *
 from django.db.models import *
 from ..views.common import *
 from ..views.sentence_matching import *
+import json
 
 import sys, traceback, os
 
@@ -108,9 +109,9 @@ def read(request):
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
 
-		cprint(e)
-		cprint(fname)
-		# cprint(sys.exc_traceback.tb_lineno)
+		print(e)
+		print(fname)
+		print(sys.exc_traceback.tb_lineno)
 		return HttpResponse(e, status = 400)
 
 def generate_code(request):
@@ -345,15 +346,14 @@ def create(request,results=None):
 		return HttpResponse(e, status = 400)
 
 def upload(request):
+
 	if request.method == "POST":
+
 		try:
 			data = request.POST
 			files = request.FILES
 			images = files.getlist("images")
-			# if len(files) == 0:
-			# 	raise_error("Kindly select a file first.")
 
-			
 			company = get_current_company(request)
 			datus = {}
 			old_is_related = data.pop('old_is_related',None)
@@ -391,6 +391,7 @@ def upload(request):
 
 			if assessment_question.is_valid():
 				assessment_save = assessment_question.save()
+
 				for image in images:
 					image_F = {}
 					image_F["image"] = image
@@ -403,18 +404,19 @@ def upload(request):
 					image_Q['company'] = company
 					image_Q['image'] = image
 
-					get_last_question_image = Assessment_image.objects.filter(is_active=True,question=assessment_save.pk).last()
-					if get_last_question_image:
-						image_Q['order'] = get_last_question_image.order + 1
-					else:
-						image_Q['order'] = 1
+					for newImage in json.loads(data["newImages"]):
+						if image.name == newImage['name']:
+							image_Q['order'] = newImage['order']
+							print image_Q
 
 					image_question = Assessment_image_form(image_Q, image_F)
 
 					if image_question.is_valid():
 						image_question.save()
+
 			# saveData(request, data, assessment_save.pk)
 			return success(assessment_save.pk)
+
 		except Exception as e:
 			exc_type, exc_obj, exc_tb = sys.exc_info()
 			filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -423,6 +425,7 @@ def upload(request):
 			print(linenum)
 			print(e)
 			return error(e)
+
 	else: return error('method error')
 
 def multiple_upload(request):
@@ -468,6 +471,7 @@ def multiple_upload(request):
 
 			if assessment_question.is_valid():
 				assessment_save = assessment_question.save()
+
 				for image in images:
 					image_F = {}
 					image_F["image"] = image
@@ -481,7 +485,8 @@ def multiple_upload(request):
 						'image' : image
 					}
 
-					get_last_question_image = Assessment_image.objects.filter(is_active=True,question=assessment_save.pk).last()
+					get_last_question_image = Assessment_image.objects.filter(is_active=True, question=assessment_save.pk).last()
+					
 					if get_last_question_image:
 						image_Q['order'] = get_last_question_image.order + 1
 					else:
@@ -508,7 +513,6 @@ def saveData(request):
 		effects    = postdata.pop("effects",None)
 		findings   = postdata.pop("findings",None)
 		old_images = postdata.pop("old_images",None)
-		new_images = postdata.pop("new_images",None)
 
 		for effect in effects:
 			effect['question']  = q_id

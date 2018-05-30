@@ -1,17 +1,21 @@
-var app = angular.module("assessments",['common_module','file-model']);
+var app = angular.module("assessments", ['common_module', 'file-model', 'angular-sortable-view']);
 
-app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCache, $timeout, $element, $controller,CommonFunc,Notification,CommonRead) {
+app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCache, $timeout, $element, $controller, CommonFunc, Notification, CommonRead)
+{
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
+	
 	var me = this;
 	$scope.record = {}
 	$scope.filter = {}
-
 	$scope.choices = []
 	$scope.effects = []
 	$scope.findings = []
 	$scope.answers = []
+	$scope.imageArr = [];
 
-	$scope.chooseQuestion = function(record){
+
+	$scope.chooseQuestion = function(record)
+	{
 		swal({
 		  title: "",
 		  showConfirmButton: false,
@@ -28,91 +32,150 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 		});
 	}
 
-	$scope.create_dialog = function(record, upload){
+	$scope.create_dialog = function(record, upload)
+	{
 		$scope.edit_is_related = false
 		$scope.choices = []
 		$scope.effects = []
 		$scope.findings = []
 		$scope.answers = []
 		$scope.ImageSrc = []
-		$scope.ImageSrcUpload = []
-		$scope.ImageSrcUpload2 = []
 		$scope.multiple_answer_list = []
 		$scope.answer_list_arr = []
-		$scope.orderArr = []
 		$scope.choice_list = {}
 		$scope.effect_list = {}
 		$scope.finding_list = {}
 		$scope.answer_list = {}
 		$scope.record = {}
 		$scope.record['is_active'] = true
-		if(record){
+
+		if (record)
+		{
 			$scope.record = angular.copy(record);
 			$scope.choices = $scope.record.choices
 			$scope.effects = $scope.record.effects
 			$scope.findings = $scope.record.findings
 			$scope.answers = $scope.record.answers
-			if($scope.record.timer){
-				$scope.record.has_timer = true
-			}
 
-			for(var ans in $scope.answers){
+			if ($scope.record.timer) $scope.record.has_timer = true
+
+			for (var ans in $scope.answers)
+			{
 				$scope.multiple_answer_list[ans] = {}
-				for(var ans2 in $scope.answers[ans].answer){
+
+				for (var ans2 in $scope.answers[ans].answer)
+				{
 					$scope.answers[ans].answer[ans2].answer_display = "\\(" + $scope.answers[ans].answer[ans2].name + "\\)"
 				}
 			}
-			$scope.ImageSrc = $scope.record.images
+
+			$scope.ImageSrc = angular.copy($scope.record.images)
+			$scope.imageArr = angular.copy($scope.record.images)
+
 			var imgCount = 0
-			for(var img in $scope.ImageSrc){
-				$scope.orderArr.push(++imgCount)
-			}
 		}
 
-		if(upload) {
-			// me.open_dialog("/assessments/upload_dialog/","dialog_whole","main")
-			$("#myModal").modal('toggle');
-		}
-		else {
-			me.open_dialog("/assessments/create_dialog/","dialog_whole","main")
-		}
+		if (upload) $("#myModal").modal('toggle');
+		else me.open_dialog("/assessments/create_dialog/", "dialog_whole", "main");
 	}
 
-	$scope.upload_close_dialog = function(){
-		$("#myModal").modal('toggle');
-	}
 
-	$scope.close_dialog = function(){$uibModalStack.dismissAll();}
+	$scope.upload_close_dialog = function() { $("#myModal").modal('toggle'); }
+
+	$scope.close_dialog = function() { $uibModalStack.dismissAll(); }
 
 	$scope.old_is_related = null
-	$scope.create = function(not_upload){
-		if(Object.keys($scope.choice_list).length > 0) {
-			if($scope.choice_list.value){
-				$scope.choices.push(angular.copy($scope.choice_list))
+
+
+	$scope.getImageFiles = function()
+	{
+		var imageFiles = document.getElementById('my-file-selector').files
+
+		if (imageFiles.length <= 0) return;
+
+		readImageFile(0);
+
+		function readImageFile(idx)
+		{
+			if (idx < imageFiles.length)
+			{
+				var fileReader = new FileReader();
+
+				fileReader.readAsDataURL(imageFiles[idx]);
+				
+				fileReader.onload = function(e)
+				{
+					$scope.$apply(function()
+			        {
+			        	var image = {
+			    			image: e.target.result,
+			    			name: imageFiles[idx].name,
+			    			isNew: true,
+			    		}
+
+			    		$scope.imageArr.push(image)
+
+			    		readImageFile(++idx)
+			        })
+				}
 			}
 		}
-		if(Object.keys($scope.effect_list).length > 0) {
-			if($scope.effect_list.value){
-				$scope.effects.push(angular.copy($scope.effect_list))
+	}
+
+	$scope.create = function(not_upload)
+	{
+		var newImages = [];
+		$scope.oldImages = [];
+
+		for (var i = 0; i < $scope.imageArr.length; i++)
+		{
+			$scope.imageArr[i].order = i + 1;
+			
+			if ($scope.imageArr[i].isNew)
+			{
+				var newImage = {
+					name: $scope.imageArr[i].name,
+					order: $scope.imageArr[i].order,
+				}
+
+				newImages.push(newImage);
+			}
+			else
+			{
+				$scope.oldImages.push($scope.imageArr[i]);
 			}
 		}
-		if(Object.keys($scope.finding_list).length > 0) {
-			if($scope.finding_list.value){
-				$scope.findings.push(angular.copy($scope.finding_list))
-			}
+
+		if (Object.keys($scope.choice_list).length > 0)
+		{
+			if ($scope.choice_list.value) $scope.choices.push(angular.copy($scope.choice_list));
 		}
-		if(Object.keys($scope.answer_list).length > 0) {
-			if($scope.answer_list.name && $scope.answer_list.item_no){
+
+		if (Object.keys($scope.effect_list).length > 0)
+		{
+			if ($scope.effect_list.value) $scope.effects.push(angular.copy($scope.effect_list));
+		}
+
+		if (Object.keys($scope.finding_list).length > 0)
+		{
+			if ($scope.finding_list.value) $scope.findings.push(angular.copy($scope.finding_list));
+		}
+
+		if (Object.keys($scope.answer_list).length > 0)
+		{
+			if ($scope.answer_list.name && $scope.answer_list.item_no)
+			{
 				var new_data = {
 					name : $scope.answer_list.name,
 					answer_display : $scope.answer_list.answer_display
 				}
+
 				$scope.answer_list_arr.push(new_data)
-				// $scope.answers.push(angular.copy($scope.answer_list))
 			}
 		}
-		console.log($scope.answer_list_arr)
-		if($scope.answer_list_arr.length > 0){
+
+		if ($scope.answer_list_arr.length > 0)
+		{
 			var newArr = {
 				answer : $scope.answer_list_arr,
 				item_no : $scope.answer_list.item_no
@@ -120,278 +183,211 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 
 			$scope.answers.push(angular.copy(newArr))
 		}
-		// if(Object.keys($scope.answer_list).length > 0) {
-		// 	if($scope.answer_list.answer && $scope.answer_list.item_no){
-		// 		$scope.answers.push(angular.copy($scope.answer_list))
-		// 	}
-		// }
+
 		var has_true = 0
 		var has_required_document = 0
-		if($scope.record.is_document == undefined) $scope.record.is_document = false;
-		if(!not_upload)
-			if($scope.record.has_timer == undefined || $scope.record.has_timer == false) $scope.record.timer = 0;
-		for(x in $scope.choices){
-			if($scope.choices[x].is_answer == true){
-				has_true++
-			}
 
-			if($scope.record.is_document){
-				if($scope.choices[x].required_document_image == true){
-					has_required_document++
-				}
-			}else{
+		if ($scope.record.is_document == undefined) $scope.record.is_document = false;
+
+		if (!not_upload)
+		{
+			if ($scope.record.has_timer == undefined || $scope.record.has_timer == false) $scope.record.timer = 0;
+		}
+
+		for (x in $scope.choices)
+		{
+			if ($scope.choices[x].is_answer == true) has_true++;
+
+			if ($scope.record.is_document)
+			{
+				if ($scope.choices[x].required_document_image == true) has_required_document++;
+			}
+			else
+			{
 				$scope.choices[x].required_document_image = false
 			}
 		}
+
 		$scope.choice_list = {}
 		$scope.effect_list = {}
 		$scope.finding_list = {}
 		$scope.answer_list = {}
-		if($scope.record.is_multiple == undefined) $scope.record.is_multiple = false;
-		if(not_upload){
 
-			if($scope.record.is_multiple){
-				if(has_true > 1){
+		if ($scope.record.is_multiple == undefined) $scope.record.is_multiple = false;
+
+		if (not_upload)
+		{
+			if ($scope.record.is_multiple)
+			{
+				if (has_true > 1)
+				{
 					$scope.record['has_multiple_answer'] = true
-				}else if(has_true == 0){
+				}
+				else if (has_true == 0)
+				{
 					$scope.record['has_multiple_answer'] = false
 					return Notification.error("The question has no correct answer. Please select one.")
-				}else if(has_true == 1){
+				}
+				else if (has_true == 1)
+				{
 					$scope.record['has_multiple_answer'] = false
 				}
-			}else{
-				if(!$scope.record.answer_type){
-					return Notification.error("Please select answer type.")	
-				}
-				if(has_true > 1){
+			}
+			else
+			{
+				if (!$scope.record.answer_type) return Notification.error("Please select answer type.");
+
+				if (has_true > 1)
+				{
 					$scope.record['has_multiple_answer'] = true
-				}else if(has_true == 0){
+				}
+				else if (has_true == 0)
+				{
 					$scope.record['has_multiple_answer'] = false
 					return Notification.error("The question has no correct answer. Please select one.")
-				}else if(has_true == 1){
+				}
+				else if (has_true == 1)
+				{
 					$scope.record['has_multiple_answer'] = false
 				}
 			}
 
-			if($scope.record.is_document){
-				if(has_required_document == 0){
-					return Notification.error("Please select a choice that requires document image.")
-				}
+			if ($scope.record.is_document)
+			{
+				if (has_required_document == 0) return Notification.error("Please select a choice that requires document image.");
 			}
 		}
 
-		if($scope.record.is_general == false) $scope.record.transaction_types = []
+		if ($scope.record.is_general == false) $scope.record.transaction_types = []
 
 		$scope.record['choices'] = $scope.choices
 		$scope.record['effects'] = $scope.effects
 		$scope.record['findings'] = $scope.findings
 		$scope.record['answers'] = $scope.answers
 		$scope.record['old_is_related'] = $scope.old_is_related
-		if($scope.record.parent_question){
-			$scope.record.parent_question.has_follow_up = true;
-		}
+
+		if ($scope.record.parent_question) $scope.record.parent_question.has_follow_up = true;
 
 		record_data = $scope.record
 		var company_settings = new FormData();
 		var questionImg = []
-		angular.forEach(record_data, function(value, key){
-		    if(record_data[key] === undefined){
-		        value = ""
-		    }
+
+		angular.forEach(record_data, function(value, key)
+		{
 		    is_continue = true;
-		    if(key == 'images'){
-		    	for(var y in record_data[key]){
-					if(typeof record_data[key][y] === 'object' || typeof record_data[key][y] === 'string'){
-						company_settings.append(key,record_data[key][y])
+		    
+		    if (record_data[key] === undefined) value = "";
+
+		    if (key == 'images')
+		    {
+		    	for (var y in record_data[key])
+		    	{
+					if (typeof record_data[key][y] === 'object' || typeof record_data[key][y] === 'string')
+					{
+						company_settings.append(key, record_data[key][y]);
 					}
 		    	}
+
 		    	is_continue = false;
 		    }
 
-		    if(is_continue){
-			    if(key == 'transaction_type'){
-			    	value = record_data[key].id
-			    }
+		    if (is_continue)
+		    {
+			    if (key == 'transaction_type') value = record_data[key].id;
 			    company_settings.append(key, value);
 		    }
 		})
+		
+		company_settings.append("newImages", JSON.stringify(newImages));
 
-		if(not_upload){
-			me.post_generic("/assessments/create/",$scope.record,"dialog")
-			.success(function(response){
+		if (not_upload)
+		{
+			me.post_generic("/assessments/create/", $scope.record, "dialog")
+			.success(function(response)
+			{
 				me.close_dialog();
 				Notification.success(response);
 				$scope.read();
-			}).error(function(err){
-				if(err=='code'){
-					Notification.error("Code already exists.")
-				}else{
-					Notification.error(err)
-				}
 			})
-		}else{
+			.error(function(err)
+			{
+				if (err=='code') Notification.error("Code already exists."); else Notification.error(err);
+			})
+		}
+		else
+		{
 			$('body').loadingModal({text: 'Saving...'});
 			$('body').loadingModal('animation', 'cubeGrid');
 			$('body').loadingModal('backgroundColor', 'green');
-			$http.post('/assessments/upload/', company_settings, { 
+
+			$http.post('/assessments/upload/', company_settings,
+			{
 			    method: "post", 
 			    transformRequest: angular.identity, 
 			    headers: {'Content-Type': undefined} 
-			}).success(function(response){ 
-			    // Notification.success(response)
-			    // me.close_dialog();
-			    // $scope.read();
+			})
+			.success(function(response)
+			{
 			    $scope.saveData($scope.record, response)
 			})
-			.error(function(err){
+			.error(function(err)
+			{
 				$('body').loadingModal('hide');
-				$('body').loadingModal('destroy') ;
-			    if(err=='code'){
-					Notification.error("Code already exists.")
-				}else{
-					Notification.error(err)
-				}
+				$('body').loadingModal('destroy');
+			    if (err=='code') Notification.error("Code already exists."); else Notification.error(err);
 			})
 		}
 
 	}
 
-	$scope.saveData = function(record, id) {
+	$scope.saveData = function(record, id)
+	{
 		var datus = {
 			answers 	: $scope.record.answers,
 			effects 	: $scope.record.effects,
 			findings 	: $scope.record.findings,
-			old_images 	: $scope.ImageSrc,
-			new_images 	: $scope.ImageSrcUpload2
+			old_images 	: $scope.oldImages,
 		}
+
 		var data = {
 			datus : datus,
 			id : id
 		}
-		me.post_generic("/assessments/saveData/",data,"dialog")
-		.success(function(response){
+
+		me.post_generic("/assessments/saveData/", data, "dialog")
+		.success(function(response)
+		{
 			$('body').loadingModal('hide');
-    		$('body').loadingModal('destroy') ;
-			// me.close_dialog();
+    		$('body').loadingModal('destroy');
 			$("#myModal").modal('toggle');
 			Notification.success(response);
 			$scope.read();
-		}).error(function(err){
+		})
+		.error(function(err)
+		{
 			$('body').loadingModal('hide');
-			$('body').loadingModal('destroy') ;
-			if(err=='code'){
-				Notification.error("Code already exists.")
-			}else{
-				Notification.error(err)
-			}
+			$('body').loadingModal('destroy');
+			if (err=='code') Notification.error("Code already exists."); else Notification.error(err);
 		})
 	}
 
-	$scope.setimage = function() {
-	    var file = $scope.record;
-	    var fayl = document.getElementById('my-file-selector').files
-	    $scope.ImageSrcUpload = []
-	    $scope.ImageSrcUpload2 = []
-	    $scope.ImageSrcArr = []
-	    for(var y in fayl){
-	    	if(typeof fayl[y] === 'object')
-	    		$scope.ImageSrcArr.push(fayl[y])
-	    }
-	    var img = 0
 
-	    sampleRecursion(0)
-
-	    function sampleRecursion(iddx) {
-	    	if (iddx == $scope.ImageSrcArr.length) {
-
-	    	}else {
-		    	var reader = new FileReader();
-				// img = $scope.ImageSrc.length + (parseInt(z) + 1);
-			    reader.readAsDataURL($scope.ImageSrcArr[iddx]);
-			    reader.onload = function(e) {
-			        $scope.$apply(function(){
-			        	row = {}
-			        	row2 = {}
-			        	row['image'] = e.target.result
-
-			        	if ($scope.ImageSrc.length > 0) {
-			        		var s = $scope.ImageSrcArr[iddx].name
-			        		var name2 = s.indexOf('.')
-			        		s = s.substring(0, name2 != -1 ? name2 : s.length)
-				        	for (var g in $scope.ImageSrc) {
-				        		var name1 = $scope.ImageSrc[g].imageName.indexOf('.')
-				        		$scope.ImageSrc[g].imageName = $scope.ImageSrc[g].imageName.substring(0, name1 != -1 ? name1 : $scope.ImageSrc[g].imageName.length)
-
-				        		if ($scope.ImageSrc[g].imageName == s) {
-				        			row['name'] = $scope.ImageSrcArr[iddx].name
-				        			row2['name'] = s + "_1.png"
-				        			break;
-				        		} else {
-						        	row['name'] = $scope.ImageSrcArr[iddx].name
-						        	row2['name'] = $scope.ImageSrcArr[iddx].name
-				        		}
-				        	}
-			        	} else {
-				        	row['name'] = $scope.ImageSrcArr[iddx].name
-				        	row2['name'] = $scope.ImageSrcArr[iddx].name
-			        	}
-
-			        	row['order'] = ($scope.ImageSrc.length + (iddx + 1))
-			        	row2['order'] = ($scope.ImageSrc.length + (iddx + 1))
-
-	        			$scope.ImageSrcUpload.push(row)
-	        			$scope.ImageSrcUpload2.push(row2)
-
-			    		sampleRecursion(++iddx)
-			        })
-			    }
-
-	    	}
-	    }
-
-	  //   for(var z in $scope.ImageSrcArr){
-	  //   	var reader = new FileReader();
-		 //    reader.readAsDataURL($scope.ImageSrcArr[z]);
-		 //    reader.onload = function(e) {
-		 //        $scope.$apply(function(){
-		 //        	row = {}
-		 //        	row['image'] = e.target.result
-		 //        	row['name'] = $scope.ImageSrcArr[z].name
-
-
-   //      			$scope.ImageSrcUpload.push(row)
-		 //        })
-		 //    }
-	  //   }
-	}
-
-	$scope.checkOrder = function(data) {
-		for (var x = 0; x < $scope.ImageSrc.length; x++) {
-			if ($scope.ImageSrc[x].order == data.order && $scope.ImageSrc[x].id != data.id) {
-				Notification.error("Image order already used.")
-				$("#saveBtn").prop('disabled', true);
-			}else if ($scope.ImageSrc[x].order == data.order && $scope.ImageSrc[x].id == data.id) {
-				$("#saveBtn").prop('disabled', false);
-			}
-		}
-	}
-
-	$scope.load_to_edit = function(record){
-		$scope.create_dialog(record, record.uploaded_question);
-	}
+	$scope.load_to_edit = function(record) { $scope.create_dialog(record, record.uploaded_question); }
 
 	$scope.filter.transaction_type = {'name':'ALL'}
 	$scope.filter.is_general = true
-	$scope.read = function(){
+
+	$scope.read = function()
+	{
 		var data = {
 			pagination:me.pagination,
 			transaction_type:$scope.filter.transaction_type['id'] ? $scope.filter.transaction_type['id'] : null,
 			code : $scope.filter.code,
 			sort: me.sort
-			// show_general:$scope.filter.is_general
 		}
-		me.post_generic("/assessments/read/",data,"main")
-		.success(function(response){
+
+		me.post_generic("/assessments/read/",data,"main").success(function(response)
+		{
 			$scope.records = response.data;
 			me.starting = response.starting;
 			me.ending = response.data.length;
@@ -402,7 +398,8 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 		})
 	};
 
-	$scope.delete = function(record){
+	$scope.delete = function(record)
+	{
 		swal({
 		    title: "Continue",
 		    text: "Remove "+record.value+"?",
@@ -533,23 +530,35 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
     	$scope.answer_list_arr.splice($scope.answer_list_arr.indexOf(list),1)
     }
 
-    $scope.remove_image = function(list,index){
-    	if(list.id){
-    		me.post_generic("/assessments/delete_image/"+list.id,{}, "dialog")
-    		.success(function(response){
-    			$scope.ImageSrc.splice($scope.ImageSrc.indexOf(list), 1);
+    $scope.remove_image = function(list, idx)
+    {
+    	if (list.id)
+    	{
+    		me.post_generic("/assessments/delete_image/" + list.id, {}, "dialog")
+    		.success(function(response)
+    		{
+    			$scope.imageArr.splice(idx, 1);
     			Notification.success("Deleted successfully!")
     		})
-    	}else{
-			$scope.ImageSrcUpload.splice($scope.ImageSrcUpload.indexOf(list), 1);
+    	}
+    	else
+    	{
+			// $scope.ImageSrcUpload.splice($scope.ImageSrcUpload.indexOf(list), 1);
+
+			$scope.imageArr.splice(idx, 1);
+
 			var fayl = document.getElementById('my-file-selector').files
+			
 			$scope.ImageSrcArr2 = []
-			for(var y in fayl){
-				if(typeof fayl[y] === 'object') {
-					if(fayl[y].name != list.name)
-						$scope.ImageSrcArr2.push(fayl[y])
+			
+			for (var y in fayl)
+			{
+				if (typeof fayl[y] === 'object')
+				{
+					if(fayl[y].name != list.name) $scope.ImageSrcArr2.push(fayl[y])
 				}
 			}
+
 			$scope.record.images = $scope.ImageSrcArr2
     	}
     }
@@ -687,17 +696,22 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
 });
 
 
-app.directive('fileModel', ['$parse', function($parse) {
+app.directive('fileModel', ['$parse', function($parse)
+{
     return {
         restrict: 'A',
-        link: function($scope, element, attrs) {
+        link: function($scope, element, attrs)
+        {
             var model = $parse(attrs.fileModel);
             var modelSetter = model.assign;
-            element.bind('change', function(e) {
+            
+            element.bind('change', function(e)
+            {
                 $scope.$apply(function(e) {
                     modelSetter($scope, element[0].files[0]);
                 });
-                $scope.setimage();
+                
+                $scope.getImageFiles();
             });
         }
     }

@@ -114,6 +114,7 @@
             <!-- <div class="modal-body"> -->
                 <div class="wrapper wrapper-content animated fadeIn modalibox">
                     <div class="ibox">
+
                         <div class="ibox-title ibox_title_reset">
                             <h3><span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></h3>
                         </div>
@@ -126,6 +127,8 @@
                                             <input type="checkbox" id="is_general" name="is_general" ng-model="record.is_general" ng-click="record.code=null;record.transaction_types={};record.transaction_type={}" ng-disabled="record.id"><label for="is_general">General <span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></label>
                                         </div>
                                     </div> -->
+
+                                    <!-- Transaction Types -->
                                     <div class="col-sm-12" ng-if="record.is_general">
                                         <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
                                         <ui-select ng-model="record.transaction_types" multiple ng-change="generate_code()">
@@ -145,46 +148,45 @@
                                             </ui-select-choices>
                                         </ui-select>
                                     </div>
+
                                     <div ng-show="record.transaction_types || record.transaction_type">
+                                        <!-- Code -->
                                         <div class="col-sm-12" ng-class="{ 'has-error' : form.code.$invalid && !form.code.$pristine }">
                                             <label class="required">Code</label>
                                             <input type="text" name="code" ng-model="record.code" required class="form-control" disabled>
                                         </div>
+                                        
                                         <div class="clearfix"></div>
                                         <hr>
+
+                                        <!-- Upload image -->
                                         <div class="col-sm-12">
                                             <label class="btn btn-outline btn-success" for="my-file-selector">
                                                 <input type="file" style="display:none;" name="image" class="ng-pristine ng-untouched ng-valid ng-empty " file-model="record.images" id="my-file-selector" multiple accept=".png,.jpg,.jpeg">
                                                 Choose file...
                                             </label>
                                         </div>
+
                                         <div class="col-sm-12">
                                             <div class="lightBoxGallery">
-                                                <div class="col-sm-2" ng-repeat="image in ImageSrc">
-                                                    <input type="number" ng-change="checkOrder(image)" name="order" ng-model="image.order" class="form-control">
-                                                    <a href="{$ image.image $}" title="" data-gallery="">
-                                                        <img src="{$ image.image $}"  class="img-rounded" style="height:100px;width:100px;"><br>
-                                                    </a>
-                                                    <button class="btn bt-outline btn-danger" ng-click="remove_image(image, $index)"><i class="fa fa-trash-o"></i></button>
+                                                
+                                                <div sv-root sv-part="imageArr">
+                                                    <div class="col-sm-2" ng-repeat="image in imageArr track by $index" sv-element>
+                                                        
+                                                        <div sv-handle>
+                                                            <img src="{$ image.image $}" class="img-rounded" style="height:100px; width:100px;" draggable="false"><br>
+                                                     
+                                                            <button class="btn bt-outline btn-danger" ng-click="remove_image(image, $index)">
+                                                                <i class="fa fa-trash-o"></i>
+                                                            </button>
+                                                        </div>
+                                                    
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-2" ng-repeat="imageUpload in ImageSrcUpload">
-                                                    <input type="number" ng-change="checkOrder(imageUpload)" name="order" ng-model="imageUpload.order" class="form-control">
-                                                    <a href="{$ imageUpload.image $}" title="" data-gallery="">
-                                                        <img src="{$ imageUpload.image $}"  class="img-rounded" style="height:100px;width:100px;"><br>
-                                                    </a>
-                                                    <button class="btn bt-outline btn-danger" ng-click="remove_image(imageUpload, $index)"><i class="fa fa-trash-o"></i></button>
-                                                </div>
-                                                <div id="blueimp-gallery" class="blueimp-gallery">
-                                                    <div class="slides"></div>
-                                                    <h3 class="title"></h3>
-                                                    <a class="prev">‹</a>
-                                                    <a class="next">›</a>
-                                                    <a class="close">×</a>
-                                                    <a class="play-pause"></a>
-                                                    <ol class="indicator"></ol>
-                                                </div>
+                                            
                                             </div>
                                         </div>
+
                                         <div class="clearfix"></div>
                                         <div class="col-sm-12" ng-hide="true">
                                             <br>
