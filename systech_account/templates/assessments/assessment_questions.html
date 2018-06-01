@@ -168,11 +168,11 @@
                                         </div>
 
                                         <div class="col-sm-12">
-                                            <div class="lightBoxGallery">
+                                            <div class="lightBoxGallery" sv-root sv-part="imageArr">
                                                 
-                                                <div sv-root sv-part="imageArr">
-                                                    <div class="col-sm-2" ng-repeat="image in imageArr track by $index" sv-element>
-                                                        
+                                                <div class="col-sm-2" ng-repeat="image in imageArr track by $index" sv-element>
+                                                    
+                                                    <a href="{$image.image$}" title="" data-gallery="">
                                                         <div sv-handle>
                                                             <img src="{$ image.image $}" class="img-rounded" style="height:100px; width:100px;" draggable="false"><br>
                                                      
@@ -180,8 +180,19 @@
                                                                 <i class="fa fa-trash-o"></i>
                                                             </button>
                                                         </div>
-                                                    
-                                                    </div>
+                                                    </a>
+                                                
+                                                </div>
+
+                                                <!-- For viewing of images and carousel -->
+                                                <div id="blueimp-gallery" class="blueimp-gallery"> 
+                                                    <div class="slides"></div> 
+                                                    <h3 class="title"></h3> 
+                                                    <a class="prev">‹</a> 
+                                                    <a class="next">›</a> 
+                                                    <a class="close">×</a> 
+                                                    <a class="play-pause"></a> 
+                                                    <ol class="indicator"></ol> 
                                                 </div>
                                             
                                             </div>
