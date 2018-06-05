@@ -211,7 +211,12 @@ class Assessment_answer(models.Model):
 	company_assessment = models.ForeignKey("Company_assessment")
 	choice             = ArrayField(models.IntegerField("Choice"),blank=True,null=True)
 	text_answer        = models.CharField(max_length=200,null=True,blank=True)
-	document_image	   = models.ImageField(upload_to='assessment/document_images/', blank=True, null=True)
+	document_image	   = ProcessedImageField(upload_to='assessment/document_images/',
+									   processors=[ResizeToFit(1000,1000)],
+									   format='PNG',
+									   options = {'quality': 100},
+									   blank=True,
+									   null=True)
 	transaction_type   = models.ForeignKey("Transaction_type",blank=True,null=True)
 	company 		   = models.ForeignKey("Company",blank=True,null=True)
 	created_on 		   = models.DateTimeField(auto_now_add=True,null=True,blank=True)
@@ -485,4 +490,32 @@ class Assessment_upload_answer(models.Model):
 			'question' 			 : self.question.pk,
 			'transaction_type' 	 : self.transaction_type.pk,
 			'company_assessment' : self.company_assessment.pk,
+		}
+
+class Assessment_answer_image(models.Model):
+	question 		   = models.ForeignKey("Assessment_question")
+	company_assessment = models.ForeignKey("Company_assessment")
+	transaction_type   = models.ForeignKey("Transaction_type")
+	image 			   = ProcessedImageField(upload_to='assessment/document_images/',
+						   processors=[ResizeToFit(1000,1000)],
+						   format='PNG',
+						   options = {'quality': 100},
+						   blank=True,
+						   null=True)
+	item_no 		   = models.IntegerField(blank=True,null=True)
+	is_active 		   = models.BooleanField(default=1)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "assessment_answer_images"
+
+	def get_dict(self):
+		return {
+			'id' 				 : self.pk,
+			'company_assessment' : self.company_assessment.pk,
+			'transaction_type'   : self.transaction_type.pk,
+			'question' 			 : self.question.pk,
+			'item_no' 			 : self.item_no,
+			'image' 			 : "/static/uploads/"+str(self.image),
+			'is_active' 		 : self.is_active
 		}
