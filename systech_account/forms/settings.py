@@ -11,3 +11,8 @@ class Math_symbol_form(forms.ModelForm):
 	class Meta:
 		model  = Math_symbol
 		fields = ('symbol','name','is_active','company','category','above_text','syntax')
+
+class To_dos_topic_form(forms.ModelForm):
+	class Meta:
+		model  = To_dos_topic
+		fields = ('name','is_active','company')

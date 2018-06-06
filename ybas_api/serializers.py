@@ -13,4 +13,4 @@ class AnswerSerializer(serializers.ModelSerializer):
 class AnswerImageSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Assessment_answer_image
-		fields = ('id', 'question', 'company_assessment', 'transaction_type', 'image', 'item_no')
+		fields = ('id', 'question', 'company_assessment', 'transaction_type', 'image', 'item_no', 'is_active')

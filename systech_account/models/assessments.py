@@ -519,3 +519,6 @@ class Assessment_answer_image(models.Model):
 			'image' 			 : "/static/uploads/"+str(self.image),
 			'is_active' 		 : self.is_active
 		}
+
+	def get_image(self):
+		return "/static/uploads/"+str(self.image)

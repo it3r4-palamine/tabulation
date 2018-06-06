@@ -44,3 +44,19 @@ class Math_symbol(models.Model):
 			"above_text" : self.above_text,
 			"syntax" 	 : self.syntax,
 		}
+
+class To_dos_topic(models.Model):
+	name 	   = models.TextField(blank=True,null=True)
+	company    = models.ForeignKey("Company")
+	is_active  = models.BooleanField(default=1)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "to_dos_topics"
+
+	def get_dict(self):
+		return {
+			"id" 		: self.pk,
+			"name" 		: self.name,
+			"is_active" : self.is_active,
+		}

@@ -75,6 +75,7 @@ urlpatterns = [
 	url(r'^users/change_password/$', users.change_password),
 	url(r'^users/get_intelex_students/$', users.get_intelex_students),
 	url(r'^users/read_user_credits/$', users.read_user_credits),
+	url(r'^users/view_lesson_update/$', users.view_lesson_update),
 	
 	url(r'^recommendations/$', recommendations.recommendations, name='recommendations'),
 	url(r'^recommendations/read/$', recommendations.read),
@@ -89,6 +90,7 @@ urlpatterns = [
 	url(r'^generate_report/read_chosen_recommendations/$', generate_report.read_chosen_recommendations),
 	url(r'^generate_report/read_assessments/$', generate_report.read_assessments),
 	url(r'^generate_report/delete_report/$', generate_report.delete_report),
+	url(r'^generate_report/new_score/$', generate_report.new_score),
 
 	url(r'^related_questions/$', assessments.related_questions),
 	url(r'^assessments/read_related_questions/$', assessments.read_related_questions),
@@ -105,6 +107,11 @@ urlpatterns = [
 	url(r'^settings/user_types_create_dialog/$', settings.user_types_create_dialog),
 	url(r'^settings/user_types_create/$', settings.user_types_create),
 	url(r'^settings/user_types_delete/(?P<id>[0-9]+)$', settings.user_types_delete),
+	url(r'^settings/to_dos/$', settings.to_dos),
+	url(r'^settings/read_to_dos/$', settings.read_to_dos),
+	url(r'^settings/to_dos_create_dialog/$', settings.to_dos_create_dialog),
+	url(r'^settings/to_dos_create/$', settings.to_dos_create),
+	url(r'^settings/to_dos_delete/(?P<id>[0-9]+)$', settings.to_dos_delete),
 	url(r'^settings/math_symbols/$', settings.math_symbols),
 	url(r'^settings/math_symbols_create_dialog/$', settings.math_symbols_create_dialog),
 	url(r'^settings/math_symbols_create/$', settings.math_symbols_create),

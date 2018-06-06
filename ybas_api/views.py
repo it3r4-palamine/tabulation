@@ -6,6 +6,8 @@ from django.db.models import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.parsers import FileUploadParser
+
 
 from systech_account.views.common import *
 
@@ -16,6 +18,8 @@ from systech_account.forms.assessments import *
 from systech_account.models.multiple_choice import *
 
 from datetime import datetime, timedelta
+
+from PIL import Image
 
 import sys, traceback, os
 import urllib
@@ -445,3 +449,44 @@ class SyncAssessments(APIView):
 			cprint(fname)
 			cprint(sys.exc_traceback.tb_lineno)
 			return HttpResponse(e, status = 400)
+
+class FileUpload(APIView):
+	# parser_classes = (FileUploadParser,)
+
+	def put(self, request):
+		try:
+			files = request.FILES
+			file_obj = files['file']
+			company_assessment = request.data['company_assessment']
+			transaction_type = request.data['transaction_type']
+			item_no = request.data['item_no']
+			question = request.data['question']
+			is_active = request.data['is_active']
+
+			image_F = {}
+			image_F['image'] = file_obj
+			image_F["filename"] = file_obj
+			image_F["filelocation"] = file_obj
+
+			imageAnswer = {}
+			imageAnswer['image'] = file_obj
+			imageAnswer['company_assessment'] = company_assessment
+			imageAnswer['question'] = question
+			imageAnswer['transaction_type'] = transaction_type
+			imageAnswer['item_no'] = item_no
+			imageAnswer['is_active'] = is_active
+
+			serializer = AnswerImageSerializer(data=imageAnswer)
+			if serializer.is_valid():
+				serializer.save()
+			else: 
+				raise_error(json.dumps(serializer.errors))
+
+
+			print file_obj
+        	# do some stuff with uploaded file
+			return Response(status=204)
+		except Exception as e:
+			print str(e)
+			return Response("imo mama kai " + str(e),status=500)
+		

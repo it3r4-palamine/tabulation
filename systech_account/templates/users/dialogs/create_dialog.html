@@ -53,6 +53,30 @@
                     </div>
                 </form>
             </div>
+            <div class="clearfix"></div><hr>
+            <h3>LESSON UPDATE</h3>
+            <div class="tabs-container">
+                <uib-tabset >
+                    <uib-tab ng-repeat="header in headers" heading={$header.name$} ng-click="view_lesson_update(header)">
+                        <div class="row table-responsive">
+                            <table class="table"  id="table" ng-class="(loading == true) ? 'table_loading' : '' " >
+                                <thead>
+                                    <tr class="hdr_border_r">
+                                        <th>Date</th>
+                                        <th>Lesson</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="lesson_update in lesson_updates track by $index">
+                                        <td align="center">{$ lesson_update.date | date $}</td>
+                                        <td align="center">{$ lesson_update.lesson $}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </uib-tab>
+                </uib-tabset>
+            </div>
         </div>
         <div class="ibox-footer">
             <div class="pull-right">

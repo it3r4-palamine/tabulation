@@ -1,5 +1,12 @@
 {% extends "base.html" %} {% load static %} {% block ngapp %}ng-app="generate_report"{% endblock %} {% block ngctrl %}ng-controller="generate_reportCtrl as main"{% endblock %} {% block title %}Generate Report {% endblock %} {% block loader_js_bottom %}
 <script type="text/javascript" src="{% static 'js/generate_report.js' %}"></script>
+<script type="text/javascript">
+
+    //Example 3
+    $(function () {
+        $('.pannable-image').ImageViewer();
+    });
+</script>
 {% endblock loader_js_bottom %} {% block page_header %}
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
@@ -147,6 +154,10 @@
                                                 <th>Item No.</th>
                                                 <th>Answer</th>
                                                 <th>Correct Answer</th>
+                                                <th>Answer Image</th>
+                                                <th>
+                                                    <button class="btn btn-primary pull-right" ng-click="new_score(record.answers, record.transaction_type.id, record.id)">SAVE NEW SCORE</button>
+                                                </th>
                                             </thead>
                                             <tbody>
                                                 <!-- <tr ng-repeat="(answer_key, answer) in record.answers" ng-class="{'wrong_answer': answer.answer.toLowerCase() != record.image_answers[answer_key].answer.toLowerCase(), 'correct_answer':answer.answer.toLowerCase() == record.image_answers[answer_key].answer.toLowerCase()}"> -->
@@ -159,6 +170,16 @@
                                                     </td>
                                                     <td>
                                                         <span ng-repeat="ans in answer.answer">{$ ans.name $}<br></span>
+                                                    </td>
+                                                    <td>
+                                                        <div ng-repeat="image_answer2 in record.image_answers" ng-if="image_answer2.item_no == answer.item_no">
+                                                            <img style="height:300px;width:300px;" src="https://yahshuaintelex.com{$image_answer2.answer_image$}" data-high-res-src="https://yahshuaintelex.com{$image_answer2.answer_image$}" class="pannable-image img-responsive img-rounded" alt="">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox checkbox-success">
+                                                            <input ng-click="selectScore(answer.is_correct)" type="checkbox" id="is_selected_{$answer_key$}" name="is_correct" ng-model="answer.is_correct"><label for="is_selected_{$answer_key$}">&nbsp;</label>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </tbody>

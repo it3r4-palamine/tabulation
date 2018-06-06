@@ -91,6 +91,7 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
     			if ($scope.records[x].uploaded_question){
 	    			for(var ans in $scope.records[x].answers){
 	    				$scope.records[x].answers[ans]['correct_answer'] = false
+	    				$scope.records[x].answers[ans]['is_correct'] = false
 	    				for(var answer in $scope.records[x].answers[ans].answer){
 		    				for(var images in $scope.records[x].image_answers){
 		    					if($scope.records[x].image_answers[images].item_no == $scope.records[x].answers[ans].item_no){
@@ -100,8 +101,10 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 		    						var perc = Math.round($scope.similarity(string1,string2)*10000)/100;
 			    					if($scope.records[x].answers[ans].answer[answer].name.toLowerCase().score($scope.records[x].image_answers[images].answer.toLowerCase()) >= 0.88){
 					    				$scope.records[x].answers[ans]['correct_answer'] = true
+					    				$scope.records[x].answers[ans]['is_correct'] = true
 			    					}else if(perc >= 80.00){
 			    						$scope.records[x].answers[ans]['correct_answer'] = true
+			    						$scope.records[x].answers[ans]['is_correct'] = true
 			    					}
 		    					}
 		    				}
@@ -168,6 +171,29 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 			}
 		})
 	};
+
+	$scope.new_score = function(data, id, id2) {
+		$scope.albumNameArray = [];
+	    angular.forEach(data, function(album){
+	      if (album.is_correct) $scope.albumNameArray.push(album);
+	    });
+
+	    var data2 = {
+	    	'company_assessment' : $scope.generate_report.id,
+	    	'transaction_type' : id,
+	    	'question' : id2,
+	    	'score' : $scope.albumNameArray.length
+	    }
+
+	    me.post_generic("/generate_report/new_score/",data2,"main")
+	    .success(function(response) {
+	    	
+	    })
+
+	}
+
+	$scope.selectScore = function(datus) {
+	}
 
 	$scope.similarity = function(s1, s2) {
 		var longer = s1;

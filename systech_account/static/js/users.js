@@ -10,9 +10,32 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 		$scope.record['is_active'] = true
 		if(record){
 			$scope.record = angular.copy(record);
+
+			me.post_generic('/settings/read_to_dos/', "", "main")
+			.success(function(response) {
+				$scope.headers = response.data
+				$scope.view_lesson_update($scope.headers[0],true);
+			}).error(function(err) {
+				console.log(err);
+			});
+		} else {
+			me.open_dialog("/users/create_dialog/","dialog_width_90","main")
 		}
 		
-		me.open_dialog("/users/create_dialog/","","main")
+	}
+
+	$scope.view_lesson_update = function(topic,first=false) {
+		var data = {
+			'user_id' : $scope.record.id,
+			'topic_id' : topic.id
+		}
+
+		me.post_generic('/users/view_lesson_update/',data,'dialog')
+		.success(function(response) {
+			$scope.lesson_updates = response.data
+			
+			if(first) me.open_dialog("/users/create_dialog/","","main")
+		})
 	}
 
 	$scope.create = function(){

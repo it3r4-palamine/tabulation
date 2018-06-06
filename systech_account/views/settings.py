@@ -503,10 +503,13 @@ def read_user_types(request):
 
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
-		filters = {}
+		
+		filters 			 = {}
 		filters['is_active'] = True
-		filters['company'] = data['company']
+		filters['company']   = data['company']
+		
 		records = User_type.objects.filter(**filters).order_by("id")
+		
 		results = {'data':[]}
 		results['total_records'] = records.count()
 
@@ -550,9 +553,75 @@ def user_types_delete(request,id=None):
 			record.save()
 			return success("Successfully deleted.")
 		except User_type.DoesNotExist:
-			raise_error("Recommendation doesn't exist.")
+			raise_error("User doesn't exists.")
 	except Exception as e:
 		return HttpResponse(e, status = 400)
+
+def to_dos(request):
+	return render(request, 'settings/to_dos.html')
+
+def read_to_dos(request):
+	try:
+		data = req_data(request,True)
+		pagination = None
+
+		if 'pagination' in data:
+			pagination = data.pop("pagination",None)
+
+		filters 		 	 = {}
+		filters['is_active'] = True
+		filters['company']	 = data['company']
+
+		records = To_dos_topic.objects.filter(**filters).order_by("id")
+
+		results = {'data': []}
+		results['total_records'] = records.count()
+
+		if pagination:
+			results.update(generate_pagination(pagination,records))
+			records = records[results['starting']:results['ending']]
+		
+		data = []
+		for record in records:
+			row = record.get_dict()
+			data.append(row)
+
+		results['data'] = data
+		return success_list(results,False)
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
+def to_dos_create_dialog(request):
+	return render(request, 'settings/dialogs/to_dos_create_dialog.html')
+
+def to_dos_create(request):
+	try:
+		postdata = req_data(request,True)
+		try:
+			instance = To_dos_topic.objects.get(id=postdata.get('id',None))
+			to_dos = To_dos_topic_form(postdata, instance=instance)
+		except To_dos_topic.DoesNotExist:
+			to_dos = To_dos_topic_form(postdata)
+
+		if to_dos.is_valid():
+			to_dos.save()
+			return HttpResponse("Successfully saved.",status=200)
+		else:
+			return HttpResponse(to_dos.errors,status=400)
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
+def to_dos_delete(request,id=None):
+	try:
+		try:
+			record 			 = To_dos_topic.objects.get(pk=id)
+			record.is_active = False
+			record.save()
+			return success("Successfully deleted.")
+		except To_dos_topic.DoesNotExist:
+			raise_error("Topic doesn't exists.")
+	except Exception as e:
+		return HttpResponse(e,status=400)
 
 def math_symbols(request):
 	return render(request, 'settings/math_symbols.html')

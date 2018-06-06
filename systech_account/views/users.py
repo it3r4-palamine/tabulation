@@ -158,6 +158,23 @@ def elimina_tildes(cadena):
     s = ''.join((c for c in unicodedata.normalize('NFD',unicode(cadena)) if unicodedata.category(c) != 'Mn'))
     return s.decode()
 
+def view_lesson_update(request):
+	try:
+		data = req_data(request,True)
+		results = {'data':[]}
+
+		lesson_updates = User_lesson_update.objects.filter(user=data['user_id'],is_active=True,to_dos_topic=data['topic_id']).order_by("date")
+
+		data = []
+		for lesson_update in lesson_updates:
+			row = lesson_update.get_dict()
+			data.append(row)
+
+		results['data'] = data
+		return success_list(results,False)
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
 def get_intelex_students(request):
 	try:
 		datus = req_data(request,True)

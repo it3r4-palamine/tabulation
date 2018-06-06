@@ -259,7 +259,14 @@ def read_assessments(request):
 						image_answers = Assessment_upload_answer.objects.filter(is_deleted=False,question=question.pk,transaction_type=transaction_type.pk,company_assessment=data['id'])
 						imageAnswersArr = []
 						for image_answer in image_answers:
-							imageAnswersArr.append(image_answer.get_dict())
+							image_data = image_answer.get_dict()
+							checkAnswerImage = Assessment_answer_image.objects.filter(question=image_answer.question.pk).last()
+
+							# print(checkAnswerImage.image)
+							# image_answer['answer_image'] = str(checkAnswerImage.image)
+							image_data['answer_image'] = str(checkAnswerImage.get_image())
+							imageAnswersArr.append(image_data)
+
 						row['image_answers'] = imageAnswersArr
 						datus.append(row)
 
@@ -555,5 +562,21 @@ def delete_report(request):
 			print("FILE DOES NOT EXISTS!!!!!!!!!!!!!!!!!!!!!!")
 
 		return success()
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
+def new_score(request):
+	try:
+		data = req_data(request)
+
+		try:
+			checkAssessmentScore = Assessment_score.objects.get(company_assessment=data['company_assessment'],transaction_type=data['transaction_type'],question=data['question'],is_active=True)
+		except Assessment_score.DoesNotExist:
+			return error("This question has no score yet. Please be advised!")
+
+		checkAssessmentScore.score = data['score']
+		checkAssessmentScore.save()
+
+		return success("Successfully saved!")
 	except Exception as e:
 		return HttpResponse(e,status=400)
