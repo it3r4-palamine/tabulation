@@ -64,6 +64,9 @@ class GetQuestionPhoto(APIView):
 	def post(self, request):
 		data = req_data(request,True)
 		image = open('systech_account/%s'%(data['imageLocation']), 'rb')
+		# assessmentImage = Assessment_image.objects.filter(question=21, is_active=True).first() 
+		# image = open('systech_account/static/uploads/%s'%(assessmentImage.image), 'rb') 
+
 		
 		return HttpResponse(image, content_type="image/png")
 		# try:
@@ -86,33 +89,35 @@ class GetData(APIView):
 			isV2= False
 
 		response = {
-			'userId': request.user.id,
-			'consultantName': request.user.fullname,
-			'is_edit': request.user.is_edit, 
-			'assessmentList': [],
-			'questionList': [],
+			'userId'	 		 : request.user.id,
+			'consultantName'	 : request.user.fullname,
+			'is_edit'			 : request.user.is_edit, 
+			'assessmentList'	 : [],
+			'questionList'		 : [],
 			'generalQuestionList': [],
 			'relatedQuestionList': [],
-			'choiceList': [],
-			'symbolList': [],
-			'imageAnswerList': [],
-			'answerList': [],
-			'findingsList': [],
-			'effectsList': [],
+			'choiceList'		 : [],
+			'symbolList'		 : [],
+			'imageAnswerList'	 : [],
+			'answerImageList'	 : [],
+			'answerList'		 : [],
+			'findingsList'		 : [],
+			'effectsList'		 : [],
 			'generalQuestionList': [],
 			'relatedQuestionList': [],
 		}
 
 		transactionTypeIdList = []
-		questionList = []
-		questionIdList = []
-		symbolList = []
-		imageAnswerList = []
-		findingsList = []
-		effectsList = []
+		questionList 		  = []
+		questionIdList 		  = []
+		symbolList 			  = []
+		imageAnswerList 	  = []
+		answerImageList 	  = []
+		findingsList 		  = []
+		effectsList 		  = []
 
 		# Version 1
-		answerList = []
+		answerList 			= []
 		generalQuestionList = []
 		relatedQuestionList = []
 
@@ -234,6 +239,10 @@ class GetData(APIView):
 		for score in image_answers:
 			imageAnswerList.append(score.get_dict())
 
+		answer_images = Assessment_answer_image.objects.filter(is_active=True,question__in=questionIdList,company_assessment__in=assessmentIds,transaction_type__in=transactionTypeIdList)
+		for answer_image in answer_images:
+			answerImageList.append(answer_image.get_dict(True))
+
 		if not isV2:
 			related_questions = Related_question.objects.filter(is_active=True)
 			for related_question in related_questions:
@@ -259,6 +268,7 @@ class GetData(APIView):
 		response["questionList"] = questionList
 		response["symbolList"] = symbolList
 		response["imageAnswerList"] = imageAnswerList
+		response["answerImageList"] = answerImageList
 
 		if not isV2:
 			response["generalQuestionList"] = generalQuestionList

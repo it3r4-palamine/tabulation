@@ -509,16 +509,24 @@ class Assessment_answer_image(models.Model):
 		app_label = "systech_account"
 		db_table  = "assessment_answer_images"
 
-	def get_dict(self):
-		return {
+	def get_dict(self, isV2=False):
+		answerImage = {
 			'id' 				 : self.pk,
 			'company_assessment' : self.company_assessment.pk,
 			'transaction_type'   : self.transaction_type.pk,
 			'question' 			 : self.question.pk,
 			'item_no' 			 : self.item_no,
-			'image' 			 : "/static/uploads/"+str(self.image),
 			'is_active' 		 : self.is_active
 		}
+
+		if isV2:
+			logo = "/static/uploads/"+str(self.image)
+			imageList = logo.rsplit('/', 1)
+			answerImage['answer_image'] = imageList[1]
+		else:
+			answerImage['image'] = "/static/uploads/"+str(self.image),
+
+		return answerImage
 
 	def get_image(self):
 		return "/static/uploads/"+str(self.image)
