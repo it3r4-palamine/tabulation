@@ -91,7 +91,7 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
     			if ($scope.records[x].uploaded_question){
 	    			for(var ans in $scope.records[x].answers){
 	    				$scope.records[x].answers[ans]['correct_answer'] = false
-	    				$scope.records[x].answers[ans]['is_correct'] = false
+	    				// $scope.records[x].answers[ans]['is_correct'] = false
 	    				for(var answer in $scope.records[x].answers[ans].answer){
 		    				for(var images in $scope.records[x].image_answers){
 		    					if($scope.records[x].image_answers[images].item_no == $scope.records[x].answers[ans].item_no){
@@ -101,10 +101,10 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 		    						var perc = Math.round($scope.similarity(string1,string2)*10000)/100;
 			    					if($scope.records[x].answers[ans].answer[answer].name.toLowerCase().score($scope.records[x].image_answers[images].answer.toLowerCase()) >= 0.88){
 					    				$scope.records[x].answers[ans]['correct_answer'] = true
-					    				$scope.records[x].answers[ans]['is_correct'] = true
+					    				// $scope.records[x].answers[ans]['is_correct'] = true
 			    					}else if(perc >= 80.00){
 			    						$scope.records[x].answers[ans]['correct_answer'] = true
-			    						$scope.records[x].answers[ans]['is_correct'] = true
+			    						// $scope.records[x].answers[ans]['is_correct'] = true
 			    					}
 		    					}
 		    				}
