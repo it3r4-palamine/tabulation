@@ -264,7 +264,8 @@ def read_assessments(request):
 
 							# print(checkAnswerImage.image)
 							# image_answer['answer_image'] = str(checkAnswerImage.image)
-							image_data['answer_image'] = str(checkAnswerImage.get_image())
+							if checkAnswerImage:
+								image_data['answer_image'] = str(checkAnswerImage.get_image())
 							imageAnswersArr.append(image_data)
 
 						row['image_answers'] = imageAnswersArr
