@@ -20,7 +20,7 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 			// });
 		} 
 		// else {
-			me.open_dialog("/users/create_dialog/","dialog_width_90","main")
+			me.open_dialog("/users/create_dialog/","","main")
 		// }
 		
 	}
