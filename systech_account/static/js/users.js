@@ -11,16 +11,17 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 		if(record){
 			$scope.record = angular.copy(record);
 
-			me.post_generic('/settings/read_to_dos/', "", "main")
-			.success(function(response) {
-				$scope.headers = response.data
-				$scope.view_lesson_update($scope.headers[0],true);
-			}).error(function(err) {
-				console.log(err);
-			});
-		} else {
+			// me.post_generic('/settings/read_to_dos/', "", "main")
+			// .success(function(response) {
+			// 	$scope.headers = response.data
+			// 	$scope.view_lesson_update($scope.headers[0],true);
+			// }).error(function(err) {
+			// 	console.log(err);
+			// });
+		} 
+		// else {
 			me.open_dialog("/users/create_dialog/","dialog_width_90","main")
-		}
+		// }
 		
 	}
 
