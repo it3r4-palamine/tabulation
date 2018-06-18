@@ -187,7 +187,8 @@ app.controller('generate_reportCtrl', function($scope, $http, $timeout, $element
 
 	    me.post_generic("/generate_report/new_score/",data2,"main")
 	    .success(function(response) {
-	    	
+	    	Notification.success(response)
+	    	$scope.instantiate();
 	    })
 
 	}
