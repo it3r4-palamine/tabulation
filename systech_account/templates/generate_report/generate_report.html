@@ -154,7 +154,7 @@
                                                 <th>Item No.</th>
                                                 <th>Answer</th>
                                                 <th>Correct Answer</th>
-                                                <!-- <th>Answer Image</th> -->
+                                                <th>Answer Image</th>
                                                 <th>
                                                     <button class="btn btn-primary pull-right" ng-click="new_score(record.answers, record.transaction_type.id, record.id)">SAVE NEW SCORE</button>
                                                 </th>
@@ -171,11 +171,11 @@
                                                     <td>
                                                         <span ng-repeat="ans in answer.answer">{$ ans.name $}<br></span>
                                                     </td>
-                                                    <!-- <td>
-                                                        <div ng-repeat="image_answer2 in record.image_answers" ng-if="image_answer2.item_no == answer.item_no">
-                                                            <img style="height:300px;width:300px;" src="http://192.168.2.117:8000{$image_answer2.answer_image$}" data-high-res-src="http://192.168.2.117:8000{$image_answer2.answer_image$}" class="pannable-image img-responsive img-rounded" alt="">
+                                                    <td>
+                                                        <div ng-repeat="image_answer2 in record.answer_images" ng-if="image_answer2.item_no == answer.item_no">
+                                                            <img style="height:300px;width:300px;" src="http://yahshuaintelex.com{$image_answer2.answer_image$}" data-high-res-src="http://yahshuaintelex.com{$image_answer2.answer_image$}" class="pannable-image img-responsive img-rounded" alt="">
                                                         </div>
-                                                    </td> -->
+                                                    </td>
                                                     <td>
                                                         <div class="checkbox checkbox-success">
                                                             <input ng-click="selectScore(answer.is_correct)" type="checkbox" id="is_selected_{$answer_key$}" name="is_correct" ng-model="answer.is_correct"><label for="is_selected_{$answer_key$}">&nbsp;</label>
