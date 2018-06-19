@@ -260,14 +260,18 @@ def read_assessments(request):
 						imageAnswersArr = []
 						for image_answer in image_answers:
 							image_data = image_answer.get_dict()
-							checkAnswerImage = Assessment_answer_image.objects.filter(question=image_answer.question.pk).last()
-
-							# print(checkAnswerImage.image)
-							# image_answer['answer_image'] = str(checkAnswerImage.image)
-							if checkAnswerImage:
-								image_data['answer_image'] = str(checkAnswerImage.get_image())
 							imageAnswersArr.append(image_data)
+						
+						checkAnswerImage = Assessment_answer_image.objects.filter(question=question.pk,transaction_type=transaction_type.pk,company_assessment=data['id'])
 
+						answerImageArr = []
+						for img in checkAnswerImage:
+							img_data = {}
+							img_data['item_no'] = img.item_no
+							img_data['answer_image'] = str(img.get_image())
+							answerImageArr.append(img_data)
+							
+						row['answer_images'] = answerImageArr
 						row['image_answers'] = imageAnswersArr
 						datus.append(row)
 

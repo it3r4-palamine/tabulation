@@ -504,6 +504,7 @@ class Assessment_answer_image(models.Model):
 						   null=True)
 	item_no 		   = models.IntegerField(blank=True,null=True)
 	is_active 		   = models.BooleanField(default=1)
+	is_sync			   = models.BooleanField(default=1)
 
 	class Meta:
 		app_label = "systech_account"
@@ -516,7 +517,8 @@ class Assessment_answer_image(models.Model):
 			'transaction_type'   : self.transaction_type.pk,
 			'question' 			 : self.question.pk,
 			'item_no' 			 : self.item_no,
-			'is_active' 		 : self.is_active
+			'is_active' 		 : self.is_active,
+			'is_sync'			 : self.is_sync
 		}
 
 		if isV2:
