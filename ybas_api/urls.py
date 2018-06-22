@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^get-base64-photo', views.GetBase64Photo.as_view()),
     url(r'^get-photo', views.GetPhoto.as_view()),
     url(r'^get-question-photo', views.GetQuestionPhoto.as_view()),
+    url(r'^get-answer-image-photo', views.GetAnswerImagePhoto.as_view()),
 ]

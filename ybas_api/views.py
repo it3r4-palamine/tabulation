@@ -76,7 +76,14 @@ class GetQuestionPhoto(APIView):
 		#   	print(e)
 		#   	return Response(str(e), status = 500)
 
+# Get Answer Image photos
+class GetAnswerImagePhoto(APIView):
 
+	def post(self, request):
+		data = req_data(request, True)
+		image = open('systech_account/static/uploads/assessment/document_images/%s'%(data['imageLocation']), 'rb')
+
+		return HttpResponse(image, content_type="image/png")
 
 # GET/UPDATE DATA
 class GetData(APIView):
