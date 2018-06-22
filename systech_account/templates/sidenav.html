@@ -21,6 +21,12 @@
             </li>
             {% if request.user.user_type.name == 'Technical' %}
             <li>
+                <a href="/lesson_updates/load_page/">
+                    <i class="fa fa-file-text"></i>
+                    <span class="nav-label">Lesson Updates</span>
+                </a>
+            </li>
+            <li>
                 <a href="/assessments"><i class="fa fa-question"></i> <span class="nav-label" ng-if="!display_terms[0].questions" ng-cloak="">Questions</span><span class="nav-label" ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></a>
             </li>
             <li>

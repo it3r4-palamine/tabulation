@@ -99,21 +99,41 @@ class User_credit(models.Model):
 			'program_id' 		 : self.program_id,
 		}
 
-class User_lesson_update(models.Model):
+
+class Lesson_update_header(models.Model):
 	user 		 = models.ForeignKey("User")
 	date 		 = models.DateField(blank=True, null=True)
-	lesson 		 = models.TextField(blank=True,null=True)
 	is_active 	 = models.BooleanField(default=1)
-	to_dos_topic = models.ForeignKey("To_dos_topic")
+
 
 	class Meta:
 		app_label = "systech_account"
-		db_table  = "user_lesson_updates"
+		db_table  = "lesson_update_header"
+
 
 	def get_dict(self):
 		return {
-			'id' 		   : self.pk,
-			'lesson' 	   : self.lesson,
-			'to_dos_topic' : self.to_dos_topic.get_dict(),
-			'date' 		   : self.date
+			'id' 		   	: self.pk,
+			'user' 	   		: self.user.get_dict(),
+			'date' 		   	: self.date
+		}
+
+
+class Lesson_update_detail(models.Model):
+	lesson_update_header 	= models.ForeignKey("Lesson_update_header")
+	lesson 					= models.TextField(blank=True, null=True)
+	to_dos_topic 			= models.ForeignKey("To_dos_topic")
+
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "lesson_update_detail"
+
+
+	def get_dict(self):
+		return {
+			'id' 					: self.pk,
+			'lesson_update_header' 	: self.lesson_update_header.get_dict(),
+			'lesson' 	   			: self.lesson,
+			'to_dos_topic' 			: self.to_dos_topic.get_dict(),
 		}

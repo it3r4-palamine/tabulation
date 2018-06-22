@@ -3,7 +3,7 @@ from django.conf.urls import url, handler404,patterns,include
 from django.conf import settings as root_settings
 from django.conf.urls.static import static
 
-from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common
+from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates
 
 urlpatterns = [
 	url(r'^common/pagination/$',common.pagination),
@@ -117,6 +117,11 @@ urlpatterns = [
 	url(r'^settings/math_symbols_create/$', settings.math_symbols_create),
 	url(r'^settings/read_math_symbols/$', settings.read_math_symbols),
 	url(r'^settings/math_symbols_delete/(?P<id>[0-9]+)$', settings.math_symbols_delete),
+
+	# Lesson Updates
+	url(r'^lesson_updates/load_page/$', lesson_updates.load_page),
+	url(r'^lesson_updates/read/$', lesson_updates.read),
+	url(r'^lesson_updates/load_lesson_update_activities/$', lesson_updates.load_lesson_update_activities),
 ]
 urlpatterns += static(root_settings.STATIC_URL,document_root=root_settings.STATIC_ROOT)
 urlpatterns += static(root_settings.MEDIA_URL,document_root=root_settings.MEDIA_ROOT)

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
 from systech_account.models.assessments import *
+from systech_account.models.user import *
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -14,3 +15,17 @@ class AnswerImageSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Assessment_answer_image
 		fields = ('id', 'question', 'company_assessment', 'transaction_type', 'image', 'item_no', 'is_active')
+
+
+class LessonUpdateHeaderSerializer(serializers.ModelSerializer):
+	
+	class Meta:
+		model = Lesson_update_header
+		fields = ('id', 'user', 'date')
+
+
+class LessonUpdateDetailSerializer(serializers.ModelSerializer):
+	
+	class Meta:
+		model = Lesson_update_detail
+		fields = ('id', 'lesson_update_header', 'lesson', 'to_dos_topic')

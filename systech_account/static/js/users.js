@@ -5,9 +5,11 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 	var me = this;
 	$scope.record = {}
 	$scope.filter = {}
+
 	$scope.create_dialog = function(record){
 		$scope.record = {}
 		$scope.record['is_active'] = true
+
 		if(record){
 			$scope.record = angular.copy(record);
 
@@ -18,11 +20,11 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 			// }).error(function(err) {
 			// 	console.log(err);
 			// });
-		} 
+		}
 		// else {
 			me.open_dialog("/users/create_dialog/","","main")
 		// }
-		
+
 	}
 
 	$scope.view_lesson_update = function(topic,first=false) {
@@ -34,7 +36,7 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 		me.post_generic('/users/view_lesson_update/',data,'dialog')
 		.success(function(response) {
 			$scope.lesson_updates = response.data
-			
+
 			if(first) me.open_dialog("/users/create_dialog/","","main")
 		})
 	}

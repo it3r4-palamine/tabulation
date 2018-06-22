@@ -269,6 +269,7 @@ class GetData(APIView):
 		response["symbolList"] = symbolList
 		response["imageAnswerList"] = imageAnswerList
 		response["answerImageList"] = answerImageList
+		response["lessonUpdateCategories"] = To_dos_topic.objects.filter(company=request.user.company, is_active=True).values('id', 'name')
 
 		if not isV2:
 			response["generalQuestionList"] = generalQuestionList
@@ -500,3 +501,40 @@ class FileUpload(APIView):
 			print str(e)
 			return Response("imo mama kai " + str(e),status=500)
 		
+
+
+class LessonUpdate(APIView):
+
+	def post(self, request):
+		try:
+			data = request.data
+			lessonUpdateHeader = data['lessonUpdate']
+			lessonUpdateDetails = lessonUpdateHeader.pop("lessonUpdateDetails", None)
+
+			if not lessonUpdateDetails: Response("No lesson update details", status=400)
+
+			# Save lesson update header
+			lessonUpdateHeaderSerializer = LessonUpdateHeaderSerializer(data=lessonUpdateHeader)
+
+			if lessonUpdateHeaderSerializer.is_valid():
+				lessonUpdateHeaderSaved = lessonUpdateHeaderSerializer.save()
+
+				# Save Lesson update details
+				for lessonUpdateDetail in lessonUpdateDetails:
+					
+					lessonUpdateDetail['lesson_update_header'] = lessonUpdateHeaderSaved.pk
+					lessonUpdateDetail['to_dos_topic'] = lessonUpdateDetail['lessonUpdateCategory']
+
+					lessonUpdateDetailSerializer = LessonUpdateDetailSerializer(data=lessonUpdateDetail)
+
+					if lessonUpdateDetailSerializer.is_valid():
+						lessonUpdateDetailSerializer.save()
+					else: 
+						return Response(json.dumps(lessonUpdateDetailSerializer.errors), status=400)
+
+				return Response({})
+			else: 
+				Response(json.dumps(lessonUpdateHeaderSerializer.errors), status=400)
+
+		except Exception as e:
+			return Response(str(e), status=500)
