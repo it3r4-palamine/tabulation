@@ -276,7 +276,7 @@ class GetData(APIView):
 		response["symbolList"] = symbolList
 		response["imageAnswerList"] = imageAnswerList
 		response["answerImageList"] = answerImageList
-		response["lessonUpdateCategories"] = To_dos_topic.objects.filter(company=request.user.company, is_active=True).values('id', 'name')
+		response["lessonUpdateActivities"] = To_dos_topic.objects.filter(company=request.user.company, is_active=True).values('id', 'name')
 
 		if not isV2:
 			response["generalQuestionList"] = generalQuestionList
@@ -530,7 +530,7 @@ class LessonUpdate(APIView):
 				for lessonUpdateDetail in lessonUpdateDetails:
 					
 					lessonUpdateDetail['lesson_update_header'] = lessonUpdateHeaderSaved.pk
-					lessonUpdateDetail['to_dos_topic'] = lessonUpdateDetail['lessonUpdateCategory']
+					lessonUpdateDetail['to_dos_topic'] = lessonUpdateDetail['lessonUpdateActivity']
 
 					lessonUpdateDetailSerializer = LessonUpdateDetailSerializer(data=lessonUpdateDetail)
 
