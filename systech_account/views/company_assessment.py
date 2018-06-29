@@ -95,6 +95,11 @@ def create(request):
 			instance 		   = Company_assessment.objects.get(id=postdata.get('id',None))
 			company_assessment = Company_assessment_form(postdata, instance=instance)
 		except Company_assessment.DoesNotExist:
+			get_reference_no = check_reference_no(request)
+			cprint(get_reference_no)
+			
+			cprint(postdata)
+			return
 			company_assessment = Company_assessment_form(postdata)
 
 		if company_assessment.is_valid():
@@ -117,6 +122,10 @@ def create(request):
 		else:
 			return HttpResponse(company_assessment.errors,status=400)
 	except Exception as err:
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		print(sys.exc_traceback.tb_lineno)
+		print(filename)
 		return HttpResponse(err,status=400)
 
 def delete(request,id = None):
