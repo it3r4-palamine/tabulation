@@ -95,11 +95,8 @@ def create(request):
 			instance 		   = Company_assessment.objects.get(id=postdata.get('id',None))
 			company_assessment = Company_assessment_form(postdata, instance=instance)
 		except Company_assessment.DoesNotExist:
-			get_reference_no = check_reference_no(request)
-			cprint(get_reference_no)
-			
-			cprint(postdata)
-			return
+			get_reference_no = check_reference_no(request,True)
+			postdata['reference_no'] = get_reference_no
 			company_assessment = Company_assessment_form(postdata)
 
 		if company_assessment.is_valid():
@@ -140,7 +137,7 @@ def delete(request,id = None):
 	except Exception as e:
 		return HttpResponse(e,status=400)
 
-def check_reference_no(request):
+def check_reference_no(request,isChecked=False):
 	try:
 		data = req_data(request,True)
 		instance = Company_assessment.objects.filter(company=data['company']).last()
@@ -154,6 +151,9 @@ def check_reference_no(request):
 
 		ref_no = str(int(ref_no) + 1)
 		ref_no = ref_no.zfill(ref_no_len)
-		return success(ref_no)
+		if isChecked:
+			return ref_no
+		else:
+			return success(ref_no)
 	except Exception as e:
 		return HttpResponse(e,status=400)
