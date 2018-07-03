@@ -368,11 +368,17 @@ class SyncAssessments(APIView):
 					sessionsQ.save()
 
 				for session in assessment['session']:
+					if 'time_end' not in session:
+						time_end_final = (datetime.strptime(str(session['time_start']), '%H:%M:%S')) + timedelta(minutes=10)
+						time_end_final = (datetime.strptime(str(time_end_final), '%Y-%m-%d %H:%M:%S').time())
+					else:
+						time_end_final = session['time_end']
 					sessions = {
 						'company_assessment' : session['assessment_id'],
 						'date' : session['date'],
 						'time_start' : session['time_start'],
-						'time_end' : session['time_end'],
+						# 'time_end' : session['time_end'] if 'time_end' in session else (datetime.strptime(str(session['time_start']), '%H:%M:%S')) + timedelta(minutes=10),
+						'time_end' : time_end_final,
 						'transaction_type' : session['transactionType'],
 						'question' : session['question'] if 'question' in session else None
 					}
