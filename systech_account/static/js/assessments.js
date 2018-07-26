@@ -655,16 +655,11 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
     	record.answer_display = "\\(" + textBefore + syntax_symbol + textAfter + "\\)"
     }
 
-    $scope.answerDisplay = function(record){
-    	// record.answer_display = "\\(" + record.answer + "\\)"
-    	// return record.answer.replace(/\w\S*/g, function(txt){
-    	// 	return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    	// });
-    	
-    	record.name = record.name.toLowerCase().replace(/\si\s/g, ' I ');
-		record.name = record.name.charAt(0).toUpperCase() + record.name.slice(1);
-		record.answer_display = "\\(" + record.name + "\\)"
-		return record.name
+    $scope.answerDisplay = function(record){    	
+  //   	record.name = record.name.toLowerCase().replace(/\si\s/g, ' I ');
+		// record.name = record.name.charAt(0).toUpperCase() + record.name.slice(1);
+		// record.answer_display = "\\(" + record.name + "\\)"
+		// return record.name
     }
 
     $scope.onEnter = function(list,arrIdx){
