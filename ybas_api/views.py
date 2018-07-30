@@ -7,7 +7,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import FileUploadParser
-
+from rest_framework import parsers, renderers
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from systech_account.views.common import *
 
@@ -23,6 +27,21 @@ from PIL import Image
 
 import sys, traceback, os
 import urllib
+
+class ObtainAuthToken(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AuthTokenSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key})
 
 # Base64
 class GetBase64Photo(APIView): 
@@ -89,6 +108,12 @@ class GetAnswerImagePhoto(APIView):
 class GetData(APIView):
 
 	def post(self, request, *args, **kwargs):
+
+		if 'isMobile' in request.data:
+			print "werk werk"
+
+		print request.META.get('HTTP_MOBILE')
+
 
 		if 'isV2' in request.data and request.data['isV2']:
 			isV2 = request.data['isV2']
@@ -291,6 +316,8 @@ class SyncAssessments(APIView):
 
 	def post(self, request, *args, **kwargs):
 		try:
+			print "Gogoy"
+			print request.data['data']
 			if 'isV2' in request.data and request.data['isV2']:
 				isV2 = request.data['isV2']
 				completedAssessments = request.data['data']
