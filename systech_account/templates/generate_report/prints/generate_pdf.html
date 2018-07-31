@@ -190,8 +190,8 @@
                             <th style="font-size: 8px">Score</th>
                             <th style="font-size: 8px">Total</th>
                             <th style="font-size: 8px" class="text-center">%</th>
-                            <th style="font-size: 8px" class="text-center">Time consumed</th>
-                            <th class="text-center" style="font-size: 8px">Effects</th> 
+                            <!-- <th style="font-size: 8px" class="text-center">Time consumed</th>
+                            <th class="text-center" style="font-size: 8px">Effects</th>  -->
                         </tr>
                     </thead>
                     <tbody>
@@ -203,7 +203,7 @@
                             <td class="text-center" style="vertical-align: middle;"> {$ record.score $}</td>
                             <td class="text-center" style="vertical-align: middle;"> {$ record.answers.length $}</td>
                             <td class="text-center" style="vertical-align: middle;"> {$ record.percentage | percentage : 2 $} </td>
-                            <td class="text-center" style="vertical-align: middle;"> {$ record.time_consumed $} </td>
+                            <!-- <td class="text-center" style="vertical-align: middle;"> {$ record.time_consumed $} </td>
                             <td style="vertical-align: middle; font-size: 9px;">
                                 <span ng-if="record.effects.length > 0 && !record.has_findings">
                                     <ul>
@@ -212,7 +212,7 @@
                                         </li>
                                     </ul>
                                 </span>
-                            </td> 
+                            </td>  -->
                         </tr>
                         
                         
