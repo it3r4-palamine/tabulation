@@ -4,10 +4,7 @@ from ..views.common import *
 
 
 def recommendations(request):
-	if request.user.user_type.name.lower() != "technical":
-		return redirect("company_assessment_redirect")
-	else:
-		return render(request, 'recommendations/recommendations.html')
+	return render(request, 'recommendations/recommendations.html')
 
 def create_dialog(request):
 	return render(request, 'recommendations/dialogs/create_dialog.html')
