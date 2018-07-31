@@ -192,8 +192,8 @@ elif env == "production":
         "https://yahshuaintelex.com",
     ]
 else:
-    INSTALLED_APPS += ["debug_toolbar","debug_panel",]
-    MIDDLEWARE_CLASSES += ('debug_panel.middleware.DebugPanelMiddleware',)
+    # INSTALLED_APPS += ["debug_toolbar","debug_panel",]
+    # MIDDLEWARE_CLASSES += ('debug_panel.middleware.DebugPanelMiddleware',)
     INTERNAL_IPS = ('localhost','127.0.0.1','127.0.0.1:8000','127.0.0.1:9000')
     DEBUG = True
     ALLOWED_HOSTS = []

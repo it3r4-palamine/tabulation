@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from ..models.user import *
+from ..models.user_logs import *
 from django import forms
 from django.db.models import Q,F
 
@@ -112,3 +113,9 @@ class User_credit_form(forms.ModelForm):
 	class Meta:
 		model  = User_credit
 		fields = ('user','enrollment_id','session_credits','session_end_date','program_id','session_start_date')
+
+class UserLogForm(forms.ModelForm):
+
+	class Meta:
+		model = UserLogs
+		fields = ('user','device')
