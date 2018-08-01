@@ -658,7 +658,7 @@ app.controller('assessmentsCtrl', function($scope, $http, $uibModal, $templateCa
     $scope.answerDisplay = function(record){    	
   //   	record.name = record.name.toLowerCase().replace(/\si\s/g, ' I ');
 		// record.name = record.name.charAt(0).toUpperCase() + record.name.slice(1);
-		// record.answer_display = "\\(" + record.name + "\\)"
+		record.answer_display = "\\(" + record.name + "\\)"
 		// return record.name
     }
 
