@@ -92,7 +92,7 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 
 	$scope.get_user_credits_yias = function(user)
 	{
-		me.post_generic("/users/read_user_credits/", user, "main")
+		me.post_generic("/users/read_user_reconciled_credits/", user, "main")
 		.success(function(response){
 
 			$scope.record_yias = response.yias

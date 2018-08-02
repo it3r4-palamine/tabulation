@@ -77,13 +77,14 @@ class User_type(models.Model):
 		}
 
 class User_credit(models.Model):
-	user 			   = models.ForeignKey("User")
-	enrollment_id 	   = models.IntegerField(blank=True, null=True)
-	session_credits    = models.DurationField(blank=True, null=True)
-	session_start_date = models.DateField(blank=True, null=True)
-	session_end_date   = models.DateField(blank=True, null=True)
-	program_id	 	   = models.IntegerField(blank=True, null=True)
-	program_name	   = models.CharField(max_length=200,blank=True,null=True)
+	user 			     = models.ForeignKey("User")
+	enrollment_id 	     = models.IntegerField(blank=True, null=True)
+	session_credits      = models.DurationField(blank=True, null=True)
+	session_credits_left = models.DurationField(blank=True,null=True)
+	session_start_date   = models.DateField(blank=True, null=True)
+	session_end_date     = models.DateField(blank=True, null=True)
+	program_id	 	     = models.IntegerField(blank=True, null=True)
+	program_name	     = models.CharField(max_length=200,blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -91,13 +92,15 @@ class User_credit(models.Model):
 
 	def get_dict(self):
 		return {
-			'id' 				 : self.pk,
-			'user' 				 : self.user.get_dict(),
-			'enrollment_id' 	 : self.enrollment_id,
-			'session_credits' 	 : self.session_credits.total_seconds(),
-			'session_start_date' : self.session_start_date,
-			'session_end_date'   : self.session_end_date,
-			'program_id' 		 : self.program_id,
+			'id' 				   : self.pk,
+			'user' 				   : self.user.get_dict(),
+			'enrollment_id' 	   : self.enrollment_id,
+			'session_credits' 	   : self.session_credits.total_seconds() if self.session_credits else 0,
+			'session_credits_left' : self.session_credits_left.total_seconds() if self.session_credits_left else 0,
+			'session_start_date'   : self.session_start_date,
+			'session_end_date'     : self.session_end_date,
+			'program_id' 		   : self.program_id,
+			'program_name'		   : self.program_name,
 		}
 
 
