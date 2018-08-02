@@ -79,6 +79,7 @@ class User_type(models.Model):
 class User_credit(models.Model):
 	user 			     = models.ForeignKey("User")
 	enrollment_id 	     = models.IntegerField(blank=True, null=True)
+	enrollment_code      = models.CharField(max_length=200,blank=True,null=True)
 	session_credits      = models.DurationField(blank=True, null=True)
 	session_credits_left = models.DurationField(blank=True,null=True)
 	session_start_date   = models.DateField(blank=True, null=True)
@@ -95,6 +96,7 @@ class User_credit(models.Model):
 			'id' 				   : self.pk,
 			'user' 				   : self.user.get_dict(),
 			'enrollment_id' 	   : self.enrollment_id,
+			'enrollment_code'      : self.enrollment_code,
 			'session_credits' 	   : self.session_credits.total_seconds() if self.session_credits else 0,
 			'session_credits_left' : self.session_credits_left.total_seconds() if self.session_credits_left else 0,
 			'session_start_date'   : self.session_start_date,

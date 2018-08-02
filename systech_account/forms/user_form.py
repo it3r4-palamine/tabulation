@@ -112,7 +112,7 @@ class SetPasswordForm(forms.ModelForm):
 class User_credit_form(forms.ModelForm):
 	class Meta:
 		model  = User_credit
-		fields = ('user','enrollment_id','session_credits','session_end_date','program_id','program_name','session_start_date')
+		fields = ('user','enrollment_id','enrollment_code','session_credits','session_end_date','program_id','program_name','session_start_date')
 
 class UserLogForm(forms.ModelForm):
 

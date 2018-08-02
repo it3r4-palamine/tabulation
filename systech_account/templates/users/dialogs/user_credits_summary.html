@@ -11,7 +11,10 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>Enrollment Code</th>
                             <th>Program</th>
+                            <th>Date Start</th>
+                            <th>Date End</th>
                             <th>Total Credits</th>
                             <th>Total Credits Consumed in YISS</th>
                             <th>Total Credits Consumed in YIAS</th>
@@ -20,7 +23,10 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="record in record_yias">
+                            <td>{$ record.enrollment_code $}</td>
                             <td>{$ record.program_name $}</td>
+                            <td>{$ record.session_start_date $}</td>
+                            <td>{$ record.session_end_date $}</td>
                             <td class="text-center">{$ record.session_credits $}</td>
                             <td class="text-center">{$ record.yiss_consumed $}</td>
                             <td class="text-center">{$ record.total_time_consumed $}</td>

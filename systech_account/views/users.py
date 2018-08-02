@@ -246,20 +246,17 @@ def reconcile_student_credits(request):
         records = result.json()
 
         for record in records:
-            print record
 
             for enrollment in record["enrollments"]:
                 user_credits = User_credit.objects.filter(enrollment_id=enrollment["enrollment_id"]).first()
 
-                print enrollment
-
                 if user_credits:
-                    user_credits.session_credits_left = timedelta(seconds=enrollment['credits_left']) if enrollment[
-                                                                                                             'credits_left'] > 0 else timedelta(
-                        seconds=enrollment['credits_left'])
+                    user_credits.session_credits_left = timedelta(seconds=enrollment['credits_consumed']) if enrollment[
+                                                                                                             'credits_consumed'] > 0 else timedelta(
+                        seconds=enrollment['credits_consumed'])
                     user_credits.save()
 
-        return success_list(results, False)
+        return HttpResponse("Reconcile Complete", status=200)
     except Exception as e:
         print e
         return HttpResponse(e, status=400)
@@ -298,6 +295,7 @@ def get_intelex_students(request):
                 if 'enrollments' in record:
                     for credits in record['enrollments']:
                         session_credits = credits["session_credits"]
+
                         user_credits = {
                             'user': user_id,
                             'enrollment_id': credits['enrollment_id'],
@@ -305,6 +303,7 @@ def get_intelex_students(request):
                             'program_name': credits["program_name"],
                             'session_start_date': datetime.strptime(credits['session_start_date'], '%Y-%m-%d').date(),
                             'session_end_date': datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
+							'enrollment_code' : credits["code"]
                             # 'session_credits' : credits['session_credits']
                         }
                         user_credits["session_credits"] = timedelta(seconds=credits['total_time_left_seconds']) if \
