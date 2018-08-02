@@ -238,7 +238,7 @@ def read_user_reconciled_credits(request):
 def reconcile_student_credits(request):
     try:
         results = {}
-        url = 'http://192.168.2.177:8000/api/read_student_credits/'
+        url = 'http://35.196.206.62/api/read_student_credits/'
         headers = {'content-type': 'application/json'}
         data = {"complete_detail": True}
         result = requests.post(url, data=json.dumps(data), headers=headers)
@@ -265,7 +265,7 @@ def reconcile_student_credits(request):
 def get_intelex_students(request):
     try:
         datus = req_data(request, True)
-        url = 'http://192.168.2.177:8000/api/read_enrolled_students/'
+        url = 'http://35.196.206.62/api/read_enrolled_students/'
         headers = {'content-type': 'application/json'}
         data = {"complete_detail": True}
         result = requests.post(url, data=json.dumps(data), headers=headers)
