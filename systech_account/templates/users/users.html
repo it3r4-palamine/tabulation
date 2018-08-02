@@ -43,6 +43,7 @@
                             </button>
                             <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()">
                                 <li><a href="#" ng-click="get_intelex_students()"><i class="fa fa-upload"></i> Get Intelex Students</a></li>
+                                <li><a href="#" ng-click="reconcile_student_credits()"><i class="fa fa-upload"></i> Reconcile Students Session Credits</a></li>
                             </ul>
                         </div>
                     </div>
@@ -68,7 +69,8 @@
                                 <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.user_type.name $}</td>
                                 {% if request.user.user_type.name == 'Technical' %}
                                 <td>
-                                    <button class="btn btn-primary btn-sm" ng-click="change_pass_dialog(record)">Change Password</button>
+                                    <button class="btn btn-primary btn-sm" ng-click="credits_summary(record)">View Credits Summary</button>
+                                    <button class="btn btn-warning btn-sm" ng-click="change_pass_dialog(record)">Change Password</button>
                                     <button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button>
                                 </td>
                                 {% endif %}

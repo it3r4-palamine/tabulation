@@ -1,0 +1,47 @@
+<div class="wrapper wrapper-content animated fadeIn modalibox">
+    <div class="ibox">
+        <div class="ibox-title ibox_title_reset">
+            <h3>Credits Summary</h3>
+        </div>
+
+        <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+            {% include "common/loader.html" %} 
+            <div class="row">
+                    
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Enrollment Code</th>
+                            <th>Program</th>
+                            <th>Date Start</th>
+                            <th>Date End</th>
+                            <th>Total Credits</th>
+                            <th>Total Credits Consumed in YISS</th>
+                            <th>Total Credits Consumed in YIAS</th>
+                            <th>Credits Left</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="record in record_yias">
+                            <td>{$ record.enrollment_code $}</td>
+                            <td>{$ record.program_name $}</td>
+                            <td>{$ record.session_start_date $}</td>
+                            <td>{$ record.session_end_date $}</td>
+                            <td class="text-center">{$ record.session_credits $}</td>
+                            <td class="text-center">{$ record.yiss_consumed $}</td>
+                            <td class="text-center">{$ record.total_time_consumed $}</td>
+                            <td class="text-center">{$ record.credits_left_reconciled $}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+        <div class="ibox-footer">
+            <div class="pull-right">
+                <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="main.close_dialog()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
