@@ -26,6 +26,10 @@ class Company_assessment(models.Model):
 		app_label = "systech_account"
 		db_table  = "company_assessment"
 
+	def get_consumed(self):
+
+		return self.session_credits - self.credits_left
+
 
 	def get_dict(self, forAPI=False, isV2=False):
 

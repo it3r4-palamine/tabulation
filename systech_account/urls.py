@@ -73,9 +73,12 @@ urlpatterns = [
 	url(r'^users/delete/(?P<id>[0-9]+)$', users.delete),
 	url(r'^users/change_pass_dialog/$', users.change_pass_dialog),
 	url(r'^users/change_password/$', users.change_password),
+	url(r'^users/user_credits_summary/$', users.user_credits_summary),
 	url(r'^users/get_intelex_students/$', users.get_intelex_students),
+	url(r'^users/reconcile_student_credits/$', users.reconcile_student_credits),
 	url(r'^users/read_user_credits/$', users.read_user_credits),
 	url(r'^users/view_lesson_update/$', users.view_lesson_update),
+	url(r'^users/read_user_credits/$', users.read_user_credits),
 	
 	url(r'^recommendations/$', recommendations.recommendations, name='recommendations'),
 	url(r'^recommendations/read/$', recommendations.read),

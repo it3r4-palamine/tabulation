@@ -1,0 +1,39 @@
+<div class="wrapper wrapper-content animated fadeIn modalibox">
+    <div class="ibox">
+        <div class="ibox-title ibox_title_reset">
+            <h3>Credits Summary</h3>
+        </div>
+
+        <div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+            {% include "common/loader.html" %} 
+            <div class="row">
+                    
+                <h2>YISS Credits</h2>
+                <h2>0.00</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Program</th>
+                            <th>Total Session</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="record in record_yias">
+                            <td>{$ record.program_id $}</td>
+                            <td>{$ record.total_time_consumed $}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>YIAS Credits</h2>
+                <h2>0.00</h2>
+
+            </div>
+        </div>
+        <div class="ibox-footer">
+            <div class="pull-right">
+                <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="main.close_dialog()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

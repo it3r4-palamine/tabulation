@@ -83,6 +83,7 @@ class User_credit(models.Model):
 	session_start_date = models.DateField(blank=True, null=True)
 	session_end_date   = models.DateField(blank=True, null=True)
 	program_id	 	   = models.IntegerField(blank=True, null=True)
+	program_name	   = models.CharField(max_length=200,blank=True,null=True)
 
 	class Meta:
 		app_label = "systech_account"

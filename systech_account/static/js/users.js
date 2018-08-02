@@ -64,6 +64,16 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 
 	}
 
+	$scope.reconcile_student_credits = function()
+	{
+		me.post_generic("/users/reconcile_student_credits/","","main")
+		.success(function(data)
+		{
+			Notification.success(data)
+			$scope.read()
+		})
+	}
+
 	$scope.load_to_edit = function(record, type){
 		if(type == 'Technical')
 			$scope.create_dialog(record);
@@ -72,6 +82,22 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 	$scope.change_pass_dialog = function(record){
 		$scope.pwd_form = record
 		me.open_dialog("/users/change_pass_dialog/","","main")
+	}
+
+	$scope.credits_summary = function(record)
+	{
+		me.open_dialog("/users/user_credits_summary/","","main")
+		$scope.get_user_credits_yias(record)
+	}
+
+	$scope.get_user_credits_yias = function(user)
+	{
+		me.post_generic("/users/read_user_credits/", user, "main")
+		.success(function(response){
+
+			$scope.record_yias = response.yias
+
+		})
 	}
 
 	$scope.change_password = function(){

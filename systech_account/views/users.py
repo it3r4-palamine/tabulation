@@ -2,11 +2,12 @@ from ..forms.transaction_types import *
 from ..models.transaction_types import *
 from ..forms.user_form import *
 from ..models.user import *
+from ..models.company_assessment import *
 from ..views.common import *
 from datetime import *
 import requests
 import sys,os,re,unicodedata
-
+from django.db.models import ExpressionWrapper, DurationField
 
 def users(request):
 	return render(request, 'users/users.html')
@@ -16,6 +17,9 @@ def create_dialog(request):
 
 def change_pass_dialog(request):
 	return render(request, 'users/dialogs/change_pass_dialog.html')
+
+def user_credits_summary(request):
+	return render(request, 'users/dialogs/user_credits_summary.html')
 
 def read(request):
 	try:
@@ -175,10 +179,60 @@ def view_lesson_update(request):
 	except Exception as e:
 		return HttpResponse(e,status=400)
 
+def read_user_credits(request):
+	try:
+		print "HERE"
+		results = { "yias" : [], "yiss": []}
+		data = req_data(request)
+
+		user_credits = User_credit.objects.filter(user=data["id"])
+
+		yias_credits = []
+		for user_credit in user_credits:
+			row = user_credit.get_dict()
+			##assessments = Company_assessment.objects.filter(company_rename=row["program_id"])
+			assessments = Company_assessment.objects.filter(company_rename=row["program_id"]).aggregate(total_time_consumed=models.Sum(ExpressionWrapper(F('session_credits') - F('credits_left'),output_field=DurationField())))
+
+			print assessments
+
+			assessments_total_seconds = assessments.get("total_time_consumed", 0)
+
+			row["session_credits_2"] = format_time_consumed(row["session_credits"])
+			row["total_time_consumed"] = format_time_consumed(assessments_total_seconds)
+
+			print row
+
+			yias_credits.append(row)
+
+
+		results["yias"] = yias_credits
+
+		return success_list(results, False)
+	except Exception as e:
+		print str(e)
+		return HttpResponse(e,status=400)
+
+def reconcile_student_credits(request):
+	try:
+		results = {}
+		url = 'http://192.168.2.177:8000/api/read_student_credits/'
+		headers = {'content-type': 'application/json'}
+		data = {"complete_detail": True}
+		result = requests.post(url, data=json.dumps(data), headers=headers)
+		result.encoding = 'ISO-8859-1'
+		records = result.json()
+
+		print records
+		print "Gogoy"
+
+		return success_list(results,False)
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
 def get_intelex_students(request):
 	try:
 		datus = req_data(request,True)
-		url = 'http://35.196.206.62/api/read_enrolled_students/'
+		url = 'http://192.168.2.177:8000/api/read_enrolled_students/'
 		headers = {'content-type': 'application/json'}
 		data = {"complete_detail": True}
 		result = requests.post(url, data=json.dumps(data), headers=headers)
@@ -186,7 +240,6 @@ def get_intelex_students(request):
 		records = result.json()
 
 		for record in records["records"]:
-			cprint(record)
 			first_name = record.get("first_name", "student_")
 			last_name = record.get("last_name", "code")
 
@@ -282,3 +335,15 @@ def get_intelex_students(request):
 		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
 		print(exc_type, fname, exc_tb.tb_lineno)
 		return HttpResponse(e,status=400)
+
+def format_time_consumed(time_seconds):
+
+	# Converts Seconds to HH:MM:SS 
+
+	if time_seconds is None:
+		return "Incomplete Logs"
+
+	m, s = divmod(time_seconds, 60)
+	h, m = divmod(m, 60)
+
+	return "%d:%02d:%02d" % (h, m, s)
