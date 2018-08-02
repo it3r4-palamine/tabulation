@@ -213,7 +213,7 @@ routerApp.controller('mathsymbolsCtrl', function($scope, $http, $timeout, $contr
 	}
 
 	$scope.create = function(){
-		if(!$scope.record.above_text) $scope.record.syntax = null
+		// if(!$scope.record.above_text) $scope.record.syntax = null
 		me.post_generic("/settings/math_symbols_create/",$scope.record,"dialog")
 		.success(function(response){
 			me.close_dialog();

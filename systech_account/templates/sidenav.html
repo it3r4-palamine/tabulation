@@ -32,10 +32,10 @@
             <li>
                 <a href="/related_questions"><i class="fa fa-link"></i> <span class="nav-label">Related Questions</span></a>
             </li>
+            {% endif %}
             <li>
                 <a href="/recommendations"><i class="fa fa-smile-o"></i> <span class="nav-label">Recommendations</span></a>
             </li>
-            {% endif %}
             <li>
                 <a href="/company_assessment"><i class="fa fa-check-square"></i> <span class="nav-label" ng-if="!display_terms[0].company_assessments" ng-cloak="">Company Assessment</span><span class="nav-label" ng-if="display_terms[0].company_assessments" ng-cloak="">{$ display_terms[0].company_assessments $}</span></a>
             </li>

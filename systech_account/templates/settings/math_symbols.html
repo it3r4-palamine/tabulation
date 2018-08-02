@@ -17,7 +17,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="record in records" class="hand_cursor">
-                            <td ng-click="load_to_edit(record)">{$ record.symbol $} <br><span ng-if="record.above_text"><i class="fa fa-code"></i>: {$ record.syntax $}</span></td>
+                            <td ng-click="load_to_edit(record)">{$ record.symbol $} <br><span ng-if="record.syntax"><i class="fa fa-code"></i>: {$ record.syntax $}</span></td>
                             <td ng-click="load_to_edit(record)">{$ record.name $}</td>
                             <td ng-click="load_to_edit(record)">{$ record.category $}</td>
                             <td><button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button></td>
