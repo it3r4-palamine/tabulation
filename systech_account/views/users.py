@@ -300,7 +300,7 @@ def get_intelex_students(request):
                             'user': user_id,
                             'enrollment_id': credits['enrollment_id'],
                             'program_id': credits['program_id'],
-                            'program_name': credits["program_name"],
+                            'program_name': credits["program"]["name"],
                             'session_start_date': datetime.strptime(credits['session_start_date'], '%Y-%m-%d').date(),
                             'session_end_date': datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
 							'enrollment_code' : credits["code"]
