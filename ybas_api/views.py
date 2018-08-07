@@ -1,7 +1,3 @@
-from .serializers import *
-
-from django.db.models import *
-
 # DJANGO REST
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,21 +9,24 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from systech_account.views.common import *
-
 # MODELS
 from systech_account.models.company_assessment import *
 from systech_account.models.assessments import *
-from systech_account.forms.assessments import *
 from systech_account.models.multiple_choice import *
 
+# FORMS
+from systech_account.forms.assessments import *
+from systech_account.forms.user_form import *
+
+# OTHERS
+from .serializers import *
+from django.db.models import *
+from systech_account.views.common import *
 from datetime import datetime, timedelta
-
 from PIL import Image
-
 import sys, traceback, os
 import urllib
-from systech_account.forms.user_form import *
+
 
 class ObtainAuthToken(APIView):
     throttle_classes = ()
@@ -37,25 +36,62 @@ class ObtainAuthToken(APIView):
     serializer_class = AuthTokenSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data,
-                                           context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
+        try:
+            request_data = request.data
+            serializer = self.serializer_class(data=request_data, context={'request': request})
+            
+            if not serializer.is_valid():
+                print serializer.errors
+                if serializer.errors.get("non_field_errors", None) and serializer.errors["non_field_errors"][0] == "Unable to log in with provided credentials.":
+                    return Response("Invalid Username/Password", status=status.HTTP_400_BAD_REQUEST)
+            
+            user = serializer.validated_data['user']
+            token, created = Token.objects.get_or_create(user=user)
 
-        request_data = request.data
+            if not request_data.get("from_yias_local", None):
+                # Create log of mobile app usages
+                userlog = {
+                    "user" : user.id,
+                    "device" : request_data.get("device", "Android")
+                }
 
-        userlog = {
-            "user" : user.id,
-            "device" : request_data.get("device", "Android")
-        }
+                user_log_form = UserLogForm(userlog)
+                if user_log_form.is_valid(): user_log_form.save()
+            else:
+                message = ""
+                if not user.is_active: message = "Account Inactive. Please activate your account."
+                if not user.is_admin or not user.user_type or user.user_type.pk != 3: message = "Invalid account.."
+                if message: return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-        # user_log_form = UserLogForm(userlog)
-        # if user_log_form.is_valid():
-        #     user_log_form.save()
-        #     print("Yes ")
+            return Response({ 'token': token.key })
 
-        return Response({'token': token.key})
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print_error(filename, "ObtainAuthToken", e, sys.exc_traceback.tb_lineno)
+            return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class Get_company_and_user_types(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            company = request.user.company.get_dict()
+            user_types_qs = User_type.objects.filter(company=company["id"]).values()
+
+            response_data = {
+                "company": company,
+                "user_types": user_types_qs,
+                "user": request.user.get_dict(True),
+            }
+
+            return Response(response_data)
+
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print_error(filename, "Get_company_and_user_types", e, sys.exc_traceback.tb_lineno)
+            return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
 # Base64
 class GetBase64Photo(APIView):

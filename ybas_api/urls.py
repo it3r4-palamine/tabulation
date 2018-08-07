@@ -22,4 +22,7 @@ urlpatterns = [
     url(r'^get-answers/(?P<question_id>[0-9]+)$', answers.GetAnswers.as_view()),
 
     url(r'^get-profile/$', users.GetUserProfile.as_view()),
+
+    # YIAS Local
+    url(r'^get-company-and-user-type/$', views.Get_company_and_user_types.as_view()),
 ]

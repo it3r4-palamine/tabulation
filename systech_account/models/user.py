@@ -25,6 +25,7 @@ class User_Manager(BaseUserManager):
 		user.save()
 		return user
 
+
 class User(AbstractBaseUser):
 	email            = models.EmailField(max_length=100,unique=True,null=False,blank=False)
 	fullname         = models.CharField(max_length=100,null=True,blank=True)
@@ -44,11 +45,27 @@ class User(AbstractBaseUser):
 		app_label = "systech_account"
 		db_table  = "User"
 
-	def get_dict(self):
-		return {
+
+	def get_dict(self, is_local=False):
+		user = {
 			"id" 	   : self.pk,
 			"fullname" : self.fullname,
 		}
+
+		if is_local:
+			user["username"]  		= self.username
+			user["password"]		= self.password
+			user["user_type"]		= self.user_type.pk
+			user["email"]			= self.email
+			user["company"]			= self.company.pk
+			user["is_active"]		= self.is_active
+			user["is_admin"]		= self.is_admin
+			user["is_edit"]			= self.is_edit
+			user["is_intelex"]		= self.is_intelex
+			user["user_intelex_id"] = self.user_intelex_id
+
+		return user
+
 
 	def delete(self):
 		self.is_active = False
