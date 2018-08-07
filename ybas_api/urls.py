@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^get-data', views.GetData.as_view()),
     url(r'^sync-assessments', views.SyncAssessments.as_view()),
     url(r'^file-upload/', views.FileUpload.as_view()),
+    url(r'^file-upload-ios', views.FileUploadIOS.as_view()),
     url(r'^sync-lesson-update', views.LessonUpdate.as_view()),
 
 

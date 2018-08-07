@@ -50,10 +50,10 @@ class ObtainAuthToken(APIView):
             "device" : request_data.get("device", "Android")
         }
 
-        user_log_form = UserLogForm(userlog)
-        if user_log_form.is_valid():
-            user_log_form.save()
-            print("Yes ")
+        # user_log_form = UserLogForm(userlog)
+        # if user_log_form.is_valid():
+        #     user_log_form.save()
+        #     print("Yes ")
 
         return Response({'token': token.key})
 
@@ -553,7 +553,25 @@ class FileUpload(APIView):
             return Response(status=204)
         except Exception as e:
             print str(e)
-            return Response("imo mama kai " + str(e),status=500)
+            return Response("" + str(e),status=500)
+
+
+class FileUploadIOS(APIView):
+
+    def post(self, request):
+        try:
+            data = request.data
+            data = data['data']
+
+            for answerImage in data:
+                serializer = AnswerImageIOSSerializer(data=answerImage)
+                if serializer.is_valid():
+                    serializer.save()
+                else: Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response({})
+        except Exception as e:
+            return Response(str(e),status=500)
 
 
 

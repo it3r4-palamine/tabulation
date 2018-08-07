@@ -48,7 +48,9 @@
                 </div>
                 <div class="col-sm-3">
                     <label>&nbsp;</label><br>
+                    {% if request.user.user_type.name == 'Technical' %}
                     <button class="btn btn-primary pull-right" ng-click="chooseQuestion()">CREATE</button><br>
+                    {% endif %}
                 </div>
                 <div class="clearfix"></div>
                 <hr>
@@ -59,7 +61,9 @@
                             <th custom-sort order="value"><span ng-if="!display_terms[0].questions" ng-cloak="">Question</span><span ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></th>
                             <th><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></th>
                             <th>Multiple Choice</th>
+                            {% if request.user.user_type.name == 'Technical' %}
                             <th>Action</th>
+                            {% endif %}
                         </thead>
                         <tbody>
                             <tr ng-repeat="(key, record) in records" class="hand_cursor">
@@ -97,7 +101,9 @@
                                     <span ng-show="record.is_multiple">Yes</span>
                                     <span ng-show="!record.is_multiple">No</span>
                                 </td>
+                                {% if request.user.user_type.name == 'Technical' %}
                                 <td><button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button></td>
+                                {% endif %}
                             </tr>
                         </tbody>
                     </table>
@@ -141,7 +147,7 @@
                                     </div>
                                     <div class="col-sm-12" ng-if="!record.is_general">
                                         <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Type</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
-                                        <ui-select ng-model="record.transaction_type" ng-change="generate_code()">
+                                        <ui-select ng-disabled="display_terms[0].user_type != 'Technical'" ng-model="record.transaction_type" ng-change="generate_code()">
                                             <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $} - {$ $select.selected.set_no $}</ui-select-match>
                                             <ui-select-choices repeat="transaction_type in transaction_types2 | filter: $select.search | limitTo:50">
                                                 <span ng-bind-html="transaction_type.name | highlight: $select.search"></span> - Set <span ng-bind-html="transaction_type.set_no | highlight: $select.search"></span> - <span ng-bind-html="transaction_type.transaction_code | highlight: $select.search"></span>
@@ -161,10 +167,12 @@
 
                                         <!-- Upload image -->
                                         <div class="col-sm-12">
+                                            {% if request.user.user_type.name == 'Technical' %}
                                             <label class="btn btn-outline btn-success" for="my-file-selector">
                                                 <input type="file" style="display:none;" name="image" class="ng-pristine ng-untouched ng-valid ng-empty " file-model="record.images" id="my-file-selector" multiple accept=".png,.jpg,.jpeg">
                                                 Choose file...
                                             </label>
+                                            {% endif %}
                                         </div>
 
                                         <div class="col-sm-12">
@@ -175,10 +183,12 @@
                                                     <a href="{$image.image$}" title="" data-gallery="">
                                                         <div sv-handle>
                                                             <img src="{$ image.image $}" class="img-rounded" style="height:100px; width:100px;" draggable="false"><br>
-                                                     
+                                                            
+                                                            {% if request.user.user_type.name == 'Technical' %}
                                                             <button class="btn bt-outline btn-danger" ng-click="remove_image(image, $index)">
                                                                 <i class="fa fa-trash-o"></i>
                                                             </button>
+                                                            {% endif %}
                                                         </div>
                                                     </a>
                                                 
@@ -208,19 +218,19 @@
                                         <div class="col-sm-12">
                                             <br>
                                             <div class="checkbox checkbox-success">
-                                                <input type="checkbox" id="is_document" name="is_document" ng-model="record.is_document" ng-click="isMultiple()"><label for="is_document">Needs document image</label>
+                                                <input ng-disabled="display_terms[0].user_type != 'Technical'" type="checkbox" id="is_document" name="is_document" ng-model="record.is_document" ng-click="isMultiple()"><label for="is_document">Needs document image</label>
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <br>
                                             <div class="checkbox checkbox-success">
-                                                <input type="checkbox" id="has_timer" name="has_timer" ng-model="record.has_timer"><label for="has_timer">Has timer</label>
+                                                <input ng-disabled="display_terms[0].user_type != 'Technical'" type="checkbox" id="has_timer" name="has_timer" ng-model="record.has_timer"><label for="has_timer">Has timer</label>
                                             </div>
                                         </div>
                                         <div class="col-sm-12" ng-if="record.has_timer">
                                             <br>
                                             <label>Timer</label>
-                                            <input type="number" required name="timer" ng-model="record.timer" class="form-control">
+                                            <input ng-disabled="display_terms[0].user_type != 'Technical'" type="number" required name="timer" ng-model="record.timer" class="form-control">
                                         </div>
                                         <div class="clearfix"></div>
                                         <div class="col-sm-12">
@@ -233,10 +243,11 @@
                                                 <tbody>
                                                     <tr ng-repeat="(key, answer) in answers">
                                                         <td>
-                                                            <input type="number" min="0" name="item" ng-model="answer.item_no" class="form-control">
+                                                            <input ng-disabled="display_terms[0].user_type != 'Technical'" type="number" min="0" name="item" ng-model="answer.item_no" class="form-control">
                                                         </td>
                                                         <td>
                                                             <div ng-repeat="(key2, multiple) in answer.answer">
+                                                                {% if request.user.user_type.name == 'Technical' %}
                                                                 <div class="btn-group">
                                                                     <div class="btn-group" uib-dropdown>
                                                                         <button type="button" class="btn btn-outline btn-primary btn-xs" uib-dropdown-toggle>
@@ -254,11 +265,13 @@
                                                                         </ul>
                                                                     </div>
                                                                 </div>
-                                                                <textarea id="answer_{$key+1$}_{$key2+1$}" ng-change="answerDisplay(multiple)" ng-model="multiple.name" class="form-control"></textarea><br>
+                                                                {% endif %}
+                                                                <textarea ng-disabled="display_terms[0].user_type != 'Technical'" id="answer_{$key+1$}_{$key2+1$}" ng-change="answerDisplay(multiple)" ng-model="multiple.name" class="form-control"></textarea><br>
                                                                 <textarea ng-hide="true" ng-model="multiple.answer_display" class="form-control"></textarea>
                                                                 Preview: <span mathjax-bind="multiple.answer_display"></span>
                                                             </div>
                                                             <div>
+                                                                {% if request.user.user_type.name == 'Technical' %}
                                                                 <div class="btn-group">
                                                                     <div class="btn-group" uib-dropdown>
                                                                         <button type="button" class="btn btn-outline btn-primary btn-xs" uib-dropdown-toggle>
@@ -276,7 +289,8 @@
                                                                         </ul>
                                                                     </div>
                                                                 </div>
-                                                                <textarea id="answer2_{$key+1$}" ng-change="answerDisplay(multiple_answer_list[key+1])" ng-model="multiple_answer_list[key+1].name" class="form-control"></textarea><br>
+                                                                {% endif %}
+                                                                <textarea ng-disabled="display_terms[0].user_type != 'Technical'" id="answer2_{$key+1$}" ng-change="answerDisplay(multiple_answer_list[key+1])" ng-model="multiple_answer_list[key+1].name" class="form-control"></textarea><br>
                                                                 <textarea ng-hide="true" ng-model="multiple_answer_list[key+1].answer_display" class="form-control"></textarea>
                                                                 Preview: <span mathjax-bind="multiple_answer_list[key+1].answer_display"></span>
                                                             </div>
@@ -299,15 +313,18 @@
                                                             Preview: <span mathjax-bind="answer.answer_display"></span> -->
                                                         </td>
                                                         <td>
+                                                            {% if request.user.user_type.name == 'Technical' %}
                                                             <a href="" class="btn bt-outline btn-danger" ng-click="remove_answer(answer, $index)"><i class="fa fa-trash-o"></i></a> 
+                                                            {% endif %}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <input type="number" min="0" name="item" ng-model="answer_list.item_no" class="form-control">
+                                                            <input ng-disabled="display_terms[0].user_type != 'Technical'" type="number" min="0" name="item" ng-model="answer_list.item_no" class="form-control">
                                                         </td>
                                                         <td>
                                                             <div ng-repeat="(key3, multiple_list) in answer_list_arr">
+                                                                {% if request.user.user_type.name == 'Technical' %}
                                                                 <div class="btn-group">
                                                                     <div class="btn-group" uib-dropdown>
                                                                         <button type="button" class="btn btn-outline btn-primary btn-xs" uib-dropdown-toggle>
@@ -325,11 +342,13 @@
                                                                         </ul>
                                                                     </div>
                                                                 </div>
-                                                                <textarea id="answer_{$key3+1$}" ng-change="answerDisplay(multiple_list)" ng-model="multiple_list.name" class="form-control"></textarea><br>
+                                                                {% endif %}
+                                                                <textarea ng-disabled="display_terms[0].user_type != 'Technical'" id="answer_{$key3+1$}" ng-change="answerDisplay(multiple_list)" ng-model="multiple_list.name" class="form-control"></textarea><br>
                                                                 <textarea ng-hide="true" ng-model="multiple_list.answer_display" class="form-control"></textarea>
                                                                 Preview: <span mathjax-bind="multiple_list.answer_display"></span>
                                                             </div>
                                                             <div>
+                                                                {% if request.user.user_type.name == 'Technical' %}
                                                                 <div class="btn-group">
                                                                     <div class="btn-group" uib-dropdown>
                                                                         <button type="button" class="btn btn-outline btn-primary btn-xs" uib-dropdown-toggle>
@@ -347,13 +366,16 @@
                                                                         </ul>
                                                                     </div>
                                                                 </div>
-                                                                <textarea id="answer_list_id" ng-enter="onEnter(answer_list, $index)" ng-change="answerDisplay(answer_list)" ng-model="answer_list.name" class="form-control"></textarea><br>
+                                                                {% endif %}
+                                                                <textarea ng-disabled="display_terms[0].user_type != 'Technical'" id="answer_list_id" ng-enter="onEnter(answer_list, $index)" ng-change="answerDisplay(answer_list)" ng-model="answer_list.name" class="form-control"></textarea><br>
                                                                 <textarea ng-hide="true" ng-model="answer_list.answer_display" class="form-control"></textarea>
                                                                 Preview: <span mathjax-bind="answer_list.answer_display"></span>
                                                             </div>
                                                         </td>
                                                         <td>
+                                                            {% if request.user.user_type.name == 'Technical' %}
                                                             <button class="btn btn-white" ng-click="add_answer(answer_list)" ng-disabled="!answer_list.name || !answer_list.item_no"><i class="fa fa-plus"></i></button>
+                                                            {% endif %}
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -368,18 +390,22 @@
                                                         <table class="table">
                                                             <tr ng-repeat="(key, finding) in findings">
                                                                 <td>
-                                                                    <textarea ng-model="finding.value" class="form-control"></textarea>
+                                                                    <textarea ng-disabled="display_terms[0].user_type != 'Technical'" ng-model="finding.value" class="form-control"></textarea>
                                                                 </td>
                                                                 <td>
+                                                                    {% if request.user.user_type.name == 'Technical' %}
                                                                     <a href="" class="btn bt-outline btn-danger" ng-click="remove_finding(finding, $index)"><i class="fa fa-trash-o"></i></a> 
+                                                                    {% endif %}
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td>
-                                                                    <textarea ng-model="finding_list.value" class="form-control"></textarea>
+                                                                    <textarea ng-disabled="display_terms[0].user_type != 'Technical'" ng-model="finding_list.value" class="form-control"></textarea>
                                                                 </td>
                                                                 <td>
+                                                                    {% if request.user.user_type.name == 'Technical' %}
                                                                     <button class="btn btn-white" ng-click="add_finding(finding_list)" ng-disabled="!finding_list.value"><i class="fa fa-plus"></i></button>
+                                                                    {% endif %}
                                                                 </td>
                                                             </tr>
                                                         </table>
@@ -390,18 +416,22 @@
                                                             <tbody>
                                                                 <tr ng-repeat="(key, effect) in effects">
                                                                     <td>
-                                                                        <textarea ng-model="effect.value" class="form-control"></textarea>
+                                                                        <textarea ng-disabled="display_terms[0].user_type != 'Technical'" ng-model="effect.value" class="form-control"></textarea>
                                                                     </td>
                                                                     <td>
+                                                                        {% if request.user.user_type.name == 'Technical' %}
                                                                         <a href="" class="btn bt-outline btn-danger" ng-click="remove_effect(effect, $index)"><i class="fa fa-trash-o"></i></a> 
+                                                                        {% endif %}
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>
-                                                                        <textarea ng-model="effect_list.value" class="form-control"></textarea>
+                                                                        <textarea ng-disabled="display_terms[0].user_type != 'Technical'" ng-model="effect_list.value" class="form-control"></textarea>
                                                                     </td>
                                                                     <td>
+                                                                        {% if request.user.user_type.name == 'Technical' %}
                                                                         <button class="btn btn-white" ng-click="add_effect(effect_list)" ng-disabled="!effect.value"><i class="fa fa-plus"></i></button>
+                                                                        {% endif %}
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -416,7 +446,9 @@
                         </div>
                         <div class="ibox-footer">
                             <div class="pull-right">
+                                {% if request.user.user_type.name == 'Technical' %}
                                 <button type="button" class="btn btn-sm btn-primary btn-w-m" ng-click="create(false)" id="saveBtn" ng-disabled="form.$invalid">Save</button>
+                                {% endif %}
                                 <button type="button" class="btn btn-sm btn-danger btn-w-m" ng-click="upload_close_dialog()">Close</button>
                             </div>
                         </div>

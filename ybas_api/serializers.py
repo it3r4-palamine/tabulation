@@ -16,6 +16,13 @@ class AnswerImageSerializer(serializers.ModelSerializer):
 		model = Assessment_answer_image
 		fields = ('id', 'question', 'company_assessment', 'transaction_type', 'image', 'item_no', 'is_active')
 
+class AnswerImageIOSSerializer(serializers.ModelSerializer):
+	image = Base64ImageField(required=False)
+
+	class Meta:
+		model = Assessment_answer_image
+		fields = ('id', 'question', 'company_assessment', 'transaction_type', 'image', 'item_no', 'is_active')
+
 
 class LessonUpdateHeaderSerializer(serializers.ModelSerializer):
 	
