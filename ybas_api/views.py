@@ -50,10 +50,10 @@ class ObtainAuthToken(APIView):
             "device" : request_data.get("device", "Android")
         }
 
-        # user_log_form = UserLogForm(userlog)
-        # if user_log_form.is_valid():
-        #     user_log_form.save()
-        #     print("Yes ")
+        user_log_form = UserLogForm(userlog)
+        if user_log_form.is_valid():
+            user_log_form.save()
+            print("Yes ")
 
         return Response({'token': token.key})
 
