@@ -1,9 +1,15 @@
+# DJANGO
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+
+# MODELS
 from ..models.transaction_types import *
 from ..models.company import *
 
+# OTHERS
+import sys, traceback, os
 import time
+
 
 class User_Manager(BaseUserManager):
 	def create_user(self, email, password=None, **extra_fields):
@@ -55,7 +61,7 @@ class User(AbstractBaseUser):
 		if is_local:
 			user["username"]  		= self.username
 			user["password"]		= self.password
-			user["user_type"]		= self.user_type.pk
+			user["user_type"]		= self.user_type.pk if self.user_type else None
 			user["email"]			= self.email
 			user["company"]			= self.company.pk
 			user["is_active"]		= self.is_active
@@ -108,8 +114,9 @@ class User_credit(models.Model):
 		app_label = "systech_account"
 		db_table  = "user_credits"
 
-	def get_dict(self):
-		return {
+	def get_dict(self, is_local=False):
+
+		user_credit = {
 			'id' 				   : self.pk,
 			'user' 				   : self.user.get_dict(),
 			'enrollment_id' 	   : self.enrollment_id,
@@ -121,6 +128,12 @@ class User_credit(models.Model):
 			'program_id' 		   : self.program_id,
 			'program_name'		   : self.program_name,
 		}
+
+		if is_local:
+			user_credit['session_credits'] = self.session_credits
+			user_credit['session_credits_left'] = self.session_credits_left
+
+		return user_credit
 
 
 class Lesson_update_header(models.Model):

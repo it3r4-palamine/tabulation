@@ -27,4 +27,5 @@ urlpatterns = [
     # YIAS Local
     url(r'^get-company-and-user-type/$', views.Get_company_and_user_types.as_view()),
     url(r'^get-programs-and-exercises/$', download_data.Get_programs_and_exercises.as_view()),
+    url(r'^get-users/$', download_data.Get_users.as_view()),
 ]
