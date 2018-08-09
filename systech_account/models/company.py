@@ -38,4 +38,6 @@ class Company_rename(models.Model):
 			"is_active"  : self.is_active,
 			"program_id" : self.program_id,
 			"is_intelex" : self.is_intelex,
+			"transaction_type" : self.transaction_type,
+			"company" 	 : self.company.pk,
 		}

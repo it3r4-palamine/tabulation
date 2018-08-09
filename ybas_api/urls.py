@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from rest_framework.authtoken.views import obtain_auth_token
 from ybas_api import views
+from ybas_api.viewss import download_data
 from ybas_api.controllers import answers, users
 
 
@@ -25,4 +26,5 @@ urlpatterns = [
 
     # YIAS Local
     url(r'^get-company-and-user-type/$', views.Get_company_and_user_types.as_view()),
+    url(r'^get-programs-and-exercises/$', download_data.Get_programs_and_exercises.as_view()),
 ]
