@@ -12,8 +12,9 @@ def fix_deleted_user(apps,schema_editor):
 
 	for user in users:
 		if not user.is_active:
-			user.email += ("__"+str(time.time()))
-			user.save()
+			if user.username:
+				user.username += ("__"+str(time.time()))
+				user.save()
 
 
 class Migration(migrations.Migration):
