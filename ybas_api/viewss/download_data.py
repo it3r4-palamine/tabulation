@@ -6,6 +6,7 @@ from rest_framework import status
 # MODELS
 from systech_account.models.company import *
 from systech_account.models.user import *
+from systech_account.models.assessments import *
 
 # OTHERS
 from systech_account.views.common import *
@@ -72,4 +73,27 @@ class Get_users(APIView):
 			exc_type, exc_obj, exc_tb = sys.exc_info()
 			filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
 			print_error(filename, "Get_users", e, sys.exc_traceback.tb_lineno)
+			return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class Get_settings(APIView):
+	def post(self, request, *args, **kwargs):
+		try:
+			recommendation_list = []
+
+			recommendation_qs = Assessment_recommendation.objects.filter(company=request.user.company.pk, is_active=True)
+
+			for recommendation in recommendation_qs:
+				recommendation_list.append(recommendation.get_dict())
+
+			result = {
+				"recommendation_list" : recommendation_list,
+			}
+
+			return Response(result)
+
+		except Exception as e:
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			print_error(filename, "Get_settings", e, sys.exc_traceback.tb_lineno)
 			return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
