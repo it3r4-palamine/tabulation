@@ -29,4 +29,5 @@ urlpatterns = [
     url(r'^get-programs-and-exercises/$', download_data.Get_programs_and_exercises.as_view()),
     url(r'^get-users/$', download_data.Get_users.as_view()),
     url(r'^get-settings/$', download_data.Get_settings.as_view()),
+    url(r'^get-worksheets/$', download_data.Get_worksheets.as_view()),
 ]

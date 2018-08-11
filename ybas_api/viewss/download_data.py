@@ -97,3 +97,72 @@ class Get_settings(APIView):
 			filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
 			print_error(filename, "Get_settings", e, sys.exc_traceback.tb_lineno)
 			return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class Get_worksheets(APIView):
+	def post(self, request, *args, **kwargs):
+		try:
+			assessment_question_list = []
+			assessment_image_list = []
+			choice_list = []
+			assessment_image_answer_list = []
+			multiple_image_answer_list = []
+			assessment_effect_list = []
+			assessment_finding_list = []
+
+			# Get assessment questions/worksheets
+			assessment_question_qs = Assessment_question.objects.filter(company=request.user.company.pk, is_active=True)
+
+			for _assessment_question in assessment_question_qs:
+				assessment_question = _assessment_question.get_dict(is_local=True)
+
+				# Get assessment images/worksheet images
+				assessment_image_list.extend(assessment_question.pop("images"))
+
+				# Get assessment image answers and multiple image answers
+				_assessment_image_answer_list = assessment_question.pop("answers")
+
+				for _assessment_image_answer in _assessment_image_answer_list:
+					multiple_image_answer_list.extend(_assessment_image_answer.pop("answer"))
+
+				assessment_image_answer_list.extend(_assessment_image_answer_list)
+
+				# # Get choices
+				# choice_qs = Choice.objects.filter(question=assessment_question["id"], is_active=True)
+
+				# for choice in choice_qs:
+				# 	choice_list.append(choice.get_dict(True))
+
+				# # Get effects
+				# effect_qs = Assessment_effect.objects.filter(question=assessment_question["id"], is_active=True)
+
+				# for effect in effect_qs:
+				# 	assessment_effect_list.append(effect.get_dict(True))
+
+				# # Get findings
+				# finding_qs = Assessment_finding.objects.filter(question=assessment_question["id"], is_active=True)
+
+				# for finding in finding_qs:
+				# 	assessment_finding_list.append(finding.get_dict(True))
+
+
+				assessment_question_list.append(assessment_question)
+
+
+			result = {
+				"assessment_question_list" 		: assessment_question_list,
+				"assessment_image_list" 		: assessment_image_list,
+				# "choice_list" 					: choice_list,
+				"assessment_image_answer_list" 	: assessment_image_answer_list,
+				"multiple_image_answer_list" 	: multiple_image_answer_list,
+				# "assessment_effect_list" 		: assessment_effect_list,
+				# "assessment_finding_list" 		: assessment_finding_list,
+			}
+
+			return Response(result)
+
+		except Exception as e:
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			print_error(filename, "Get_settings", e, sys.exc_traceback.tb_lineno)
+			return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
