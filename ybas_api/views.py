@@ -366,8 +366,6 @@ class SyncAssessments(APIView):
 
     def post(self, request, *args, **kwargs):
         try:
-            print "Gogoy"
-            print request.data['data']
             if 'isV2' in request.data and request.data['isV2']:
                 isV2 = request.data['isV2']
                 completedAssessments = request.data['data']

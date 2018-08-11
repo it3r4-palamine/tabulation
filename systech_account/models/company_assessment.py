@@ -31,7 +31,26 @@ class Company_assessment(models.Model):
 		return self.session_credits - self.credits_left
 
 
-	def get_dict(self, forAPI=False, isV2=False):
+	def get_dict(self, forAPI=False, isV2=False, is_local=False):
+
+		if is_local:
+			return {
+				"id"			 	: self.pk,
+				"date_from"		 	: self.date_from,
+				"date_to" 		 	: self.date_to,
+				"is_active" 	 	: self.is_active,
+				"transaction_type"	: self.transaction_type,
+				"is_synced" 		: self.is_synced,
+				"is_complete"	 	: self.is_complete,
+				"reference_no"	 	: self.reference_no,
+				"consultant" 	 	: self.consultant.pk,
+				"is_generated" 		: self.is_generated,
+				"company_rename"	: self.company_rename.pk,
+				"credits_left"	 	: self.credits_left,
+				"session_credits"	: self.session_credits,
+				"facilitator"		: self.facilitator.pk,
+			}
+
 
 		company_assessment = {
 			"id"			 : self.pk,
@@ -42,12 +61,10 @@ class Company_assessment(models.Model):
 			"session_credits": self.session_credits.total_seconds() if self.session_credits else None,
 			"credits_left"	 : self.credits_left.total_seconds() if self.credits_left else None,
 			"consultant" 	 : self.consultant.id if forAPI else self.consultant.get_dict(),
-			# "transaction_type": [],
 		}
 
-		# Assessment transaction types
+		# Set transaction types
 		transaction_type_list = []
-		sessions_list = []
 
 		if self.transaction_type:
 			for transaction_type_id in self.transaction_type:
@@ -78,6 +95,9 @@ class Company_assessment(models.Model):
 				except Transaction_type.DoesNotExist:
 					continue
 
+		# Set sessions
+		sessions_list = []
+		
 		sessions = str2model("Assessment_session").objects.filter(is_deleted=False,company_assessment=self.pk,time_end__isnull=False)
 		for session in sessions:
 			rowSession = session.get_dict()
@@ -101,7 +121,6 @@ class Company_assessment(models.Model):
 			company_assessment["transaction_type"] = transaction_type_list
 			company_assessment["is_synced"]   	   = self.is_synced
 			company_assessment["facilitator"] 	   = self.facilitator.get_dict() if self.facilitator else None
-			# company_assessment["sessions"] = json.dumps(sessions_list)
 			company_assessment["sessions"]	  	   = sessions_list
 
 		return company_assessment

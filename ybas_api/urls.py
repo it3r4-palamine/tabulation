@@ -30,4 +30,5 @@ urlpatterns = [
     url(r'^get-users/$', download_data.Get_users.as_view()),
     url(r'^get-settings/$', download_data.Get_settings.as_view()),
     url(r'^get-worksheets/$', download_data.Get_worksheets.as_view()),
+    url(r'^get-sessions/$', download_data.Get_sessions.as_view()),
 ]

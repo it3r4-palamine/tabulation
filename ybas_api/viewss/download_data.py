@@ -7,6 +7,7 @@ from rest_framework import status
 from systech_account.models.company import *
 from systech_account.models.user import *
 from systech_account.models.assessments import *
+from systech_account.models.company_assessment import *
 
 # OTHERS
 from systech_account.views.common import *
@@ -164,5 +165,28 @@ class Get_worksheets(APIView):
 		except Exception as e:
 			exc_type, exc_obj, exc_tb = sys.exc_info()
 			filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-			print_error(filename, "Get_settings", e, sys.exc_traceback.tb_lineno)
+			print_error(filename, "Get_worksheets", e, sys.exc_traceback.tb_lineno)
+			return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class Get_sessions(APIView):
+	def post(self, request, *args, **kwargs):
+		try:
+			company_assessment_list = []
+
+			company_assessment_qs = Company_assessment.objects.filter(company=request.user.company.pk, is_active=True, is_synced=False, is_complete=False)
+
+			for company_assessment in company_assessment_qs:
+				company_assessment_list.append(company_assessment.get_dict(is_local=True))
+
+			result = {
+				"company_assessment_list" : company_assessment_list,
+			}
+
+			return Response(result)
+
+		except Exception as e:
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			print_error(filename, "Get_sessions", e, sys.exc_traceback.tb_lineno)
 			return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
