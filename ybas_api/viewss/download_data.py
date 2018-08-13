@@ -64,7 +64,7 @@ class Get_users(APIView):
 					user_credit_list.append(user_credit)
 
 			result = {
-				"user_list"	: user_list,
+				"user_list"			: user_list,
 				"user_credit_list"	: user_credit_list,
 			}
 

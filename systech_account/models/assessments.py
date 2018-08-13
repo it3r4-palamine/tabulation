@@ -77,7 +77,7 @@ class Assessment_question(models.Model):
 					
 				
 				for image in images:
-					assessmentImageDict = image.get_dict(isV2)
+					assessmentImageDict = image.get_dict(True) if is_local else image.get_dict(isV2)
 
 					if isV2:
 						assessmentImageDict['questionId'] = assessment_question['id']
