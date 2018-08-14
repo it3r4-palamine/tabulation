@@ -76,6 +76,7 @@ class User(AbstractBaseUser):
 	def delete(self):
 		self.is_active = False
 		self.email += ("__"+str(time.time()))
+		self.username += ("__"+str(time.time()))
 
 		self.save()
 
