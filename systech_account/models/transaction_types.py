@@ -33,5 +33,6 @@ class Transaction_type(models.Model):
 			transaction_type['set_no'] = self.set_no
 			transaction_type['total_items'] = self.total_items
 			transaction_type['is_intelex'] = self.is_intelex
+			transaction_type['company'] = self.company.pk
 
 		return transaction_type

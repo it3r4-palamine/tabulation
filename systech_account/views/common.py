@@ -224,3 +224,12 @@ def generate_sorting(sort_dict = None,replace_id = None):
 
 	sort_by = "-"+sort_by
 	return [sort_by,"-id"]
+
+
+def print_error(filename, method_name, error, line_number):
+	print("======ERROR=======")
+	print("Filename: " + filename)
+	print("Method name: " + method_name)
+	print("Error: " + str(error))
+	print("Line number: " + str(line_number))
+	print("==================")
