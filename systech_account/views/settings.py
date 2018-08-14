@@ -468,6 +468,7 @@ def display_settings_read(request):
 		data = []
 		for record in records:
 			row = record.get_dict()
+			row['user_type'] = request.user.user_type.name
 			data.append(row)
 
 		results['data'] = data

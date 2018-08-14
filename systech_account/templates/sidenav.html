@@ -25,10 +25,10 @@
                     <span class="nav-label">Lesson Updates</span>
                 </a>
             </li>
-            {% if request.user.user_type.name == 'Technical' %}
             <li>
                 <a href="/assessments"><i class="fa fa-question"></i> <span class="nav-label" ng-if="!display_terms[0].questions" ng-cloak="">Questions</span><span class="nav-label" ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></a>
             </li>
+            {% if request.user.user_type.name == 'Technical' %}
             <li>
                 <a href="/related_questions"><i class="fa fa-link"></i> <span class="nav-label">Related Questions</span></a>
             </li>

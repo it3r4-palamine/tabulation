@@ -10,11 +10,11 @@ class Company(models.Model):
 		app_label = "systech_account"
 		db_table  = "company"
 
+
 	def get_dict(self):
 		return {
 			"id" 		: self.pk,
 			"name" 		: self.name,
-			# "transaction_type" : self.transaction_type.get_dict(),
 			"is_active" : self.is_active
 		}
 
@@ -30,6 +30,7 @@ class Company_rename(models.Model):
 		app_label = "systech_account"
 		db_table  = "company_rename"
 
+
 	def get_dict(self):
 		return {
 			"id" 		 : self.pk,
@@ -37,4 +38,6 @@ class Company_rename(models.Model):
 			"is_active"  : self.is_active,
 			"program_id" : self.program_id,
 			"is_intelex" : self.is_intelex,
+			"transaction_type" : self.transaction_type,
+			"company" 	 : self.company.pk,
 		}

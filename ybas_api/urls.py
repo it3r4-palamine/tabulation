@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from rest_framework.authtoken.views import obtain_auth_token
 from ybas_api import views
+from ybas_api.viewss import download_data
 from ybas_api.controllers import answers, users
 
 
@@ -9,6 +10,7 @@ urlpatterns = [
     url(r'^get-data', views.GetData.as_view()),
     url(r'^sync-assessments', views.SyncAssessments.as_view()),
     url(r'^file-upload/', views.FileUpload.as_view()),
+    url(r'^file-upload-ios', views.FileUploadIOS.as_view()),
     url(r'^sync-lesson-update', views.LessonUpdate.as_view()),
 
 
@@ -21,4 +23,12 @@ urlpatterns = [
     url(r'^get-answers/(?P<question_id>[0-9]+)$', answers.GetAnswers.as_view()),
 
     url(r'^get-profile/$', users.GetUserProfile.as_view()),
+
+    # YIAS Local
+    url(r'^get-company-and-user-type/$', views.Get_company_and_user_types.as_view()),
+    url(r'^get-programs-and-exercises/$', download_data.Get_programs_and_exercises.as_view()),
+    url(r'^get-users/$', download_data.Get_users.as_view()),
+    url(r'^get-settings/$', download_data.Get_settings.as_view()),
+    url(r'^get-worksheets/$', download_data.Get_worksheets.as_view()),
+    url(r'^get-sessions/$', download_data.Get_sessions.as_view()),
 ]

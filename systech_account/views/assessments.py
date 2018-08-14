@@ -11,10 +11,7 @@ import sys, traceback, os
 
 
 def home(request):
-	if request.user.user_type.name.lower() != "technical":
-		return redirect("company_assessment_redirect")
-	else:
-		return render(request, 'assessments/assessment_questions.html')
+	return render(request, 'assessments/assessment_questions.html')
 
 def create_dialog(request):
 	return render(request, 'assessments/dialogs/create_dialog.html')
