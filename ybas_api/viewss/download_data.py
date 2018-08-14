@@ -112,7 +112,8 @@ class Get_worksheets(APIView):
 			assessment_finding_list = []
 
 			# Get assessment questions/worksheets
-			assessment_question_qs = Assessment_question.objects.filter(company=request.user.company.pk, is_active=True)
+			relateds = ["transaction_type", "parent_question",]
+			assessment_question_qs = Assessment_question.objects.filter(company=request.user.company.pk, is_active=True).select_related(*relateds)
 
 			for _assessment_question in assessment_question_qs:
 				assessment_question = _assessment_question.get_dict(is_local=True)
