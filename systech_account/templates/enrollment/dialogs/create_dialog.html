@@ -1,0 +1,208 @@
+<div class="wrapper wrapper-content animated fadeIn modalinbox">
+	<div class="ibox">
+		<div class="ibox-title ibox_title_reset">
+			<div class="col-sm-5">
+        		<h3>Enrollment</h3>
+        	</div>
+	        <div class="col-sm-7">
+	            <div class="pull-right">
+
+	                <button class="btn btn-sm btn-link" ng-click="save_enrollment(enrollment_data, 'open')">
+	                    <i class="fa fa-save dialog-button" class="dialog-button"></i>
+	                    <span>Save</span>
+	                </button>
+
+	                <div class="btn-group">
+		                <button class="btn btn-sm btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		                    <i class="fa fa-save dialog-button" class="dialog-button" style="width: 10px; float: left; margin-left: 25px;"></i>
+		                    <i class="fa fa-angle-down dialog-button" class="dialog-button" style="width: -10px; font-size: 2em; padding-top: 8px; margin-bottom: 5px;"></i>
+		                    <span>More Saving Options</span>
+		                </button>
+		                <ul class="dropdown-menu">
+						    <li><a href="" ng-click="save_enrollment(enrollment_data, 'close')">Save and Close</a></li>
+						    <li><a href="" ng-click="save_enrollment(enrollment_data, 'new')">Save and New</a></li>
+						    <li><a href="" ng-click="save_enrollment(enrollment_data, 'print')">Save and Print</a></li>
+					  	</ul>
+				  	</div>
+	                <button class="btn btn-sm btn-link" ng-click="main.close_dialog(); is_renew = false;">
+	                    <i class="fa fa-times-circle dialog-button"></i>
+	                    <span>Close</span>
+	                </button>
+	            </div>
+	        </div>
+        </div>
+
+        <div class="ibox-content no-padding-top" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+        	{% include "common/loader.html" %}
+        	<div class="row">
+				<form class="form-horizontal" name="form">
+					{% csrf_token %}
+					<div class="ibox float-e-margins">
+						<div class="ibox-title no-border-top">
+						    <!-- <h5>Total Payment ({$ ctrl.total_payment | currency $})</h5> -->
+						    <div class="ibox-tools">
+						        <a class="collapse-link">
+						            <i class="fa fa-chevron-up"></i>
+						        </a>
+						    </div>
+						</div>
+
+						<div class="ibox-content no-padding-bottom">
+
+							<div class="row">
+								<div class="form-group"> 
+									<label class="col-sm-2 control-label">Form No</label>
+				                    <div class="col-sm-3">
+				                        <input type="text" ng-model="enrollment_data.code" class="form-control" ng-init="(!enrollment_data.code && !enrollment_data.id) ? enrollment_data.code = '{{ reference_no }}' : '' ">
+				                    </div>
+			                	</div>
+							</div>
+
+							<div class="row"> 
+								<div class="form-group "> 
+									<label class="col-sm-2 control-label">Student:</label>  
+									<div class="col-sm-3"> 
+										<!-- <div class="input-group">  -->
+											<ui-select ng-model="enrollment_data.student" ng-change="get_excess_time();"> 
+											<ui-select-match>{$ $select.selected.fullname $}</ui-select-match> 
+											<ui-select-choices repeat="student in users2 | filter: $select.search | limitTo:50"> 
+												<div ng-bind-html="student.fullname | highlight: $select.search"></div> 
+											</ui-select-choices> 
+											</ui-select>
+											<!-- <span class="input-group-btn">
+			                                	<a class="btn btn-default" ng-click="ctrl.open_create_edit_dialog()"><i class="glyphicon glyphicon-plus"></i></a>
+			                            	</span> -->
+										<!-- </div> -->
+									</div>
+
+									<label class="col-sm-2 control-label">Enrollment Date:</label>  
+									<div class="col-sm-3"> 
+										<input type="date" name="session credits" ng-model="enrollment_data.enrollment_date" class="form-control"> 
+									</div> 
+								</div>
+							</div>
+
+							<div class="row">
+
+								<div class="form-group">
+
+								<label class="col-sm-2 control-label">Program:</label>  
+								<div class="col-sm-3"> 
+									<!-- <div class="input-group">  -->
+										<ui-select ng-model="enrollment_data.program" ng-change="compute_program_session_credits(enrollment_data.program.hours); get_excess_time();"> 
+										<ui-select-match>{$ $select.selected.name $} : {$ $select.selected.rate $}</ui-select-match> 
+										<ui-select-choices repeat="program in company2 | filter: $select.search | limitTo:50"> 
+											<div ng-bind-html="program.name | highlight: $select.search"></div>
+											<small>Rate: {$ program.rate $}</small> 
+										</ui-select-choices> 
+										</ui-select>
+
+										<br><br>
+										<b ng-show="excess_time>0"><p>Remaining Balance: &nbsp;<span class="text-danger">{$ excess_time | secondsDuration $}</span></p></b>
+									<!-- </div> -->
+								</div>
+
+								<label class="col-sm-2 control-label">Center:</label>  
+									<div class="col-sm-3"> 
+										<!-- <div class="input-group">  -->
+												<ui-select ng-model="enrollment_data.school"> 
+												<ui-select-match>{$ $select.selected.name $}</ui-select-match> 
+												<ui-select-choices repeat="school in schools | filter: $select.search | limitTo:50"> 
+													<div ng-bind-html="school.name | highlight: $select.search"></div> 
+												</ui-select-choices> 
+												</ui-select> 
+												
+											<!-- </div>  -->
+									</div>   
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="form-group"> 
+									<label class="col-sm-2 control-label">Session Credits:</label>  
+									<div class="col-sm-2"> 
+										<label class="col-sm-2 control-label">Hours</label>  
+										<input type="number" name="session credits" ng-model="enrollment_data.session_credits.hours" class="form-control"> 
+									</div>
+									<form class="form-horizontal" name="form">
+										<div class="col-sm-2"> 
+											<label class="col-sm-2 control-label">Minutes</label>  
+											<input name="minutes" type="number" name="session credits" ng-model="enrollment_data.session_credits.minutes" 
+												class="form-control" max="59"> 
+											<div class="m-t-xs" ng-show="form.minutes.$invalid && form.minutes.$dirty">
+												<small class="text-danger">Max minutes is 59</small>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+
+							<div class="row"> 
+								<div class="form-group"> 
+									<label class="col-sm-2 control-label">Session Start Date:</label>  
+									<div class="col-sm-3"> 
+										<input type="date" name="session credits" ng-model="enrollment_data.session_start_date" class="form-control"> 
+									</div> 
+									
+									<label class="col-sm-2 control-label">Session End Date:</label>  
+									<div class="col-sm-3"> 
+										<input type="date" name="session credits" ng-model="enrollment_data.session_end_date" class="form-control"> 
+									</div> 
+								</div> 
+							</div> 
+
+
+						
+						</div>
+				</form>
+
+				<form > 
+					<div class="ibox float-e-margins">
+		                <div class="ibox-title">
+		                    <h5>Total Payment ({$ total_payment $})</h5>
+		                    <div class="ibox-tools">
+		                        <a class="collapse-link">
+		                            <i class="fa fa-chevron-up"></i>
+		                        </a>
+		                    </div>
+		                </div>
+		                
+		                <div class="ibox-content">
+		                    <div class="feed-activity-list">
+
+		                        <table class="table table-condensed">
+		                            <thead>
+		                                <tr>
+		                                    <th>Reference</th>
+		                                    <th>Date</th>
+		                                    <th>Amount</th>
+		                                </tr>
+		                            </thead>
+		                            <tbody>
+		                                <tr class="feed-element clickable" ng-repeat="record in enrollment_data.payments" ng-click="open_payment_create_dialog(record)" >
+		                                    <td>
+		                                		<input class="form-control text-center has-error" type="text" ng-model="record.official_receipt_no" ng-disabled="!enrollment_data.program">
+		                                    </td>
+		                                    <td class="text-center">
+		                                    	<input class="form-control text-center" type="date" ng-model="record.payment_date">
+		                                    	
+		                                    </td>
+		                                    <td class="text-right">
+		                                    	<input min="0" class="form-control text-center" ng-blur="compute_session_credits()" type="number" ng-model="record.amount_paid" ng-disabled="!enrollment_data.program && record.official_receipt_no == null">
+		                                    </td>
+		                                    <td>
+		                                    	<button type="button" class="btn btn-sm btn-success" ng-click="delete_payment(record)"><i class="fa fa-trash"></i></button>
+		                                    </td>
+		                                </tr>
+		                            </tbody>
+		                        </table>
+		                        <a ng-click="add_payment()" style="text-decoration:underline">Add New Payment</p>
+		                    </div>
+		                </div>
+		            </div>
+
+				</form>
+        	</div>
+        </div>
+	</div>
+</div>

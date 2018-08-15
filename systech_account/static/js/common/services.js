@@ -732,6 +732,32 @@ app.factory("CommonFunc", function($http, Notification, SweetAlert) {
             return sweetalert;
         },
 
+        attention: function(title,message,type,confirmButton)
+        {
+            if (!type) {
+                type = "warning"
+            }
+
+            if(!confirmButton)
+            {
+                confirmButton = "Okay"
+            }
+
+            confcolor = "#3f51b5"
+
+            var sweetalert = SweetAlert.swal({
+                title: title,
+                text: message,
+                type: type,
+                showCancelButton: true,
+                confirmButtonColor: confcolor,
+                confirmButtonText: confirmButton,
+                cancelButtonText: "Cancel",
+                closeOnConfirm: true,
+            });
+            return sweetalert;
+        },
+
         /*get the likely percentage of two string*/
         similar(a,b) {
             var lengthA = a.length;
@@ -853,11 +879,26 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
+        get_company2: function(scope) {
+            data = {"exclude":true}
+            var post = CommonRequests.read_common_records(scope, "company2", "/company/read/",data,true);
+            return post.success(function(response){
+                scope["company2"] = response.data;
+            })
+        },
+
         get_users: function(scope) {
             var post = CommonRequests.read_common_records(scope, "users", "/users/read/",{},true);
             return post.success(function(response){
                 response.data.unshift({'fullname' : 'ALL'});
                 scope["users"] = response.data;
+            })
+        },
+
+        get_users2: function(scope) {
+            var post = CommonRequests.read_common_records(scope, "users2", "/users/read/",{},true);
+            return post.success(function(response){
+                scope["users2"] = response.data;
             })
         },
 

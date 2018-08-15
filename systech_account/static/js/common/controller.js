@@ -324,6 +324,15 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
 		scope.pagination["total_pages"] = response.total_pages;
 	}
 
+	me.convert_seconds_duration = function(time)
+    {
+		var hrs = ~~(time / 3600);
+    	var mins = ~~((time % 3600) / 60);
+    	var secs = time % 60;
+
+    	return { hours : hrs, minutes : mins, seconds : secs };
+    }
+
 	me.related_transactions = function(scope,record,trans_id){
 		if(!trans_id){
 			trans_id = record.id;
@@ -365,6 +374,23 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
             }
         }
         return obj
+    }
+
+    me.format_time = function(arr,fields,from_backend){
+
+    	if(!fields){fields = ["session_timein","session_timeout"]}
+        for(var i in fields){
+            var field = fields[i];
+            if(arr[field]){
+            	if(from_backend){
+        			arr[field] = Date.parse(arr[field]);
+            	}else{
+                	arr[field] = me.format_single_time(arr[field]);
+            	}
+            }
+        }
+
+        return arr
     }
 
     me.pad = function(num, size,rightpad) {

@@ -3,7 +3,7 @@ from django.conf.urls import url, handler404,patterns,include
 from django.conf import settings as root_settings
 from django.conf.urls.static import static
 
-from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs
+from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs,enrollment
 
 urlpatterns = [
 	url(r'^common/pagination/$',common.pagination),
@@ -85,7 +85,11 @@ urlpatterns = [
 	url(r'^recommendations/create_dialog/$', recommendations.create_dialog),
 	url(r'^recommendations/create/$', recommendations.create),
 	url(r'^recommendations/delete/(?P<id>[0-9]+)$', recommendations.delete),
-	
+
+	url(r'^enrollment/$', enrollment.enrollment, name='enrollment'),
+	url(r'^enrollment/create_dialog/$', enrollment.create_dialog),
+	url(r'^enrollment/read_enrollees/$', enrollment.read_enrollees),
+
 	url(r'^generate_report/(?P<generate_report_id>[0-9]+)/$',generate_report.generate_report,name="generate_report"),
 	url(r'^generate_report/generate/$', generate_report.generate),
 	url(r'^generate_report/download_dialog/$', generate_report.download_dialog),
