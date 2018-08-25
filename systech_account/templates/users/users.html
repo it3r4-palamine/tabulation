@@ -67,7 +67,9 @@
                                 <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.user_type.name $}</td>
                                 <td>
                                     <button class="btn btn-primary btn-sm" ng-click="credits_summary(record)">View Credits Summary</button>
+                                    {% if request.user.id != 453 %}
                                     <button class="btn btn-warning btn-sm" ng-if="record.user_type.name != 'Technical'" ng-click="change_pass_dialog(record)">Change Password</button>
+                                    {% endif %}
                                     {% if request.user.user_type.name == 'Technical' %}
                                     <button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button>
                                     {% endif %}
