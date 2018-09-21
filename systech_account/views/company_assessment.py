@@ -88,7 +88,7 @@ def create(request):
 			checkQuestion = Assessment_question.objects.filter(company=postdata['company'],is_active=True,transaction_type=transaction_type['id'])
 			if len(checkQuestion) < 1:
 				t_type = Transaction_type.objects.get(id=transaction_type['id'])
-				return error(t_type.name + " doesn't have any questions. Please be advised!")
+				return error(t_type.name + " " + str(t_type.set_no) + " doesn't have any questions. Please be advised!")
 
 		postdata['transaction_type'] = list_to_string(company_assessment_transaction_type)
 		try:

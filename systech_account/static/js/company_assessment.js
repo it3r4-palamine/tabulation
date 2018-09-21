@@ -137,7 +137,7 @@ app.controller('company_assessmentCtrl', function($scope, $http, $timeout, $elem
 	}
 
 	$scope.read_transaction_types = function(record){
-    	me.post_generic("/transaction_types/read/",{"company_rename":record.company_rename.id},"main")
+    	me.post_generic("/transaction_types/read/",{"company_rename":record.company_rename.id, "with_questions":true},"dialog")
     	.success(function(response){
     		$scope.transaction_types = response.data;
     	})

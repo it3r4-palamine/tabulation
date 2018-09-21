@@ -25,6 +25,7 @@ def read(request):
 		name_search 	   	 = data.pop("name","")
 		has_company 	   	 = data.get("company_rename",None)
 		bypass_code_exists 	 = data.get("bypass_code_exists",False)
+		with_questions		 = data.get("with_questions",False)
 		c_term 			   	 = "Company"
 		terms 				 = get_display_terms(request)
 
@@ -34,7 +35,19 @@ def read(request):
 		if has_company:
 			try:
 				company 		  = Company_rename.objects.get(id=has_company)
-				filters['id__in'] = company.transaction_type
+
+				if with_questions:
+					t_types_ids = []
+					t_types = Transaction_type.objects.filter(id__in=company.transaction_type)
+					for t_type in t_types:
+						check_question = Assessment_question.objects.filter(is_active=True,company=data['company'],transaction_type=t_type.id)
+						if len(check_question) > 0:
+							t_types_ids.append(t_type.id)
+
+					filters['id__in'] = t_types_ids
+				else:
+					filters['id__in'] = company.transaction_type
+
 			except Company_rename.DoesNotExist:
 				raise_error("%s doesn't exist."%(c_term))
 
