@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import RegexValidator
 
 class Display_setting(models.Model):
 	company_assessments = models.CharField(max_length=200,blank=True,null=True)
@@ -60,3 +61,42 @@ class To_dos_topic(models.Model):
 			"name" 		: self.name,
 			"is_active" : self.is_active,
 		}
+
+class School(models.Model):
+	name = models.CharField(max_length=100, blank=False, null=False)
+	address = models.TextField(blank=False, null=False)
+	contact_person = models.CharField(max_length=200, blank=True, null=True)
+	phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+	contact_number = models.CharField(max_length=15, validators=[phone_regex], blank=True, null=True) # validators should be a list
+	is_active = models.BooleanField(default=True)
+	is_deleted = models.BooleanField(default=False)
+
+	class Meta:
+	    app_label = "systech_account"
+	    db_table  = "school"
+	    ordering  = ["id"]
+
+	def get_dict(self):
+
+	    instance = {}
+	    instance["id"] = self.id
+	    instance["name"] = self.name
+
+	    return instance
+
+class GradeLevel(models.Model):
+    name = models.CharField(max_length=50, blank=False, null=False)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+     
+    class Meta:
+        app_label = "systech_account"
+        db_table  = "grade_level"
+        ordering  = ["id"]
+
+    def get_dict(self):
+		instance = {}
+		instance["id"] = self.id
+		instance["name"] = self.name
+
+		return instance
