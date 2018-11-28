@@ -63,13 +63,14 @@ class To_dos_topic(models.Model):
 		}
 
 class School(models.Model):
-	name = models.CharField(max_length=100, blank=False, null=False)
-	address = models.TextField(blank=False, null=False)
-	contact_person = models.CharField(max_length=200, blank=True, null=True)
-	phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-	contact_number = models.CharField(max_length=15, validators=[phone_regex], blank=True, null=True) # validators should be a list
-	is_active = models.BooleanField(default=True)
-	is_deleted = models.BooleanField(default=False)
+	name 			= models.CharField(max_length=100, blank=False, null=False)
+	address 		= models.TextField(blank=False, null=False)
+	contact_person 	= models.CharField(max_length=200, blank=True, null=True)
+	phone_regex 	= RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+	contact_number 	= models.CharField(max_length=15, validators=[phone_regex], blank=True, null=True) # validators should be a list
+	is_active 		= models.BooleanField(default=True)
+	is_deleted 		= models.BooleanField(default=False)
+	company    		= models.ForeignKey("Company",blank=True,null=True)
 
 	class Meta:
 	    app_label = "systech_account"
@@ -85,9 +86,10 @@ class School(models.Model):
 	    return instance
 
 class GradeLevel(models.Model):
-    name = models.CharField(max_length=50, blank=False, null=False)
-    is_active = models.BooleanField(default=True)
-    is_deleted = models.BooleanField(default=False)
+    name 		= models.CharField(max_length=50, blank=False, null=False)
+    is_active 	= models.BooleanField(default=True)
+    is_deleted 	= models.BooleanField(default=False)
+    company    	= models.ForeignKey("Company",blank=True,null=True)
      
     class Meta:
         app_label = "systech_account"
@@ -95,8 +97,8 @@ class GradeLevel(models.Model):
         ordering  = ["id"]
 
     def get_dict(self):
-		instance = {}
-		instance["id"] = self.id
+		instance 		 = {}
+		instance["id"] 	 = self.id
 		instance["name"] = self.name
 
 		return instance
