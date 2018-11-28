@@ -105,26 +105,37 @@ urlpatterns = [
 	url(r'^assessments/related_questions_create/$', assessments.related_questions_create),
 	url(r'^assessments/delete_related_questions/(?P<id>[0-9]+)$', assessments.delete_related_questions),
 	
+	### SETTINGS
 	url(r'^settings/$', settings.settings, name='settings'),
+	
 	url(r'^settings/display_settings/$', settings.display_settings),
 	url(r'^settings/display_settings_read/$', settings.display_settings_read),
 	url(r'^settings/save_display_terms/$', settings.save_display_terms),
+	
 	url(r'^settings/user_types/$', settings.user_types),
 	url(r'^settings/read_user_types/$', settings.read_user_types),
 	url(r'^settings/user_types_create_dialog/$', settings.user_types_create_dialog),
 	url(r'^settings/user_types_create/$', settings.user_types_create),
 	url(r'^settings/user_types_delete/(?P<id>[0-9]+)$', settings.user_types_delete),
+	
 	url(r'^settings/to_dos/$', settings.to_dos),
 	url(r'^settings/read_to_dos/$', settings.read_to_dos),
 	url(r'^settings/to_dos_create_dialog/$', settings.to_dos_create_dialog),
 	url(r'^settings/to_dos_create/$', settings.to_dos_create),
 	url(r'^settings/to_dos_delete/(?P<id>[0-9]+)$', settings.to_dos_delete),
+	
 	url(r'^settings/math_symbols/$', settings.math_symbols),
 	url(r'^settings/math_symbols_create_dialog/$', settings.math_symbols_create_dialog),
 	url(r'^settings/math_symbols_create/$', settings.math_symbols_create),
 	url(r'^settings/read_math_symbols/$', settings.read_math_symbols),
 	url(r'^settings/math_symbols_delete/(?P<id>[0-9]+)$', settings.math_symbols_delete),
 
+	url(r'^settings/schools/$', settings.schools),
+	url(r'^settings/schools_create_dialog/$', settings.schools_create_dialog),
+	url(r'^settings/schools_create/$', settings.schools_create),
+	url(r'^settings/read_schools/$', settings.read_schools),
+	url(r'^settings/schools_delete/(?P<id>[0-9]+)$', settings.schools_delete),
+	
 	# Lesson Updates
 	url(r'^lesson_updates/load_page/$', lesson_updates.load_page),
 	url(r'^lesson_updates/read/$', lesson_updates.read),

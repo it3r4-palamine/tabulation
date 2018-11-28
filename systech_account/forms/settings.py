@@ -25,4 +25,4 @@ class School_form(forms.ModelForm):
 class Grade_level_form(forms.ModelForm):
 	class Meta:
 		model = GradeLevel
-		fields = ('name',)
+		fields = ('name','is_active','company')
