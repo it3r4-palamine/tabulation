@@ -86,9 +86,14 @@ urlpatterns = [
 	url(r'^recommendations/create/$', recommendations.create),
 	url(r'^recommendations/delete/(?P<id>[0-9]+)$', recommendations.delete),
 
-	url(r'^enrollment/$', enrollment.enrollment, name='enrollment'),
-	url(r'^enrollment/create_dialog/$', enrollment.create_dialog),
-	url(r'^enrollment/read_enrollees/$', enrollment.read_enrollees),
+	### ENROLLMENT
+	url(r'^enrollments/$', enrollment.enrollment, name='enrollment'),
+	url(r'^enrollments/create_dialog/$', enrollment.create_dialog),
+	url(r'^enrollments/read_enrollees/$', enrollment.read_enrollees),
+	url(r'^enrollments/get_excess_time/$', enrollment.get_excess_time),
+	url(r'^enrollments/save_enrollment/$', enrollment.save_enrollment),
+	url(r'^enrollments/check_reference_no/$', enrollment.check_reference_no),
+	url(r'^enrollments/read_enrollment/(?P<enrollment_id>\w{0,50})$$', enrollment.read_enrollment),
 
 	url(r'^generate_report/(?P<generate_report_id>[0-9]+)/$',generate_report.generate_report,name="generate_report"),
 	url(r'^generate_report/generate/$', generate_report.generate),
@@ -104,7 +109,8 @@ urlpatterns = [
 	url(r'^assessments/related_questions_create_dialog/$', assessments.related_questions_create_dialog),
 	url(r'^assessments/related_questions_create/$', assessments.related_questions_create),
 	url(r'^assessments/delete_related_questions/(?P<id>[0-9]+)$', assessments.delete_related_questions),
-	
+
+
 	### SETTINGS
 	url(r'^settings/$', settings.settings, name='settings'),
 	

@@ -12,7 +12,7 @@
 	                    <span>Save</span>
 	                </button>
 
-	                <div class="btn-group">
+	                <!-- <div class="btn-group">
 		                <button class="btn btn-sm btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		                    <i class="fa fa-save dialog-button" class="dialog-button" style="width: 10px; float: left; margin-left: 25px;"></i>
 		                    <i class="fa fa-angle-down dialog-button" class="dialog-button" style="width: -10px; font-size: 2em; padding-top: 8px; margin-bottom: 5px;"></i>
@@ -23,7 +23,7 @@
 						    <li><a href="" ng-click="save_enrollment(enrollment_data, 'new')">Save and New</a></li>
 						    <li><a href="" ng-click="save_enrollment(enrollment_data, 'print')">Save and Print</a></li>
 					  	</ul>
-				  	</div>
+				  	</div> -->
 	                <button class="btn btn-sm btn-link" ng-click="main.close_dialog(); is_renew = false;">
 	                    <i class="fa fa-times-circle dialog-button"></i>
 	                    <span>Close</span>
@@ -63,7 +63,7 @@
 									<label class="col-sm-2 control-label">Student:</label>  
 									<div class="col-sm-3"> 
 										<!-- <div class="input-group">  -->
-											<ui-select ng-model="enrollment_data.student" ng-change="get_excess_time();"> 
+											<ui-select ng-model="enrollment_data.user" ng-change="get_excess_time();"> 
 											<ui-select-match>{$ $select.selected.fullname $}</ui-select-match> 
 											<ui-select-choices repeat="student in users2 | filter: $select.search | limitTo:50"> 
 												<div ng-bind-html="student.fullname | highlight: $select.search"></div> 
@@ -89,7 +89,7 @@
 								<label class="col-sm-2 control-label">Program:</label>  
 								<div class="col-sm-3"> 
 									<!-- <div class="input-group">  -->
-										<ui-select ng-model="enrollment_data.program" ng-change="compute_program_session_credits(enrollment_data.program.hours); get_excess_time();"> 
+										<ui-select ng-model="enrollment_data.company_rename" ng-change="compute_program_session_credits(enrollment_data.company_rename.hours); get_excess_time();"> 
 										<ui-select-match>{$ $select.selected.name $} : {$ $select.selected.rate $}</ui-select-match> 
 										<ui-select-choices repeat="program in company2 | filter: $select.search | limitTo:50"> 
 											<div ng-bind-html="program.name | highlight: $select.search"></div>
@@ -181,14 +181,14 @@
 		                            <tbody>
 		                                <tr class="feed-element clickable" ng-repeat="record in enrollment_data.payments" ng-click="open_payment_create_dialog(record)" >
 		                                    <td>
-		                                		<input class="form-control text-center has-error" type="text" ng-model="record.official_receipt_no" ng-disabled="!enrollment_data.program">
+		                                		<input class="form-control text-center has-error" type="text" ng-model="record.official_receipt_no" ng-disabled="!enrollment_data.company_rename">
 		                                    </td>
 		                                    <td class="text-center">
 		                                    	<input class="form-control text-center" type="date" ng-model="record.payment_date">
 		                                    	
 		                                    </td>
 		                                    <td class="text-right">
-		                                    	<input min="0" class="form-control text-center" ng-blur="compute_session_credits()" type="number" ng-model="record.amount_paid" ng-disabled="!enrollment_data.program && record.official_receipt_no == null">
+		                                    	<input min="0" class="form-control text-center" ng-blur="compute_session_credits()" type="number" ng-model="record.amount_paid" ng-disabled="!enrollment_data.company_rename && record.official_receipt_no == null">
 		                                    </td>
 		                                    <td>
 		                                    	<button type="button" class="btn btn-sm btn-success" ng-click="delete_payment(record)"><i class="fa fa-trash"></i></button>

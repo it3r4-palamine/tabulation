@@ -7,6 +7,8 @@ from ..models.multiple_choice import *
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFit
 
+from django.db.models import ExpressionWrapper, DurationField
+
 from datetime import *
 import sys, traceback, os
 import base64

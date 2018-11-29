@@ -887,6 +887,15 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
+        get_schools2 : function(scope)
+        {
+            var post = CommonRequests.read_common_records(scope, "schools2", "/settings/read_schools/",{},true);
+            return post.success(function(response){
+                response.data.unshift({'name' : 'No School'});
+                scope["schools"] = response.data;
+            })
+        },
+
         get_users: function(scope) {
             var post = CommonRequests.read_common_records(scope, "users", "/users/read/",{},true);
             return post.success(function(response){

@@ -52,12 +52,14 @@
                     <table class="table table-bordered">
                         <thead>
                             <th>Name</th>
+                            <th>Rate</th>
                             <!-- <th><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></th> -->
                             <th>Action</th>
                         </thead>
                         <tbody>
                             <tr ng-repeat="record in records" class="hand_cursor">
                                 <td ng-click="load_to_edit(record)">{$ record.name $}</td>
+                                <td ng-click="load_to_edit(record)">{$ record.rate $}</td>
                                 <!-- <td ng-click="load_to_edit(record)">
                                     <ul>
                                         <li ng-repeat="transaction_type in record.transaction_type">

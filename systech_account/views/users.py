@@ -2,6 +2,7 @@ from ..forms.transaction_types import *
 from ..models.transaction_types import *
 from ..forms.user_form import *
 from ..models.user import *
+from ..models.enrollment import *
 from ..models.company_assessment import *
 from ..views.common import *
 from datetime import *
@@ -165,6 +166,19 @@ def read_user_credits(request):
         for user_credit in user_credits:
             row = user_credit.get_dict()
             data.append(row)
+
+        if not user_credits:
+            enrollments = Enrollment.objects.filter(
+                user=datus['consultant']['id'],
+                session_start_date__lte=date_now,
+                session_end_date__gte=date_now,
+                company_rename=datus['company_rename']['id'],
+                )
+
+            for enrollment in enrollments:
+                datus = enrollment.get_dict()
+                datus['session_credits'] = datus['session_credits_seconds']
+                data.append(datus)
         results['data'] = data
         return success_list(results, False)
     except Exception as e:

@@ -56,7 +56,7 @@ class ObtainAuthToken(APIView):
                 }
 
                 user_log_form = UserLogForm(userlog)
-                if user_log_form.is_valid(): user_log_form.save()
+                # if user_log_form.is_valid(): user_log_form.save()
             else:
                 message = ""
                 if not user.is_active: message = "Account Inactive. Please activate your account."
@@ -131,16 +131,16 @@ class GetPhoto(APIView):
 class GetQuestionPhoto(APIView):
 
     def post(self, request):
-        data = req_data(request,True)
+        # data = req_data(request,True)
 
-        if os.path.exists('systech_account/%s'%(data['imageLocation'])):
-            image = open('systech_account/%s'%(data['imageLocation']), 'rb')
-            return HttpResponse(image, content_type="image/png")
-        else:
-            return Response("File does not exists", status=status.HTTP_404_NOT_FOUND)
-        # assessmentImage = Assessment_image.objects.filter(question=21, is_active=True).first()
-        # image = open('systech_account/static/uploads/%s'%(assessmentImage.image), 'rb')
-
+        # if os.path.exists('systech_account/%s'%(data['imageLocation'])):
+        #     image = open('systech_account/%s'%(data['imageLocation']), 'rb')
+        #     return HttpResponse(image, content_type="image/png")
+        # else:
+        #     return Response("File does not exists", status=status.HTTP_404_NOT_FOUND)
+        assessmentImage = Assessment_image.objects.filter(question=21, is_active=True).first()
+        image = open('systech_account/static/uploads/%s'%(assessmentImage.image), 'rb')
+        return HttpResponse(image, content_type="image/png")
 
         # try:
             # assessmentImage = Assessment_image.objects.filter(question=21, is_active=True).first()
@@ -212,7 +212,7 @@ class GetData(APIView):
         today = datetime.today()
         date_now = today.strftime('%Y-%m-%d')
 
-        assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True, date_to__gte=date_now).order_by("id") ### commented the old code bcoz pwd na mg generate maski wala pa na complete ang assessment
+        assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True, date_to__gte=date_now).order_by("id",is_expired=True) ### commented the old code bcoz pwd na mg generate maski wala pa na complete ang assessment
         # assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True, is_generated=False, date_to__gte=date_now)
         # assessmentQs = Company_assessment.objects.filter(consultant=request.user.id, is_active=True)
 

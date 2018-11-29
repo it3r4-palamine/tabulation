@@ -4,6 +4,10 @@ from ..models.settings import *
 from ..models.transaction_types import *
 from ..models.user import *
 from ..models.company import *
+from ..models.payment import *
+from ..models.assessments import *
+from ..views.common import *
+from django.db.models import Count, Sum, Avg,Min,Q,F,Func
 
 class Enrollment(models.Model):
     user 				= models.ForeignKey("User")
@@ -37,16 +41,16 @@ class Enrollment(models.Model):
         try:
             instance = {}
 
-            if return_type == FOR_LIST:
+            if return_type == 1:
                 instance['id'] 						= self.id
                 instance['code'] 					= self.code
-                instance['student'] 				= self.student.get_dict(return_type = FOR_LABEL)
-                instance['student_id'] 				= self.student.id
-                instance['program'] 				= self.program.get_dict(return_type = FOR_LABEL) if self.program else None
+                instance['user'] 					= self.user.get_dict()
+                instance['user_id'] 				= self.user.id
+                instance['company_rename'] 			= self.company_rename.get_dict() if self.company_rename else None
                 instance['session_credits_seconds'] = self.session_credits.total_seconds() if self.session_credits else 0
                 instance['session_start_date'] 		= format_date_from_db(self.session_start_date)
                 instance['session_end_date'] 		= format_date_from_db(self.session_end_date)
-                instance['is_expire'] 				= False if self.session_end_date and self.session_end_date.date() >= DATE_TODAY.date() else True
+                instance['is_expire'] 				= False if self.session_end_date and self.session_end_date.date() >= datetime.now().date() else True
 
                 time_consumed 	= self.get_total_session_time()
                 time_remaining 	= self.get_remaining_credit()
@@ -63,15 +67,15 @@ class Enrollment(models.Model):
 
             instance['id'] 							= self.id
             instance['code'] 						= self.code
-            instance['student'] 					= self.student.get_dict()
-            instance['program'] 					= self.program.get_dict() if self.program else None
-            instance['school'] 						= self.school.get_dict() if self.school else None
+            instance['user'] 						= self.user.get_dict()
+            instance['school'] 					= self.school.get_dict() if self.school else None
+            instance['company_rename'] 				= self.company_rename.get_dict() if self.company_rename else None
             instance['session_credits'] 			= str(self.session_credits)
             instance['session_credits_seconds'] 	= self.session_credits.total_seconds() if self.session_credits else 0
             instance['session_start_date'] 			= format_date_from_db(self.session_start_date)
             instance['session_end_date'] 			= format_date_from_db(self.session_end_date)
             instance['enrollment_date'] 			= format_date_from_db(self.enrollment_date)
-            instance['is_expire'] 					= False if self.session_end_date and self.session_end_date.date() >= DATE_TODAY.date() else True
+            instance['is_expire'] 					= False if self.session_end_date and self.session_end_date.date() >= datetime.now().date() else True
             instance['total_time_left_seconds'] 	= 0
             
             time_consumed 	= self.get_total_session_time()
@@ -115,11 +119,11 @@ class Enrollment(models.Model):
     def get_total_session_time(self):
 
         session_filters = {
-            "enrollment_id" : self.id,
+            "company_assessment__company_rename__pk" : self.company_rename.id,
+            "company_assessment__consultant__pk" : self.user.id,
             "is_deleted" : False
         }
-
-        sessions = StudentSession.objects.filter(**session_filters).aggregate(total_time_consumed=models.Sum(ExpressionWrapper(F('session_timeout') - F('session_timein'),output_field=DurationField())))
+        sessions = Assessment_session.objects.filter(**session_filters).aggregate(total_time_consumed=models.Sum(ExpressionWrapper(F('time_end') - F('time_start'),output_field=DurationField())))
 
         if sessions["total_time_consumed"]:
             return sessions["total_time_consumed"]

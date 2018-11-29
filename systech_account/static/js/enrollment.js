@@ -26,7 +26,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 
 	CommonRead.get_users2($scope);
 	CommonRead.get_company2($scope);
-	// CommonRead.get_schools2(self,"schools");
+	CommonRead.get_schools2($scope);
 
 
 	$scope.enrollment_dialog = function(enrollment, is_renew)
@@ -56,20 +56,25 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 			};
 			$scope.enrollment_data.payments.push(angular.copy($scope.payment));
 			$scope.set_date_and_time();
+
+			me.post_generic("/enrollments/check_reference_no/","","main")
+			.success(function(response){
+				$scope.enrollment_data.code = response
+			})
 		}
 		
-		me.open_dialog("/enrollment/create_dialog/", 'dialog_width_90','main');
+		me.open_dialog("/enrollments/create_dialog/", 'dialog_width_90','main');
 	};
 
 	$scope.get_excess_time = function(){
 		$scope.excess_time = 0;
-		if (!$scope.enrollment_data.student || !$scope.enrollment_data.program) return;
+		if (!$scope.enrollment_data.user || !$scope.enrollment_data.company_rename) return;
 		var data = {
-			student_id: $scope.enrollment_data.student.id,
-			program_id: $scope.enrollment_data.program.id,
+			student_id: $scope.enrollment_data.user.id,
+			program_id: $scope.enrollment_data.company_rename.id,
 		}
 
-		me.post_generic("/enrollment/get_excess_time/", data, 'dialog')
+		me.post_generic("/enrollments/get_excess_time/", data, 'dialog')
 		.success(function(response){
 			$scope.excess_time = response.excess_time
 		}).error(function(error){
@@ -80,7 +85,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	$scope.read_enrollment = function(enrollment)
 	{
 
-		me.post_generic("/enrollment/read_enrollment/" + enrollment.id, "", 'main')
+		me.post_generic("/enrollments/read_enrollment/" + enrollment.id, "", 'main')
 			.success(function(enrollment){
 				for(var i in enrollment.payments)
 				{
@@ -103,7 +108,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		if ($scope.validate_enrollment()) {
 			data["deleted_payments"] = $scope.deleted_payment_ids;
 
-			$http.post("/enrollment/save_enrollment/", data).success(function(response){
+			$http.post("/enrollments/save_enrollment/", data).success(function(response){
 				data.id = response.enrollment_pk;
 				check_save_options(save_opt, data, response.message);
 				$scope.main_loader();
@@ -158,7 +163,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		var confirmation = CommonFunc.confirmation("Delete Enrollment \n" + data.student.full_name + "?");
 		confirmation.then(function(){
 
-			me.post_generic("/enrollment/delete_enrollment/", data, null, true)
+			me.post_generic("/enrollments/delete_enrollment/", data, null, true)
 				.success(function(response){
 					$scope.main_loader();
 				})
@@ -192,7 +197,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		filters = me.format_time(filters);
 		filters["pagination"] = me.pagination;
 
-		var post = me.post_generic("/enrollment/read_enrollees/",filters,"main");
+		var post = me.post_generic("/enrollments/read_enrollees/",filters,"main");
 		post.success(function(response){
 			$scope.records = response.records;
 			me.starting = response.starting;
@@ -383,7 +388,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 
 		$scope.total_payment = $scope.get_total_payments();
 
-		if($scope.total_payment >= $scope.enrollment_data.program.rate)
+		if($scope.total_payment >= $scope.enrollment_data.company_rename.rate)
 		{
 			$scope.enrollment_data.session_credits.hours = $scope.total_payment / 125;
 		}else{
@@ -414,5 +419,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		self.context_id = record.id;
 		return RightClick.get_menu(self,record)
 	}
+
+	CommonRead.get_display_terms($scope)
 
 })
