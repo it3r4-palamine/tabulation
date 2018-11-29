@@ -4,8 +4,8 @@ from ..models.enrollment import *
 class Enrollment_form(forms.ModelForm):
 	class Meta:
 		model = Enrollment
-		fields = ('student', 
-				  'program',
+		fields = ('user', 
+				  'company_rename',
 				  'school', 
 				  'code',
 				  'session_credits',
