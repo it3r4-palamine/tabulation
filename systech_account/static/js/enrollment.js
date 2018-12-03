@@ -1,4 +1,4 @@
-var app = angular.module("enrollment", ['common_module'])
+var app = angular.module("enrollment", ['common_module','ui.bootstrap.contextMenu'])
 
 app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $controller, Notification, CommonRead, CommonFunc, RightClick){
 	
@@ -22,7 +22,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		payments: [],
 		session_credits:{ hours: 0, minutes: 0}  
 	};
-
+	$scope.filter = {}
 
 	CommonRead.get_users2($scope);
 	CommonRead.get_company2($scope);
@@ -158,9 +158,9 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	}
 
 
-	$scope.delete_enrollment = function(data)
+	me.delete_enrollment = function(data)
 	{
-		var confirmation = CommonFunc.confirmation("Delete Enrollment \n" + data.student.full_name + "?");
+		var confirmation = CommonFunc.confirmation("Delete Enrollment \n" + data.user.fullname + "?");
 		confirmation.then(function(){
 
 			me.post_generic("/enrollments/delete_enrollment/", data, null, true)
@@ -196,12 +196,13 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		filters = me.format_date(filters);
 		filters = me.format_time(filters);
 		filters["pagination"] = me.pagination;
+		filters['name_search'] = $scope.filter.name
 
 		var post = me.post_generic("/enrollments/read_enrollees/",filters,"main");
 		post.success(function(response){
 			$scope.records = response.records;
 			me.starting = response.starting;
-			me.ending = response.data.length;
+			me.ending = response.records.length;
 			me.pagination.limit_options = angular.copy(me.pagination.limit_options_orig);
 			me.pagination.limit_options.push(response.total_records)
 			me.pagination["total_records"] = response.total_records;
@@ -241,53 +242,81 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		self.get_total_enrolled_time();
 	};
 
-	self.get_total_enrolled_time = function()
+	$scope.get_total_enrolled_time = function()
 	{
 		var total_seconds = 0;
-		for(var i in self.response.enrolled_sessions)
+		for(var i in $scope.response.enrolled_sessions)
 		{
-			total_seconds += self.response.enrolled_sessions[i].total_session_time_seconds;
+			total_seconds += $scope.response.enrolled_sessions[i].total_session_time_seconds;
 		}
-		self.response.enroll_total_session_time_seconds = total_seconds;
+		$scope.response.enroll_total_session_time_seconds = total_seconds;
 
 		var total_seconds = 0;
-		for(var i in self.response.unenrolled_sessions)
+		for(var i in $scope.response.unenrolled_sessions)
 		{
-			total_seconds += self.response.unenrolled_sessions[i].total_session_time_seconds;
+			total_seconds += $scope.response.unenrolled_sessions[i].total_session_time_seconds;
 		}
 
-		self.response.non_enroll_total_session_time_seconds = total_seconds;
-		self.response.remaining_credits = self.selected_enrollment.session_credits_seconds - self.response.enroll_total_session_time_seconds;
+		$scope.response.non_enroll_total_session_time_seconds = total_seconds;
+		$scope.response.remaining_credits = $scope.selected_enrollment.session_credits_seconds - $scope.response.enroll_total_session_time_seconds;
 	};
 
-	self.open_session_handler_dialog = function(enrollment)
+	me.open_session_handler_dialog = function(enrollment)
 	{
-		self.selected_enrollment = enrollment;
+		$scope.selected_enrollment = enrollment;
 
-		var response = self.post_generic("/enrollment/read_sessions_reconcile/", self.selected_enrollment);
+		var response = me.post_generic("/enrollments/read_sessions_reconcile/", $scope.selected_enrollment);
 
 		response.success(function(response){
-			self.response = response;
-			self.get_total_enrolled_time();
-			self.open_dialog("/get_dialog/enrollment/session_handler/", 'dialog_width_90');
+			$scope.response = response;
+			$scope.get_total_enrolled_time();
+
+			for (x in $scope.response.enrolled_sessions) {
+				var total_seconds = 0
+				var start_hms = $scope.response.enrolled_sessions[x].time_start
+				var end_hms = $scope.response.enrolled_sessions[x].time_end
+
+				var a = start_hms.split(":")
+				var b = end_hms.split(":")
+
+				var start_seconds = (+a[0])*60*60+(+a[1])*60+(+a[2])
+				var end_seconds = (+b[0])*60*60+(+b[1])*60+(+b[2])
+
+				total_seconds += (end_seconds - start_seconds)
+
+				$scope.response.enrolled_sessions[x]['time_consumed'] = convertSecondstoHours(total_seconds)
+			}
+			me.open_dialog("/enrollments/session_handler_dialog/", 'dialog_width_90');
 		})
 
 	};
 
+	convertSecondstoHours = function(d){
+		d = Number(d);
+	    var h = Math.floor(d / 3600);
+	    var m = Math.floor(d % 3600 / 60);
+	    var s = Math.floor(d % 3600 % 60);
+
+	    var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+	    var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+	    var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+	    return hDisplay + mDisplay + sDisplay; 
+	}
+
 	$scope.save_enrolled_sessions = function()
 	{
 		var data = {
-			enrollment : self.selected_enrollment,
-			enrolled_sessions : self.response.enrolled_sessions,
-			unenrolled_sessions : self.response.unenrolled_sessions
+			enrollment : $scope.selected_enrollment,
+			enrolled_sessions : $scope.response.enrolled_sessions,
+			unenrolled_sessions : $scope.response.unenrolled_sessions
 		}
 
 		var response = me.post_generic("/enrollment/save_enrolled_sessions/", data, "dialog", true, null, true);
 
 		response.success(function(response)
 		{
-			self.selected_enrollment = {};
-			self.response = {};
+			$scope.selected_enrollment = {};
+			$scope.response = {};
 			$scope.main_loader();
 		})
 	};
@@ -415,10 +444,10 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		window.open('/print_forms/get_enrollment_document/')
 	};
 
-	self.menu_options = function (record) {
-		self.context_id = record.id;
-		return RightClick.get_menu(self,record)
-	}
+	me.menu_options = function (record) {
+	    me.context_id = record.id;
+	    return RightClick.get_menu(me,record)
+	};
 
 	CommonRead.get_display_terms($scope)
 

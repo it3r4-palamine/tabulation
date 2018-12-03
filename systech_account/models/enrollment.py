@@ -18,9 +18,9 @@ class Enrollment(models.Model):
     is_active 			= models.BooleanField(default=True)
     is_deleted 			= models.BooleanField(default=False)
     session_credits 	= models.DurationField(blank=True, null=True)
-    session_start_date 	= models.DateTimeField(default=timezone.now, blank=True, null=True)    
-    session_end_date  	= models.DateTimeField(blank=True, null=True)
-    enrollment_date 	= models.DateTimeField(default=timezone.now, blank=True, null=True)
+    session_start_date 	= models.DateField(blank=True,null=True)    
+    session_end_date  	= models.DateField(blank=True,null=True)
+    enrollment_date 	= models.DateField(blank=True,null=True)
     company 			= models.ForeignKey("Company")
 
     class Meta:
@@ -48,9 +48,11 @@ class Enrollment(models.Model):
                 instance['user_id'] 				= self.user.id
                 instance['company_rename'] 			= self.company_rename.get_dict() if self.company_rename else None
                 instance['session_credits_seconds'] = self.session_credits.total_seconds() if self.session_credits else 0
-                instance['session_start_date'] 		= format_date_from_db(self.session_start_date)
-                instance['session_end_date'] 		= format_date_from_db(self.session_end_date)
-                instance['is_expire'] 				= False if self.session_end_date and self.session_end_date.date() >= datetime.now().date() else True
+                # instance['session_start_date'] 		= format_date_from_db(self.session_start_date)
+                instance['session_start_date'] 		= self.session_start_date
+                # instance['session_end_date'] 		= format_date_from_db(self.session_end_date)
+                instance['session_end_date'] 		= self.session_end_date
+                instance['is_expire'] 				= False if self.session_end_date and self.session_end_date >= datetime.now().date() else True
 
                 time_consumed 	= self.get_total_session_time()
                 time_remaining 	= self.get_remaining_credit()
@@ -72,10 +74,10 @@ class Enrollment(models.Model):
             instance['company_rename'] 				= self.company_rename.get_dict() if self.company_rename else None
             instance['session_credits'] 			= str(self.session_credits)
             instance['session_credits_seconds'] 	= self.session_credits.total_seconds() if self.session_credits else 0
-            instance['session_start_date'] 			= format_date_from_db(self.session_start_date)
-            instance['session_end_date'] 			= format_date_from_db(self.session_end_date)
+            instance['session_start_date'] 			= self.session_start_date
+            instance['session_end_date'] 			= self.session_end_date
             instance['enrollment_date'] 			= format_date_from_db(self.enrollment_date)
-            instance['is_expire'] 					= False if self.session_end_date and self.session_end_date.date() >= datetime.now().date() else True
+            instance['is_expire'] 					= False if self.session_end_date and self.session_end_date >= datetime.now().date() else True
             instance['total_time_left_seconds'] 	= 0
             
             time_consumed 	= self.get_total_session_time()

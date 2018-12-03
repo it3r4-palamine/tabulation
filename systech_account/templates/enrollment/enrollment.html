@@ -31,7 +31,7 @@
                     <input type="text" class="form-control" placeholder="Search..." ng-model="filter.name" name="">
                 </div>
                 <div class="col-sm-3">
-                    <button class="btn btn-default" ng-click="read()"><i class="fa fa-search"></i> SEARCH</button><br>
+                    <button class="btn btn-default" ng-click="read_pagination()"><i class="fa fa-search"></i> SEARCH</button><br>
                 </div>
                 <div class="col-sm-6">
                     <button class="btn btn-primary pull-right" ng-click="enrollment_dialog()">CREATE</button>
@@ -53,7 +53,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="record in records" style="text-align: center;" ng-click="enrollment_dialog(record)">
+                            <tr ng-repeat="record in records" context-menu="main.menu_options(record)" class="hand_cursor" style="text-align: center;" ng-click="enrollment_dialog(record)">
                                 <td>{$ record.code $}</td>
                                 <td>{$ record.user.fullname $}</td>
                                 <td>{$ record.company_rename.name $}</td>

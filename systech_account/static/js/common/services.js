@@ -396,7 +396,9 @@ app.factory("RightClick", function(Notification){
                 scope.FindingsService.open_dialog(scope,record)
             }]
 
-
+            view_manage_sessions_menu = ['View Session', function($itemScope, $event, modelValue, text, $li) {
+                scope.open_session_handler_dialog(record)
+            }]
 
             print_menu = ['Print', function ($itemScope, $event, modelValue, text, $li) {
                 if (scope.current_module == "purchase_order"){
@@ -453,6 +455,12 @@ app.factory("RightClick", function(Notification){
 
             set_inactive_menu = ['Set '+status, function($itemScope, $event, modelValue, text, $li){
                 scope.set_to_inactive(record);
+            }]
+
+            delete_menu = ['Delete', function($itemScope, $event, modelValue, text, $li) {
+                if(scope.current_module == "enrollment_list"){
+                    scope.delete_enrollment(record)
+                }
             }]
 
             if (scope.key_in_list(scope.current_module,[
@@ -540,6 +548,11 @@ app.factory("RightClick", function(Notification){
                 "customer",])){
                 menu.push(set_inactive_menu)
             }
+
+            if(scope.key_in_list(scope.current_module,[
+                "enrollment_list",])){
+                menu.push(view_manage_sessions_menu)
+            }
             
             menu.push(null)
             
@@ -576,7 +589,10 @@ app.factory("RightClick", function(Notification){
                 menu.push(remove_menu)
             }
 
-            
+            if(scope.key_in_list(scope.current_module,[
+                "enrollment_list",])){
+                menu.push(delete_menu)
+            }
 
             return menu
         }

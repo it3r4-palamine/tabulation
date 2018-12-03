@@ -64,7 +64,7 @@ def read_enrollees(request):
 		pagination = None
 
 		# Get Filters
-		name_search = filters.pop("name", "")
+		name_search = filters.pop("name_search", "")
 		student_id = filters.pop("student_id",None)
 		program_id = filters.pop("program_id",None)
 		date_from = filters.pop("date_from","")
@@ -212,3 +212,60 @@ def check_reference_no(request,isChecked=False):
 			return success(ref_no)
 	except Exception as e:
 		return HttpResponse(e,status=400)
+
+def delete_enrollment(request):
+	try:
+		data = req_data(request,True)
+
+		instance = Enrollment.objects.get(id=data.get("id"), is_deleted=False)
+		check_assessment = Company_assessment.objects.filter(is_active=True,company_rename__id=data['company_rename']['id'],date_from__gte=data['session_start_date'],date_to=data['session_end_date']).first()
+		
+		term  = "Company Assessment"
+		terms = get_display_terms(request)
+
+		if terms:
+			if terms.company_assessments:
+				term = terms.company_assessments
+
+		if check_assessment:
+			return error("Used in %s. Please be advised!"%(term))
+
+		instance.is_deleted = True
+		instance.save()
+		
+		return success("Successfully deleted.")
+	except Exception as e:
+		return error(e)
+
+def read_sessions_reconcile(request):
+	try:
+		filters = req_data(request,True)
+		results = { "enrolled_sessions" : [] , "unenrolled_sessions" : [] }
+
+		enrolled_sessions = Assessment_session.objects.filter(company_assessment__company_rename__pk=filters["company_rename"]['id'],company_assessment__consultant__pk=filters['user']['id'],is_deleted=False)
+		# unenrolled_sessions = StudentSession.objects.filter(student_id=filters["student_id"],enrollment=None,is_deleted=False)
+		total_session_time = 0
+
+		data = []
+		for session in enrolled_sessions:
+			results['enrolled_sessions'].append(session.get_dict())
+			# total_session_time += session.get_total_session_time().total_seconds()
+			# results["enrolled_sessions"].append(session.get_dict(complete_instance=True))
+
+		# results["enroll_total_session_time"] = format_time_consumed(total_session_time)
+		# results["enroll_total_session_time_seconds"] = total_session_time
+		
+		# total_session_time = 0
+		# for session in unenrolled_sessions:
+		# 	total_session_time += session.get_total_session_time().total_seconds()
+		# 	results["unenrolled_sessions"].append(session.get_dict(True))
+
+		# results["non_enroll_total_session_time"] = format_time_consumed(total_session_time)
+		# results["non_enroll_total_session_time_seconds"] = total_session_time
+
+		return success_list(results,False)
+	except Exception as e:	
+		return error(e)
+
+def session_handler_dialog(request):
+	return render(request, 'enrollment/dialogs/session_handler_dialog.html')

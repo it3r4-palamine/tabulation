@@ -94,6 +94,9 @@ urlpatterns = [
 	url(r'^enrollments/save_enrollment/$', enrollment.save_enrollment),
 	url(r'^enrollments/check_reference_no/$', enrollment.check_reference_no),
 	url(r'^enrollments/read_enrollment/(?P<enrollment_id>\w{0,50})$$', enrollment.read_enrollment),
+	url(r'^enrollments/delete_enrollment/$', enrollment.delete_enrollment),
+	url(r'^enrollments/read_sessions_reconcile/$', enrollment.read_sessions_reconcile),
+	url(r'^enrollments/session_handler_dialog/$', enrollment.session_handler_dialog),
 
 	url(r'^generate_report/(?P<generate_report_id>[0-9]+)/$',generate_report.generate_report,name="generate_report"),
 	url(r'^generate_report/generate/$', generate_report.generate),
