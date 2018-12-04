@@ -9,3 +9,5 @@ systech_account/static/images/
 systech_account/static/reports/
 
 \.idea/
+
+\.DS_Store
