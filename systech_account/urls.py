@@ -3,7 +3,7 @@ from django.conf.urls import url, handler404,patterns,include
 from django.conf import settings as root_settings
 from django.conf.urls.static import static
 
-from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs,enrollment
+from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs,enrollment,payment_reports,student_reports
 
 urlpatterns = [
 	url(r'^common/pagination/$',common.pagination),
@@ -87,7 +87,7 @@ urlpatterns = [
 	url(r'^recommendations/delete/(?P<id>[0-9]+)$', recommendations.delete),
 
 	### ENROLLMENT
-	url(r'^enrollments/$', enrollment.enrollment, name='enrollment'),
+	url(r'^enrollments/enrollments/$', enrollment.enrollment, name='enrollment'),
 	url(r'^enrollments/create_dialog/$', enrollment.create_dialog),
 	url(r'^enrollments/read_enrollees/$', enrollment.read_enrollees),
 	url(r'^enrollments/get_excess_time/$', enrollment.get_excess_time),
@@ -97,6 +97,10 @@ urlpatterns = [
 	url(r'^enrollments/delete_enrollment/$', enrollment.delete_enrollment),
 	url(r'^enrollments/read_sessions_reconcile/$', enrollment.read_sessions_reconcile),
 	url(r'^enrollments/session_handler_dialog/$', enrollment.session_handler_dialog),
+
+	url(r'^enrollments/payment_reports/$', payment_reports.payment_reports, name='payment_reports'),
+	url(r'^enrollments/student_reports/$', student_reports.student_reports, name='student_reports'),
+	url(r'^enrollments/read_enrollment_report/$', student_reports.read_enrollment_report),
 
 	url(r'^generate_report/(?P<generate_report_id>[0-9]+)/$',generate_report.generate_report,name="generate_report"),
 	url(r'^generate_report/generate/$', generate_report.generate),
@@ -144,7 +148,13 @@ urlpatterns = [
 	url(r'^settings/schools_create/$', settings.schools_create),
 	url(r'^settings/read_schools/$', settings.read_schools),
 	url(r'^settings/schools_delete/(?P<id>[0-9]+)$', settings.schools_delete),
-	
+
+	url(r'^settings/grade_levels/$', settings.grade_levels),
+	url(r'^settings/grade_levels_create_dialog/$', settings.grade_levels_create_dialog),
+	url(r'^settings/grade_levels_create/$', settings.grade_levels_create),
+	url(r'^settings/read_grade_levels/$', settings.read_grade_levels),
+	url(r'^settings/grade_levels_delete/(?P<id>[0-9]+)$', settings.grade_levels_delete),
+
 	# Lesson Updates
 	url(r'^lesson_updates/load_page/$', lesson_updates.load_page),
 	url(r'^lesson_updates/read/$', lesson_updates.read),

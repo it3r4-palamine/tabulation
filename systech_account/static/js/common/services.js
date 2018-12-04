@@ -903,6 +903,14 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
+        get_schools : function(scope)
+        {
+            var post = CommonRequests.read_common_records(scope, "schools", "/settings/read_schools/",{},true);
+            return post.success(function(response){
+                scope["schools"] = response.data;
+            })
+        },
+
         get_schools2 : function(scope)
         {
             var post = CommonRequests.read_common_records(scope, "schools2", "/settings/read_schools/",{},true);

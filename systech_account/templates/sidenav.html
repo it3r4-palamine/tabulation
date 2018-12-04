@@ -39,6 +39,38 @@
             <!-- <li>
                 <a href="/enrollments"><i class="fa fa-university"></i> <span class="nav-label">Enrollment</span></a>
             </li> -->
+
+            <li id="enrollment">
+                <a id="enrollment" href="#">
+                    <i class="fa fa-pencil"></i>
+                    <span class="nav-label">Enrollment</span>
+                    <span class="fa arrow"></span>
+                </a>
+
+                <ul class="nav nav-second-level collapse"> 
+                    <li id="enrollment_list">
+                        <a href="/enrollments/enrollments">
+                            <i class="fa fa-university"></i>
+                            <span class="nav-label">Enrollment List</span>
+                        </a>
+                    </li>
+
+                    <li id="enrollment_reports">
+                        <a href="/enrollments/student_reports/">
+                            <i class="fa fa-graduation-cap"></i>
+                            <span class="nav-label">Student Reports</span>
+                        </a>
+                    </li>
+
+                    <li id="enrollment_reports">
+                        <a href="/enrollments/payment_reports">
+                            <i class="fa fa-credit-card"></i>
+                            <span class="nav-label">Payment Reports</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <li>
                 <a href="/company_assessment"><i class="fa fa-check-square"></i> <span class="nav-label" ng-if="!display_terms[0].company_assessments" ng-cloak="">Company Assessment</span><span class="nav-label" ng-if="display_terms[0].company_assessments" ng-cloak="">{$ display_terms[0].company_assessments $}</span></a>
             </li>

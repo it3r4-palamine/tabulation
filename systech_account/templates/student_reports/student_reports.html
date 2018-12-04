@@ -1,0 +1,90 @@
+{% extends "base.html" %} {% load static %} {% block ngapp %}ng-app="enrollment"{% endblock %} {% block ngctrl %}ng-controller="student_reportsCtrl as main"{% endblock %} {% block title %}Payment Reports {% endblock %} {% block loader_js_bottom %}
+<script type="text/javascript" src="{% static 'js/enrollment.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/student_reports.js' %}"></script>
+{% endblock loader_js_bottom %} {% block page_header %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <!-- <h2><span ng-if="!display_terms[0].company_rename" ng-cloak="">Company</span><span ng-if="display_terms[0].company_rename" ng-cloak="">{$ display_terms[0].company_rename $}</span></h2> -->
+        <h2>Payment Reports</h2>
+    </div>
+</div>
+{% endblock %} 
+
+{% block editable_css %}
+    <style type="text/css">
+        .hand_cursor {
+            cursor: pointer !important;
+        }
+
+        .hand_cursor:hover {
+            background-color: #E8E8E8 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content_body %}
+<div class="wrapper wrapper-content animated fadeIn" ng-cloak="">
+    <div class="ibox">
+        <div class="ibox-content" layout="ibox-content"  ng-class="main.page_loader.main ? 'sk-loading' : ''">
+        {% include "common/loader.html" %}
+            <div class="col-xs-3">
+                <label>Name</label>
+                <div class="input-group">
+                    <input type="text" 
+                            ng-model="main.filters.name" 
+                            class="form-control ng-pristine ng-valid ng-scope ng-empty ng-touched" 
+                            placeholder="Search..."
+                            on-enter="main.main_loader();">         
+
+                    <div class="input-group-btn">
+                        <button class="btn btn-default ng-scope" type="button" ng-click="main.main_loader();"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                    <label>Enrolled Program</label>
+                    <ui-select ng-model="main.filters.program" ng-change="read_enrollment_report()"> 
+                    <ui-select-match>{$ $select.selected.name $}</ui-select-match> 
+                    <ui-select-choices repeat="program in company2 | filter: $select.search | limitTo:50"> 
+                        <div ng-bind-html="program.name | highlight: $select.search"></div> 
+                    </ui-select-choices> 
+                    </ui-select>
+            </div>
+            <div class="col-xs-3">
+                    <label>School</label>
+                    <ui-select ng-model="main.filters.school" ng-change="read_enrollment_report()"> 
+                    <ui-select-match>{$ $select.selected.name $}</ui-select-match> 
+                    <ui-select-choices repeat="school in schools | filter: $select.search | limitTo:50"> 
+                        <div ng-bind-html="school.name | highlight: $select.search"></div> 
+                    </ui-select-choices> 
+                    </ui-select>
+            </div>
+            <div class="col-xs-3">
+                    <label>Grade Level</label>
+                    <ui-select ng-model="main.filters.grade_level" ng-change="read_enrollment_report()"> 
+                    <ui-select-match>{$ $select.selected.name $}</ui-select-match> 
+                    <ui-select-choices repeat="grade_level in ctrl.grade_level_list | filter: $select.search | limitTo:50"> 
+                        <div ng-bind-html="grade_level.name | highlight: $select.search"></div> 
+                    </ui-select-choices> 
+                    </ui-select>
+            </div>
+            <div class="clearfix"></div>
+            <h4 class="text-center" ng-show="reports.length <= 0">No Students Enrolled in this Program</h4>
+            <table class="table table-striped" ng-show="reports.length > 0">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="student in reports">
+                        <td>{$ student.full_name $}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <p># of Students Enrolled : <b>{$ response.student_count $}</b></p> -->
+        </div>
+        <pagination></pagination>
+    </div>
+</div>
+{% endblock %}
