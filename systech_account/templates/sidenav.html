@@ -49,6 +49,23 @@
             <li>
                 <a href="/company"><i class="fa fa-building"></i> <span class="nav-label" ng-if="!display_terms[0].company_rename" ng-cloak="">Company</span><span class="nav-label" ng-if="display_terms[0].company_rename" ng-cloak="">{$ display_terms[0].company_rename $}</span></a>
             </li>
+            
+             <!-- SESSION EVALUATION -->
+            <li id="session_evaluation">
+                <a id="session_evaluation" href="#"><i class="fa fa-vcard"></i> <span class="nav-label">Session Evaluation</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li id="evaluation_list">
+                            <a href="/student_sessions/"><i class="fa fa-list"></i> <span class="nav-label">Evaluation List</span> </a>
+                    </li>
+                    <li id="session_report">
+                            <a href="/session_report/"><i class="fa fa-tachometer"></i> <span class="nav-label">Session Reports</span> </a>
+                    </li>
+                    <li id="student_todo">
+                            <a href="/student_todo/"><i class="fa fa-list-ol"></i> <span class="nav-label">Student To Do</span> </a>
+                    </li>
+                </ul>
+            </li>
+
             <li>
                 <a href="/import"><i class="fa fa-upload"></i> <span class="nav-label">Import</span></a>
             </li>
