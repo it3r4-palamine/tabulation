@@ -3,7 +3,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 from ybas_api import views
 from ybas_api.viewss import download_data
 from ybas_api.controllers import answers, users
-
+from ybas_api.controllers import student
 
 urlpatterns = [
     url(r'^api-auth', views.ObtainAuthToken.as_view()), # Refactor
@@ -31,4 +31,8 @@ urlpatterns = [
     url(r'^get-settings/$', download_data.Get_settings.as_view()),
     url(r'^get-worksheets/$', download_data.Get_worksheets.as_view()),
     url(r'^get-sessions/$', download_data.Get_sessions.as_view()),
+
+    url(r'^get_student_information/$', student.StudentInfo.as_view()),
+
+
 ]
