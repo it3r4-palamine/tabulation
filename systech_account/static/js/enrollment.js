@@ -122,6 +122,16 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		}
 	};
 
+	$scope.change_start_date = function(data,date) {
+		if(date == "date_from") {
+			$scope.enrollment_data.session_end_date = moment($scope.enrollment_data.session_start_date).add(30,'d').format('YYYY-MM-DD')
+			$scope.enrollment_data.session_end_date = new Date($scope.enrollment_data.session_end_date)
+		}else if(date == 'date_to'){
+            $scope.enrollment_data.session_start_date = moment($scope.enrollment_data.session_end_date).subtract(30,'d').format('YYYY-MM-DD');
+            $scope.enrollment_data.session_start_date = new Date($scope.enrollment_data.session_start_date)
+        }
+	}
+
 	success_notif_link = function(title, data, is_new){
 		var config = {
             timeOut: 2000,

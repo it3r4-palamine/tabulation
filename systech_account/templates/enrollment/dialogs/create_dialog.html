@@ -141,12 +141,12 @@
 								<div class="form-group"> 
 									<label class="col-sm-2 control-label">Session Start Date:</label>  
 									<div class="col-sm-3"> 
-										<input type="date" name="session credits" ng-model="enrollment_data.session_start_date" class="form-control"> 
+										<input type="date" name="session credits" ng-change="change_start_date(enrollment_data,'date_from')" ng-model="enrollment_data.session_start_date" class="form-control"> 
 									</div> 
 									
 									<label class="col-sm-2 control-label">Session End Date:</label>  
 									<div class="col-sm-3"> 
-										<input type="date" name="session credits" ng-model="enrollment_data.session_end_date" class="form-control"> 
+										<input type="date" name="session credits" ng-change="change_start_date(enrollment_data,'date_to')" ng-model="enrollment_data.session_end_date" class="form-control"> 
 									</div> 
 								</div> 
 							</div> 
