@@ -82,6 +82,7 @@ class School(models.Model):
 	    instance = {}
 	    instance["id"] = self.id
 	    instance["name"] = self.name
+	    instance["is_active"] = self.is_active
 
 	    return instance
 
@@ -100,5 +101,6 @@ class GradeLevel(models.Model):
 		instance 		 = {}
 		instance["id"] 	 = self.id
 		instance["name"] = self.name
+		instance["is_active"] = self.is_active
 
 		return instance

@@ -8,6 +8,7 @@ angular.module("enrollment")
 	CommonRead.get_users2($scope);
 	CommonRead.get_company2($scope);
 	CommonRead.get_schools($scope);
+	CommonRead.get_grade_level($scope);
 
 	$scope.reports = [];
 

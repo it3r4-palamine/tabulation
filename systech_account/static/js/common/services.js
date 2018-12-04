@@ -920,6 +920,14 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
+        get_grade_level : function(scope)
+        {
+            var post = CommonRequests.read_common_records(scope, "grade_levels", "/settings/read_grade_levels/",{},true);
+            return post.success(function(response){
+                scope["grade_levels"] = response.data;
+            })
+        },
+
         get_users: function(scope) {
             var post = CommonRequests.read_common_records(scope, "users", "/users/read/",{},true);
             return post.success(function(response){

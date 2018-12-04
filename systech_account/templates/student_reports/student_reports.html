@@ -63,7 +63,7 @@
                     <label>Grade Level</label>
                     <ui-select ng-model="main.filters.grade_level" ng-change="read_enrollment_report()"> 
                     <ui-select-match>{$ $select.selected.name $}</ui-select-match> 
-                    <ui-select-choices repeat="grade_level in ctrl.grade_level_list | filter: $select.search | limitTo:50"> 
+                    <ui-select-choices repeat="grade_level in grade_levels | filter: $select.search | limitTo:50"> 
                         <div ng-bind-html="grade_level.name | highlight: $select.search"></div> 
                     </ui-select-choices> 
                     </ui-select>
