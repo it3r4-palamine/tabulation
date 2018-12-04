@@ -51,15 +51,30 @@ def read(request):
             records = records[results['starting']:results['ending']]
         data = []
         for record in records:
-            row = {}
-            row['id'] = record.pk
-            row['email'] = record.email
-            row['username'] = record.username
-            row['fullname'] = record.fullname
-            row['is_active'] = record.is_active
-            row['is_admin'] = record.is_admin
-            row['password'] = record.password
-            row['is_edit'] = record.is_edit
+            row                         = {}
+            row['id']                   = record.pk
+            row['email']                = record.email
+            row['username']             = record.username
+            row['fullname']             = record.fullname
+            row['is_active']            = record.is_active
+            row['is_admin']             = record.is_admin
+            row['password']             = record.password
+            row['is_edit']              = record.is_edit
+            row['first_name']           = record.first_name
+            row['last_name']            = record.last_name
+            row['nick_name']            = record.nick_name
+            row['address']              = record.address
+            row['gender']               = record.gender
+            row['nationality']          = record.nationality
+            row['date_of_birth']        = record.date_of_birth
+            row['contact_number']       = record.contact_number
+            row['fathers_name']         = record.fathers_name
+            row['mothers_name']         = record.mothers_name
+            row['fathers_contact_no']   = record.fathers_contact_no
+            row['mothers_contact_no']   = record.mothers_contact_no
+            row['grade_level']          = record.grade_level
+            row['school']               = record.school
+            row['description']          = record.description
             if record.user_type:
                 row['user_type'] = record.user_type.get_dict()
             data.append(row)

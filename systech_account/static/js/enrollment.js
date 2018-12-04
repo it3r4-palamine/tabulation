@@ -108,6 +108,8 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		if ($scope.validate_enrollment()) {
 			data["deleted_payments"] = $scope.deleted_payment_ids;
 
+			if(data['school'].name == 'No School') delete(data['school'])
+
 			$http.post("/enrollments/save_enrollment/", data).success(function(response){
 				data.id = response.enrollment_pk;
 				check_save_options(save_opt, data, response.message);

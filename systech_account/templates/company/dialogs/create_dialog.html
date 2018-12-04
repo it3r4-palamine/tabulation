@@ -12,9 +12,13 @@
                         <label class="required">Name</label>
                         <input type="text" ng-model="record.name" name="name" required class="form-control">
                     </div>
-                    <div class="col-sm-12" ng-class="{ 'has-error' : form.name.$invalid && !form.name.$pristine }">
+                    <div class="col-sm-12" ng-class="{ 'has-error' : form.rate.$invalid && !form.rate.$pristine }">
                         <label class="required">Rate</label>
                         <input type="number" ng-model="record.rate" name="rate" required class="form-control">
+                    </div>
+                    <div class="col-sm-12" ng-class="{ 'has-error' : form.hours.$invalid && !form.hours.$pristine }">
+                        <label class="required">Hours</label>
+                        <input type="number" ng-model="record.hours" name="hours" min="0" required class="form-control">
                     </div>
                     <div class="col-sm-12" ng-if="!record.id">
                         <br>

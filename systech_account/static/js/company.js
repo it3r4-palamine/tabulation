@@ -13,6 +13,7 @@ app.controller('companyCtrl', function($scope, $http, $timeout, $element, $contr
 		if(record){
 			$scope.record = angular.copy(record);
 			$scope.record['transaction_types'] = $scope.record.transaction_type
+			$scope.record.hours = me.convert_seconds_duration(record.hours).hours
 			$scope.t_types_total_records = $scope.record.transaction_type.length
 			$scope.setPagingData($scope.currentPage);
 			$scope.read_subject_transaction_types($scope.record)

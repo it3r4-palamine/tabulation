@@ -8,48 +8,129 @@
             {% include "common/loader.html" %} 
             <div class="row">
                 <form class="form" name="form">
-                    <div class="col-sm-12" ng-class="{ 'has-error' : form.fullname.$invalid && !form.fullname.$pristine }">
-                        <label class="required">Fullname</label>
-                        <input type="text" ng-model="record.fullname" name="fullname" required class="form-control">
-                    </div>
-                    <div class="col-sm-12" ng-class="{ 'has-error' : form.username.$invalid && !form.username.$pristine }">
-                        <label class="required">Username</label>
-                        <input type="text" ng-model="record.username" name="username" required class="form-control">
-                    </div>
-                    <div class="col-sm-12" ng-class="{ 'has-error' : form.email.$invalid && !form.email.$pristine }">
-                        <label class="required">Email</label>
-                        <input type="email" ng-model="record.email" name="email" required class="form-control">
-                    </div>
-                    <div class="col-sm-12" ng-hide="record.password">
-                        <label class="required">Password</label>
-                        <input type="password" ng-model="record.password1" ng-required="!record.password" name="password" class="form-control">
-                    </div>
-                    <div class="col-sm-12" ng-hide="record.password">
-                        <label class="required">Confirm Password</label>
-                        <input type="password" ng-model="record.password2" ng-required="!record.password" name="password" class="form-control">
-                    </div>
-                    <div class="col-sm-12" ng-class="{ 'has-error' : form.user_type.$invalid && !form.user_type.$pristine }">
-                        <label>User Type</label>
-                        <ui-select ng-model="record.user_type">
-                            <ui-select-match placeholder="Select...">{$ $select.selected.name $}</ui-select-match>
-                            <ui-select-choices repeat="user_type in user_types | filter: $select.search | limitTo:50">
-                                <div ng-bind-html="user_type.name | highlight: $select.search"></div>
-                            </ui-select-choices>
-                        </ui-select>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="checkbox checkbox-success">
-                            <input type="checkbox" id="is_admin" name="is_admin" ng-model="record.is_admin"><label for="is_admin">Admin</label>
+                    <div class="row">
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.username.$invalid && !form.username.$pristine }">
+                            <label class="required">Username</label>
+                            <input type="text" ng-model="record.username" name="username" required class="form-control">
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.first_name.$invalid && !form.first_name.$pristine }">
+                            <label class="required">First Name</label>
+                            <input type="text" ng-model="record.first_name" name="first_name" required class="form-control">
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.last_name.$invalid && !form.last_name.$pristine }">
+                            <label class="required">Last Name</label>
+                            <input type="text" ng-model="record.last_name" name="last_name" required class="form-control">
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.fullname.$invalid && !form.fullname.$pristine }">
+                            <label class="required">Fullname</label>
+                            <input type="text" ng-model="record.fullname" name="fullname" required class="form-control">
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <div class="checkbox checkbox-success">
-                            <input type="checkbox" id="is_edit" name="is_edit" ng-model="record.is_edit"><label for="is_edit">Can edit after sync</label>
+                    <div class="row">
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.nick_name.$invalid && !form.nick_name.$pristine }">
+                            <label class="required">Nick Name</label>
+                            <input type="text" ng-model="record.nick_name" name="nick_name" required class="form-control">
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.email.$invalid && !form.email.$pristine }">
+                            <label class="required">Email</label>
+                            <input type="email" ng-model="record.email" name="email" required class="form-control">
+                        </div>
+                        <div class="col-sm-3" ng-hide="record.password">
+                            <label class="required">Password</label>
+                            <input type="password" ng-model="record.password1" ng-required="!record.password" name="password" class="form-control">
+                        </div>
+                        <div class="col-sm-3" ng-hide="record.password">
+                            <label class="required">Confirm Password</label>
+                            <input type="password" ng-model="record.password2" ng-required="!record.password" name="password" class="form-control">
                         </div>
                     </div>
-                    <div class="col-sm-12" ng-hide="true">
-                        <br>
-                        <input type="checkbox" id="is_active" name="is_active" ng-model="record.is_active"><label for="is_active">Active</label>
+                    <div class="row">
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.user_type.$invalid && !form.user_type.$pristine }">
+                            <label>User Type</label>
+                            <ui-select ng-model="record.user_type">
+                                <ui-select-match placeholder="Select...">{$ $select.selected.name $}</ui-select-match>
+                                <ui-select-choices repeat="user_type in user_types | filter: $select.search | limitTo:50">
+                                    <div ng-bind-html="user_type.name | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.date_of_birth.$invalid && !form.date_of_birth.$pristine }">
+                            <label>Birthday</label>
+                            <input type="date" name="date_of_birth" class="form-control" ng-model="record.date_of_birth">
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.address.$invalid && !form.address.$pristine }">
+                            <label>Address</label>
+                            <textarea class="form-control" cols="10" rows="2" ng-model="record.address"></textarea>
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.contact_number.$invalid && !form.contact_number.$pristine }">
+                            <label>Contact Number</label>
+                            <input type="text" ng-model="record.contact_number" name="contact_number" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.fathers_name.$invalid && !form.fathers_name.$pristine }">
+                            <label>Father's Name</label>
+                            <input type="text" name="fathers_name" class="form-control" ng-model="record.fathers_name">
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.mothers_name.$invalid && !form.mothers_name.$pristine }">
+                            <label>Mother's Name</label>
+                            <input type="text" name="mothers_name" class="form-control" ng-model="record.mothers_name">
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.fathers_contact_no.$invalid && !form.fathers_contact_no.$pristine }">
+                            <label>Fathers Contact No.</label>
+                            <input type="text" ng-model="record.fathers_contact_no" name="fathers_contact_no" class="form-control">
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.mothers_contact_no.$invalid && !form.mothers_contact_no.$pristine }">
+                            <label>Mothers Contact No.</label>
+                            <input type="text" ng-model="record.mothers_contact_no" name="mothers_contact_no" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.gender.$invalid && !form.gender.$pristine }">
+                            <label>Gender</label>
+                            <select ng-model="record.gender" class="form-control">
+                                <option value="">Select a Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.nationality.$invalid && !form.nationality.$pristine }">
+                            <label>Nationality</label>
+                            <select ng-model="record.nationality" class="form-control">
+                                <option value="">Select a Nationality</option>
+                                <option value="Filipino">Filipino</option>
+                                <option value="American">American</option>
+                                <option value="Korean">Korean</option>
+                                <option value="Chinese">Chinese</option>
+                                <option value="Japanese">Japanese</option>
+                                <option value="Japanese">Indian</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.school.$invalid && !form.school.$pristine }">
+                            <label>School</label>
+                            <select class="form-control" name="school" ng-model="record.student.school" ng-options="school.id as school.name for school in schools"></select>
+                        </div>
+                        <div class="col-sm-3" ng-class="{ 'has-error' : form.grade_level.$invalid && !form.grade_level.$pristine }">
+                            <label>Grade Level</label>
+                            <select class="form-control" name="grade_level" ng-model="record.student.grade_level" ng-options="grade_level.id as grade_level.name for grade_level in grade_levels"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="checkbox checkbox-success">
+                                <input type="checkbox" id="is_admin" name="is_admin" ng-model="record.is_admin"><label for="is_admin">Admin</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="checkbox checkbox-success">
+                                <input type="checkbox" id="is_edit" name="is_edit" ng-model="record.is_edit"><label for="is_edit">Can edit after sync</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12" ng-hide="true">
+                            <br>
+                            <input type="checkbox" id="is_active" name="is_active" ng-model="record.is_active"><label for="is_active">Active</label>
+                        </div>
                     </div>
                 </form>
             </div>

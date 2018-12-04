@@ -26,6 +26,7 @@ class Company_rename(models.Model):
 	is_intelex		 = models.BooleanField(default=0)
 	program_id		 = models.IntegerField(blank=True,null=True)
 	rate 			 = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=8)
+	hours 			 = models.DurationField(blank=True, null=True)
 
 	class Meta:
 		app_label = "systech_account"
@@ -41,5 +42,6 @@ class Company_rename(models.Model):
 			"is_intelex" 		: self.is_intelex,
 			"transaction_type" 	: self.transaction_type,
 			"company" 	 		: self.company.pk,
-			"rate"				: self.rate
+			"rate"				: self.rate,
+			"hours"				: self.hours.total_seconds() if self.hours else 0
 		}
