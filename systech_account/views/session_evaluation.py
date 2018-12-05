@@ -1,4 +1,13 @@
+from ..forms.transaction_types import *
+from ..models.transaction_types import *
+from ..forms.company import *
+from ..models.company import *
+from ..forms.company_assessment import *
+from ..models.company_assessment import *
+from ..models.assessments import *
+from django.db.models import *
 from ..views.common import *
+import sys, traceback, os
 
 def session_evaluation_list(request):
 	return render(request, "session_evaluation/session_evaluation_list.html", {"pagename" : "Student Evaluation"})
@@ -91,3 +100,79 @@ def read_student_session(request, session_id):
 		return success_list(results,False)
 	except Exception as e:
 		return error(e)
+
+def read(request):
+	try:
+		data 				 = req_data(request,True)
+		filters 			 = {}
+		filters['is_active'] = True
+		filters['company'] 	 = data['company']
+
+		name_search 	   	 = data.pop("name","")
+
+		exclude = data.pop("exclude",None)
+		# has_transaction = data.get("transaction_type",None)
+		# if has_transaction:
+		# 	filters['transaction_type'] = has_transaction
+
+		if name_search:
+			filters['name__icontains'] = name_search
+
+		pagination = None
+
+		if 'pagination' in data:
+			pagination = data.pop("pagination",None)
+		records = Company_rename.objects.filter(**filters).order_by("id")
+		results = {'data':[]}
+		results['total_records'] = records.count()
+
+		if pagination:
+			results.update(generate_pagination(pagination,records))
+			records = records[results['starting']:results['ending']]
+		datus = []
+		for record in records:
+			company_transaction_type = []
+			row = record.get_dict()
+
+			if record.transaction_type:
+				if not exclude:
+					for t_types in record.transaction_type:
+						try:
+							t_type = Transaction_type.objects.get(id=t_types,is_active=True,company=data['company'])
+						except Transaction_type.DoesNotExist:
+							continue
+						transaction_type_dict = {
+												'id'		: t_type.pk,
+												'name'		: t_type.name,
+												'is_active' : t_type.is_active,
+												'code'		: t_type.transaction_code,
+												'set_no'	: t_type.set_no,
+											}
+						company_transaction_type.append(transaction_type_dict)
+			row['transaction_type'] = company_transaction_type
+			datus.append(row)
+		results['data'] = datus
+		return success_list(results,False)
+	except Exception as e:
+		return HttpResponse(e, status = 400)
+		
+def check_reference_no(request,isChecked=False):
+	try:
+		data = req_data(request,True)
+		instance = Company_assessment.objects.filter(company=data['company']).last()
+		if not instance:
+			ref_no = "000000"
+		else:
+			ref_no = instance.reference_no
+
+		ref_no_len = len(ref_no)
+
+
+		ref_no = str(int(ref_no) + 1)
+		ref_no = ref_no.zfill(ref_no_len)
+		if isChecked:
+			return ref_no
+		else:
+			return success(ref_no)
+	except Exception as e:
+		return HttpResponse(e,status=400)

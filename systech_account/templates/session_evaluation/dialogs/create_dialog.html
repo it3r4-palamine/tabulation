@@ -72,11 +72,11 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Student:</label>
                             <div class="col-sm-3">
-                                <ui-select ng-model="ctrl.session.student" ng-change="ctrl.read_programs(ctrl.session)">
-                                    <ui-select-match>{$ $select.selected.full_name $}</ui-select-match>
-                                    <ui-select-choices repeat="student in ctrl.enrolled_students | filter: $select.search | limitTo:50">
-                                        <div ng-bind-html="student.full_name | highlight: $select.search"></div>
-                                    </ui-select-choices>
+                                <ui-select ng-model="record.consultant" ng-change="read_user_credits(record)">
+                                    <ui-select-match>{$ $select.selected.fullname $}</ui-select-match>
+                                    <ui-select-choices repeat="consultant in consultants | filter: $select.search | limitTo:50">
+                                    <span ng-bind-html="consultant.fullname | highlight: $select.search"></span> - <span ng-bind-html="consultant.user_type.name | highlight: $select.search"></span>
+                            </ui-select-choices>
                                 </ui-select>
                             </div>
                             <label class="col-sm-2 control-label" ng-hide="true">Evaluated by:</label>

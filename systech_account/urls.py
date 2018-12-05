@@ -138,6 +138,9 @@ urlpatterns = [
 	url(r'^student_sessions/$', session_evaluation.session_evaluation_list),
     url(r'^student_sessions/read_student_session/(?P<session_id>\w{0,50})$', session_evaluation.read_student_session),
 	url(r'^student_sessions/create_dialog/$', session_evaluation.create_dialog),
+	url(r'^student_sessions/check_reference_no/$', session_evaluation.check_reference_no),
+	url(r'^student_sessions/read/$', session_evaluation.read),
+
 
 ]
 urlpatterns += static(root_settings.STATIC_URL,document_root=root_settings.STATIC_ROOT)
