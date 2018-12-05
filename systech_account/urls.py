@@ -3,7 +3,7 @@ from django.conf.urls import url, handler404,patterns,include
 from django.conf import settings as root_settings
 from django.conf.urls.static import static
 
-from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs,enrollment
+from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs,enrollment,session_evaluation
 
 urlpatterns = [
 	url(r'^common/pagination/$',common.pagination),
@@ -133,6 +133,11 @@ urlpatterns = [
 	# User Logs
 	url(r'^user_logs/$', user_logs.user_logs),
 	url(r'^user_logs/read/$', user_logs.read),
+
+    ### Session ###
+	url(r'^student_sessions/$', session_evaluation.session_evaluation_list),
+    url(r'^student_sessions/read_student_session/(?P<session_id>\w{0,50})$', session_evaluation.read_student_session),
+	url(r'^student_sessions/create_dialog/$', session_evaluation.create_dialog),
 
 ]
 urlpatterns += static(root_settings.STATIC_URL,document_root=root_settings.STATIC_ROOT)
