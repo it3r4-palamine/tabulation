@@ -16,3 +16,13 @@ class To_dos_topic_form(forms.ModelForm):
 	class Meta:
 		model  = To_dos_topic
 		fields = ('name','is_active','company')
+
+class School_form(forms.ModelForm):
+	class Meta:
+		model = School
+		fields = ('name','is_active','company')
+
+class Grade_level_form(forms.ModelForm):
+	class Meta:
+		model = GradeLevel
+		fields = ('name','is_active','company')

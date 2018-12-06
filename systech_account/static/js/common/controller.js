@@ -362,7 +362,7 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
     }
 
 	me.format_date = function(obj,fields,from_backend){
-		if(!fields){fields = ["date_from","date_to","date","pdccheckdate_from","pdccheckdate_to","other_date_from","other_date_to"]}
+		if(!fields){fields = ["date_from","date_to","date","pdccheckdate_from","pdccheckdate_to","other_date_from","other_date_to","date_of_birth"]}
         for(var i in fields){
             var field = fields[i];
             if(obj[field]){

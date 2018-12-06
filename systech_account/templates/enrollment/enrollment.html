@@ -3,7 +3,8 @@
 {% endblock loader_js_bottom %} {% block page_header %}
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <h2><span ng-if="!display_terms[0].company_rename" ng-cloak="">Company</span><span ng-if="display_terms[0].company_rename" ng-cloak="">{$ display_terms[0].company_rename $}</span></h2>
+        <!-- <h2><span ng-if="!display_terms[0].company_rename" ng-cloak="">Company</span><span ng-if="display_terms[0].company_rename" ng-cloak="">{$ display_terms[0].company_rename $}</span></h2> -->
+        <h2>Enrollment</h2>
     </div>
 </div>
 {% endblock %} 
@@ -30,7 +31,7 @@
                     <input type="text" class="form-control" placeholder="Search..." ng-model="filter.name" name="">
                 </div>
                 <div class="col-sm-3">
-                    <button class="btn btn-default" ng-click="read()"><i class="fa fa-search"></i> SEARCH</button><br>
+                    <button class="btn btn-default" ng-click="read_pagination()"><i class="fa fa-search"></i> SEARCH</button><br>
                 </div>
                 <div class="col-sm-6">
                     <button class="btn btn-primary pull-right" ng-click="enrollment_dialog()">CREATE</button>
@@ -52,14 +53,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="enrollee in records" style="text-align: center;" ng-click="enrollment_dialog(enrollee)">
-                                <td>{$ enrollee.code $}</td>
-                                <td>{$ enrollee.student $}</td>
-                                <td>{$ enrollee.program.name $}</td>
-                                <td>{$ enrollee.session_credits_seconds | secondstoDuration $}</td>
-                                <td>{$ enrollee.total_session_time $}</td>
-                                <td ng-class="{'text-red' : enrollee.total_seconds_left < 0 }">{$ enrollee.total_time_left $}</td>
-                                <td><span ng-show="{$enrollee.is_expire$}">Expired</span></td>
+                            <tr ng-repeat="record in records" context-menu="main.menu_options(record)" class="hand_cursor" style="text-align: center;" ng-click="enrollment_dialog(record)">
+                                <td>{$ record.code $}</td>
+                                <td>{$ record.user.fullname $}</td>
+                                <td>{$ record.company_rename.name $}</td>
+                                <td>{$ record.session_credits_seconds | secondstoDuration $}</td>
+                                <td>{$ record.total_session_time $}</td>
+                                <td ng-class="{'text-red' : record.total_seconds_left < 0 }">{$ record.total_time_left $}</td>
+                                <td><span ng-show="{$record.is_expire$}">Expired</span></td>
                                 <td ng-hide="true"></td>
                             </tr>
                         </tbody>

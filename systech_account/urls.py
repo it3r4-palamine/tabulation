@@ -4,6 +4,7 @@ from django.conf import settings as root_settings
 from django.conf.urls.static import static
 
 from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs,enrollment,session_evaluation
+from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs,enrollment,payment_reports,student_reports
 
 urlpatterns = [
 	url(r'^common/pagination/$',common.pagination),
@@ -86,9 +87,21 @@ urlpatterns = [
 	url(r'^recommendations/create/$', recommendations.create),
 	url(r'^recommendations/delete/(?P<id>[0-9]+)$', recommendations.delete),
 
-	url(r'^enrollment/$', enrollment.enrollment, name='enrollment'),
-	url(r'^enrollment/create_dialog/$', enrollment.create_dialog),
-	url(r'^enrollment/read_enrollees/$', enrollment.read_enrollees),
+	### ENROLLMENT
+	url(r'^enrollments/enrollments/$', enrollment.enrollment, name='enrollment'),
+	url(r'^enrollments/create_dialog/$', enrollment.create_dialog),
+	url(r'^enrollments/read_enrollees/$', enrollment.read_enrollees),
+	url(r'^enrollments/get_excess_time/$', enrollment.get_excess_time),
+	url(r'^enrollments/save_enrollment/$', enrollment.save_enrollment),
+	url(r'^enrollments/check_reference_no/$', enrollment.check_reference_no),
+	url(r'^enrollments/read_enrollment/(?P<enrollment_id>\w{0,50})$$', enrollment.read_enrollment),
+	url(r'^enrollments/delete_enrollment/$', enrollment.delete_enrollment),
+	url(r'^enrollments/read_sessions_reconcile/$', enrollment.read_sessions_reconcile),
+	url(r'^enrollments/session_handler_dialog/$', enrollment.session_handler_dialog),
+
+	url(r'^enrollments/payment_reports/$', payment_reports.payment_reports, name='payment_reports'),
+	url(r'^enrollments/student_reports/$', student_reports.student_reports, name='student_reports'),
+	url(r'^enrollments/read_enrollment_report/$', student_reports.read_enrollment_report),
 
 	url(r'^generate_report/(?P<generate_report_id>[0-9]+)/$',generate_report.generate_report,name="generate_report"),
 	url(r'^generate_report/generate/$', generate_report.generate),
@@ -104,26 +117,44 @@ urlpatterns = [
 	url(r'^assessments/related_questions_create_dialog/$', assessments.related_questions_create_dialog),
 	url(r'^assessments/related_questions_create/$', assessments.related_questions_create),
 	url(r'^assessments/delete_related_questions/(?P<id>[0-9]+)$', assessments.delete_related_questions),
-	
+
+
+	### SETTINGS
 	url(r'^settings/$', settings.settings, name='settings'),
+	
 	url(r'^settings/display_settings/$', settings.display_settings),
 	url(r'^settings/display_settings_read/$', settings.display_settings_read),
 	url(r'^settings/save_display_terms/$', settings.save_display_terms),
+	
 	url(r'^settings/user_types/$', settings.user_types),
 	url(r'^settings/read_user_types/$', settings.read_user_types),
 	url(r'^settings/user_types_create_dialog/$', settings.user_types_create_dialog),
 	url(r'^settings/user_types_create/$', settings.user_types_create),
 	url(r'^settings/user_types_delete/(?P<id>[0-9]+)$', settings.user_types_delete),
+	
 	url(r'^settings/to_dos/$', settings.to_dos),
 	url(r'^settings/read_to_dos/$', settings.read_to_dos),
 	url(r'^settings/to_dos_create_dialog/$', settings.to_dos_create_dialog),
 	url(r'^settings/to_dos_create/$', settings.to_dos_create),
 	url(r'^settings/to_dos_delete/(?P<id>[0-9]+)$', settings.to_dos_delete),
+	
 	url(r'^settings/math_symbols/$', settings.math_symbols),
 	url(r'^settings/math_symbols_create_dialog/$', settings.math_symbols_create_dialog),
 	url(r'^settings/math_symbols_create/$', settings.math_symbols_create),
 	url(r'^settings/read_math_symbols/$', settings.read_math_symbols),
 	url(r'^settings/math_symbols_delete/(?P<id>[0-9]+)$', settings.math_symbols_delete),
+
+	url(r'^settings/schools/$', settings.schools),
+	url(r'^settings/schools_create_dialog/$', settings.schools_create_dialog),
+	url(r'^settings/schools_create/$', settings.schools_create),
+	url(r'^settings/read_schools/$', settings.read_schools),
+	url(r'^settings/schools_delete/(?P<id>[0-9]+)$', settings.schools_delete),
+
+	url(r'^settings/grade_levels/$', settings.grade_levels),
+	url(r'^settings/grade_levels_create_dialog/$', settings.grade_levels_create_dialog),
+	url(r'^settings/grade_levels_create/$', settings.grade_levels_create),
+	url(r'^settings/read_grade_levels/$', settings.read_grade_levels),
+	url(r'^settings/grade_levels_delete/(?P<id>[0-9]+)$', settings.grade_levels_delete),
 
 	# Lesson Updates
 	url(r'^lesson_updates/load_page/$', lesson_updates.load_page),

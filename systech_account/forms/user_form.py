@@ -16,7 +16,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 	class Meta:
 		model  = User
-		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","username")
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","username","first_name","last_name","nick_name","address","gender","nationality","date_of_birth","contact_number","fathers_name","mothers_name","fathers_contact_no","mothers_contact_no","grade_level","school","description")
 
 
 	def clean(self):
@@ -46,7 +46,7 @@ class StudentUserForm(UserCreationForm):
 
 	class Meta:
 		model  = User
-		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","is_intelex","user_intelex_id","username")
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","is_intelex","user_intelex_id","username","first_name","last_name","nick_name","address","gender","nationality","date_of_birth","contact_number","fathers_name","mothers_name","fathers_contact_no","mothers_contact_no","grade_level","school","description")
 
 
 	def clean(self):
@@ -68,7 +68,7 @@ class CustomUserChangeForm(forms.ModelForm):
 
 	class Meta:
 		model  = User
-		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","username")
+		fields = ("email","fullname", "is_admin","is_active","user_type","is_edit","company","username","first_name","last_name","nick_name","address","gender","nationality","date_of_birth","contact_number","fathers_name","mothers_name","fathers_contact_no","mothers_contact_no","grade_level","school","description")
 
 	def clean(self):
 		raw_data = self.cleaned_data

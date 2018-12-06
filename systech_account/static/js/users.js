@@ -11,7 +11,7 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 		$scope.record['is_active'] = true
 
 		if(record){
-			$scope.record = angular.copy(record);
+			$scope.record = angular.copy(me.format_date(record,null,true));
 
 			// me.post_generic('/settings/read_to_dos/', "", "main")
 			// .success(function(response) {
@@ -22,7 +22,7 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 			// });
 		}
 		// else {
-			me.open_dialog("/users/create_dialog/","","main")
+			me.open_dialog("/users/create_dialog/","dialog_width_80","main")
 		// }
 
 	}
@@ -42,6 +42,7 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 	}
 
 	$scope.create = function(){
+		$scope.record = me.format_date($scope.record)
 		if($scope.record.password1 != $scope.record.password2) return Notification.error("Password do not match.")
 		me.post_generic("/users/create/",$scope.record,"dialog")
 		.success(function(response){
@@ -179,4 +180,6 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 	$scope.read_user_types();
 	me.main_loader = function(){$scope.read();}
 	CommonRead.get_display_terms($scope)
+	CommonRead.get_schools($scope)
+	CommonRead.get_grade_level($scope)
 });

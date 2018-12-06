@@ -233,3 +233,65 @@ def print_error(filename, method_name, error, line_number):
 	print("Error: " + str(error))
 	print("Line number: " + str(line_number))
 	print("==================")
+
+def set_id(data):
+	try:
+		for key in data:
+			if isinstance(data[key], dict):
+				if 'id' in data[key]:
+					data[key] = data[key]['id']
+		return data
+	except Exception as e:
+		print(e)
+
+def format_dates(data):
+	fields = [
+		'date_of_birth',
+		'session_date',
+		'enrollment_date',
+		'session_end_date',
+		'session_start_date',
+		'payment_date'
+	]
+
+	for value in data.iteritems():
+		for field in fields:
+			if value[0] == field and value[1]:
+				data[field] = format_date(value[1])
+
+	return data
+
+def format_date(date):
+	return datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%Y-%m-%d')
+
+def format_date_from_db(date):
+	# Convert Datetime Object to String date 
+	# For Passing Dates as JSON
+	if date:
+		return date.strftime("%Y-%m-%d")
+
+def clean_list(lists):
+
+	try:
+		new_lists = []
+
+		for index,item in enumerate(lists):
+
+			if item or bool(item):
+				new_lists.append(item)
+
+		return new_lists
+
+	except Exception as e:
+		print None
+
+def format_time_consumed(time_seconds):
+    # Converts Seconds to HH:MM:SS
+
+    if time_seconds is None:
+        return "Incomplete Logs"
+
+    m, s = divmod(time_seconds, 60)
+    h, m = divmod(m, 60)
+
+    return "%d:%02d:%02d" % (h, m, s)

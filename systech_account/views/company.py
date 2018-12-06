@@ -94,6 +94,9 @@ def create(request):
 			company_transaction_type.append(transaction_type)
 
 		postdata['transaction_type'] = list_to_string(company_transaction_type)
+		hours = postdata.get("hours", 0)
+
+		postdata["hours"]  = timedelta(hours=hours, minutes=0) 
 		try:
 			instance = Company_rename.objects.get(id=postdata.get('id',None))
 			company  = Company_rename_form(postdata, instance=instance)

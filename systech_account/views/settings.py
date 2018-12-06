@@ -685,3 +685,125 @@ def math_symbols_delete(request,id=None):
 			raise_error("Symbol doesn't exist.")
 	except Exception as e:
 		return HttpResponse(e, status = 400)
+
+def schools(request):
+	return render(request, 'settings/schools.html')
+
+def schools_create_dialog(request):
+	return render(request, 'settings/dialogs/schools_create_dialog.html')
+
+def read_schools(request):
+	try:
+		data = req_data(request,True)
+		pagination = None
+
+		if 'pagination' in data:
+			pagination = data.pop("pagination",None)
+		filters = {}
+		filters['is_active'] = True
+		filters['company'] = data['company']
+		records = School.objects.filter(**filters).order_by("id")
+		results = {'data':[]}
+		results['total_records'] = records.count()
+
+		if pagination:
+			results.update(generate_pagination(pagination,records))
+			records = records[results['starting']:results['ending']]
+		data = []
+		for record in records:
+			row = record.get_dict()
+			data.append(row)
+		results['data'] = data
+		return success_list(results,False)
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
+def schools_delete(request,id=None):
+	try:
+		try:
+			record = School.objects.get(pk = id)
+			record.is_active = False
+			record.save()
+			return success("Successfully deleted.")
+		except School.DoesNotExist:
+			raise_error("Symbol doesn't exist.")
+	except Exception as e:
+		return HttpResponse(e, status = 400)
+
+def schools_create(request):
+	try: 
+		postdata = req_data(request,True)
+		try:
+			instance = School.objects.get(id=postdata.get('id',None))
+			schools = School_form(postdata, instance=instance)
+		except School.DoesNotExist:
+			schools = School_form(postdata)
+
+		if schools.is_valid():
+			schools.save()
+			return HttpResponse("Successfully saved.", status = 200)
+		else:
+			return HttpResponse(schools.errors, status = 400)
+	except Exception as err:
+		return HttpResponse(err, status = 400)
+
+def grade_levels(request):
+	return render(request, 'settings/grade_levels.html')
+
+def grade_levels_create_dialog(request):
+	return render(request, 'settings/dialogs/grade_levels_create_dialog.html')
+
+def read_grade_levels(request):
+	try:
+		data = req_data(request,True)
+		pagination = None
+
+		if 'pagination' in data:
+			pagination = data.pop("pagination",None)
+		filters = {}
+		filters['is_active'] = True
+		filters['company'] = data['company']
+		records = GradeLevel.objects.filter(**filters).order_by("id")
+		results = {'data':[]}
+		results['total_records'] = records.count()
+
+		if pagination:
+			results.update(generate_pagination(pagination,records))
+			records = records[results['starting']:results['ending']]
+		data = []
+		for record in records:
+			row = record.get_dict()
+			data.append(row)
+		results['data'] = data
+		return success_list(results,False)
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
+def grade_levels_delete(request,id=None):
+	try:
+		try:
+			record = GradeLevel.objects.get(pk = id)
+			record.is_active = False
+			record.save()
+			return success("Successfully deleted.")
+		except GradeLevel.DoesNotExist:
+			raise_error("Symbol doesn't exist.")
+	except Exception as e:
+		return HttpResponse(e, status = 400)
+
+def grade_levels_create(request):
+	try: 
+		postdata = req_data(request,True)
+		try:
+			instance = GradeLevel.objects.get(id=postdata.get('id',None))
+			schools = Grade_level_form(postdata, instance=instance)
+		except GradeLevel.DoesNotExist:
+			schools = Grade_level_form(postdata)
+
+		if schools.is_valid():
+			schools.save()
+			return HttpResponse("Successfully saved.", status = 200)
+		else:
+			return HttpResponse(schools.errors, status = 400)
+	except Exception as err:
+		return HttpResponse(err, status = 400)

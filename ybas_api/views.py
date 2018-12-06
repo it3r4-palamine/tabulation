@@ -140,7 +140,7 @@ class GetQuestionPhoto(APIView):
             return Response("File does not exists", status=status.HTTP_404_NOT_FOUND)
         # assessmentImage = Assessment_image.objects.filter(question=21, is_active=True).first()
         # image = open('systech_account/static/uploads/%s'%(assessmentImage.image), 'rb')
-
+        return HttpResponse(image, content_type="image/png")
 
         # try:
             # assessmentImage = Assessment_image.objects.filter(question=21, is_active=True).first()

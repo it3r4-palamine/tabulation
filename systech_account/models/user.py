@@ -9,6 +9,7 @@ from ..models.company import *
 # OTHERS
 import sys, traceback, os
 import time
+from django.core.validators import RegexValidator
 
 
 class User_Manager(BaseUserManager):
@@ -33,17 +34,34 @@ class User_Manager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-	email            = models.EmailField(max_length=100,unique=True,null=False,blank=False)
-	fullname         = models.CharField(max_length=100,null=True,blank=True)
-	is_admin         = models.BooleanField(default=False)
-	is_active        = models.BooleanField(default=1)
-	user_type        = models.ForeignKey("User_type",null=True,blank=True)
-	is_edit          = models.BooleanField(default=False)
-	company			 = models.ForeignKey("Company",blank=True,null=True)
-	objects          = User_Manager()
-	is_intelex       = models.BooleanField(default=False)
-	user_intelex_id	 = models.IntegerField(blank=True,null=True)
-	username 		 = models.CharField(max_length=100,unique=True,null=True,blank=True)
+	email            	= models.EmailField(max_length=100,unique=True,null=False,blank=False)
+	fullname        	= models.CharField(max_length=100,null=True,blank=True)
+	is_admin         	= models.BooleanField(default=False)
+	is_active        	= models.BooleanField(default=1)
+	user_type        	= models.ForeignKey("User_type",null=True,blank=True)
+	is_edit         	= models.BooleanField(default=False)
+	company			 	= models.ForeignKey("Company",blank=True,null=True)
+	objects          	= User_Manager()
+	is_intelex       	= models.BooleanField(default=False)
+	user_intelex_id	 	= models.IntegerField(blank=True,null=True)
+	username 		 	= models.CharField(max_length=100,unique=True,null=True,blank=True)
+	first_name 		 	= models.CharField(max_length=200,blank=True,null=True)
+	last_name 		 	= models.CharField(max_length=200,blank=True,null=True)
+	nick_name 		 	= models.CharField(max_length=200,blank=True,null=True)
+	address 		 	= models.TextField(blank=True, null=True)
+	gender 			 	= models.CharField(max_length=50,blank=True,null=True)
+	nationality 	 	= models.CharField(max_length=50,blank=True,null=True)
+	date_of_birth 	 	= models.DateField(blank=True, null=True)
+	phone_regex 	 	= RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+	contact_number 	 	= models.CharField(max_length=15, validators=[phone_regex], blank=True, null=True)
+	fathers_name 		= models.CharField(max_length=200, blank=True, null=True)
+	mothers_name 		= models.CharField(max_length=200, blank=True, null=True)
+	fathers_contact_no 	= models.CharField(max_length=200, blank=True, null=True)
+	mothers_contact_no 	= models.CharField(max_length=200, blank=True, null=True)
+	guardian_name 		= models.CharField(max_length=200, blank=True, null=True)
+	grade_level 		= models.ForeignKey("Gradelevel", blank=True, null=True)
+	school 				= models.ForeignKey("School", blank=True, null=True)
+	description 		= models.TextField(null=True,blank=True)
 
 	USERNAME_FIELD = 'username'
 

@@ -1,0 +1,101 @@
+<div class="modal-header">
+	
+	<div class="row">
+        <div class="col-sm-6">
+            <h2>{$ selected_enrollment.student.full_name $} - Credits ({$ selected_enrollment.session_credits_seconds | secondstoDuration $})</h2>
+        	
+        </div>
+
+        <div class="col-sm-6">
+            <div class="pull-right">
+
+                <!-- <button class="btn btn-sm btn-link" ng-click="save_enrolled_sessions()">
+                    <i class="fa fa-save dialog-button" class="dialog-button"></i>
+                    <span>Save</span>
+                </button> -->
+
+                <button class="btn btn-sm btn-link" ng-click="main.close_dialog()">
+                    <i class="fa fa-times-circle dialog-button"></i>
+                    <span>Close</span>
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div cclass="modal-body">
+	<div class="ibox-content" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+    {% include "common/loader.html" %}
+
+        <div class="row">
+            <div class="col-xs-12">
+
+                <h4>Program : {$ selected_enrollment.company_rename.name $}</h5>
+                <h4>Consumed Credits : {$ selected_enrollment.total_session_time $}</h5>
+                <h4>Remaining Credits : {$ selected_enrollment.total_time_left $}</h4>
+            </div>
+
+        </div>
+
+         <div class="row">
+            <div class="col-xs-12">
+                <caption style="text-align: center;"><h2 class="text-center">Enrolled Sessions</h2></caption>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Date</th>
+                            <th>Evaluator</th>
+                            <th>Total Session Time</th>
+                            <!-- <th>Option</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="session in response.enrolled_sessions">
+                            <td>{$ session.code $}</td>
+                            <td class="text-center">{$ session.date $}</td>
+                            <td>{$ session.evaluated_by.full_name $}</td>
+                            <td class="text-center">{$ session.time_consumed $}</td>
+                            <!-- <td>
+                                <button class="btn btn-success btn-xs" ng-click="remove_this_session(session)">Remove from this enrollment</button>
+                            </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Total Session Time : {$ selected_enrollment.total_session_time $}</p>
+            </div>
+        </div>
+
+        <!-- <div class="row">
+            <div class="col-xs-12">
+                <caption style="text-align: center;"><h2 class="text-center">(Non) Enrolled Sessions</h2></caption>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Date</th>
+                            <th>Evaluator</th>
+                            <th>Total Session Time</th>
+                            <th>Option</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="session in ctrl.response.unenrolled_sessions">
+                            <td>{$ session.code $}</td>
+                            <td>{$ session.session_date $}</td>
+                            <td>{$ session.evaluated_by.full_name $}</td>
+                            <td class="text-center">{$ session.total_session_time $}</td>
+                            <td>
+                                <button class="btn btn-success btn-xs" ng-click="ctrl.add_this_session(session)">Enroll this session</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Total Session Time : {$ ctrl.response.non_enroll_total_session_time_seconds | secondstoDuration $} </p>
+            </div>
+        </div> -->
+
+	</div>
+</div>
+<div class="modal-footer">
+</div>
