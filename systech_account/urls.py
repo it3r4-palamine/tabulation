@@ -140,6 +140,8 @@ urlpatterns = [
 	url(r'^student_sessions/create_dialog/$', session_evaluation.create_dialog),
 	url(r'^student_sessions/check_reference_no/$', session_evaluation.check_reference_no),
 	url(r'^student_sessions/read/$', session_evaluation.read),
+	url(r'^student_sessions/create/$', session_evaluation.create),
+
 
 
 ]

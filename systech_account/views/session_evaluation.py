@@ -155,6 +155,109 @@ def read(request):
 		return success_list(results,False)
 	except Exception as e:
 		return HttpResponse(e, status = 400)
+
+def create(request,from_api=False,session=None):
+	try:
+		result = None
+		if not from_api:
+			session = req_data(request)
+
+			if 'enrollment_id' in session['program']:
+				session['enrollment'] = session['program'].get("enrollment_id", None)
+				session['program'] = session['program']['program_id']
+				
+			session = set_id(session)
+			session = format_dates(session)
+			session = format_times(session)
+
+		if 'id' in session:
+			instance = StudentSession.objects.get(id=session['id'])
+			form = StudentSessionForm(session, instance=instance)
+
+			if form.is_valid():
+				update_result = form.save()
+				session_pk = update_result.pk
+
+				SessionExercise.objects.filter(session=session['id']).delete()
+
+				for exercise in clean_list(session['session_exercises']):
+					exercise = set_id(exercise)
+					exercise['session'] = update_result.pk
+					exercise_form = SessionExerciseForm(exercise)
+
+					if exercise_form.is_valid():
+						exercise_form.save()
+					else:
+						print exercise_form.errors
+
+				if from_api:
+					print "api"
+					response = {
+						'status' : True,
+						'message' : "Success",
+						'code' : session["code"]
+					}
+					return response
+
+				result = {
+					"message": "Saving Session "+session["code"]+" Success!",
+					"session_pk": session_pk,
+				}
+				
+				return success_list(result, False)
+			else:
+				raise ValueError(form.errors)
+
+		session['code'] = check_replace_ref_code(session['code'])
+
+		session_form = StudentSessionForm(session)
+
+		if session_form.is_valid():
+
+			result = session_form.save()
+			session_pk = result.pk
+
+			if result:
+				for exercise in clean_list(session['session_exercises']):
+					exercise['session'] = result.pk
+					exercise = set_id(exercise)
+					exercise_form = SessionExerciseForm(exercise)
+					if exercise_form.is_valid():
+						exercise_form.save()
+					else:
+						print exercise_form.errors
+						raise ValueError(exercise_form.errors)
+		else:
+			raise ValueError(session_form.errors)
+
+		if from_api:
+			response = {
+				'status' : True,
+				'message' : "Success",
+				'code' : session["code"]
+			}
+			return response
+		
+		result = {
+			"message": "Saving Session "+session["code"]+" Success!",
+			"session_pk": session_pk,
+		}
+		
+		return success_list(result, False)
+	except Exception as e:
+
+		if result:
+			result.delete()
+
+		if from_api:
+			response = {
+				'status' : False,
+				'message' : str(e)
+			}
+			return response
+
+		return error(e)
+
 		
 def check_reference_no(request,isChecked=False):
 	try:

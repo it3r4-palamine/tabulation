@@ -27,7 +27,7 @@
             {% include "common/loader.html" %} 
             <div class="row">
                 <div class="col-sm-3">
-                    <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}fsf</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
+                    <label><span ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></label> <span ng-if="!transaction_types[0]"><i class="fa fa-spinner fa-pulse"></i></span>
                     <ui-select ng-model="filter.transaction_type">
                         <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $} <span ng-if="$select.selected.name != 'ALL'">- {$ $select.selected.set_no $} - {$ $select.selected.transaction_code $}</ui-select-match>
                         <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">

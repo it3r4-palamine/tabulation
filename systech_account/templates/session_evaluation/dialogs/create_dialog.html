@@ -57,11 +57,11 @@
 
                             <label class="col-sm-2 control-label">Program:</label>
                             <div class="col-sm-3">
-                                <ui-select ng-model="ctrl.session.program" ng-change="ctrl.check_for_existing_session()">
+                                <ui-select ng-model="record.company_rename" required>
                                     <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                                    <ui-select-choices repeat="program in ctrl.programs | filter: $select.search | limitTo:50">
-                                        <div ng-bind-html="program.name | highlight: $select.search"></div>
-                                    </ui-select-choices>
+                                   <ui-select-choices repeat="company in companies | filter: $select.search | limitTo:50">
+                                    <div ng-bind-html="company.name | highlight: $select.search"></div>
+                                </ui-select-choices>
                                 </ui-select>
                                 <span ng-show="ctrl.session.program.remaining_credit">Time Credit Left : {$ ctrl.session.program.remaining_credit $}</span>
                             </div>
@@ -72,7 +72,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Student:</label>
                             <div class="col-sm-3">
-                                <ui-select ng-model="record.consultant" ng-change="read_user_credits(record)">
+                                <ui-select ng-model="record.consultant">
                                     <ui-select-match>{$ $select.selected.fullname $}</ui-select-match>
                                     <ui-select-choices repeat="consultant in consultants | filter: $select.search | limitTo:50">
                                     <span ng-bind-html="consultant.fullname | highlight: $select.search"></span> - <span ng-bind-html="consultant.user_type.name | highlight: $select.search"></span>
@@ -148,30 +148,30 @@
                             </thead>
                             <tbody>
 
-                                <tr ng-repeat="exercise in ctrl.session.session_exercises track by $index">
-                                    <td class="col-sm-2">
-                                        <div class="input-group">
-                                            <ui-select ng-model="exercise.exercise" class="exercise_select" tooltip-placement="bottom" tooltip-class="align_left" uib-tooltip-html="ctrl.tooltips" ng-mouseover="ctrl.tooltipContent(exercise.exercise)">
-                                                <ui-select-match>{$ $select.selected.exercise_name_code $}</ui-select-match>
-                                                <ui-select-choices limit="30" refresh-delay="500" repeat="exercise in ctrl.exercise_arr | filter: $select.search | limitTo: 30" >
-                                                    <div ng-bind-html="exercise.exercise_name_code | highlight: $select.search"></div>
-                                                    <small>Set No : {$ exercise.set_no $}</small>
+                                 <tr ng-repeat="exercise in ctrl.session.session_exercises track by $index">
+
+                                    <td class="col-sm-1">
+                                              <ui-select ng-model="exercise.transaction_type">>
+                                                <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $}</ui-select-match>
+                                                <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">
+                                                    <span ng-bind-html="transaction_type.name | highlight: $select.search"></span>
+                                                     <div ng-bind-html="transaction_type.exercise_name_code | highlight: $select.search"></div>
+                                                    <small>Set No : {$ transaction_type.set_no $}</small>
                                                 </ui-select-choices>
                                             </ui-select>
-                                        </div>
                                     </td>
                                     <td width="1%" style="text-align: center; vertical-align: middle;">
-                                        <span>{$ exercise.exercise.set_no $}</span>
+                                        <span>{$ exercise.transaction_type.set_no $}</span>
                                     </td>
                                     <td class="col-sm-1">
                                         <form class="form-horizontal" name="form">
                                             <input name="score"
                                                     ng-model="exercise.score"
                                                     class="form-control text-center"
-                                                    ng-class="{ 'text-red' : exercise.score > exercise.exercise.total_items }"
+                                                    ng-class="{ 'text-red' : exercise.score > exercise.transaction_type.total_items }"
                                                     type="number"
                                                     min="0"
-                                                    placeholder="Max ({$ exercise.exercise.total_items $})"
+                                                    placeholder="Max ({$ exercise.transaction_type.total_items $})"
                                                     require="false">
                                             <div class="m-t-xs" ng-show="exercise.score.$invalid && exercise.score.$dirty">
                                                 <small class="text-danger">Max Score({$ exercise.exercise.total_items $})</small>
@@ -187,10 +187,10 @@
                                         </ui-select>
                                     </td>
                                     <td class="col-sm-1">
-                                        <ui-select ng-model="exercise.facilitated_by" require="false">
-                                            <ui-select-match>{$ $select.selected.full_name $}</ui-select-match>
-                                            <ui-select-choices repeat="trainer in ctrl.trainers | filter: $select.search | limitTo:50">
-                                                <div ng-bind-html="trainer.full_name | highlight: $select.search"></div>
+                                        <ui-select ng-model="exercise.facilitator" required>
+                                            <ui-select-match placeholder="Select...">{$ $select.selected.fullname $}</ui-select-match>
+                                            <ui-select-choices repeat="facilitator in consultants | filter: $select.search | limitTo:50">
+                                                <span ng-bind-html="facilitator.fullname | highlight: $select.search"></span> - <span ng-bind-html="facilitator.user_type.name | highlight: $select.search"></span>
                                             </ui-select-choices>
                                         </ui-select>
                                     </td>
