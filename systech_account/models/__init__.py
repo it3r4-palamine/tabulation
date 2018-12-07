@@ -9,3 +9,4 @@ from systech_account.models.settings import *
 from systech_account.models.user_logs import *
 from systech_account.models.enrollment import *
 from systech_account.models.payment import *
+from systech_account.models.session import *

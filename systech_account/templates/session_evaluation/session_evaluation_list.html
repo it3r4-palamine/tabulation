@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+{% block ngapp %}ng-app="session_evaluation"{% endblock %}
+{% block ngctrl %}ng-controller="StudentSessionCtrl as ctrl"{% endblock %} 
+{% block title %}Company Assessment {% endblock %} 
+
+{% block loader_js_bottom %}
+<script type="text/javascript" src="{% static 'js/session_evaluation.js'%}?ver=1"></script>
+{% endblock loader_js_bottom %} {% block page_header %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2><span ng-if="!display_terms[0].company_assessments" ng-cloak="">Company Assessment</span><span ng-if="display_terms[0].company_assessments" ng-cloak="">{$ display_terms[0].company_assessments $}</span></h2>
+    </div>
+</div>
+{% endblock %} 
+
+{% block editable_css %}
+    <style type="text/css">
+        .hand_cursor {
+            cursor: pointer !important;
+        }
+
+        .hand_cursor:hover {
+            background-color: #E8E8E8 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content_body %}
+<div class="wrapper wrapper-content animated fadeIn" ng-cloak="">
+    <div class="ibox">
+        <div class="ibox-content" ng-class="ctrl.page_loader.main ? 'sk-loading' : ''">
+            {% include "common/loader.html" %}
+            <div class="row">
+                <div class="ibox-title">
+
+                    <button class="btn btn-outline btn-warning" ng-click="create_edit_session()" ng-hide="ctrl.draft_session">Add Session</button>
+                    <div class="input-group-btn" ng-show="ctrl.draft_session">
+                        <button data-toggle="dropdown" class="btn btn-outline btn-warning dropdown-toggle" type="button" aria-expanded="false">Add Session <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a ng-click="ctrl.create_edit_session()">Create New Session</a></li>
+                            <li><a ng-click="ctrl.create_edit_session(ctrl.draft_session, true)">Continue with Drafted Session</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <label>&nbsp;</label>
+                    <input type="text" class="form-control" ng-model="filter.code" placeholder="Search..." name="">
+                    <!-- <div class="checkbox checkbox-success">
+                        <input type="checkbox" name="is_general" id="is_general" ng-model="filter.is_general"><label for="is_general">General Questions</label>
+                    </div> -->
+                </div>
+                <div class="col-sm-3">
+                    <label>&nbsp;</label><br>
+                    <button class="btn btn-default" ng-click="read()"><i class="fa fa-search"></i> SEARCH</button><br>
+                </div>
+                <div class="clearfix"></div>
+                <br>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                           <tr>
+                                <th>Reference No</th>
+                                <th>Student Name</th>
+                                <th>Session Date</th>
+                                <th>Session Duration</th>
+                                <th>Program</th>
+                                <th>Time Remaining</th>
+                            </tr>
+                        </thead>
+                       <tbody>
+                        <tr style="text-align: center;" ng-repeat="student_session in ctrl.records " ng-class="(ctrl.context_id == student_session.id) ? 'tr_gray2 hand_cursor' : 'tr_gray hand_cursor'" context-menu="ctrl.menu_options(student_session)" ng-click="ctrl.create_edit_session(student_session,false)">
+                            <td>{$ student_session.code $}</td>
+                            <td>{$ student_session.student_full_name $}</td>
+                            <td>{$ student_session.session_date | date : "MM/dd/yyyy" $}</td>
+                            <td>{$ student_session.session_timein | dateInMillis | date: "hh:mm a" $} 
+                                - {$ student_session.session_timeout | dateInMillis | date: "hh:mm a" $}</td>
+                            <td>{$ student_session.program_name $}</td>
+                            <td><p ng-class="{ 'text-red' : student_session.time_remaining <= 900  }">{$ student_session.time_remaining | secondsDuration : "hh:mm" $}</p></td>
+                        </tr>
+                                        
+                        </tbody>
+                    </table>
+                </div>
+                <pagination></pagination>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
