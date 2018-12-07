@@ -396,7 +396,23 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	};
 	
     $scope.read_student_session = function(){
-		self.post_generic("/student_sessions/read_student_session/",null,"main")		
+		self.post_generic("/student_sessions/read_student_session/",null,"main")
+		.success(function(response){
+			console.log(response);
+			self.records = response.records;
+			for(var record in $scope.records){
+				var credits_left = $scope.records[record].credits_left ? $scope.records[record].credits_left : 0 
+				var session_credits = $scope.records[record].session_credits
+				$scope.records[record]['credits_left_seconds'] = convertSecondstoHours(credits_left);
+				$scope.records[record]['session_credits_seconds'] = convertSecondstoHours(session_credits);
+			}
+			self.starting = response.starting;
+			self.ending = response.records.length;
+			self.pagination.limit_options = angular.copy(self.pagination.read_user_credits);
+			// self.pagination.limit_options.push(response.total_records);
+			self.pagination["total_records"] = response.total_records;
+			self.pagination["total_pages"] = response.total_pages;
+		})		
     } 
 
    	$scope.read = function(){
@@ -408,19 +424,21 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		}
 		self.post_generic("/student_sessions/read_student_session/",data,"main")
 		.success(function(response){
-			$scope.records = response.data;
-			for(var record in $scope.records){
-				var credits_left = $scope.records[record].credits_left ? $scope.records[record].credits_left : 0 
-				var session_credits = $scope.records[record].session_credits
-				$scope.records[record]['credits_left_seconds'] = convertSecondstoHours(credits_left);
-				$scope.records[record]['session_credits_seconds'] = convertSecondstoHours(session_credits);
-			}
-			self.starting = response.starting;
-			self.ending = response.data.length;
-			self.pagination.limit_options = angular.copy(self.pagination.read_user_credits);
-			// self.pagination.limit_options.push(response.total_records);
-			self.pagination["total_records"] = response.total_records;
-			self.pagination["total_pages"] = response.total_pages;
+			alert("Fdfsd")
+			console.log(response);
+			self.records = response.records;
+			// for(var record in $scope.records){
+			// 	var credits_left = $scope.records[record].credits_left ? $scope.records[record].credits_left : 0 
+			// 	var session_credits = $scope.records[record].session_credits
+			// 	$scope.records[record]['credits_left_seconds'] = convertSecondstoHours(credits_left);
+			// 	$scope.records[record]['session_credits_seconds'] = convertSecondstoHours(session_credits);
+			// }
+			// self.starting = response.starting;
+			// self.ending = response.data.length;
+			// self.pagination.limit_options = angular.copy(self.pagination.read_user_credits);
+			// // self.pagination.limit_options.push(response.total_records);
+			// self.pagination["total_records"] = response.total_records;
+			// self.pagination["total_pages"] = response.total_pages;
 		})
 	};
 

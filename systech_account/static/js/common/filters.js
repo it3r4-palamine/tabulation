@@ -106,6 +106,12 @@ app.filter('secondstoDuration', [function() {
     };
 }])
 
+app.filter('dateInMillis', function(){
+    return function(dateString){
+      return Date.parse(dateString);
+    };
+  });
+
 app.filter('range', function () {
     return function (input, total) {
 
