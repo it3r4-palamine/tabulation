@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.core.validators import RegexValidator
 from django.db.models import ExpressionWrapper, DurationField
 from utils.date_handler import *
+from utils.response_handler import *
 from utils.global_variables import MOBILE_API
 
 class StudentSession(models.Model):
@@ -33,11 +34,11 @@ class StudentSession(models.Model):
         
         instance = {}
         
-
-        if return_type == 1:
+        print(return_type)
+        if return_type == 0:
             instance['id'] = self.id
             instance['code'] = self.code if self.code else ""
-            instance['student_full_name'] = self.student.get_full_name()
+            # instance['student_full_name'] = self.student.get_full_name()
             instance['program_name'] = self.program.name
             instance['session_date'] = str(self.session_date)
             instance['session_timein'] = str(convert_24_12(self.session_timein))

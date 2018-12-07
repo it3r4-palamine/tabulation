@@ -7,7 +7,7 @@
 
         <div class="col-sm-7">
             <div class="pull-right">
-                <button class="btn btn-sm btn-link" ng-click="ctrl.save_session(null, 'open')">
+                <button class="btn btn-sm btn-link" ng-click="ctrl.save_session(ctrl.session, 'open')">
                     <i class="fa fa-save dialog-button" class="dialog-button"></i>
                     <span>Save</span>
                 </button>
@@ -19,7 +19,7 @@
                         <span>More Saving Options</span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a href="" ng-click="ctrl.save_session(null, 'close')">Save and Close</a></li>
+                        <li><a href="" ng-click="ctrl.save_session(record, 'close')">Save and Close</a></li>
                         <li><a href="" ng-click="ctrl.save_session(null, 'new')">Save and New</a></li>
                         <li><a href="" ng-click="ctrl.save_session(null, 'print')">Save and Print</a></li>
                         <li ng-show="ctrl.session.id"><a href="" ng-click="ctrl.print_student_session(ctrl.session)">Print</a></li>
@@ -57,7 +57,7 @@
 
                             <label class="col-sm-2 control-label">Program:</label>
                             <div class="col-sm-3">
-                                <ui-select ng-model="record.company_rename" required>
+                                <ui-select ng-model="ctrl.session.program" required>
                                     <ui-select-match>{$ $select.selected.name $}</ui-select-match>
                                    <ui-select-choices repeat="company in companies | filter: $select.search | limitTo:50">
                                     <div ng-bind-html="company.name | highlight: $select.search"></div>
@@ -72,7 +72,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Student:</label>
                             <div class="col-sm-3">
-                                <ui-select ng-model="record.consultant">
+                                <ui-select ng-model="ctrl.session.student">
                                     <ui-select-match>{$ $select.selected.fullname $}</ui-select-match>
                                     <ui-select-choices repeat="consultant in consultants | filter: $select.search | limitTo:50">
                                     <span ng-bind-html="consultant.fullname | highlight: $select.search"></span> - <span ng-bind-html="consultant.user_type.name | highlight: $select.search"></span>

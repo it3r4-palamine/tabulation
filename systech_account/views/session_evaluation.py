@@ -7,6 +7,12 @@ from ..models.company_assessment import *
 from ..models.assessments import *
 from django.db.models import *
 from ..views.common import *
+from utils.date_handler import *
+from utils.model_utils import *
+from utils.dict_types import *
+from utils.response_handler import *
+from ..forms.session import *
+from .common import *
 import sys, traceback, os
 
 def session_evaluation_list(request):
@@ -53,8 +59,8 @@ def read_student_session(request, session_id):
 			results['session_exercises'] = exercises
 
 		else:
-			if not request.user.is_staff:
-				student_id = request.user.studentprofile.student.id
+			# if not request.user.is_staff:
+				# student_id = request.user.studentprofile.student.id
 				
 
 			name_search = filters.pop("name","")
@@ -88,7 +94,7 @@ def read_student_session(request, session_id):
 			sessions = StudentSession.objects.filter(filters).select_related(*related).order_by("-id","-code")
 
 			for session in sessions:
-				records.append(session.get_dict(return_type=FOR_LIST))
+				records.append(session.get_dict(return_type=DEFAULT))
 
 			if pagination:
 				results.update(generate_pagination(pagination,sessions))
@@ -122,7 +128,7 @@ def read(request):
 
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
-		records = Company_rename.objects.filter(**filters).order_by("id")
+		records = StudentSession.objects.filter(**filters).order_by("id")
 		results = {'data':[]}
 		results['total_records'] = records.count()
 
@@ -165,7 +171,7 @@ def create(request,from_api=False,session=None):
 			if 'enrollment_id' in session['program']:
 				session['enrollment'] = session['program'].get("enrollment_id", None)
 				session['program'] = session['program']['program_id']
-				
+			
 			session = set_id(session)
 			session = format_dates(session)
 			session = format_times(session)
@@ -245,7 +251,11 @@ def create(request,from_api=False,session=None):
 		
 		return success_list(result, False)
 	except Exception as e:
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		print(exc_type, fname, exc_tb.tb_lineno)
 
+		cprint(e)
 		if result:
 			result.delete()
 

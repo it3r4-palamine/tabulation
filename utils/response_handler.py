@@ -1,10 +1,53 @@
 from rest_framework.response import Response
 from django.http.response import HttpResponse
+from django.db.models import Count, Sum, Avg,Min,Q,F,Func
 import json
 import ast
 import decimal
+from datetime import *
 
 
+def convert_24_12(time,get_object=False):
+    if time is None:
+        return ""
+
+    results = {}
+    epoch = datetime.utcfromtimestamp(0)
+    converted_time = datetime.strptime(str(time), "%H:%M:%S")
+
+    if get_object:
+        converted_datetime = datetime.combine(DUMMYDATE,time)
+        results["time"] = time.strftime("%I:%M %p")
+        results["total_seconds"] = (converted_datetime - epoch).total_seconds() * 1000.0
+        results["datetime"] = converted_datetime
+        return results
+
+    return converted_time
+
+def filter_obj_to_q(obj,or_q = ()):
+    q_filters = Q()
+    for value in obj.iteritems():
+        if value[0] in or_q:
+            q_filters |= Q((value[0],value[1]))
+        else:
+            q_filters &= Q((value[0],value[1]))
+
+    return q_filters
+
+def convert_date_key(filters,key):
+    converted = {}
+    for value in filters.iteritems():
+        if "date_from" in value:
+            converted[key] = value[1]
+        elif "date_to" in value:
+            converted[key] = value[1]
+        else:
+            converted[value[0]] = value[1]
+
+    return converted
+    
+def get_data(request):
+    return json.loads(request.body.decode("utf-8")) if request.body.decode("utf-8") else {}
 
 def extract_json_data(request):
     post_params = json.loads(request.body.decode("utf-8"), parse_float=round_off_req_data) if request.body.decode(

@@ -26,6 +26,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	$scope.create_edit_session = function(student_session, fromDraft, record){
 		$scope.record = {}
 		$scope.record['is_active'] = true
+		console.log(record)
 		if (student_session && !fromDraft && record ) {
 			$scope.read_transaction_types(record)
 			var response = self.post_generic('/student_sessions/read_student_session/'+student_session.id);
@@ -96,10 +97,10 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
 		if (self.session.session_exercises.length > 0) {
 			self.session_exercise.facilitated_by = self.session.session_exercises[self.session.session_exercises.length-1].facilitated_by
-			self.session_exercise.trainer_note = self.session.session_exercises[self.session.session_exercises.length-1].trainer_note
+			// self.session_exercise.trainer_note = self.session.session_exercises[self.session.session_exercises.length-1].trainer_note
 		} else {
 			self.session_exercise.facilitated_by = {};
-			self.session_exercise.trainer_note = {};
+			// self.session_exercise.trainer_note = {};
 		}
 
 		self.session.session_exercises.push(angular.copy(self.session_exercise));
@@ -219,6 +220,9 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
 	self.save_session = function(datus, save_opt)
 	{
+
+		console.log(datus);
+
 		if (datus) var post_data = angular.copy(datus);
 		else var post_data = angular.copy(self.session);
 
@@ -296,23 +300,23 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		self.draft_session = angular.fromJson(localStorage.session);
 	}
 
-	// $scope.read_transaction_types = function(record){
-	//     	self.post_generic("/transaction_types/read/",{"company_rename":record.company_rename.id, "with_questions":true},"dialog")
-	//     	.success(function(response){
-	//     		$scope.transaction_types = response.data;
-	//     	})
-	//     }
+	$scope.read_transaction_types = function(record){
+	    	self.post_generic("/transaction_types/read/",{"company_rename":record.company_rename.id, "with_questions":true},"dialog")
+	    	.success(function(response){
+	    		$scope.transaction_types = response.data;
+	    	})
+	    }
 
-	// $scope.read_companies = function(record){
-	// 	$scope.record.company = {}
-	// 	var data = {
-	// 		exclude : true
-	// 	}
- //    	me.post_generic("/company/read/",data,"main")
- //    	.success(function(response){
- //    		$scope.companies = response.data;
- //    	})
- //    }
+	$scope.read_companies = function(record){
+		$scope.record.company = {}
+		var data = {
+			exclude : true
+		}
+    	me.post_generic("/company/read/",data,"main")
+    	.success(function(response){
+    		$scope.companies = response.data;
+    	})
+    }
 
    $scope.read_transaction_types = function(){
     	var post = CommonRead.get_transaction_types2($scope,{"bypass_code_exists": true});
@@ -374,6 +378,27 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
     	})
     }
 
+	self.read_pagination = function(reset){
+		if(reset) self.reset_filter();
+
+		self.filters["sort"] = self.sort;
+		var filters = angular.copy(self.filters);
+		filters = self.format_date(filters);
+		filters = self.format_time(filters);
+		filters["pagination"] = self.pagination;
+
+		var post = self.post_generic("/student_sessions/read_student_session/", filters, "main");
+		post.success(function(response){
+			self.records = response.records;
+			calculate_remaining_time();
+			self.generate_pagination(self,response,"records");
+		});
+	};
+	
+    $scope.read_student_session = function(){
+		self.post_generic("/student_sessions/read_student_session/",null,"main")		
+    } 
+
    	$scope.read = function(){
 		var data = {
 			pagination: self.pagination,
@@ -381,7 +406,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 			company_rename:self.filter.company['id'] ? $scope.filter.company['id'] : null,
 			user:self.filter.user['id'] ? $scope.filter.user['id'] : null,
 		}
-		self.post_generic("/student_sessions/read/",data,"main")
+		self.post_generic("/student_sessions/read_student_session/",data,"main")
 		.success(function(response){
 			$scope.records = response.data;
 			for(var record in $scope.records){
@@ -415,6 +440,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	$scope.main_loader = function(){$scope.read();}
 	$scope.read_companies();
 	$scope.read_users();
+	$scope.read_student_session();
 	CommonRead.get_display_terms($scope)
 	CommonRead.get_transaction_types($scope);
 	CommonRead.get_company($scope);
