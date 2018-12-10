@@ -23,11 +23,14 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	self.filter.company = {'name':'ALL'}
 
 
-	$scope.create_edit_session = function(student_session, fromDraft, record){
+	self.create_edit_session = function(student_session, fromDraft, record){
 		$scope.record = {}
 		$scope.record['is_active'] = true
-		console.log(record)
-		if (student_session && !fromDraft && record ) {
+
+		console.log(student_session)
+
+		if (student_session && !fromDraft) {
+
 			$scope.read_transaction_types(record)
 			var response = self.post_generic('/student_sessions/read_student_session/'+student_session.id);
 			response.success(function(response){
@@ -36,9 +39,9 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 				self.session.session_timein = new Date(response.session_timein);
 				self.session.session_timeout = new Date(response.session_timeout);
 
-				if (self.session.session_exercises.length > 0) {
-					self.session_exercise.facilitated_by = self.session.session_exercises[self.session.session_exercises.length-1].facilitated_by
-				}
+				// if (self.session.session_exercises.length > 0) {
+				// 	self.session_exercise.facilitated_by = self.session.session_exercises[self.session.session_exercises.length-1].facilitated_by
+				// }
 
 				self.read_programs(self.session);
 			})
@@ -81,7 +84,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 			self.set_date_and_time();
 			self.post_generic("/student_sessions/check_reference_no/","","main")
 			.success(function(response){
-				$scope.record.reference_no = response
+				self.session.code = response;
 			})
 		}
 
@@ -117,13 +120,13 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	};
 	
 	self.read_exercises = function()
-		{
-			$http.post("/transaction_types/read/").success(function(response){
-				self.exercise_arr = response;
-			}).error(function(err){
-				Notification.error(err);
-			});
-		};
+	{
+		$http.post("/transaction_types/read/").success(function(response){
+			self.exercise_arr = response;
+		}).error(function(err){
+			Notification.error(err);
+		});
+	};
 
 	self.load_exercises_by_program = function(program_id){
 		$http.post("/transaction_types/read/"+program_id).success(function(response){
@@ -182,6 +185,10 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	}
 
 	self.read_programs = function(session){
+
+
+		console.log(session)
+
 		self.programs = [];
 		// self.session.program = {};
 
@@ -454,7 +461,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		    return hDisplay + mDisplay + sDisplay; 
 	}
 
-   	$scope.read();
+   	// $scope.read();
 	$scope.main_loader = function(){$scope.read();}
 	$scope.read_companies();
 	$scope.read_users();

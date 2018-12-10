@@ -2,7 +2,7 @@
 {% load static %}
 {% block ngapp %}ng-app="session_evaluation"{% endblock %}
 {% block ngctrl %}ng-controller="StudentSessionCtrl as ctrl"{% endblock %} 
-{% block title %}Company Assessment {% endblock %} 
+{% block title %} Session Evaluation {% endblock %} 
 
 {% block loader_js_bottom %}
 <script type="text/javascript" src="{% static 'js/session_evaluation.js'%}?ver=1"></script>
@@ -34,7 +34,7 @@
             <div class="row">
                 <div class="ibox-title">
 
-                    <button class="btn btn-outline btn-warning" ng-click="create_edit_session()" ng-hide="ctrl.draft_session">Add Session</button>
+                    <button class="btn btn-outline btn-warning" ng-click="ctrl.create_edit_session()" ng-hide="ctrl.draft_session">Add Session</button>
                     <div class="input-group-btn" ng-show="ctrl.draft_session">
                         <button data-toggle="dropdown" class="btn btn-outline btn-warning dropdown-toggle" type="button" aria-expanded="false">Add Session <span class="caret"></span></button>
                         <ul class="dropdown-menu">
@@ -43,14 +43,14 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-3"  ng-hide="true">
                     <label>&nbsp;</label>
                     <input type="text" class="form-control" ng-model="filter.code" placeholder="Search..." name="">
                     <!-- <div class="checkbox checkbox-success">
                         <input type="checkbox" name="is_general" id="is_general" ng-model="filter.is_general"><label for="is_general">General Questions</label>
                     </div> -->
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-3"  ng-hide="true">
                     <label>&nbsp;</label><br>
                     <button class="btn btn-default" ng-click="read()"><i class="fa fa-search"></i> SEARCH</button><br>
                 </div>

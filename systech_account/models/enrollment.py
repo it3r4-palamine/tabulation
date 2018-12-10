@@ -110,10 +110,10 @@ class Enrollment(models.Model):
     def get_dict_as_program(self):
 
         instance = {}
-        instance['id'] = self.program.id
-        instance['program_id'] = self.program.id
+        instance['id'] = self.company_rename.id
+        instance['program_id'] = self.company_rename.id
         instance['enrollment_id'] = self.id
-        instance['name'] = self.program.name
+        instance['name'] = self.company_rename.name
         instance["remaining_credit"] = format_time_consumed(self.get_remaining_credit())
 
         return instance
