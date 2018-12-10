@@ -26,8 +26,8 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	$scope.create_edit_session = function(student_session, fromDraft, record){
 		$scope.record = {}
 		$scope.record['is_active'] = true
-		console.log(record)
-		if (student_session && !fromDraft && record ) {
+
+		if (student_session && !fromDraft ) {
 			$scope.read_transaction_types(record)
 			var response = self.post_generic('/student_sessions/read_student_session/'+student_session.id);
 			response.success(function(response){
@@ -436,8 +436,8 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		    return hDisplay + mDisplay + sDisplay; 
 	}
 
-   	$scope.read();
-	$scope.main_loader = function(){$scope.read();}
+   	$scope.read_student_session();
+	$scope.main_loader = function(){$scope.read_student_session();}
 	$scope.read_companies();
 	$scope.read_users();
 	$scope.read_student_session();
