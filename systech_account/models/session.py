@@ -165,8 +165,8 @@ class SessionExercise(models.Model):
                 instance['total_items'] = self.exercise.total_items
                 instance['percentage'] = self.get_score_percentage()
 
-            if self.trainer_note:
-                instance['note'] = self.trainer_note.name
+            # if self.trainer_note:
+                # instance['note'] = self.trainer_note.name
             if self.facilitated_by:
                 instance['facilitated_by'] = self.facilitated_by.first_name
 
@@ -175,8 +175,8 @@ class SessionExercise(models.Model):
                     instance['exercise'] = self.exercise.get_dict()
                     instance['exercise_set_no'] = { "set_no": self.exercise.set_no, "total_items": self.exercise.total_items }
 
-                if self.trainer_note:
-                    instance['trainer_note'] = self.trainer_note.get_dict()
+                # if self.trainer_note:
+                    # instance['trainer_note'] = self.trainer_note.get_dict()
 
                 if self.facilitated_by:
                     instance['facilitated_by'] = self.facilitated_by.get_dict()

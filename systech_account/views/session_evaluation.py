@@ -30,6 +30,9 @@ def read_student_session(request, session_id):
 		records = []
 		filters = get_data(request)
 
+		print("Session ID")
+		print(session_id)
+
 		pagination = filters.pop("pagination",None)
 		sort_by = filters.pop("sort",None)
 

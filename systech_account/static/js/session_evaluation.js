@@ -128,7 +128,8 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		});
 	};
 
-	self.load_exercises_by_program = function(program_id){
+	self.load_exercises_by_program = function(program_id)
+	{
 		$http.post("/transaction_types/read/"+program_id).success(function(response){
 			self.exercise_arr = response;
 		}).error(function(err){
@@ -184,11 +185,8 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		self.close_dialog();
 	}
 
-	self.read_programs = function(session){
-
-
-		console.log(session)
-
+	self.read_programs = function(session)
+	{
 		self.programs = [];
 		// self.session.program = {};
 
@@ -200,8 +198,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
 		response.error(function(response){
 			Notification.error(response)
-		})
-
+		});
 	};
 
 	self.initiate = function(){
@@ -212,10 +209,10 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		self.read_pagination();
 	};
 
-
 	self.delete_session_excercise = function(session_exercise){
 		self.session.session_exercises.splice(self.session.session_exercises.indexOf(session_exercise), 1);
 	};
+	
 	self.print_student_session = function(student_session){
 
 		$http.post('/student_sessions/read_student_session/' + student_session.id)
@@ -228,8 +225,6 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	self.save_session = function(datus, save_opt)
 	{
 
-		console.log(datus);
-
 		if (datus) var post_data = angular.copy(datus);
 		else var post_data = angular.copy(self.session);
 
@@ -241,15 +236,13 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
 		// if (self.validate_session(post_data)) {
 
-			self.post_generic('/student_sessions/create/', post_data, null, false, null, false)
-				.success(function(response){
-					self.session.id = response.session_pk
-					localStorage.clear();
-					check_save_options(save_opt, self.session, response.message);
-					self.main_loader();
-				})
+		self.post_generic('/student_sessions/create/', post_data, null, false, null, false)
+			.success(function(response){
+				self.session.id = response.session_pk
+				localStorage.clear();
+				self.main_loader();
+			})
 
-		// }
 	};
 
 	self.validate_session = function(data)
