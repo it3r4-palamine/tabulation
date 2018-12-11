@@ -190,7 +190,7 @@ def save_enrollment(request):
 		}
 		return success_list(result, False)
 	except Exception as e:
-		print e
+		return error_response(str(e))
 
 def check_reference_no(request,isChecked=False):
 	try:
