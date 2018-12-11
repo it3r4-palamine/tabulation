@@ -33,9 +33,6 @@ def read_student_session(request, session_id):
 		records = []
 		filters = get_data(request)
 
-		print("Session ID")
-		print(session_id)
-
 		pagination = filters.pop("pagination",None)
 		sort_by = filters.pop("sort",None)
 
@@ -63,9 +60,6 @@ def read_student_session(request, session_id):
 
 			results = student_session.get_dict(complete_instance=True)
 			results['session_exercises'] = exercises
-
-			print("Here")
-			print(results)
 
 		else:
 			# if not request.user.is_staff:
@@ -226,8 +220,6 @@ def create(request,from_api=False,session=None):
 			else:
 				raise ValueError(form.errors)
 
-		# session['code'] = check_replace_ref_code(session['code'])
-
 		session_form = StudentSessionForm(session)
 
 		if session_form.is_valid():
@@ -238,12 +230,8 @@ def create(request,from_api=False,session=None):
 			if result:
 				for exercise in clean_list(session['session_exercises']):
 
-
-
 					exercise['session'] = result.pk
 					exercise = set_id(exercise)
-
-					print(exercise)
 
 					exercise_form = SessionExerciseForm(exercise)
 					if exercise_form.is_valid():

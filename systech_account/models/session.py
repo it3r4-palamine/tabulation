@@ -33,11 +33,11 @@ class StudentSession(models.Model):
         
         instance = {}
         
-        print(return_type)
         if not complete_instance and return_type == 0:
             instance['id'] = self.id
             instance['code'] = self.code if self.code else ""
             instance['student_full_name'] = self.student.fullname
+            instance["enrollment_id"] = self.enrollment.id
             instance['program_name'] = self.program.name
             instance['session_date'] = str(self.session_date)
             instance['session_timein'] = str(convert_24_12(self.session_timein))
@@ -74,6 +74,7 @@ class StudentSession(models.Model):
 
             instance["id"] = self.id
             instance["code"] = self.code
+            instance["enrollment"] = self.enrollment.id
             instance['student'] = self.student.get_dict()
             instance["session_date"] = str(self.session_date)
             instance['session_timein'] = str(convert_24_12(self.session_timein))

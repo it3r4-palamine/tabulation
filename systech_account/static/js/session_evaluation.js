@@ -37,7 +37,11 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 				self.session.session_timein = new Date(response.session_timein);
 				self.session.session_timeout = new Date(response.session_timeout);
 
-				self.read_programs(self.session);
+				self.read_programs(self.session, true);
+			})
+
+			response.error(function(response){
+				self.session.exercise = [];
 			})
 
 		} else {
@@ -166,7 +170,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		self.close_dialog();
 	}
 
-	self.read_programs = function(session)
+	self.read_programs = function(session, silent_notification)
 	{
 		self.programs = [];
 		// self.session.program = {};
@@ -178,7 +182,10 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		});
 
 		response.error(function(response){
-			Notification.error(response)
+			if (!silent_notification)
+			{
+				Notification.error(response)
+			}
 		});
 	};
 

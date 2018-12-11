@@ -6,8 +6,10 @@ from ..models.user import *
 from ..models.company import *
 from ..models.payment import *
 from ..models.assessments import *
+from ..models.session import *
 from ..views.common import *
 from django.db.models import Count, Sum, Avg,Min,Q,F,Func
+from datetime import timedelta
 
 class Enrollment(models.Model):
     user 				= models.ForeignKey("User")
@@ -125,10 +127,28 @@ class Enrollment(models.Model):
             "company_assessment__consultant__pk" : self.user.id,
             "is_deleted" : False
         }
-        sessions = Assessment_session.objects.filter(**session_filters).aggregate(total_time_consumed=models.Sum(ExpressionWrapper(F('time_end') - F('time_start'),output_field=DurationField())))
 
-        if sessions["total_time_consumed"]:
-            return sessions["total_time_consumed"]
+        student_session_filters = {
+            "student_id" : self.user.id,
+            "is_deleted" : False
+        }
+
+        sessions = Assessment_session.objects.filter(**session_filters).aggregate(total_time_consumed=models.Sum(ExpressionWrapper(F('time_end') - F('time_start'),output_field=DurationField())))
+        sessions2 = StudentSession.objects.filter(**student_session_filters).aggregate(total_time_consumed=models.Sum(ExpressionWrapper(F('session_timeout') - F('session_timein'),output_field=DurationField())))
+
+        assessments_session = sessions.get("total_time_consumed", timedelta(seconds=0))
+        evaluation_session = sessions2.get("total_time_consumed", timedelta(seconds=0))
+
+        if not assessments_session:
+            assessments_session = timedelta(seconds=0)
+
+        if not evaluation_session:
+            evaluation_session = timedelta(seconds=0)
+
+        total = assessments_session + evaluation_session
+
+        if total:
+            return total
         else:
             return None
 

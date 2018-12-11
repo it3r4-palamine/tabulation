@@ -6,8 +6,6 @@ def read_enrolled_programs(request, from_api = False):
 		filters = get_data(request)
 		results = { "records" : [] }
 
-		print(filters)
-
 		q_filters = Q(user=filters["id"]) & ~Q(session_end_date__lte=datetime.now()) & Q(is_deleted=False)
 
 		if from_api:
