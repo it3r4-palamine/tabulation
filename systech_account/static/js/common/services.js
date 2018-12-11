@@ -424,11 +424,13 @@ app.factory("RightClick", function(Notification){
                     // scope.printt(record)
                 }
             }]
-            void_menu = ['Void', function ($itemScope, $event, modelValue, text, $li) {
-                scope.delete(record,true)
+
+            edit_menu = ["Edit", function($itemScope, $event, modelValue, text, $li){
+                scope.create_edit_session(record)
             }]
-            remove_menu = ['Remove', function ($itemScope, $event, modelValue, text, $li) {
-                scope.delete(record);
+            
+            remove_menu = ['Delete', function ($itemScope, $event, modelValue, text, $li) {
+                scope.delete_student_session(record);
             }]
 
             //Stock in and Stock Out
@@ -462,6 +464,11 @@ app.factory("RightClick", function(Notification){
                     scope.delete_enrollment(record)
                 }
             }]
+
+            if (scope.key_in_list(scope.current_module, [
+                "session_evaluation"])){
+                menu.push(edit_menu);
+            }
 
             if (scope.key_in_list(scope.current_module,[
                 "monitoring",
@@ -573,6 +580,7 @@ app.factory("RightClick", function(Notification){
             if  (scope.key_in_list(scope.current_module,[
                 "monitoring",
                 "purchase_order",
+                "session_evaluation",
                 "receive_inventory",
                 "paybills",
                 "sales_order",
@@ -588,6 +596,8 @@ app.factory("RightClick", function(Notification){
                 "customer"])) {
                 menu.push(remove_menu)
             }
+
+
 
             if(scope.key_in_list(scope.current_module,[
                 "enrollment_list",])){

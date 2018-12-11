@@ -34,7 +34,7 @@ class StudentSession(models.Model):
         instance = {}
         
         print(return_type)
-        if return_type == 0:
+        if not complete_instance and return_type == 0:
             instance['id'] = self.id
             instance['code'] = self.code if self.code else ""
             instance['student_full_name'] = self.student.fullname
@@ -45,7 +45,7 @@ class StudentSession(models.Model):
 
             return instance
 
-        if return_type == MOBILE_API:
+        if not complete_instance and return_type == MOBILE_API:
             instance['id'] = self.id
             instance['code'] = self.code if self.code else ""
             instance['program_name'] = self.program.name
@@ -58,21 +58,26 @@ class StudentSession(models.Model):
             return instance
 
 
-
-        instance['id'] = self.id
-        instance['code'] = self.code if self.code else ""
-        instance['student_full_name'] = self.student.fullname
-        instance['program_name'] = self.program.name
-        instance['session_date'] = str(self.session_date)
-        instance['session_timein'] = str(convert_24_12(self.session_timein))
-        instance['session_timeout'] = str(convert_24_12(self.session_timeout))
-        instance['time_in'] = time_to_datetime(self.session_timein,True)
-        instance['total_session_time'] = self.format_total_time(self.get_total_session_time())
-        instance['total_session_time_seconds'] = float(self.get_total_session_time().total_seconds())
-        instance['comments'] = self.comments
+        # instance['id'] = self.id
+        # instance['code'] = self.code if self.code else ""
+        # instance['student_full_name'] = self.student.fullname
+        # instance['program_name'] = self.program.name
+        # instance['session_date'] = str(self.session_date)
+        # instance['session_timein'] = str(convert_24_12(self.session_timein))
+        # instance['session_timeout'] = str(convert_24_12(self.session_timeout))
+        # instance['time_in'] = time_to_datetime(self.session_timein,True)
+        # instance['total_session_time'] = self.format_total_time(self.get_total_session_time())
+        # instance['total_session_time_seconds'] = float(self.get_total_session_time().total_seconds())
+        # instance['comments'] = self.comments
 
         if complete_instance:
+
+            instance["id"] = self.id
+            instance["code"] = self.code
             instance['student'] = self.student.get_dict()
+            instance["session_date"] = str(self.session_date)
+            instance['session_timein'] = str(convert_24_12(self.session_timein))
+            instance['session_timeout'] = str(convert_24_12(self.session_timeout))
 
             if self.enrollment:
                 instance['program'] = self.enrollment.get_dict_as_program()
@@ -157,20 +162,25 @@ class SessionExercise(models.Model):
             instance = {}
             instance['id'] = self.id
             instance['score'] = self.score
+            instance['exercise'] = self.exercise
             
             if self.exercise:
-                instance['code'] = self.exercise.exercise_code
+                print("here223 ")
+                instance['code'] = self.exercise.transaction_code
+                print("fdsf")
                 instance['set_no'] = self.exercise.set_no
-                instance['exercise_name'] = self.exercise.exercise_name
+                instance['exercise_name'] = self.exercise.name
                 instance['total_items'] = self.exercise.total_items
                 instance['percentage'] = self.get_score_percentage()
 
             # if self.trainer_note:
                 # instance['note'] = self.trainer_note.name
             if self.facilitated_by:
+                print("dfsdf")
                 instance['facilitated_by'] = self.facilitated_by.first_name
 
             if complete_instance:
+                print("Complete Instance")
                 if self.exercise:
                     instance['exercise'] = self.exercise.get_dict()
                     instance['exercise_set_no'] = { "set_no": self.exercise.set_no, "total_items": self.exercise.total_items }
@@ -180,6 +190,8 @@ class SessionExercise(models.Model):
 
                 if self.facilitated_by:
                     instance['facilitated_by'] = self.facilitated_by.get_dict()
+
+            print(instance)
 
             return instance
         except Exception as e:

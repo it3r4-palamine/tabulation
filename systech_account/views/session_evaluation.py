@@ -11,9 +11,12 @@ from utils.date_handler import *
 from utils.model_utils import *
 from utils.dict_types import *
 from utils.response_handler import *
+from utils.view_utils import * 
 from ..forms.session import *
 from .common import *
+import datetime
 import sys, traceback, os
+
 
 def session_evaluation_list(request):
 	return render(request, "session_evaluation/session_evaluation_list.html", {"pagename" : "Student Evaluation"})
@@ -60,6 +63,9 @@ def read_student_session(request, session_id):
 
 			results = student_session.get_dict(complete_instance=True)
 			results['session_exercises'] = exercises
+
+			print("Here")
+			print(results)
 
 		else:
 			# if not request.user.is_staff:
@@ -190,6 +196,9 @@ def create(request,from_api=False,session=None):
 				SessionExercise.objects.filter(session=session['id']).delete()
 
 				for exercise in clean_list(session['session_exercises']):
+
+					print(exercise)
+
 					exercise = set_id(exercise)
 					exercise['session'] = update_result.pk
 					exercise_form = SessionExerciseForm(exercise)
@@ -217,7 +226,7 @@ def create(request,from_api=False,session=None):
 			else:
 				raise ValueError(form.errors)
 
-		session['code'] = check_replace_ref_code(session['code'])
+		# session['code'] = check_replace_ref_code(session['code'])
 
 		session_form = StudentSessionForm(session)
 
@@ -228,8 +237,14 @@ def create(request,from_api=False,session=None):
 
 			if result:
 				for exercise in clean_list(session['session_exercises']):
+
+
+
 					exercise['session'] = result.pk
 					exercise = set_id(exercise)
+
+					print(exercise)
+
 					exercise_form = SessionExerciseForm(exercise)
 					if exercise_form.is_valid():
 						exercise_form.save()
@@ -271,15 +286,27 @@ def create(request,from_api=False,session=None):
 
 		return error(e)
 
+def delete(request, session_id):
+	try:
+
+		student_session = StudentSession.objects.get(id=session_id)
+		student_session.code = remove_non_numeric_str(str(datetime.datetime.now()))
+		student_session.is_deleted = True
+		student_session.save()
+
+		return success()
+	except Exception as e:
+		return error(str(e))
+
 		
 def check_reference_no(request,isChecked=False):
 	try:
 		data = req_data(request,True)
-		instance = Company_assessment.objects.filter(company=data['company']).last()
+		instance = StudentSession.objects.filter(is_deleted=False).last()
 		if not instance:
 			ref_no = "000000"
 		else:
-			ref_no = instance.reference_no
+			ref_no = instance.code
 
 		ref_no_len = len(ref_no)
 

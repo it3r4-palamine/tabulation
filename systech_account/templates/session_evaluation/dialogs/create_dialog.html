@@ -151,7 +151,7 @@
                                  <tr ng-repeat="exercise in ctrl.session.session_exercises track by $index">
 
                                     <td class="col-sm-1">
-                                              <ui-select ng-model="exercise.transaction_type">>
+                                              <ui-select ng-model="exercise.exercise">>
                                                 <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $}</ui-select-match>
                                                 <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">
                                                     <span ng-bind-html="transaction_type.name | highlight: $select.search"></span>
@@ -161,7 +161,7 @@
                                             </ui-select>
                                     </td>
                                     <td width="1%" style="text-align: center; vertical-align: middle;">
-                                        <span>{$ exercise.transaction_type.set_no $}</span>
+                                        <span>{$ exercise.exercise.set_no $}</span>
                                     </td>
                                     <td class="col-sm-1">
                                         <form class="form-horizontal" name="form">
@@ -187,7 +187,7 @@
                                         </ui-select>
                                     </td>
                                     <td class="col-sm-1">
-                                        <ui-select ng-model="exercise.facilitator" required>
+                                        <ui-select ng-model="exercise.facilitated_by" required>
                                             <ui-select-match placeholder="Select...">{$ $select.selected.fullname $}</ui-select-match>
                                             <ui-select-choices repeat="facilitator in consultants | filter: $select.search | limitTo:50">
                                                 <span ng-bind-html="facilitator.fullname | highlight: $select.search"></span> - <span ng-bind-html="facilitator.user_type.name | highlight: $select.search"></span>

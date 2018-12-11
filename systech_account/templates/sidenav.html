@@ -26,7 +26,7 @@
                 </a>
             </li>
             <li>
-                <a href="/assessments"><i class="fa fa-question"></i> <span class="nav-label" ng-if="!display_terms[0].questions" ng-cloak="">Questions</span><span class="nav-label" ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></a>
+                <a href="/assessments"><i class="fa fa-question"></i> <span class="nav-label" ng-if="!display_terms[0].questions" ng-cloak="">Worksheets</span><span class="nav-label" ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></a>
             </li>
             {% if request.user.user_type.name == 'Technical' %}
             <li>
@@ -72,7 +72,7 @@
             </li>
 
             <li>
-                <a href="/company_assessment"><i class="fa fa-check-square"></i> <span class="nav-label" ng-if="!display_terms[0].company_assessments" ng-cloak="">Company Assessment</span><span class="nav-label" ng-if="display_terms[0].company_assessments" ng-cloak="">{$ display_terms[0].company_assessments $}</span></a>
+                <a href="/company_assessment"><i class="fa fa-check-square"></i> <span class="nav-label" ng-if="!display_terms[0].company_assessments" ng-cloak="">Session Evaluation</span><span class="nav-label" ng-if="display_terms[0].company_assessments" ng-cloak="">{$ display_terms[0].company_assessments $}</span></a>
             </li>
             {% if request.user.user_type.name == 'Technical' %}
             <li>

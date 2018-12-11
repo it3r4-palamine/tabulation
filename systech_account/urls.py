@@ -171,6 +171,7 @@ urlpatterns = [
 	url(r'^student_sessions/check_reference_no/$', session_evaluation.check_reference_no),
 	url(r'^student_sessions/read/$', session_evaluation.read),
 	url(r'^student_sessions/create/$', session_evaluation.create),
+	url(r'^student_sessions/delete/(?P<session_id>\w{0,50})$', session_evaluation.delete),
 
 	### Program ###
 	url(r'^program/read_enrolled_programs/$', program.read_enrolled_programs), 

@@ -1,10 +1,11 @@
-var app = angular.module("session_evaluation", ['common_module', 'file-model', 'angular-sortable-view']);
+var app = angular.module("session_evaluation", ['common_module', 'file-model', 'angular-sortable-view','ui.bootstrap.contextMenu']);
 
-app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element, $controller, CommonFunc, Notification, CommonRead)
+app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element, $controller, CommonFunc, RightClick, Notification, CommonRead)
 {
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope }));
 	var self = this;
-	self.current_module = "evaluation_list"
+	var me = this;
+	self.current_module = "session_evaluation"
 
 	self.filters = { name : ''};
 	self.pagination;
@@ -36,25 +37,11 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 				self.session.session_timein = new Date(response.session_timein);
 				self.session.session_timeout = new Date(response.session_timeout);
 
-				// if (self.session.session_exercises.length > 0) {
-				// 	self.session_exercise.facilitated_by = self.session.session_exercises[self.session.session_exercises.length-1].facilitated_by
-				// }
-
 				self.read_programs(self.session);
 			})
 
-		} else if (student_session && fromDraft) {
-			self.session = self.draft_session;
-			self.session.session_date = new Date(self.draft_session.session_date);
-			self.session.session_timein = new Date(self.draft_session.session_timein);
-			self.session.session_timeout = new Date(self.draft_session.session_timeout);
-
-			self.read_programs(self.session);
-
 		} else {
 			localStorage.clear();
-
-			
 
 			self.session = {
 				session_exercises : [],
@@ -70,6 +57,9 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 			         "id":3
 				},
 			};
+
+			self.session.session_exercises = [];
+
 			self.session_exercise = {
 				exercise : {},
 				score : null,
@@ -107,12 +97,6 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
 		if (self.session.session_exercises.length == 3) {
 			$("#top-ibox-collapse").trigger("click");
-		}
-
-		if (is_save) 
-		{
-			save_to_localstorage();
-			self.save_session(null, 'open')
 		}
 	};
 	
@@ -219,6 +203,18 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 			})
 	};
 
+	self.delete_student_session = function(student_session)
+	{
+		var confirmation = CommonFunc.confirmation("Delete Session of " + student_session.student_full_name + "?");
+		confirmation.then(function(){
+
+			self.post_generic("/student_sessions/delete/" + student_session.id, null, true)
+				.success(function(response){
+					self.main_loader();
+				})
+		})
+	};
+
 	self.save_session = function(datus, save_opt)
 	{
 
@@ -235,10 +231,13 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
 		self.post_generic('/student_sessions/create/', post_data, null, false, null, false)
 			.success(function(response){
-				self.session.id = response.session_pk
-				localStorage.clear();
+				self.session.id = response.session_pk;
+				self.close_dialog();
 				self.main_loader();
+			}).error(function(response){
+				Notification.error(response)
 			})
+
 
 	};
 
@@ -439,6 +438,11 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		})
 	};
 
+	me.menu_options = function (record) {
+	    me.context_id = record.id;
+	    return RightClick.get_menu(me,record)
+	};
+
 	convertSecondstoHours = function(d){
 			d = Number(d);
 		    var h = Math.floor(d / 3600);
@@ -452,9 +456,8 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	}
 
    	// $scope.read();
-	$scope.main_loader = function(){$scope.read();}
    	$scope.read_student_session();
-	$scope.main_loader = function(){$scope.read_student_session();}
+	self.main_loader = function(){$scope.read_student_session();}
 	$scope.read_companies();
 	$scope.read_users();
 	$scope.read_student_session();
