@@ -104,3 +104,29 @@ class GradeLevel(models.Model):
 		instance["is_active"] = self.is_active
 
 		return instance
+
+
+class TrainerNote(models.Model):
+	name = models.TextField()
+	code = models.CharField(max_length=100, blank=True, null=True)
+	score_min = models.DecimalField(decimal_places=2, max_digits=5, blank=True, null=True)
+	score_max = models.DecimalField(decimal_places=2, max_digits=5, blank=True, null=True)
+	is_active  = models.BooleanField(default=True)
+	is_deleted = models.BooleanField(default=False)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "trainer_note"
+		ordering  = ["id"]
+
+	def get_dict(self):
+
+		instance = {}
+		instance['id'] = self.id
+		instance['name'] = self.name
+		instance['score_min'] = self.score_min
+		instance['score_max'] = self.score_max
+
+		instance = obj_decimal_to_float(instance)
+
+		return instance
