@@ -40,3 +40,5 @@ def format_time(time):
 		return datetime.strptime(time, '%H:%M:%S').strftime('%H:%M:%S')
 	except Exception as e:
 		return None
+
+# Test
