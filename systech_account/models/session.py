@@ -147,7 +147,7 @@ class SessionExercise(models.Model):
     session = models.ForeignKey("StudentSession", blank=True, null=True,related_name="student_session")
     exercise = models.ForeignKey("Transaction_type", blank=True, null=True)
     score = models.DecimalField(decimal_places=2, max_digits=5, blank=True, null=True)
-    # trainer_note = models.ForeignKey("TrainerNote", blank=True, null=True)    
+    trainer_note = models.ForeignKey("TrainerNote", blank=True, null=True)    
     facilitated_by = models.ForeignKey("User", blank=True, null=True)    
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
@@ -166,22 +166,20 @@ class SessionExercise(models.Model):
             instance['exercise'] = self.exercise
             
             if self.exercise:
-                print("here223 ")
                 instance['code'] = self.exercise.transaction_code
-                print("fdsf")
                 instance['set_no'] = self.exercise.set_no
                 instance['exercise_name'] = self.exercise.name
                 instance['total_items'] = self.exercise.total_items
                 instance['percentage'] = self.get_score_percentage()
 
+            if self.trainer_note:
+                instance["trainer_note"] = self.trainer_note.get_dict()
             # if self.trainer_note:
                 # instance['note'] = self.trainer_note.name
             if self.facilitated_by:
-                print("dfsdf")
                 instance['facilitated_by'] = self.facilitated_by.first_name
 
             if complete_instance:
-                print("Complete Instance")
                 if self.exercise:
                     instance['exercise'] = self.exercise.get_dict()
                     instance['exercise_set_no'] = { "set_no": self.exercise.set_no, "total_items": self.exercise.total_items }

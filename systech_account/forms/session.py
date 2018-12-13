@@ -21,5 +21,5 @@ class SessionExerciseForm(forms.ModelForm):
 		fields = ('session',
 				  'exercise', 
 				  'score', 
-				  # 'trainer_note', 
+				  'trainer_note', 
 				  'facilitated_by')

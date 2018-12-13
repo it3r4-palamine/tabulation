@@ -19,9 +19,9 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	self.record = {}
 	self.filter = {}
 
-	self.filter.transaction_type = {'name':'ALL'}
-	self.filter.user = {'fullname':'ALL'}
-	self.filter.company = {'name':'ALL'}
+	// self.filter.transaction_type = {'name':'ALL'}
+	// self.filter.user = {'fullname':'ALL'}
+	// self.filter.company = {'name':'ALL'}
 
 
 	self.create_edit_session = function(student_session, fromDraft, record){
