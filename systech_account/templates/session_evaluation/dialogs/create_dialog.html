@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <div class="modal-header">
     
     <div class="row">
@@ -75,8 +76,16 @@
                                 <ui-select ng-model="ctrl.session.student" ng-change="ctrl.read_programs(ctrl.session)">
                                     <ui-select-match>{$ $select.selected.fullname $}</ui-select-match>
                                     <ui-select-choices repeat="consultant in consultants | filter: $select.search | limitTo:50">
-                                    <span ng-bind-html="consultant.fullname | highlight: $select.search"></span> - <span ng-bind-html="consultant.user_type.name | highlight: $select.search"></span>
-                            </ui-select-choices>
+                                        <div class="row">
+                                            <div class="col-xs-2">
+                                                <img alt="image" class="rounded-circle" style="width:38px; height:38px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
+                                            </div>
+                                            <div class="col-xs-10">
+                                                <span ng-bind-html="consultant.fullname | highlight: $select.search"></span> 
+                                                <p ng-bind-html="consultant.user_type.name | highlight: $select.search"></p>
+                                            </div>
+                                        </div>
+                                    </ui-select-choices>
                                 </ui-select>
                             </div>
                             <label class="col-sm-2 control-label" ng-hide="true">Evaluated by:</label>
@@ -88,7 +97,6 @@
                                     </ui-select-choices>
                                 </ui-select>
                             </div>
-                            <button class="btn btn-primary" ng-click="ctrl.tasksDialog(ctrl.session.student.id)">Tasks</button>
                         </div>
                     </div>     
 

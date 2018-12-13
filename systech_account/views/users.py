@@ -26,6 +26,21 @@ def change_pass_dialog(request):
 def user_credits_summary(request):
     return render(request, 'users/dialogs/user_credits_summary.html')
 
+def read_students(request):
+    try:
+        results = {}
+        records = []
+
+        users = User.objects.filter(user_type__name="Student").order_by("id")
+
+        for user in users:
+            records.append(user.get_dict())
+
+        results["records"] = records
+
+        return success_list(results, False)
+    except Exception as e:
+        return error(str(e))
 
 def read(request):
     try:

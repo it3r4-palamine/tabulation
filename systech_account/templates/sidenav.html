@@ -26,7 +26,7 @@
                 </a>
             </li>
             <li>
-                <a href="/assessments"><i class="fa fa-question"></i> <span class="nav-label" ng-if="!display_terms[0].questions" ng-cloak="">Worksheets</span><span class="nav-label" ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></a>
+                <a href="/assessments"><i class="fa fa-pencil"></i> <span class="nav-label" ng-if="!display_terms[0].questions" ng-cloak="">Worksheets</span><span class="nav-label" ng-if="display_terms[0].questions" ng-cloak="">{$ display_terms[0].questions $}</span></a>
             </li>
             {% if request.user.user_type.name == 'Technical' %}
             <li>
@@ -70,10 +70,10 @@
 
             <!-- SESSION EVALUATION -->
             <li id="session_evaluation">
-                <a id="session_evaluation" href="#"><i class="fa fa-upload"></i> <span class="nav-label">Session Evaluation</span><span class="fa arrow"></span></a>
+                <a id="session_evaluation" href="#"><i class="fa fa-bolt"></i> <span class="nav-label">Session Evaluation</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li id="evaluation_list">
-                            <a href="/student_sessions/"><i class="fa fa-list"></i> <span class="nav-label">Evaluation List</span> </a>
+                            <a href="/student_sessions/"><i class="fa fa-check-square-o"></i> <span class="nav-label">Evaluation List</span> </a>
                     </li>
                     <li id="evaluation_list">
                             <a href="/company_assessment/"><i class="fa fa-list"></i> <span class="nav-label">Assessment List</span> </a>
