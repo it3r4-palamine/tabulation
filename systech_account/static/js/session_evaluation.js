@@ -381,6 +381,15 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
     	})
     }
 
+    self.read_trainer_notes = function(record)
+    {
+    	var response = self.post_generic("/settings/read_trainer_notes/")
+
+    	response.success(function(response){
+    		self.trainers_notes = response.data
+    	});
+    }
+
 	self.read_pagination = function(reset){
 		if(reset) self.reset_filter();
 
@@ -464,6 +473,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
    	// $scope.read();
    	$scope.read_student_session();
+   	self.read_trainer_notes();
 	self.main_loader = function(){$scope.read_student_session();}
 	$scope.read_companies();
 	$scope.read_users();

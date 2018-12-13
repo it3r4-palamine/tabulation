@@ -9,6 +9,7 @@ from ..forms.transaction_types import *
 from ..views.assessments import *
 from ..views.common import *
 from ..views.sentence_matching import *
+from utils.view_utils import *
 
 import sys, traceback, os
 
@@ -807,3 +808,59 @@ def grade_levels_create(request):
 			return HttpResponse(schools.errors, status = 400)
 	except Exception as err:
 		return HttpResponse(err, status = 400)
+
+def trainer_notes(request):
+	return render(request, 'settings/trainer_notes.html')
+
+def trainer_notes_create_dialog(request):
+	return render(request, 'settings/dialogs/trainer_notes_create_dialog.html')
+
+def read_trainer_notes(request):
+	try:
+		data = req_data(request,True)
+		pagination = None
+
+		if 'pagination' in data:
+			pagination = data.pop("pagination",None)
+		filters = {}
+		filters['is_active'] = True
+		records = TrainerNote.objects.filter(**filters).order_by("id")
+		results = {'data':[]}
+		results['total_records'] = records.count()
+
+		if pagination:
+			results.update(generate_pagination(pagination,records))
+			records = records[results['starting']:results['ending']]
+		data = []
+		for record in records:
+			row = record.get_dict()
+			data.append(row)
+		results['data'] = data
+		return success_list(results,False)
+	except Exception as e:
+		return HttpResponse(e,status=400)
+
+def trainer_notes_create(request):
+	try:
+		postdata = req_data(request,True)
+		record_id = postdata.get("id", None)
+
+		if record_id:
+			instance = TrainerNote.objects.get(id=record_id)
+			form = TrainerNoteForm(postdata,instance=instance)
+		else:
+			form = TrainerNoteForm(postdata)
+
+		if form.is_valid():
+			form.save()
+		else:
+			raise_error(form.errors)
+
+		return success("Success")
+	except Exception as e:
+		return HttpResponse(str(e), status = 400)
+
+
+
+
+

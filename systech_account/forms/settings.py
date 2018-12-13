@@ -26,3 +26,11 @@ class Grade_level_form(forms.ModelForm):
 	class Meta:
 		model = GradeLevel
 		fields = ('name','is_active','company')
+
+class TrainerNoteForm(forms.ModelForm):
+	class Meta:
+		model = TrainerNote
+		fields = ('name', 
+		 		  'code', 
+				  'score_min',
+				  'score_max')

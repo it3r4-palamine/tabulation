@@ -36,9 +36,6 @@
             <li>
                 <a href="/recommendations"><i class="fa fa-smile-o"></i> <span class="nav-label">Recommendations</span></a>
             </li>
-            <!-- <li>
-                <a href="/enrollments"><i class="fa fa-university"></i> <span class="nav-label">Enrollment</span></a>
-            </li> -->
 
             <li id="enrollment">
                 <a id="enrollment" href="#">
@@ -71,23 +68,15 @@
                 </ul>
             </li>
 
-            <li>
-                <a href="/company_assessment"><i class="fa fa-check-square"></i> <span class="nav-label" ng-if="!display_terms[0].company_assessments" ng-cloak="">Session Evaluation</span><span class="nav-label" ng-if="display_terms[0].company_assessments" ng-cloak="">{$ display_terms[0].company_assessments $}</span></a>
-            </li>
-            {% if request.user.user_type.name == 'Technical' %}
-            <li>
-                <a href="/transaction_types"><i class="fa fa-exchange"></i> <span class="nav-label" ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span class="nav-label" ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></a>
-            </li>
-            <li>
-                <a href="/company"><i class="fa fa-building"></i> <span class="nav-label" ng-if="!display_terms[0].company_rename" ng-cloak="">Company</span><span class="nav-label" ng-if="display_terms[0].company_rename" ng-cloak="">{$ display_terms[0].company_rename $}</span></a>
-            </li>
-            
-             <!-- SESSION EVALUATION -->
+            <!-- SESSION EVALUATION -->
             <li id="session_evaluation">
                 <a id="session_evaluation" href="#"><i class="fa fa-upload"></i> <span class="nav-label">Session Evaluation</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li id="evaluation_list">
                             <a href="/student_sessions/"><i class="fa fa-list"></i> <span class="nav-label">Evaluation List</span> </a>
+                    </li>
+                    <li id="evaluation_list">
+                            <a href="/company_assessment/"><i class="fa fa-list"></i> <span class="nav-label">Assessment List</span> </a>
                     </li>
                     <li id="session_report">
                             <a href="/session_report/"><i class="fa fa-tachometer"></i> <span class="nav-label">Session Reports</span> </a>
@@ -97,6 +86,16 @@
                     </li>
                 </ul>
             </li>
+            
+            {% if request.user.user_type.name == 'Technical' %}
+            <li>
+                <a href="/transaction_types"><i class="fa fa-exchange"></i> <span class="nav-label" ng-if="!display_terms[0].transaction_types" ng-cloak="">Transaction Types</span><span class="nav-label" ng-if="display_terms[0].transaction_types" ng-cloak="">{$ display_terms[0].transaction_types $}</span></a>
+            </li>
+            <li>
+                <a href="/company"><i class="fa fa-building"></i> <span class="nav-label" ng-if="!display_terms[0].company_rename" ng-cloak="">Company</span><span class="nav-label" ng-if="display_terms[0].company_rename" ng-cloak="">{$ display_terms[0].company_rename $}</span></a>
+            </li>
+            
+             
 
             <li>
                 <a href="/import"><i class="fa fa-upload"></i> <span class="nav-label">Import</span></a>

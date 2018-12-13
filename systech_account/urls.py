@@ -155,6 +155,11 @@ urlpatterns = [
 	url(r'^settings/read_grade_levels/$', settings.read_grade_levels),
 	url(r'^settings/grade_levels_delete/(?P<id>[0-9]+)$', settings.grade_levels_delete),
 
+	url(r'^settings/trainer_notes/$', settings.trainer_notes),
+	url(r'^settings/trainer_notes_create_dialog/$', settings.trainer_notes_create_dialog),
+	url(r'^settings/trainer_notes_create/$', settings.trainer_notes_create),
+	url(r'^settings/read_trainer_notes/$', settings.read_trainer_notes),
+
 	# Lesson Updates
 	url(r'^lesson_updates/load_page/$', lesson_updates.load_page),
 	url(r'^lesson_updates/read/$', lesson_updates.read),

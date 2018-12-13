@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import RegexValidator
 
+from utils.view_utils import *
+
 class Display_setting(models.Model):
 	company_assessments = models.CharField(max_length=200,blank=True,null=True)
 	transaction_types 	= models.CharField(max_length=200,blank=True,null=True)
