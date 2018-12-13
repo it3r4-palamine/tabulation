@@ -401,11 +401,11 @@ app.factory("RightClick", function(Notification){
             }]
 
             print_menu = ['Print', function ($itemScope, $event, modelValue, text, $li) {
-                if (scope.current_module == "purchase_order"){
+                if (scope.current_module == "session_evaluation"){
                     // scope.printfunc.printPO(record)
                     scope.record = record
                     scope.printfunc.open_form_settings_picker_dialog('PO', scope)
-                }else if(scope.current_module == "receive_inventory"){
+                }else if(scope.current_module == "enrollment_list"){
                     // scope.printfunc.printRI(record)
                     scope.record = record
                     scope.printfunc.open_form_settings_picker_dialog('RI', scope)
@@ -506,6 +506,8 @@ app.factory("RightClick", function(Notification){
                 menu.push(copy_menu)
             }
             if (scope.key_in_list(scope.current_module,[
+                "session_evaluation",
+                "enrollment_list",
                 "purchase_order",
                 "receive_inventory",
                 "paybills",
