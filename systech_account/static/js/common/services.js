@@ -400,28 +400,11 @@ app.factory("RightClick", function(Notification){
                 scope.open_session_handler_dialog(record)
             }]
 
-            print_menu = ['Print', function ($itemScope, $event, modelValue, text, $li) {
-                if (scope.current_module == "session_evaluation"){
-                    // scope.printfunc.printPO(record)
-                    scope.record = record
-                    scope.printfunc.open_form_settings_picker_dialog('PO', scope)
-                }else if(scope.current_module == "enrollment_list"){
-                    // scope.printfunc.printRI(record)
-                    scope.record = record
-                    scope.printfunc.open_form_settings_picker_dialog('RI', scope)
-                }else if(scope.current_module == "invoice"){
-                    scope.record = record
-                    scope.printfunc.open_form_settings_picker_dialog('SI',scope)
-                }else if(scope.current_module == "sales_order"){
-                    scope.record = record
-                    scope.printfunc.open_form_settings_picker_dialog('SO',scope)
-                }else if(scope.current_module == "paybills"){
-                    scope.record = record
-                    scope.open_cv_no_dialog(record)
-                }else if(scope.current_module == "general_journal"){
-                    scope.record = record
-                    scope.printfunc.open_form_settings_picker_dialog('JV',scope)
-                    // scope.printt(record)
+            print_menu = ['Print', function($itemScope, $event, modelValue, text, $li){
+                if(scope.current_module == "enrollment_list"){
+                    scope.print_enrollment_form(record)
+                }else if(scope.current_module == "evaluation_list"){
+                    scope.print_student_session(record)
                 }
             }]
 

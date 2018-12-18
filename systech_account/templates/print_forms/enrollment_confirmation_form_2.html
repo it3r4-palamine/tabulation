@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="{% static 'inspinia/css/bootstrap3.3.6.min.css'%}" rel="stylesheet" media="print" type="text/css">
+    <link href="{% static 'inspinia/font-awesome-4.7.0/css/font-awesome.css'%}" rel="stylesheet">
+
+    <script src="{% static 'inspinia/js/angular/angular.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/print_forms/form_controller.js' %}?v=110"></script>
+    <script type="text/javascript" src="{% static 'js/common/date_format.js' %}?v=110"></script>
+</head>
+
+<style type="text/css">
+	/*td {
+		padding: 2px;
+		font-weight: 700;
+		font-size: 20px;
+	}*/
+
+	.header-text {
+		font-size:10px;
+	}
+
+	.header-value {
+		font-size:10px;
+		margin-left: 5px;
+	}
+
+	.footer {
+	    position: relative;
+	    bottom: 0;
+	    margin-top: 100px;
+	    width: 100%;
+	}
+
+	.footer1 {
+	    position: fixed;
+	    bottom: 0;
+	    width: 100%;
+	}
+
+	.item-row td {
+		padding: 2px !important;
+	}
+
+	#table-data {
+		margin-bottom: 0px !important;
+	}
+
+	small { 
+	    font-size: xx-small;
+	}
+
+	.rm-padding {
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+</style>
+
+
+<body  ng-app="form" ng-controller="FormCtrl as ctrl" ng-cloak>
+	<div class="container-fluid" ng-init="ctrl.get_enrollment()" style="font-size: small;">
+
+		<div class="row">
+			<div class="col-xs-offset-1 col-xs-10 rm-padding">
+
+				<div class="row">
+					<div class="col-xs-offset-1 col-xs-10 rm-padding">
+						<h5 style="text-align: center;"><b>YAHSHUA INTELEX STUDENT ENROLLMENT CONFIRMATION</b></h5>
+					</div>
+					<div class="col-xs-1 rm-padding">
+						<h5>{$ ctrl.enrollment.code $}</h5>
+					</div>
+				</div>
+
+				<h5 style="margin-bottom: 15px;"><b>Thank you for enrolling {$ ctrl.enrollment.student $} to YAHSHUA Intelex!</b></h5>
+
+				<p style="margin-bottom: 15px;">
+					<b>{$ ctrl.enrollment.student $}</b> is enrolled in the program(s): <b>{$ ctrl.enrollment.program.name $}</b>.<br>
+					<b>{$ ctrl.enrollment.student $}</b> is enrolled for the period from <b>{$ ctrl.session_start_date | date: 'longDate' $} to {$ ctrl.session_end_date | date: 'longDate' $}</b>.
+				</p>
+
+				<p style="margin-bottom: 15px;">
+					We confirm receipt of payment made in cash with the amount of <b>{$ ctrl.enrollment.payments[0].amount_paid | currency:'₱' $}</b> with <b>OR# {$ ctrl.enrollment.payments[0].official_receipt_no $}</b>.
+				</p>
+
+				<p>
+					Please check each box below for enrollment confirmation:
+				</p>
+				<p style="text-indent: 10px;">
+					<img src="{% static 'img/check-box.png' %}" alt="Smiley face" height="20" width="20">
+			  		My child’s information in the Enrollment form is correct.
+				</p>
+				<p style="text-indent: 10px;">
+					<img src="{% static 'img/check-box.png' %}" alt="Smiley face" height="20" width="20">
+			  		My payment details and OR# are all correct.
+				</p>
+				<p style="text-indent: 10px; margin-bottom: 15px;">
+					<img src="{% static 'img/check-box.png' %}" alt="Smiley face" height="20" width="20">
+			  		Below YAHSHUA Intelex Enrollment Policies & Guidelines were thoroughly explained to me.
+				</p>
+
+				<h5><b>ENROLLMENT POLICIES & GUIDELINES:</b></h5>
+				<ol>
+					<li>
+						<p>
+							<!-- <small> -->
+							<b>Enrollment</b>. Every student can have at least 1 hour of session per day. Sessions maybe extended and shall
+							be deductible to the student’s remaining hours or session credits, provided, there are time slots available.
+							Session hours shall expire after 30 days from date of enrollment. Unused session hours shall be forfeited at
+							expiration date. In case of partial payments, full payment shall be made within 7 days. Failure to do so shall
+							cause the partial payment to be computed as <u>Php 250/hr</u>. Full payment made after the allowed 7 days shall
+							be treated as new payment and cannot be added to the partial payment made earlier.
+							<!-- </small> -->
+						</p>
+					</li>
+
+					<li>
+						<p>
+							<b>Renewal</b>. To maintain the reserved slot, the student shall make a full renewal payment <u>no later than 7 days
+							before expiration date</u>. Failure to do so shall allow YAHSHUA Intelex to open the reserved slot to other students.
+						</p>
+					</li>
+
+					<li>
+						<p>
+							<b>Responsibilities</b>. The parent/guardian/student is responsible in ensuring that school requirements are complied with. <b>YAHSHUA Intelex shall only provide the training/tutorial needed to supplement the student’s learning</b>.  The parent/guardian/student is responsible in ensuring the student’s safety in going to and in leaving from the center.
+						</p>
+					</li>
+
+					<li>
+						<p>
+							<b>Training</b>. Each enrolled student will undergo an <b>individualized training -- a specific training program designed that suits your child's specific needs based on the result of the assessment.</b> Also, student's training sessions will be facilitated by full -- time and well -- trained facilitators who qualified to do the YAHSHUA system. 
+						</p>
+					</li>
+
+					<li>
+						<p>
+							<b>Session Goals</b>. To make sure that all required activities for the session are done, the facilitator shall request the parent/guardian/student to first fill out the Lesson Update Form (LUF) to establish the goals for that session.  After the session, the facilitator shall confirm with the parent/guardian/student the activities completed per LUF.
+						</p>
+					</li>
+
+					<li>
+						<p>
+							<b>During Student Session</b>. Facilitators shall not allow requests to write, encode (type) and print student assignments. Students are not allowed to use YAHSHUA Intelex devices: such as laptop, tablet, printer, etc. Students should bring their own laptop, tablet etc., if necessary to make assignments, projects, etc.
+						</p>
+					</li>
+
+					<li>
+						<p>
+							<b>Reserved Time Slots</b>. Students are given priority accommodation on their reserved time slot.
+						</p>
+					</li>
+
+					<li>
+						<p>
+							<b>After Student Session.</b>. Students are not allowed to stay inside YAHSHUA Intelex center after session. For students with finished session but parent/guardian has not yet arrived to fetch student, facilitators shall let them sit down and wait for their parent/guardian at the lobby.  Facilitators shall not accompany any student to be fetched by parent/guardian outside YAHSHUA Intelex - Stonestown building. Students with sessions in the evening should not exceed beyond 8pm. Parents/guardians should already be at the lobby not later than 8pm to fetch their child.
+						</p>
+					</li>
+
+					<li>
+						<p>
+							<b>Liability Disclaimer.</b>. YAHSHUA Intelex shall not be held responsible for any loss of personal belongings/valuable items of students like: cellular phones, tablet, laptop, calculator, etc. while on session at our center. Each student shall be responsible to taking care of their own belongings.
+						</p>
+					</li>
+				</ol>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="{% static 'inspinia/css/bootstrap3.3.6.min.css'%}" rel="stylesheet" media="print" type="text/css">
+    <link href="{% static 'inspinia/font-awesome-4.7.0/css/font-awesome.css'%}" rel="stylesheet">
+
+    <script src="{% static 'inspinia/js/angular/angular.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/print_forms/form_controller.js' %}?v=110"></script>
+    <script type="text/javascript" src="{% static 'js/common/date_format.js' %}?v=110"></script>
+</head>
+
+<style type="text/css">
+	/*td {
+		padding: 2px;
+		font-weight: 700;
+		font-size: 20px;
+	}*/
+
+	.header-text {
+		font-size:10px;
+	}
+
+	.header-value {
+		font-size:10px;
+		margin-left: 5px;
+	}
+
+	.footer {
+	    position: relative;
+	    bottom: 0;
+	    margin-top: 100px;
+	    width: 100%;
+	}
+
+	.footer1 {
+	    position: fixed;
+	    bottom: 0;
+	    width: 100%;
+	}
+
+	.item-row td {
+		padding: 2px !important;
+	}
+
+	#table-data {
+		margin-bottom: 0px !important;
+	}
+
+	small { 
+	    font-size: xx-small;
+	}
+</style>
+
+
+<body  ng-app="form" ng-controller="FormCtrl as ctrl" ng-cloak>
+	<div class="container-fluid" ng-init="ctrl.get_enrollment()">
+		
+		<div id="title-box" class="row">
+			<div class="col-xs-offset-2 col-xs-8">
+				<img style="margin-left:0em;" src="{% static "img/banner-logo.jpg"%}" style="display:none;" alt="Intelex">
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<small class="pull-right">CN#-PBL521</small>
+			</div>
+		</div>
+
+		<br>
+
+		<div id="header-box" class="row">
+			<div class="col-xs-6">
+				<table>
+					<thead>
+						<tr>
+							<td><small>Name: </small></td>
+							<td style="padding-left: 10px;"><small>{$ ctrl.enrollment.student.full_name $}</small></td>
+						</tr>
+						<tr>
+							<td><small>Age: </small></td>
+							<td style="padding-left: 10px;"><small>{$ student_age $}</small></td>
+						</tr>
+						<tr>
+							<td><small>Program: </small></td>
+							<td style="padding-left: 10px;"><small>{$ ctrl.enrollment.program.name $}</small></td>
+						</tr>
+					</thead>
+				</table>
+			</div>
+
+			<div class="col-xs-6">
+				<table>
+					<thead>
+						<tr>
+							<td><small>Nickname: </small></td>
+							<td style="padding-left: 10px;"><small>{$ ctrl.enrollment.student.nick_name $}</small></td>
+						</tr>
+						<tr>
+							<td><small>Grade Level: </small></td>
+							<td style="padding-left: 10px;"><small>{$ ctrl.enrollment.student.grade_level.name $}</small></td>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+
+		<hr>
+
+		<div id="header-box" class="row">
+			<div class="col-xs-6">
+				<table>
+					<thead>
+						<tr>
+							<td><small>Father's Name: </small></td>
+							<td style="padding-left: 10px;"><small>{$ ctrl.enrollment.student.fathers_name $}</small></td>
+						</tr>
+						<tr>
+							<td><small>Contact No: </small></td>
+							<td style="padding-left: 10px;"><small>{$ ctrl.enrollment.student.fathers_contact_no $}</small></td>
+						</tr>
+					</thead>
+				</table>
+			</div>
+
+			<div class="col-xs-6">
+				<table>
+					<thead>
+						<tr>
+							<td><small>Mother's Name: </small></td>
+							<td style="padding-left: 10px;"><small>{$ ctrl.enrollment.student.mothers_name $}</small></td>
+						</tr>
+						<tr>
+							<td><small>Contact No: </small></td>
+							<td style="padding-left: 10px;"><small>{$ ctrl.enrollment.student.mothers_contact_no $}</small></td>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<h5 style="text-align: center;">Waiver of Liability</h5>
+
+				<small>I hereby:</small><br>
+				<small style="margin: auto 10px; display: block; text-align: justify;">
+					Acknowledge that the activities of the Training program involves risk of accidents, loss of properties
+					or personal injuries and agree to release, waive and not discharge NOT to sue YAHSHUA Intelex, their board members, trainers/teachers, volunteers, and employees and any other associated personnel including owners or landlords(YAHSHUA Intelex) of the training premises utilized by the training organizers, of and from any and all claims, actions and damages for sustained as a result of participation in this program.<br>
+					Authorized YAHSHUA Intelex, to seek emergency medical treatment for STUDENT at an available medical facility at my expenses.<br>
+					Allow YAHSHUA intelex and, permission to publish or exhibit photographs of and work by STUDENT in the workshop premises and other media venue.<br>
+					Agree to take full financial responsibility for any damage to workshop facilities and equipment caused by STUDENT or myself.
+				</small><br>
+				<small>
+					I have read and understand and accept all of the statement recited above and accept full responsibility as described.<br>
+					Print Name(Parent/Guardian)_________________________________________________
+					Signature(Parent/Guardian)_________________________________ &nbsp;Date____________
+				</small>
+			</div>
+		</div>
+		
+	</div>
+
+	<hr style="border: 0 none; border-top: 2px dashed #322f32; background: none; height:0;">
+
+	<div class="row">
+		<div class="col-xs-6" style="text-align: center;">
+			<img style="margin-left:0em;" src="{% static "img/banner-logo.jpg"%}" style="display:none;" alt="Intelex">
+			<small>For inquiries pls contact: 0917-329-7592</small>
+		</div>
+
+		<div class="col-xs-6">
+			<small class="pull-right">CN#-PBL521</small><br>
+			<h4 class="pull-right" style="margin-top: 0px; margin-bottom: 0px;">Registered</h4>
+			<small class="pull-right">Please present this during the first day.</small>
+		</div>
+	</div>
+</body>
+</html>
