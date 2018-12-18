@@ -205,6 +205,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
 		$http.post('/student_sessions/read_student_session/' + student_session.id)
 			.success(function(response){
+				console.log(response)
 				sessionStorage.form_data = angular.toJson(response);
 				window.open('/print_forms/get_document/')
 			})

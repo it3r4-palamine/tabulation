@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="{% static 'inspinia/css/bootstrap3.3.6.min.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/font-awesome-4.7.0/css/font-awesome.css'%}" rel="stylesheet">
+
+    <script src="{% static 'inspinia/js/angular/angular.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/print_forms/form_controller.js' %}?v=111"></script>
+    <script type="text/javascript" src="{% static 'js/common/date_format.js' %}?v=111"></script>
+</head>
+
+<style type="text/css">
+	
+	td {
+		padding: 2px;
+	}
+
+	.header-text {
+		font-size:9px;
+	}
+
+	.header-value {
+		font-size:9px;
+		margin-left: 3px;
+	}
+
+	.footer {
+	    position: relative;
+	    bottom: 0;
+	    margin-top: 100px;
+	    width: 100%;
+	}
+
+	.footer1 {
+	    /*position: fixed;*/
+	    /*margin-top: 100px;*/
+	    bottom: 0;
+	    width: 100%;
+	}
+
+	.position_absolute {
+		position: absolute;
+	}
+
+	.position_fixed {
+		position: fixed;
+	}
+
+	.item-row td {
+		padding: 2px !important;
+	}
+
+	#table-data {
+		margin-bottom: 0px !important;
+	}
+
+</style>
+
+<body  ng-app="form" ng-controller="FormCtrl as ctrl" ng-cloak>
+
+	<div class="container-fluid" ng-init="ctrl.load_data()" style="position: relative;">
+		<div id="title-box" class="row">
+
+			<div class="row">
+
+				<div class="col-xs-11">
+					<img style="margin-left:0em;" src="{% static "img/banner-logo.jpg"%}" style="display:none;" alt="Intelex">
+				</div>
+
+			</div>
+
+			<div class="row">
+				
+				<div class="col-xs-12">
+				
+						
+				</div>
+			</div>
+
+			<div class="row">
+				
+				<div class="col-xs-12">
+
+					
+				</div>
+
+			</div>
+			
+		</div>
+
+		<br>
+		
+		<div id="header-box" class="row" style="padding:5px; margin-bottom:10px; border: 1.5px solid #0016CC; border-radius:10px;">
+
+			<div class="col-xs-6">
+
+				<table>
+					<thead>
+						<tr>
+							<td>
+								<p class="header-text">Name </p>
+							</td>
+							<td>
+								<p class="header-value">{$ ctrl.form_data.student.fullname $}</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p class="header-text">Lesson Learned </p>
+							</td>
+							<td>
+								<p class="header-value"> {$ ctrl.form_data.program.name $}</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p class="header-text">Date </p>
+							</td>
+							<td>
+								<p class="header-value"> {$ ctrl.form_data.session_date | date $}</p>
+							</td>
+						</tr>
+
+					</thead>
+				</table>
+
+			</div>
+
+			<div class="col-xs-6">
+
+				<table>
+					<thead>
+						<tr>
+							<td>
+								<p class="header-text">Time In </p>
+							</td>
+							<td>
+								<p class="header-value"> {$ ctrl.form_data.session_timein | date : "shortTime" $}</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p class="header-text">Time Out </p>
+							</td>
+							<td>
+								<p class="header-value"> {$ ctrl.form_data.session_timeout  | date: "shortTime" $}</p>
+							</td>
+						</tr>
+						<tr>
+							<td ng-hide="true">
+								<p class="header-text">Time Consumed </p>
+							</td>
+							<td ng-hide="true">
+								<p class="header-value"> {$ ctrl.form_data.total_session_time $}</p>
+							</td>
+						</tr>
+					</thead>
+				</table>
+
+			</div>
+
+
+			
+		</div>
+
+		<div id="main-box" class="row">
+			<div class="col-xs-12" style="padding-left:0px; padding-right:0px;">
+
+				<table id="table-data" class="table table-bordered table-condensed">
+					
+					<thead class="thead-inverse">
+						<tr style="font-size:10px;">
+							<th style="font-size: 8px">Code</th>
+							<th style="font-size: 8px" class="text-center">Set</th>
+							<th style="font-size: 8px" class="text-center">Exercise Name</th>
+							<th style="font-size: 8px">Score</th>
+							<th style="font-size: 8px">Total</th>
+							<th style="font-size: 8px" class="text-center">%</th>
+							<th class="text-center" style="font-size: 8px">Note</th>
+							<th class="text-center" style="font-size: 8px">Facilitator</th> 
+						</tr>
+					</thead>
+					<tbody>
+
+						<tr class="item-row" ng-repeat="record in ctrl.form_data.session_exercises" style="font-size:10px;">
+							<td style="vertical-align: middle;"> {$ record.code $}</td>
+							<td style="vertical-align: middle;" class="text-center"> {$ record.set_no $}</td>
+							<td style="vertical-align: middle; font-size: 9px;"> {$ record.exercise_name $}</td>
+							<td class="text-center" style="vertical-align: middle;"> {$ record.score $}</td>
+							<td class="text-center" style="vertical-align: middle;"> {$ record.total_items $}</td>
+							<td class="text-center" style="vertical-align: middle;"> {$ record.percentage | currency : '' $}</td>
+							<td style="vertical-align: middle; font-size: 9px;"> {$ record.trainer_note.name $}</td>
+							<td style="vertical-align: middle; font-size: 9px;"> {$ record.facilitated_by.fullname $}</td> 
+						</tr>
+						
+						
+					</tbody>
+
+				</table>
+				<p style="font-size: 9px;">TRAINING NOTES AND EVALUATION</p>
+			</div>
+
+			
+
+		</div>
+
+		<div class="row">
+			<div class="col-md-offset-3 col-md-6">
+				<p style="text-indent: 20px; text-align: justify;">
+					{$ ctrl.form_data.comments $}
+				</p>
+			</div>
+		</div><br><br><br>
+		
+		<!-- Details -->
+
+		<div class="row" ng-class="(hidethis ? 'footer' : 'footer1')+' '+(footer_position_absolute ? 'position_absolute' : 'position_fixed')">
+				<div class="col-xs-12" style="padding-left:0px; display: none;">
+					<p style="font-size:11px;">Evaluated by : Leonil Bagayna</p>
+				</div>
+
+				<div class="col-xs-12" style="padding-left:0px;">
+					<p style="font-size:10px;">For Inquiries and clarification kindly visit us or please call landline 859-0570</p>
+				</div>
+
+			</div>
+
+
+	</div>
+
+
+	</div>
+
+	
+
+</body>
+</html>
