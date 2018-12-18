@@ -113,6 +113,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 			$http.post("/enrollments/save_enrollment/", data).success(function(response){
 				data.id = response.enrollment_pk;
 				check_save_options(save_opt, data, response.message);
+				self.close_dialog();
 				$scope.main_loader();
 
 			}).error(function(err){

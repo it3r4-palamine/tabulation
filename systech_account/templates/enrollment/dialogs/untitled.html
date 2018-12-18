@@ -1,30 +1,4 @@
-	<div class="ibox-title">
-
-		<div class="row">
-			
-			<div class="col-sm-5">
-    		<h2>Enrollment</h2>
-	    	</div>
-	        <div class="col-sm-7">
-	            <div class="pull-right">
-
-	                <button class="btn btn-sm btn-link" ng-click="save_enrollment(enrollment_data, 'open')">
-	                    <i class="fa fa-save dialog-button" class="dialog-button"></i>
-	                    <span>Save</span>
-	                </button>
-	                
-	                <button class="btn btn-sm btn-link" ng-click="main.close_dialog(); is_renew = false;">
-	                    <i class="fa fa-times-circle dialog-button"></i>
-	                    <span>Close</span>
-	                </button>
-	            </div>
-	        </div>
-		</div>
-    </div>
-
-    <div class="ibox-content">
-
-    	<div class="row">
+<div class="row">
 			<form class="form-horizontal" name="form">
 				{% csrf_token %}
 				<div class="ibox float-e-margins">
@@ -140,55 +114,53 @@
 								</div> 
 							</div> 
 						</div> 
+
+
+					
 					</div>
 			</form>
-	</div>
+</div>
+<!-- <h5>Total Payment ({$ ctrl.total_payment | currency $})</h5> -->
+<div class="ibox float-e-margins">
+	                <div class="ibox-title">
+	                    <h5>Total Payment ({$ total_payment $})</h5>
+	                    <div class="ibox-tools">
+	                        <a class="collapse-link">
+	                            <i class="fa fa-chevron-up"></i>
+	                        </a>
+	                    </div>
+	                </div>
+	                
+	                <div class="ibox-content">
+	                    <div class="feed-activity-list">
 
-	<div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5>Total Payment ({$ total_payment $})</h5>
-            <div class="ibox-tools">
-                <a class="collapse-link">
-                    <i class="fa fa-chevron-up"></i>
-                </a>
-            </div>
-        </div>
-        
-        <div class="ibox-content">
-            <div class="feed-activity-list">
-
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th>Reference</th>
-                            <th>Date</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="feed-element clickable" ng-repeat="record in enrollment_data.payments" ng-click="open_payment_create_dialog(record)" >
-                            <td>
-                        		<input class="form-control text-center has-error" type="text" ng-model="record.official_receipt_no" ng-disabled="!enrollment_data.company_rename">
-                            </td>
-                            <td class="text-center">
-                            	<input class="form-control text-center" type="date" ng-model="record.payment_date">
-                            	
-                            </td>
-                            <td class="text-right">
-                            	<input min="0" class="form-control text-center" ng-blur="compute_session_credits()" type="number" ng-model="record.amount_paid" ng-disabled="!enrollment_data.company_rename && record.official_receipt_no == null">
-                            </td>
-                            <td>
-                            	<button type="button" class="btn btn-sm btn-success" ng-click="delete_payment(record)"><i class="fa fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <a ng-click="add_payment()" style="text-decoration:underline">Add New Payment</p>
-            </div>
-        </div>
-    </div>
-    	
-    	
-
-
-    
+	                        <table class="table table-condensed">
+	                            <thead>
+	                                <tr>
+	                                    <th>Reference</th>
+	                                    <th>Date</th>
+	                                    <th>Amount</th>
+	                                </tr>
+	                            </thead>
+	                            <tbody>
+	                                <tr class="feed-element clickable" ng-repeat="record in enrollment_data.payments" ng-click="open_payment_create_dialog(record)" >
+	                                    <td>
+	                                		<input class="form-control text-center has-error" type="text" ng-model="record.official_receipt_no" ng-disabled="!enrollment_data.company_rename">
+	                                    </td>
+	                                    <td class="text-center">
+	                                    	<input class="form-control text-center" type="date" ng-model="record.payment_date">
+	                                    	
+	                                    </td>
+	                                    <td class="text-right">
+	                                    	<input min="0" class="form-control text-center" ng-blur="compute_session_credits()" type="number" ng-model="record.amount_paid" ng-disabled="!enrollment_data.company_rename && record.official_receipt_no == null">
+	                                    </td>
+	                                    <td>
+	                                    	<button type="button" class="btn btn-sm btn-success" ng-click="delete_payment(record)"><i class="fa fa-trash"></i></button>
+	                                    </td>
+	                                </tr>
+	                            </tbody>
+	                        </table>
+	                        <a ng-click="add_payment()" style="text-decoration:underline">Add New Payment</p>
+	                    </div>
+	                </div>
+	            </div>

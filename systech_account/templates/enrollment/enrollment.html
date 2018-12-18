@@ -24,21 +24,16 @@
 {% block content_body %}
 <div class="wrapper wrapper-content animated fadeIn" ng-cloak="">
     <div class="ibox">
+
+        <div class="ibox-title">
+            <button class="btn btn-outline btn-primary" ng-click="enrollment_dialog()">Add Enrollment</button>             
+        </div>
+
         <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
             {% include "common/loader.html" %} 
             <div class="row">
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" placeholder="Search..." ng-model="filter.name" name="">
-                </div>
-                <div class="col-sm-3">
-                    <button class="btn btn-default" ng-click="read_pagination()"><i class="fa fa-search"></i> SEARCH</button><br>
-                </div>
-                <div class="col-sm-6">
-                    <button class="btn btn-primary pull-right" ng-click="enrollment_dialog()">Create</button>
-                </div>
-                <div class="clearfix"></div>
-                <hr>
-                <div class="table-responsive">
+               
+                <div class="table-responsive" style="min-height: 400px;">
                     <table class="table table-striped">
                         <thead>
                             <tr>

@@ -33,6 +33,11 @@
     padding-bottom: 20px; 
 }
 
+.dialog-button {
+    font-size: 3em;
+    display: block;
+}
+
 /*.panel-heading {
     margin-right: -25px; 
 }*/
