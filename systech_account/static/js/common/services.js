@@ -449,7 +449,7 @@ app.factory("RightClick", function(Notification){
             }]
 
             if (scope.key_in_list(scope.current_module, [
-                "session_evaluation"])){
+                "evaluation_list"])){
                 menu.push(edit_menu);
             }
 
@@ -489,7 +489,7 @@ app.factory("RightClick", function(Notification){
                 menu.push(copy_menu)
             }
             if (scope.key_in_list(scope.current_module,[
-                "session_evaluation",
+                "evaluation_list",
                 "enrollment_list",
                 "purchase_order",
                 "receive_inventory",
@@ -565,19 +565,7 @@ app.factory("RightClick", function(Notification){
             if  (scope.key_in_list(scope.current_module,[
                 "monitoring",
                 "purchase_order",
-                "session_evaluation",
-                "receive_inventory",
-                "paybills",
-                "sales_order",
-                "invoice",
-                "credit_memo",
-                "sales_collections",
-                "general_journal",
-                "withdrawals",
-                "errors",
-                "stock_out",
-                "employee",
-                "supplier",
+                "evaluation_list",
                 "customer"])) {
                 menu.push(remove_menu)
             }

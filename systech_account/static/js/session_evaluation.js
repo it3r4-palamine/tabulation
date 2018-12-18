@@ -5,7 +5,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope }));
 	var self = this;
 	var me = this;
-	self.current_module = "session_evaluation"
+	self.current_module = "evaluation_list"
 
 	self.filters = { name : ''};
 	self.pagination;
