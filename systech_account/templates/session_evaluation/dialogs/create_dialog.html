@@ -77,12 +77,11 @@
                                     <ui-select-match>
                                         
                                         <div class="row">
-                                            <div class="col-xs-1">
+                                            <div class="col-xs-12">
                                                 <img alt="image" class="rounded-circle" style="width:20px; height:20px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
-                                            </div>
-                                            <div class="col-xs-11">
                                                 <span>{$ $select.selected.fullname $}</span> 
                                             </div>
+                                            
                                         </div>
                                     </ui-select-match>
                                     <ui-select-choices repeat="consultant in consultants | filter: $select.search | limitTo:50">
