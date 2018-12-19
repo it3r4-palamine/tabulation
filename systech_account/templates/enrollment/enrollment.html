@@ -48,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="record in records" context-menu="main.menu_options(record)" class="hand_cursor" style="text-align: center;" ng-click="enrollment_dialog(record)">
+                            <tr ng-repeat="record in main.records" context-menu="main.menu_options(record)" class="hand_cursor" style="text-align: center;" ng-click="enrollment_dialog(record)">
                                 <td>{$ record.code $}</td>
                                 <td>{$ record.user.fullname $}</td>
                                 <td>{$ record.company_rename.name $}</td>

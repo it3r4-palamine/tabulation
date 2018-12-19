@@ -395,23 +395,6 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
     		self.trainers_notes = response.data
     	});
     }
-
-	self.read_pagination = function(reset){
-		if(reset) self.reset_filter();
-
-		self.filters["sort"] = self.sort;
-		var filters = angular.copy(self.filters);
-		filters = self.format_date(filters);
-		filters = self.format_time(filters);
-		filters["pagination"] = self.pagination;
-
-		var post = self.post_generic("/student_sessions/read_student_session/", filters, "main");
-		post.success(function(response){
-			self.records = response.records;
-			calculate_remaining_time();
-			self.generate_pagination(self,response,"records");
-		});
-	};
 	
     $scope.read_student_session = function(){
 		self.post_generic("/student_sessions/read_student_session/",null,"main")

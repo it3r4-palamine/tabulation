@@ -213,13 +213,8 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 
 		var post = me.post_generic("/enrollments/read_enrollees/",filters,"main");
 		post.success(function(response){
-			$scope.records = response.records;
-			me.starting = response.starting;
-			me.ending = response.records.length;
-			me.pagination.limit_options = angular.copy(me.pagination.limit_options_orig);
-			me.pagination.limit_options.push(response.total_records)
-			me.pagination["total_records"] = response.total_records;
-			me.pagination["total_pages"] = response.total_pages;
+			self.records = response.records;
+			self.generate_pagination(self,response,"records");
 		});
 	};
 
@@ -231,12 +226,12 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	};
 
 
-	$scope.main_loader = function()
+	self.main_loader = function()
 	{
 		$scope.read_pagination();
 	};
 
-	$scope.main_loader();
+	self.main_loader();
 
 
 	// Session Reconciler Module Functions
