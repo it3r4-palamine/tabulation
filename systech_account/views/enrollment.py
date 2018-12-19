@@ -10,6 +10,7 @@ from ..models.company_assessment import *
 from ..models.assessments import *
 from django.db.models import *
 from ..views.common import *
+from utils.response_handler import *
 import sys, traceback, os
 
 
@@ -20,28 +21,28 @@ def create_dialog(request):
 	return render(request, 'enrollment/dialogs/create_dialog.html')
 
 def get_excess_time(request):
-	# try:
-	result = { "excess_time": 0 }
-	data = req_data(request,True)
+	try:
+		result = { "excess_time": 0 }
+		data = req_data(request,True)
 
-	enrollments = Enrollment.objects\
-								.filter(user=data["student_id"], company_rename=data["program_id"], is_deleted=False)\
-								.aggregate(total_session_duration=models.Sum(ExpressionWrapper(F('session_credits'), output_field=DurationField())))
+		enrollments = Enrollment.objects\
+									.filter(user=data["student_id"], company_rename=data["program_id"], is_deleted=False)\
+									.aggregate(total_session_duration=models.Sum(ExpressionWrapper(F('session_credits'), output_field=DurationField())))
 
-	if enrollments["total_session_duration"]:
-		session_list = User_credit.objects.filter(user=data["student_id"], program_id=data["program_id"])
+		if enrollments["total_session_duration"]:
+			session_list = Enrollment.objects.filter(user=data["student_id"], company_rename_id=data["program_id"])
 
-		total_consumed_time = timedelta(microseconds=0, seconds=0)
-		for session in session_list:
-			total_consumed_time += session.get_total_session_time()
+			total_consumed_time = timedelta(microseconds=0, seconds=0)
+			for session in session_list:
+				total_consumed_time += session.get_total_session_time()
 
-		if total_consumed_time > enrollments["total_session_duration"]:
-			excess_time = total_consumed_time - enrollments["total_session_duration"]
-			result["excess_time"] = excess_time.total_seconds()
+			if total_consumed_time > enrollments["total_session_duration"]:
+				excess_time = total_consumed_time - enrollments["total_session_duration"]
+				result["excess_time"] = excess_time.total_seconds()
 
-	return success_list(result, False)
-	# except Exception as err:	
-	# 	return error_response(request, err, show_line=True)
+		return success_list(result, False)
+	except Exception as err:
+		return error_http_response(err, show_line=True)
 
 def read_enrollment(request,enrollment_id):
 	try:
