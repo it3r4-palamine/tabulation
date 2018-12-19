@@ -39,6 +39,7 @@ class StudentSession(models.Model):
             instance['student_full_name'] = self.student.fullname
             instance["enrollment_id"] = self.enrollment.id
             instance['program_name'] = self.program.name
+            instance['comments'] = self.comments
             instance['session_date'] = str(self.session_date)
             instance['session_timein'] = str(convert_24_12(self.session_timein))
             instance['session_timeout'] = str(convert_24_12(self.session_timeout))
@@ -79,6 +80,7 @@ class StudentSession(models.Model):
             instance["session_date"] = str(self.session_date)
             instance['session_timein'] = str(convert_24_12(self.session_timein))
             instance['session_timeout'] = str(convert_24_12(self.session_timeout))
+            instance['comments'] = self.comments
 
             if self.enrollment:
                 instance['program'] = self.enrollment.get_dict_as_program()
