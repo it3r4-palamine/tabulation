@@ -3,12 +3,12 @@
     
     <div class="row">
         <div class="col-sm-5">
-            <h3 style="margin:10px">Student Session No. {$ ctrl.session.code $} <span ng-show="!ctrl.session.id" style="color: #18A689">(New)</span></h3>
+            <h3 style="margin:10px">Student Session No. {$ main.session.code $} <span ng-show="!main.session.id" style="color: #18A689">(New)</span></h3>
         </div>
 
         <div class="col-sm-7">
             <div class="pull-right">
-                <button class="btn btn-sm btn-link" ng-click="ctrl.save_session(ctrl.session, 'open')">
+                <button class="btn btn-sm btn-link" ng-click="main.save_session(main.session, 'open')">
                     <i class="fa fa-save dialog-button" class="dialog-button"></i>
                     <span>Save</span>
                 </button>
@@ -20,14 +20,14 @@
                         <span>More Saving Options</span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a href="" ng-click="ctrl.save_session(record, 'close')">Save and Close</a></li>
-                        <li><a href="" ng-click="ctrl.save_session(null, 'new')">Save and New</a></li>
-                        <li><a href="" ng-click="ctrl.save_session(null, 'print')">Save and Print</a></li>
-                        <li ng-show="ctrl.session.id"><a href="" ng-click="ctrl.print_student_session(ctrl.session)">Print</a></li>
+                        <li><a href="" ng-click="main.save_session(record, 'close')">Save and Close</a></li>
+                        <li><a href="" ng-click="main.save_session(null, 'new')">Save and New</a></li>
+                        <li><a href="" ng-click="main.save_session(null, 'print')">Save and Print</a></li>
+                        <li ng-show="main.session.id"><a href="" ng-click="main.print_student_session(main.session)">Print</a></li>
                     </ul>
                 </div>
 
-                <button class="btn btn-sm btn-link" ng-click="ctrl.confirm_close_dialog()">
+                <button class="btn btn-sm btn-link" ng-click="main.confirm_close_dialog()">
                     <i class="fa fa-times-circle dialog-button"></i>
                     <span>Close</span>
                 </button>
@@ -36,12 +36,12 @@
     </div>
 </div>
 <div cclass="modal-body">
-    <div class="ibox-content no-padding-top gray-bg" ng-class="ctrl.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+    <div class="ibox-content no-padding-top gray-bg" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
     {% include "common/loader.html" %}
         <form class="form-horizontal" name="form">
             <div class="ibox float-e-margins" style="margin-bottom: 0px;">
                 <div class="ibox-title no-border-top">
-                    <!-- <h5>Total Payment ({$ ctrl.total_payment | currency $})</h5> -->
+                    <!-- <h5>Total Payment ({$ main.total_payment | currency $})</h5> -->
                     <div class="ibox-tools">
                         <a class="collapse-link" id="top-ibox-collapse">
                             <i class="fa fa-chevron-up"></i>
@@ -53,18 +53,18 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Reference No:</label>
                             <div class="col-sm-3">
-                                <input type="text" ng-model="ctrl.session.code" class="form-control" ng-init="(!ctrl.session.code && !ctrl.session.id) ? ctrl.session.code = '{{ reference_no }}' : '' ">
+                                <input type="text" ng-model="main.session.code" class="form-control" ng-init="(!main.session.code && !main.session.id) ? main.session.code = '{{ reference_no }}' : '' ">
                             </div>
 
                             <label class="col-sm-2 control-label">Program:</label>
                             <div class="col-sm-3">
-                                <ui-select ng-model="ctrl.session.program" required>
+                                <ui-select ng-model="main.session.program" required>
                                     <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                                   <ui-select-choices repeat="company in ctrl.programs | filter: $select.search | limitTo:50">
+                                   <ui-select-choices repeat="company in main.programs | filter: $select.search | limitTo:50">
                                     <div ng-bind-html="company.name | highlight: $select.search"></div>
                                 </ui-select-choices>
                                 </ui-select>
-                                <span ng-show="ctrl.session.program.remaining_credit">Time Credit Left : {$ ctrl.session.program.remaining_credit $}</span>
+                                <span ng-show="main.session.program.remaining_credit">Time Credit Left : {$ main.session.program.remaining_credit $}</span>
                             </div>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Student:</label>
                             <div class="col-sm-3">
-                                <ui-select ng-model="ctrl.session.student" ng-change="ctrl.read_programs(ctrl.session)">
+                                <ui-select ng-model="main.session.student" ng-change="main.read_programs(main.session)">
                                     <ui-select-match>
                                         
                                         <div class="row">
@@ -84,7 +84,7 @@
                                         </div>
 
                                     </ui-select-match>
-                                    <ui-select-choices repeat="student in ctrl.students | filter: $select.search | limitTo:50">
+                                    <ui-select-choices repeat="student in main.students | filter: $select.search | limitTo:50">
                                         <div class="row">
                                             <div class="col-xs-2">
                                                 <img alt="image" class="rounded-circle" style="width:38px; height:38px; margin-left: 10px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
@@ -99,9 +99,9 @@
                             </div>
                             <label class="col-sm-2 control-label" ng-hide="true">Evaluated by:</label>
                             <div class="col-sm-3" ng-hide="true">
-                                <ui-select ng-model="ctrl.session.evaluated_by">
+                                <ui-select ng-model="main.session.evaluated_by">
                                     <ui-select-match>{$ $select.selected.full_name $}</ui-select-match>
-                                    <ui-select-choices repeat="trainer in ctrl.trainers | filter: $select.search | limitTo:50">
+                                    <ui-select-choices repeat="trainer in main.trainers | filter: $select.search | limitTo:50">
                                         <div ng-bind-html="trainer.full_name | highlight: $select.search"></div>
                                     </ui-select-choices>
                                 </ui-select>
@@ -113,15 +113,15 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Session Date:</label>
                             <div class="col-sm-2">
-                                <input type="date" class="form-control" name="session date" ng-model="ctrl.session.session_date">
+                                <input type="date" class="form-control" name="session date" ng-model="main.session.session_date">
                             </div>
                             <label class="col-sm-1 control-label" style="padding-left: 0px;">Session Start:</label>
                             <div class="col-sm-2">
-                                <input type="time" class="form-control" ng-model="ctrl.session.session_timein">
+                                <input type="time" class="form-control" ng-model="main.session.session_timein">
                             </div>
                             <label class="col-sm-1 control-label" style="padding-left: 0px;">Session End:</label>
                             <div class="col-sm-2">
-                                <input type="time" class="form-control" ng-model="ctrl.session.session_timeout">
+                                <input type="time" class="form-control" ng-model="main.session.session_timeout">
                             </div>
                         </div>
                     </div>
@@ -130,7 +130,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="comment">Comment:</label>
                             <div class="col-sm-7">
-                                <textarea class="form-control" rows="3" id="comment" ng-model="ctrl.session.comments"></textarea>
+                                <textarea class="form-control" rows="3" id="comment" ng-model="main.session.comments"></textarea>
                             </div>
                         </div>
                     </div>
@@ -141,7 +141,7 @@
         <form>
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <!-- <h5>Total Payment ({$ ctrl.total_payment | currency $})</h5> -->
+                    <!-- <h5>Total Payment ({$ main.total_payment | currency $})</h5> -->
                     <div class="ibox-tools">
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
@@ -165,7 +165,7 @@
                             </thead>
                             <tbody>
 
-                                 <tr ng-repeat="exercise in ctrl.session.session_exercises track by $index">
+                                 <tr ng-repeat="exercise in main.session.session_exercises track by $index">
 
                                     <td class="col-sm-1">
                                               <ui-select ng-model="exercise.exercise">>
@@ -198,7 +198,7 @@
                                     <td class="col-sm-1">
                                         <ui-select name="note" ng-model="exercise.trainer_note" require="false">
                                             <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                                            <ui-select-choices repeat="trainer_note in ctrl.trainers_notes | filter: $select.search | limitTo:50 | orderBy:'name'">
+                                            <ui-select-choices repeat="trainer_note in main.trainers_notes | filter: $select.search | limitTo:50 | orderBy:'name'">
                                                 <div ng-bind-html="trainer_note.name | highlight: $select.search"></div>
                                             </ui-select-choices>
                                         </ui-select>
@@ -213,7 +213,7 @@
                                                     </div>
                                                 </div>
                                             </ui-select-match>
-                                            <ui-select-choices repeat="facilitator in ctrl.facilitators | filter: $select.search | limitTo:50">
+                                            <ui-select-choices repeat="facilitator in main.facilitators | filter: $select.search | limitTo:50">
 
                                                 <div class="row">
                                                     <div class="col-xs-2">
@@ -229,13 +229,13 @@
                                         </ui-select>
                                     </td>
                                     <td width="1%" style="text-align: center;">
-                                        <button type="button" class="btn btn-sm btn-success" ng-click="ctrl.delete_session_excercise(exercise)"><i class="fa fa-trash"></i></button>
+                                        <button type="button" class="btn btn-sm btn-success" ng-click="main.delete_session_excercise(exercise)"><i class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>
 
                             </tbody>
                         </table>
-                        <a ng-click="ctrl.add_session_exercise(true)" style="text-decoration:underline">Add New Line</p>
+                        <a ng-click="main.add_session_exercise(true)" style="text-decoration:underline">Add New Line</p>
                     </div>
                 </div>
             </div>

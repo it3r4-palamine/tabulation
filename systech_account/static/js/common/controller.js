@@ -315,14 +315,7 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
 		})
 	}
 
-	me.generate_pagination = function(scope,response){
-		scope.starting = response.starting;
-		scope.ending = response.data.length;
-		scope.pagination.limit_options = angular.copy(scope.pagination.limit_options_orig);
-		scope.pagination.limit_options.push(response.total_records)
-		scope.pagination["total_records"] = response.total_records;
-		scope.pagination["total_pages"] = response.total_pages;
-	}
+	
 
 	me.convert_seconds_duration = function(time)
     {
@@ -481,6 +474,18 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
     	}
     	return status
     }
+
+    me.generate_pagination = function(scope, response, key){
+
+    	console.log(response);
+
+		scope.starting = response.starting;
+		scope.ending = response[key].length;
+		scope.pagination.limit_options = angular.copy(scope.pagination.limit_options_orig);
+		scope.pagination.limit_options.push(response.total_records);
+		scope.pagination["total_records"] = response.total_records;
+		scope.pagination["total_pages"] = response.total_pages;
+	}
 
     me.values_list = function(arr,key){
     	if(!key){

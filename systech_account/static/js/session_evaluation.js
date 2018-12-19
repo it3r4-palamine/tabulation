@@ -17,7 +17,8 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	// self.session = {};
 	self.exercise_arr = [];
 	self.record = {}
-	self.filter = {}
+	self.filter = { name : "" }
+	$scope.filter = { name : "" }
 
 
 	self.create_edit_session = function(student_session, fromDraft, record){
@@ -430,33 +431,25 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 			self.pagination["total_records"] = response.total_records;
 			self.pagination["total_pages"] = response.total_pages;
 		})		
-    } 
+    }
 
-   	$scope.read = function(){
-		var data = {
-			pagination: self.pagination,
-			transaction_type:self.filter.transaction_type['id'] ? $scope.filter.transaction_type['id'] : null,
-			company_rename:self.filter.company['id'] ? $scope.filter.company['id'] : null,
-			user:self.filter.user['id'] ? $scope.filter.user['id'] : null,
-		}
-		self.post_generic("/student_sessions/read_student_session/",data,"main")
-		.success(function(response){
-			alert("Fdfsd")
-			console.log(response);
+    self.read_pagination = function(reset){
+		if(reset) self.reset_filter();
+
+		self.filters["sort"] = self.sort;
+		var filters = angular.copy(self.filters);
+		filters = self.format_date(filters);
+		filters = self.format_time(filters);
+
+		self.pagination["limit"] = 20;
+
+		filters["pagination"] = self.pagination;
+
+		var post = self.post_generic("/student_sessions/read_student_session/", filters, "main");
+		post.success(function(response){
 			self.records = response.records;
-			// for(var record in $scope.records){
-			// 	var credits_left = $scope.records[record].credits_left ? $scope.records[record].credits_left : 0 
-			// 	var session_credits = $scope.records[record].session_credits
-			// 	$scope.records[record]['credits_left_seconds'] = convertSecondstoHours(credits_left);
-			// 	$scope.records[record]['session_credits_seconds'] = convertSecondstoHours(session_credits);
-			// }
-			// self.starting = response.starting;
-			// self.ending = response.data.length;
-			// self.pagination.limit_options = angular.copy(self.pagination.read_user_credits);
-			// // self.pagination.limit_options.push(response.total_records);
-			// self.pagination["total_records"] = response.total_records;
-			// self.pagination["total_pages"] = response.total_pages;
-		})
+			self.generate_pagination(self,response,"records");
+		});
 	};
 
 	me.menu_options = function (record) {
@@ -475,18 +468,20 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		    var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
 		    return hDisplay + mDisplay + sDisplay; 
 	}
+   	
+	self.main_loader = function(){ self.read_pagination(); }
 
-   	// $scope.read();
-   	self.read_facilitators();
-   	$scope.read_student_session();
-   	self.read_trainer_notes();
-	self.main_loader = function(){$scope.read_student_session();}
 	$scope.read_companies();
 	$scope.read_users();
-	$scope.read_student_session();
+
+	self.read_facilitators();
+	self.read_trainer_notes();
+
 	CommonRead.get_display_terms($scope)
 	CommonRead.get_transaction_types($scope);
 	CommonRead.get_company($scope);
 	CommonRead.get_users($scope);
 	$scope.read_transaction_types();
+
+	self.main_loader();
 });
