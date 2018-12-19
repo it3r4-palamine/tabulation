@@ -81,17 +81,17 @@
                                                 <img alt="image" class="rounded-circle" style="width:20px; height:20px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
                                                 <span>{$ $select.selected.fullname $}</span> 
                                             </div>
-                                            
                                         </div>
+
                                     </ui-select-match>
-                                    <ui-select-choices repeat="consultant in consultants | filter: $select.search | limitTo:50">
+                                    <ui-select-choices repeat="student in ctrl.students | filter: $select.search | limitTo:50">
                                         <div class="row">
                                             <div class="col-xs-2">
                                                 <img alt="image" class="rounded-circle" style="width:38px; height:38px; margin-left: 10px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
                                             </div>
                                             <div class="col-xs-10">
-                                                <span ng-bind-html="consultant.fullname | highlight: $select.search"></span> 
-                                                <p ng-bind-html="consultant.user_type.name | highlight: $select.search"></p>
+                                                <span ng-bind-html="student.fullname | highlight: $select.search"></span> 
+                                                <p ng-bind-html="student.user_type.name | highlight: $select.search"></p>
                                             </div>
                                         </div>
                                     </ui-select-choices>
@@ -205,9 +205,26 @@
                                     </td>
                                     <td class="col-sm-1">
                                         <ui-select ng-model="exercise.facilitated_by" required>
-                                            <ui-select-match placeholder="Select...">{$ $select.selected.fullname $}</ui-select-match>
-                                            <ui-select-choices repeat="facilitator in consultants | filter: $select.search | limitTo:50">
-                                                <span ng-bind-html="facilitator.fullname | highlight: $select.search"></span> - <span ng-bind-html="facilitator.user_type.name | highlight: $select.search"></span>
+                                            <ui-select-match placeholder="Select...">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <img alt="image" class="rounded-circle" style="width:18px; height:18px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
+                                                        <span>{$ $select.selected.fullname $}</span> 
+                                                    </div>
+                                                </div>
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="facilitator in ctrl.facilitators | filter: $select.search | limitTo:50">
+
+                                                <div class="row">
+                                                    <div class="col-xs-2">
+                                                        <img alt="image" class="rounded-circle" style="width:38px; height:38px; margin-left: 5px; margin-right: 2px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
+                                                    </div>
+                                                    <div class="col-xs-10">
+                                                        <span ng-bind-html="facilitator.fullname | highlight: $select.search"></span> 
+                                                        <p ng-bind-html="facilitator.user_type.name | highlight: $select.search"></p>
+                                                    </div>
+                                                </div>
+
                                             </ui-select-choices>
                                         </ui-select>
                                     </td>

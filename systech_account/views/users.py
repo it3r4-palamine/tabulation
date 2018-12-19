@@ -5,6 +5,7 @@ from ..models.user import *
 from ..models.enrollment import *
 from ..models.company_assessment import *
 from ..views.common import *
+from utils.dict_types import *
 from datetime import *
 import requests
 import sys, os, re, unicodedata
@@ -34,7 +35,23 @@ def read_students(request):
         users = User.objects.filter(user_type__name="Student").order_by("id")
 
         for user in users:
-            records.append(user.get_dict())
+            records.append(user.get_dict(dict_type=UI_SELECT))
+
+        results["records"] = records
+
+        return success_list(results, False)
+    except Exception as e:
+        return error(str(e))
+
+def read_facilitators(request):
+    try:
+        results = {}
+        records = []
+
+        users = User.objects.filter(user_type__name="Facilitator", is_active=True).order_by("id")
+
+        for user in users:
+            records.append(user.get_dict(dict_type=UI_SELECT))
 
         results["records"] = records
 

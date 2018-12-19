@@ -19,10 +19,6 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	self.record = {}
 	self.filter = {}
 
-	// self.filter.transaction_type = {'name':'ALL'}
-	// self.filter.user = {'fullname':'ALL'}
-	// self.filter.company = {'name':'ALL'}
-
 
 	self.create_edit_session = function(student_session, fromDraft, record){
 		$scope.record = {}
@@ -365,11 +361,19 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
     }
 
 	$scope.read_users = function(){
-    	self.post_generic("/users/read/","","main")
+    	self.post_generic("/users/read_students/","","main")
     	.success(function(response){
-    		$scope.consultants = response.data;
+    		self.students = response.records;
     	})
     };
+
+    self.read_facilitators = function()
+    {
+    	self.post_generic("/users/read_facilitators/","","main")
+    	.success(function(response){
+    		self.facilitators = response.records;
+    	})
+    }
 
     $scope.read_companies = function(record){
 		self.record.company = {}
@@ -473,6 +477,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	}
 
    	// $scope.read();
+   	self.read_facilitators();
    	$scope.read_student_session();
    	self.read_trainer_notes();
 	self.main_loader = function(){$scope.read_student_session();}

@@ -67,7 +67,8 @@ urlpatterns = [
 	
 	url(r'^users/$', users.users, name='users'),
 	url(r'^users/read/$', users.read),
-	url(r'^users/read_students/$', users.read),
+	url(r'^users/read_students/$', users.read_students),
+	url(r'^users/read_facilitators/$', users.read_facilitators),
 	url(r'^users/create_dialog/$', users.create_dialog),
 	url(r'^users/read_user_types/$', users.read_user_types),
 	url(r'^users/create/$', users.create),

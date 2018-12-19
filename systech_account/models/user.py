@@ -6,6 +6,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from ..models.transaction_types import *
 from ..models.company import *
 
+from utils.dict_types import *
+
 # OTHERS
 import sys, traceback, os
 import time
@@ -70,25 +72,38 @@ class User(AbstractBaseUser):
 		db_table  = "User"
 
 
-	def get_dict(self, is_local=False):
-		user = {
-			"id" 	   : self.pk,
-			"fullname" : self.fullname,
-		}
+	def get_dict(self, is_local=False, dict_type=DEFAULT):
+
+		instance = {}
+
+		if dict_type == DEFAULT:
+			instance = {
+				"id" 	    : self.pk,
+				"fullname"  : self.fullname,
+				"user_type" : self.user_type.pk if self.user_type else None
+			}
+
+		if dict_type == UI_SELECT:
+
+			instance = {
+				"id" 	    : self.pk,
+				"fullname"  : self.fullname,
+				"user_type" : self.user_type.get_dict() if self.user_type else None
+			}
 
 		if is_local:
-			user["username"]  		= self.username
-			user["password"]		= self.password
-			user["user_type"]		= self.user_type.pk if self.user_type else None
-			user["email"]			= self.email
-			user["company"]			= self.company.pk
-			user["is_active"]		= self.is_active
-			user["is_admin"]		= self.is_admin
-			user["is_edit"]			= self.is_edit
-			user["is_intelex"]		= self.is_intelex
-			user["user_intelex_id"] = self.user_intelex_id
+			instance["username"]  		= self.username
+			instance["password"]		= self.password
+			instance["user_type"]		= self.user_type.pk if self.user_type else None
+			instance["email"]			= self.email
+			instance["company"]			= self.company.pk
+			instance["is_active"]		= self.is_active
+			instance["is_admin"]		= self.is_admin
+			instance["is_edit"]			= self.is_edit
+			instance["is_intelex"]		= self.is_intelex
+			instance["user_intelex_id"] = self.user_intelex_id
 
-		return user
+		return instance
 
 
 	def delete(self):
