@@ -926,6 +926,14 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
+        get_students : function(scope)
+        {
+            var post = CommonRequests.read_common_records(scope, "students", "/users/read_students/",{},true);
+            return post.success(function(response){
+                scope["students"] = response.records;
+            })
+        },
+
         get_math_symbols: function(scope) {
             var post = CommonRequests.read_common_records(scope, "math_symbols", "/settings/read_math_symbols/",{},true);
             return post.success(function(response){

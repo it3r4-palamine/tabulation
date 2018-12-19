@@ -1,3 +1,4 @@
+{% load staticfiles %}	
 	<div class="ibox-title">
 
 		<div class="row">
@@ -22,9 +23,9 @@
 		</div>
     </div>
 
-    <div class="ibox-content">
+    <div class="ibox-content gray-bg">
 
-    	<div class="row">
+    	<div class="row" style="padding: 0px 10px 0px 10px">
 			<form class="form-horizontal" name="form">
 				{% csrf_token %}
 				<div class="ibox float-e-margins">
@@ -52,17 +53,35 @@
 							<div class="form-group "> 
 								<label class="col-sm-2 control-label">Student:</label>  
 								<div class="col-sm-3"> 
-									<!-- <div class="input-group">  -->
+									<div class="input-group"> 
 										<ui-select ng-model="enrollment_data.user" ng-change="get_excess_time();"> 
-										<ui-select-match>{$ $select.selected.fullname $}</ui-select-match> 
-										<ui-select-choices repeat="student in users2 | filter: $select.search | limitTo:50"> 
-											<div ng-bind-html="student.fullname | highlight: $select.search"></div> 
+										<ui-select-match>
+											
+											<div class="row">
+	                                            <div class="col-xs-12">
+	                                                <img alt="image" class="rounded-circle" style="width:20px; height:20px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
+	                                                <span>{$ $select.selected.fullname $}</span> 
+	                                            </div>
+                                        	</div>
+
+
+										</ui-select-match> 
+										<ui-select-choices repeat="student in students | filter: $select.search | limitTo:50"> 
+											<div class="row">
+                                            <div class="col-xs-2">
+                                                <img alt="image" class="rounded-circle" style="width:38px; height:38px; margin-left: 5px; margin-right: 10px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
+                                            </div>
+                                            <div class="col-xs-10">
+                                                <span ng-bind-html="student.fullname | highlight: $select.search"></span> 
+                                                <p ng-bind-html="student.user_type.name | highlight: $select.search"></p>
+                                            </div>
+                                        </div>
 										</ui-select-choices> 
 										</ui-select>
-										<!-- <span class="input-group-btn">
+										<span class="input-group-btn">
 		                                	<a class="btn btn-default" ng-click="ctrl.open_create_edit_dialog()"><i class="glyphicon glyphicon-plus"></i></a>
-		                            	</span> -->
-									<!-- </div> -->
+		                            	</span>
+									</div>
 								</div>
 
 								<label class="col-sm-2 control-label">Enrollment Date:</label>  
@@ -144,7 +163,7 @@
 			</form>
 	</div>
 
-	<div class="ibox float-e-margins">
+	<div class="ibox">
         <div class="ibox-title">
             <h5>Total Payment ({$ total_payment $})</h5>
             <div class="ibox-tools">

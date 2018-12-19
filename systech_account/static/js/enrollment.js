@@ -24,7 +24,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	};
 	$scope.filter = {}
 
-	CommonRead.get_users2($scope);
+	CommonRead.get_students($scope);
 	CommonRead.get_company2($scope);
 	CommonRead.get_schools2($scope);
 
@@ -355,6 +355,22 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		})
 	}
 
+	self.read_students = function(){
+    	self.post_generic("/users/read_students/","","main")
+    	.success(function(response){
+    		self.students = response.records;
+    	})
+    };
+
+    self.read_facilitators = function()
+    {
+    	self.post_generic("/users/read_facilitators/","","main")
+    	.success(function(response){
+    		self.facilitators = response.records;
+    	})
+    }
+
+    self.read_students();
 
 	// Add Student
 	self.open_create_edit_dialog = function(){
