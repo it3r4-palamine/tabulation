@@ -237,7 +237,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		self.post_generic('/student_sessions/create/', post_data, null, false, null, false)
 			.success(function(response){
 				self.session.id = response.session_pk;
-				self.close_dialog();
+				check_save_options(save_opt, self.session, response.message);
 				self.main_loader();
 			}).error(function(response){
 				Notification.error(response)
@@ -245,6 +245,31 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
 
 	};
+
+	check_save_options = function(save_opt, session, message){
+		switch (save_opt) {
+			case "close":
+				self.close_dialog();
+				init_student_session();
+				self.set_date_and_time();
+				success_notif_link(message, session, false);
+				break;
+			case "new":
+				self.close_dialog();
+				init_student_session();
+				self.set_date_and_time();
+				self.create_edit_session();
+				success_notif_link(message, session, true);
+				break;
+			case "print":
+				self.print_student_session(session);
+				Notification.success(message);
+				break;
+			default:
+				Notification.success(message);
+				break;
+		}
+	}
 
 	self.validate_session = function(data)
 	{

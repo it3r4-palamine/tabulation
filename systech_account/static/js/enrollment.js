@@ -175,12 +175,17 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	{
 		var confirmation = CommonFunc.confirmation("Delete Enrollment \n" + data.user.fullname + "?");
 		confirmation.then(function(){
+			alert("cfds")
 
-			me.post_generic("/enrollments/delete_enrollment/", data, null, true)
-				.success(function(response){
-					$scope.main_loader();
-				})
-		})
+			self.post_generic("/student_sessions/delete/" + student_session.id, null, true)
+			.success(function(response){
+				self.main_loader();
+			})
+			
+			// let response = me.post_generic("/enrollments/delete_enrollment/", data, null, true).then(function(response){
+			// 	$scope.main_loader();
+			// });
+		});
 	};
 
 	$scope.compute_program_session_credits = function(seconds)
@@ -196,10 +201,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 			confirmation = CommonFunc.attention("Payment Error", "Must provide reference No.(OR/TR) and Amount");
 			return false;
 		}
-
-
 		return true;
-
 	}
 
 	$scope.read_pagination = function(reset){
