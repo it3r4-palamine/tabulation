@@ -1,0 +1,171 @@
+{% load staticfiles %}	
+<div class="ibox-title">
+
+	<div class="row">
+		
+		<div class="col-sm-5">
+		<h2>New Student</h2>
+    	</div>
+        <div class="col-sm-7">
+            <div class="pull-right">
+
+                <button class="btn btn-sm btn-link" ng-click="main.save_new_student(main.student, 'open')">
+                    <i class="fa fa-save dialog-button" class="dialog-button"></i>
+                    <span>Save</span>
+                </button>
+                
+                <button class="btn btn-sm btn-link" ng-click="main.close_dialog(null, true);">
+                    <i class="fa fa-times-circle dialog-button"></i>
+                    <span>Close</span>
+                </button>
+            </div>
+        </div>
+	</div>
+</div>
+
+<div class="ibox-content gray-bg">
+
+	<div class="row">
+		
+		<div class="col-xs-12">
+
+			<div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a class="nav-link" data-toggle="tab" href="#tab-3"> <i class="fa fa-laptop"></i> Basic Info</a></li>
+                    <li><a class="nav-link" data-toggle="tab" href="#tab-4"><i class="fa fa-desktop"></i> User Account Info</a></li>
+                    <li><a class="nav-link" data-toggle="tab" href="#tab-5"><i class="fa fa-database"></i> Personal Info</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-3" class="tab-pane active">
+                        <div class="panel-body">
+
+                        	<div class="row">
+
+                        		<div class="col-lg-6">
+                        		
+	                        		<label>First Name</label>
+	                        		<input type="text" class="form-control" ng-model="main.student.first_name">
+
+	                        	</div>
+	                            
+	                            <div class="col-lg-6">
+	                        		
+	                        		<label>Last Name</label>
+	                        		<input type="text" class="form-control" ng-model="main.student.last_name">
+
+	                        	</div>
+                        		
+                        	</div>
+                        	
+                        	<br>
+
+                        	<div class="row">
+                        		<div class="col-lg-6">
+                        		
+                        		<label>Nick Name</label>
+                        		<input type="text" class="form-control" ng-model="main.student.nick_name">
+
+                        		</div>
+                        	</div>
+
+                        </div>
+                    </div>
+                    <div id="tab-4" class="tab-pane">
+                        <div class="panel-body">
+
+                        	<div class="row">
+                    			<div class="col-lg-6">
+                    				
+                    				<label>User Name</label>
+                    				<input type="text" class="form-control" ng-model="main.student.username">
+
+                    			</div>
+                    		    
+                    		    <div class="col-lg-6">
+                    				
+                    				<label>Email</label>
+                    				<input type="email" class="form-control" ng-model="main.student.email">
+
+                    			</div>
+                        	</div>
+
+                        	<br>
+
+                        	<div class="row">
+
+                        		<div class="col-lg-6">
+                        			
+                        			<label>Password (default: yahshuagrace)</label>
+                        			<input type="password" class="form-control" ng-model="main.student.password1" placeholder="Leave blank for Auto generated password">
+
+                        		</div>
+
+                        		<div class="col-lg-6">
+                        			
+                        			<label>Confirm Password (default: yahshuagrace)</label>
+                        			<input type="password" class="form-control" ng-model="main.student.password2">
+
+                        		</div>
+                        		
+                        	</div>
+
+                        	<br>
+
+                        	<div class="row">
+                        		
+                        		<div class="col-lg-6">
+                        			<label>User Type</label>
+                        			<ui-select ng-model="main.student.user_type">
+		                                <ui-select-match placeholder="Select...">{$ $select.selected.name $}</ui-select-match>
+		                                <ui-select-choices repeat="user_type in user_types | filter: $select.search | limitTo:50">
+		                                    <div ng-bind-html="user_type.name | highlight: $select.search"></div>
+		                                </ui-select-choices>
+		                            </ui-select>
+                        		</div>
+
+                        	</div>
+
+                        </div>
+                    </div>
+                    <div id="tab-5" class="tab-pane">
+                        <div class="panel-body">
+
+                        	<div class="row">
+                        		
+                        		<div class="col-lg-6">
+                        			<label>Birthday</label>
+                        			<input type="date" name="date_of_birth" class="form-control ng-pristine ng-valid ng-empty ng-touched" ng-model="main.student.date_of_birth" style="">
+                        		</div>
+
+                        		<div class="col-lg-6">
+                        			<label>Address</label>
+                        			<input type="text" class="form-control" ng-model="main.student.address">
+                        		</div>
+
+                        	</div>
+
+                        	<div class="row">
+                        		
+                        		<div class="col-lg-6">
+                        			<label>Contact Number</label>
+                        			<input type="text" name="" class="form-control">
+                        		</div>
+
+                        	</div>
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+
+</div>
+
+	
+    	
+    	
+
+
+    

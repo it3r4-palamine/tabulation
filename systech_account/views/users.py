@@ -19,6 +19,9 @@ def users(request):
 def create_dialog(request):
     return render(request, 'users/dialogs/create_dialog.html')
 
+def create_student_dialog(request):
+    print("dsfsd")
+    return render(request, 'users/dialogs/create_student_dialog.html')
 
 def change_pass_dialog(request):
     return render(request, 'users/dialogs/change_pass_dialog.html')
@@ -129,8 +132,14 @@ def create(request):
             user_type = CustomUserCreationForm(postdata)
 
         if user_type.is_valid():
-            user_type.save()
-            return HttpResponse("Successfully saved.", status=200)
+            instance = user_type.save()
+
+            results = {
+                "record" : instance.get_dict(),
+                "message" : "Successfully saved"
+            }
+
+            return success_list(results, False)
         else:
             return HttpResponse(user_type.errors, status=400)
     except Exception as err:

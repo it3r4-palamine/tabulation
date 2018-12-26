@@ -80,7 +80,7 @@ class User(AbstractBaseUser):
 			instance = {
 				"id" 	    : self.pk,
 				"fullname"  : self.fullname,
-				"user_type" : self.user_type.pk if self.user_type else None
+				"user_type" : self.user_type.get_dict() if self.user_type else None
 			}
 
 		if dict_type == UI_SELECT:

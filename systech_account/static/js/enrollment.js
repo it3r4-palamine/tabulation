@@ -5,6 +5,8 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
 	var self = this;
 	var me = this;
+
+	self.student = {};
 	
 	me.current_module = "enrollment_list"
 	$scope.enrollment_data = {};
@@ -18,10 +20,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		payment_date: new Date(),
 		amount_paid : null
 	};
-	$scope.enrollment_data = { 
-		payments: [],
-		session_credits:{ hours: 0, minutes: 0}  
-	};
+	
 	$scope.filter = {}
 
 	CommonRead.get_students($scope);
@@ -50,10 +49,9 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 			$scope.set_date_and_time();
 
 		} else {
-			$scope.enrollment_data = {
-				payments: [],
-				session_credits:{ hours: 0, minutes: 0}  
-			};
+
+			self.init_new_enrollment();
+
 			$scope.enrollment_data.payments.push(angular.copy($scope.payment));
 			$scope.set_date_and_time();
 
@@ -65,6 +63,12 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		
 		me.open_dialog("/enrollments/create_dialog/", 'dialog_width_90','main');
 	};
+
+	self.open_student_dialog = function()
+	{
+		self.init_new_student();
+		self.open_dialog("/users/create_student_dialog/", 'dialog_width_50 second_dialog', 'main');
+	}
 
 	$scope.get_excess_time = function(){
 		$scope.excess_time = 0;
@@ -104,8 +108,10 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 
 	}
 
-	$scope.save_enrollment = function(data, save_opt){
-		if ($scope.validate_enrollment()) {
+	$scope.save_enrollment = function(data, save_opt)
+	{
+		if ($scope.validate_enrollment()) 
+		{
 			data["deleted_payments"] = $scope.deleted_payment_ids;
 
 			if(data['school'].name == 'No School') delete(data['school'])
@@ -113,9 +119,9 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 			$http.post("/enrollments/save_enrollment/", data).success(function(response){
 				data.id = response.enrollment_pk;
 				check_save_options(save_opt, data, response.message);
-				self.close_dialog();
-				$scope.main_loader();
-
+				self.main_loader();
+				self.close_dialog(self.dialog);
+				
 			}).error(function(err){
 				Notification.error(err);
 				$scope.enrollment_data.enrollment_date = new Date();
@@ -175,7 +181,6 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	{
 		var confirmation = CommonFunc.confirmation("Delete Enrollment \n" + data.user.fullname + "?");
 		confirmation.then(function(){
-			alert("cfds")
 
 			self.post_generic("/student_sessions/delete/" + student_session.id, null, true)
 			.success(function(response){
@@ -350,13 +355,6 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		self.open_dialog("/enrollment/test_dialog/", 'dialog_height_55')
 	};
 
-	$scope.data = {};
-	$scope.take_assessment = function(data){
-		$http.post('', data).success(function(response){
-			
-		})
-	}
-
 	self.read_students = function(){
     	self.post_generic("/users/read_students/","","main")
     	.success(function(response){
@@ -372,7 +370,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
     	})
     }
 
-    self.read_students();
+    
 
 	// Add Student
 	self.open_create_edit_dialog = function(){
@@ -384,6 +382,37 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		self.load_grade_levels();
 
 		self.open_dialog("/get_dialog/student/create_edit_dialog/", "second_dialog dialog_width_80 dialog_height_20");
+	};
+
+	self.generate_student_account_info = function(student)
+	{
+		var first_name_stripped = student.first_name.replace(/\s+/g, '').toLowerCase();
+		var last_name_stripped = student.last_name.replace(/\s+/g, '').toLowerCase();
+		var full_name = student.first_name + " " + student.last_name
+		var username = first_name_stripped + last_name_stripped
+
+		student.username = username;
+		student.email = username + "@intelex.com"
+		student.fullname = full_name;
+		student.is_active = true;
+
+		return student
+	};
+
+	self.save_new_student = function(student)
+	{
+		student = self.generate_student_account_info(student);
+
+		let response = self.post_generic("/users/create/", student, "main", true)
+
+		response.success(function(response){
+
+			$scope.enrollment_data.user = response.record
+			CommonRead.get_students($scope);
+			self.init_new_student();
+			self.close_dialog(null,true);
+
+		})
 	};
 
 	self.load_schools = function(){
@@ -400,21 +429,37 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		})
 	}
 
-	self.save_student = function(data){
-		var response = self.post_generic('/student/save_student/', self.student, null, true, null, false);
-		self.close_dialog(self.dialog, true)
-
-		response.success(function(response){
-			CommonRead.get_students(self, "students");
-		})
-	};
-
 	self.print_enrollment_form = function(enrollment){
 		sessionStorage.enrollment = angular.toJson(enrollment);
 		window.open('/print_forms/get_enrollment_document/')
 	};
 
 	// Enrollment Payment Module
+
+	self.read_user_types = function(){
+    	me.post_generic("/users/read_user_types/","","main")
+    	.success(function(response){
+    		$scope.user_types = response;
+    	})
+    }
+
+    self.init_new_student = function()
+    {
+    	self.student = {
+			"password1" : "yahshuagrace",
+			"password2" : "yahshuagrace"
+		};
+		self.student.user_type = { 'name' : "Student", 'id': 1 }
+    }
+
+    self.init_new_enrollment = function()
+    {
+    	$scope.enrollment_data = {
+			user : {}, 
+			payments: [],
+			session_credits:{ hours: 0, minutes: 0 }  
+		};
+    }
 
 	$scope.add_payment = function(payment)
 	{
@@ -445,9 +490,17 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 
 		if($scope.total_payment >= $scope.enrollment_data.company_rename.rate)
 		{
-			$scope.enrollment_data.session_credits.hours = $scope.total_payment / 125;
+
+			$scope.enrollment_data.session_credits.hours = $scope.enrollment_data.program.hours;
+			$scope.enrollment_data.session_credits.minutes = 0;
+
 		}else{
-			$scope.enrollment_data.session_credits.hours = $scope.total_payment / 250;
+
+			minutes = Math.round(($scope.total_payment / 350) % 1);
+			hours = Math.floor($scope.total_payment / 350);
+
+			$scope.enrollment_data.session_credits.hours = hours;
+			$scope.enrollment_data.session_credits.minutes = minutes;
 		}
 	}
 
@@ -476,5 +529,9 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	};
 
 	CommonRead.get_display_terms($scope)
+
+
+	self.read_user_types();
+	self.read_students();
 
 })
