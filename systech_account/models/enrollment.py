@@ -150,7 +150,7 @@ class Enrollment(models.Model):
         if total:
             return total
         else:
-            return None
+            return timedelta(seconds=0)
 
     def get_remaining_credit(self):
 
