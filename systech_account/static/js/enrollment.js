@@ -491,7 +491,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		if($scope.total_payment >= $scope.enrollment_data.company_rename.rate)
 		{
 
-			$scope.enrollment_data.session_credits.hours = $scope.enrollment_data.program.hours;
+			$scope.enrollment_data.session_credits.hours = $scope.enrollment_data.company_rename.hours;
 			$scope.enrollment_data.session_credits.minutes = 0;
 
 		}else{
