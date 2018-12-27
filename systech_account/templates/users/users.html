@@ -22,18 +22,33 @@
 
 {% block content_body %}
 <div class="wrapper wrapper-content animated fadeIn" ng-cloak="">
+
+
     <div class="ibox">
-        <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
-            {% include "common/loader.html" %} 
-            <div class="row">
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" ng-model="filter.code" placeholder="Search..." name="">
-                </div>
-                <div class="col-sm-4">
-                    <button class="btn btn-default" ng-click="read()"><i class="fa fa-search"></i> SEARCH</button><br>
-                </div>
-                <div class="col-sm-4">
-                    <div class="btn-group pull-right">
+
+        <div class="ibox-content m-b-sm border-bottom">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="col-form-label" for="product_name">Search Name</label>
+                            <input type="text" id="product_name" name="product_name" value="" placeholder="Search for Name" class="form-control" ng-model="filter.code" ng-enter="read()">
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label class="col-form-label" for="price">User Type</label>
+                            <ui-select ng-model="filter.user_type" ng-change="read()">
+                                <ui-select-match placeholder="Select...">{$ $select.selected.name $}</ui-select-match>
+                                <ui-select-choices repeat="user_type in user_types | filter: $select.search | limitTo:50">
+                                    <div ng-bind-html="user_type.name | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-2">
+                        <div class="btn-group pull-right">
                         {% if request.user.user_type.name == 'Technical' %}
                         <button class="btn btn-primary" ng-click="create_dialog()">CREATE</button>
                         {% endif %}
@@ -46,12 +61,23 @@
                                 <li><a href="#" ng-click="reconcile_student_credits()"><i class="fa fa-upload"></i> Reconcile Students Session Credits</a></li>
                             </ul>
                         </div>
+                        </div>
                     </div>
+                    
                 </div>
-                <div class="clearfix"></div>
-                <hr>
+        </div>
+        
+    </div>
+
+    <div class="ibox">
+
+        <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
+            {% include "common/loader.html" %} 
+
+            <div class="row">
+                
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-condensed">
                         <thead>
                             <th>Fullname</th>
                             <th>Username</th>

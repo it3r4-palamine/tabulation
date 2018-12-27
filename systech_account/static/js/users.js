@@ -114,11 +114,17 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 	    })
 	}
 
-	$scope.read = function(){
+	$scope.read = function()
+	{
+		var pagination = me.pagination;
+		pagination.limit = 20;
+
 		var data = {
-			pagination: me.pagination,
+			pagination: pagination,
 			code: $scope.filter.code,
+			user_type : $scope.filter.user_type
 		}
+
 		me.post_generic("/users/read/",data,"main")
 		.success(function(response){
 			$scope.records = response.data;

@@ -68,6 +68,8 @@ def read(request):
         pagination = None
 
         code = data.pop("code", "")
+        user_type = data.pop("user_type", None)
+
 
         if 'pagination' in data:
             pagination = data.pop("pagination", None)
@@ -76,6 +78,9 @@ def read(request):
 
         if code:
             filters &= (Q(email__icontains=code) | Q(fullname__icontains=code))
+
+        if user_type:
+            filters &= Q(user_type=user_type["id"])
 
         records = User.objects.filter(filters).order_by("id")
         results = {'data': []}
