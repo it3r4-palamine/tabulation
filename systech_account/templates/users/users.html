@@ -58,7 +58,6 @@
                             </button>
                             <ul role="menu" uib-dropdown-menu="" ng-click="$event.stopPropagation()">
                                 <li><a href="#" ng-click="get_intelex_students()"><i class="fa fa-upload"></i> Get Intelex Students</a></li>
-                                <li><a href="#" ng-click="reconcile_student_credits()"><i class="fa fa-upload"></i> Reconcile Students Session Credits</a></li>
                             </ul>
                         </div>
                         </div>
@@ -74,7 +73,16 @@
         <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
             {% include "common/loader.html" %} 
 
-            <div class="row">
+            <div class="row" ng-show="records.length == 0">
+                
+                <div class="col-lg-12">
+
+                    <h2><i class="fa fa-frown-o"></i> No Records Found</h2>
+                </div>
+
+            </div>
+
+            <div class="row" ng-show="records.length >= 1">
                 
                 <div class="table-responsive">
                     <table class="table table-condensed">
@@ -87,12 +95,16 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="record in records" class="hand_cursor">
-                                <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.fullname $}</td>
-                                <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.username $}</td>
-                                <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.email $}</td>
-                                <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.user_type.name $}</td>
+                                <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">
+                                    <img alt="image" class="rounded-circle" style="width:35px; height:35px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'> {$ record.fullname $} 
+                                    <i class="fa fa-mars text-success" aria-hidden="true" ng-show="record.gender == 'Male'"></i>
+                                    <i class="fa fa-venus text-pink" aria-hidden="true" ng-show="record.gender == 'Female'"></i>
+                                </td>
+                                <td class="text-vertical-middle" ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.username $}</td>
+                                <td class="text-vertical-middle" ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.email $}</td>
+                                <td class="text-vertical-middle" ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.user_type.name $}</td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm" ng-click="credits_summary(record)">View Credits Summary</button>
+                                    <button ng-show="record.user_type.id == 1" class="btn btn-primary btn-sm" ng-click="credits_summary(record)">View Credits Summary</button>
                                     {% if request.user.id != 453 %}
                                     <button class="btn btn-warning btn-sm" ng-if="record.user_type.name != 'Technical'" ng-click="change_pass_dialog(record)">Change Password</button>
                                     {% endif %}

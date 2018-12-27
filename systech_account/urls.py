@@ -82,6 +82,7 @@ urlpatterns = [
 	url(r'^users/view_lesson_update/$', users.view_lesson_update),
 	url(r'^users/read_user_credits/$', users.read_user_credits),
 	url(r'^users/create_student_dialog/$', users.create_student_dialog),
+	url(r'^users/create_user_dialog/$', users.create_user_dialog),
 	
 	url(r'^recommendations/$', recommendations.recommendations, name='recommendations'),
 	url(r'^recommendations/read/$', recommendations.read),

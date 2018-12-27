@@ -20,8 +20,10 @@ def create_dialog(request):
     return render(request, 'users/dialogs/create_dialog.html')
 
 def create_student_dialog(request):
-    print("dsfsd")
     return render(request, 'users/dialogs/create_student_dialog.html')
+
+def create_user_dialog(request):
+    return render(request, 'users/dialogs/create_user_dialog.html')
 
 def change_pass_dialog(request):
     return render(request, 'users/dialogs/change_pass_dialog.html')

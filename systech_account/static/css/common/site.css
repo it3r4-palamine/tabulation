@@ -38,6 +38,14 @@
     display: block;
 }
 
+.text-vertical-middle {
+    vertical-align: middle !important;
+}
+
+.text-pink {
+    color: pink !important;
+}
+
 /*.panel-heading {
     margin-right: -25px; 
 }*/

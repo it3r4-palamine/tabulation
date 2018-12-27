@@ -3,6 +3,7 @@ var app = angular.module("users",['common_module']);
 app.controller('usersCtrl', function($scope, $http, $timeout, $element, $controller,CommonFunc,Notification,CommonRead) {
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
 	var me = this;
+	var self = this;
 	$scope.record = {}
 	$scope.filter = {}
 
@@ -22,7 +23,7 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 			// });
 		}
 		// else {
-			me.open_dialog("/users/create_dialog/","dialog_width_80","main")
+			me.open_dialog("/users/create_user_dialog/","dialog_width_80","main")
 		// }
 
 	}
@@ -41,17 +42,61 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 		})
 	}
 
-	$scope.create = function(){
-		$scope.record = me.format_date($scope.record)
-		if($scope.record.password1 != $scope.record.password2) return Notification.error("Password do not match.")
-		me.post_generic("/users/create/",$scope.record,"dialog")
-		.success(function(response){
-			me.close_dialog();
-			Notification.success(response);
-			$scope.read();
-		}).error(function(err){
-			Notification.error(err)
-		})
+	self.generate_student_account_info = function(student)
+	{
+		var first_name_stripped = student.first_name.replace(/\s+/g, '').toLowerCase();
+		var last_name_stripped = student.last_name.replace(/\s+/g, '').toLowerCase();
+		var full_name = student.first_name + " " + student.last_name
+		var username = first_name_stripped + last_name_stripped
+		student.fullname = full_name;
+		student.is_active = true;
+
+		if (!student.username)
+		{
+			student.username = username;
+		}
+
+		if (!student.email)
+		{
+			student.email = username + "@intelex.com"
+		}
+
+		if (!student.password1 && !student.password2)
+		{
+			student.password1 = student.password2 = "yahshuagrace"
+		}
+
+		return student
+	};
+
+	self.validate_user = function(student)
+	{
+		if (!student.first_name || !student.last_name)
+		{
+			Notification.warning("Please Provide First Name and Last Name")
+			return false;
+		}
+
+		return true;
+	}
+
+	$scope.create = function()
+	{
+		if (self.validate_user($scope.record))
+		{
+			$scope.record = self.generate_student_account_info($scope.record)
+
+			$scope.record = me.format_date($scope.record)
+			if($scope.record.password1 != $scope.record.password2) return Notification.error("Password do not match.")
+			me.post_generic("/users/create/",$scope.record,"dialog")
+			.success(function(response){
+				me.close_dialog();
+				Notification.success(response.message);
+				$scope.read();
+			}).error(function(err){
+				Notification.error(err)
+			})
+		}
 	}
 
 	$scope.get_intelex_students = function()
