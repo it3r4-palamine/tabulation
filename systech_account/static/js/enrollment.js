@@ -70,6 +70,11 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		self.open_dialog("/users/create_student_dialog/", 'dialog_width_50 second_dialog', 'main');
 	}
 
+	self.open_quickview_dialog = function()
+	{
+		self.open_dialog("/users/quickview_dialog/", 'dialog_width_50 second_dialog', 'main');
+	}
+
 	$scope.get_excess_time = function(){
 		$scope.excess_time = 0;
 		if (!$scope.enrollment_data.user || !$scope.enrollment_data.company_rename) return;

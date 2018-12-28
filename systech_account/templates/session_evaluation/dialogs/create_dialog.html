@@ -20,9 +20,9 @@
                         <span>More Saving Options</span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a href="" ng-click="main.save_session(record, 'close')">Save and Close</a></li>
-                        <li><a href="" ng-click="main.save_session(null, 'new')">Save and New</a></li>
-                        <li><a href="" ng-click="main.save_session(null, 'print')">Save and Print</a></li>
+                        <li><a href="" ng-click="main.save_session(main.session, 'close')">Save and Close</a></li>
+                        <li><a href="" ng-click="main.save_session(main.session, 'new')">Save and New</a></li>
+                        <li><a href="" ng-click="main.save_session(main.session, 'print')">Save and Print</a></li>
                         <li ng-show="main.session.id"><a href="" ng-click="main.print_student_session(main.session)">Print</a></li>
                     </ul>
                 </div>

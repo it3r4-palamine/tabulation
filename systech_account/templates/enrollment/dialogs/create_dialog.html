@@ -44,7 +44,15 @@
 							<div class="form-group"> 
 								<label class="col-sm-2 control-label">Form No</label>
 			                    <div class="col-sm-3">
-			                        <input type="text" ng-model="enrollment_data.code" class="form-control" ng-init="(!enrollment_data.code && !enrollment_data.id) ? enrollment_data.code = '{{ reference_no }}' : '' ">
+
+			                    	<div class="input-group">
+			                    		<input type="text" ng-model="enrollment_data.code" class="form-control" ng-init="(!enrollment_data.code && !enrollment_data.id) ? enrollment_data.code = '{{ reference_no }}' : '' ">
+			                    		<span class="input-group-btn">
+		                                	<a class="btn btn-info btn-rounded" ng-click="main.open_quickview_dialog()"><i class="glyphicon glyphicon-info-sign"></i></a>
+		                            	</span>
+			                    	</div>
+
+			                        
 			                    </div>
 		                	</div>
 						</div>

@@ -1,0 +1,39 @@
+{% load staticfiles %}	
+	<div class="ibox-title">
+		<h2>QuickView of Existing Enrollments</h2>
+    </div>
+
+    <div class="ibox-content gray-bg">
+
+    	<table class="table table-condensed">
+    		
+    		<thead>
+    			
+    			<tr>
+    				<th>Code</th>
+    				<th>Student</th>
+    				<th>Date</th>
+    			</tr>
+
+    		</thead>
+
+    		<tbody>
+    			
+    			<tr ng-repeat="record in main.records">
+    				<td>{$ record.code $}</td>
+    				<td>{$ record | json $}</td>
+    				<td>{$ record.enrollment_date | date $}</td>
+    			</tr>
+
+    		</tbody>
+
+    	</table>
+
+
+	</div>
+
+    	
+    	
+
+
+    
