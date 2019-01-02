@@ -19,9 +19,7 @@ def create_dialog(request):
 def read(request):
 	try:
 		data 				 = req_data(request,True)
-		filters 			 = {}
-		filters['is_active'] = True
-		filters['company'] 	 = data['company']
+		filters 			 = Q(is_active=True) & Q(company=data['company'])
 		name_search 	   	 = data.pop("name","")
 		has_company 	   	 = data.get("company_rename",None)
 		bypass_code_exists 	 = data.get("bypass_code_exists",False)
@@ -44,31 +42,30 @@ def read(request):
 						if len(check_question) > 0:
 							t_types_ids.append(t_type.id)
 
-					filters['id__in'] = t_types_ids
+					filters &= Q(id__in=t_types_ids)
 				else:
-					filters['id__in'] = company.transaction_type
+					filters &= Q(id__in=company.transaction_type)
 
 			except Company_rename.DoesNotExist:
 				raise_error("%s doesn't exist."%(c_term))
 
 		has_ids = data.get('ids',None)
 		if has_ids:
-			filters['id__in'] = has_ids
+			filters &= Q(id__in=has_ids)
 		pagination = None
 
 		if 'pagination' in data:
 			pagination = data.pop("pagination",None)
 
 		if name_search:
-			filters['name__icontains'] = name_search
-			# filters['transaction_code__icontains'] = name_search
+			filters &= Q(name__icontains=name_search) | Q(transaction_code__icontains=name_search)
 
 		sort_by = generate_sorting(data.pop("sort",None))
 
 		if 'program_id' in data:
-			records = Transaction_type.objects.filter(**filters).exclude(id__in=data['program_id']).order_by(*sort_by)
+			records = Transaction_type.objects.filter(filters).exclude(id__in=data['program_id']).order_by(*sort_by)
 		else:
-			records = Transaction_type.objects.filter(**filters).order_by(*sort_by)
+			records = Transaction_type.objects.filter(filters).order_by(*sort_by)
 
 		results = {'data':[]}
 		results['total_records'] = records.count()
