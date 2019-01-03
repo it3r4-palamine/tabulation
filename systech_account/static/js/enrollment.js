@@ -72,7 +72,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 
 	self.open_quickview_dialog = function()
 	{
-		self.open_dialog("/users/quickview_dialog/", 'dialog_width_50 second_dialog', 'main');
+		self.open_dialog("/get_dialog/enrollment/quickview_dialog/", 'dialog_width_50 second_dialog', 'main');
 	}
 
 	$scope.get_excess_time = function(){

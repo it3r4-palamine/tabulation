@@ -53,7 +53,8 @@ class Enrollment(models.Model):
                 # instance['session_start_date'] 		= format_date_from_db(self.session_start_date)
                 instance['session_start_date'] 		= self.session_start_date
                 # instance['session_end_date'] 		= format_date_from_db(self.session_end_date)
-                instance['session_end_date'] 		= self.session_end_date
+                instance['session_end_date']        = self.session_end_date
+                instance['enrollment_date'] 		= self.enrollment_date
                 instance['is_expire'] 				= False if self.session_end_date and self.session_end_date >= datetime.now().date() else True
 
                 time_consumed 	= self.get_total_session_time()

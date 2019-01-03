@@ -6,7 +6,6 @@ def get_dialog_document(request, folder_name, file_name, new):
 		file_location = folder_name + "/dialogs/" + file_name + ".html"
 
 		return_data = {}
-		return_data['reference_no'] = code_model_selector(folder_name)
 
 		return render(request, file_location, return_data)
 	except Exception as e:
