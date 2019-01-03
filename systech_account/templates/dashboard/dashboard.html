@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+{% load static %}
+{% block ngapp %}ng-app="dashboard"{% endblock %}
+{% block ngctrl %}ng-controller="DashboardCtrl as ctrl"{% endblock %} 
+{% block title %} Dashboard {% endblock %} 
+
+{% block loader_js_bottom %}
+<script type="text/javascript" src="{% static 'js/dashboard.js'%}?ver=1"></script>
+{% endblock loader_js_bottom %} {% block page_header %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Dashboard</h2>
+    </div>
+</div>
+{% endblock %} 
+
+{% block editable_css %}
+    <style type="text/css">
+        .hand_cursor {
+            cursor: pointer !important;
+        }
+
+        .hand_cursor:hover {
+            background-color: #E8E8E8 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content_body %}
+<div class="wrapper wrapper-content animated fadeIn" ng-cloak="">
+
+    <div class="row">
+
+        <div class="col-xs-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <a ng-click="ctrl.show_detail()"><span class="label label-info pull-right">Monthly</span></a>
+                    <h5>Enrolled Students</h5>
+                </div>
+
+                <div class="ibox-content" layout="ibox-content"  ng-class="ctrl.page_loader.main2 ? 'sk-loading' : ''">
+                    {% include "common/loader.html" %}
+                    <h1 class="no-margins">{$ ctrl.student_data.count_enrolled_students $} <small>for this month</small></h1>
+
+                    <div class="row" ng-repeat="record in ctrl.student_data.count_enrolled_by_school">
+                        <div class="col-xs-12">
+                            <div class="stat-percent font-bold text-info">{$ record.student_count $}</div>
+                            <small ng-hide="record.school_name">No School</small>
+                            <small>{$ record.school_name $}</small>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="stat-percent font-bold text-info">{$ ctrl.student_data.count_enrolled_total $}</div>
+                            <small><b>Overall Total Students</b></small>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <a ng-click="ctrl.show_session_detail()"><span class="label label-info pull-right">Monthly</span></a>
+                    <h5>Sessions Created</h5>
+                </div>
+                <div class="ibox-content" layout="ibox-content"  ng-class="ctrl.page_loader.main ? 'sk-loading' : ''">
+                    {% include "common/loader.html" %}
+                    <h1 class="no-margins">{$ ctrl.session_data.count_sessions_created $} <small>for this month</small></h1>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="stat-percent font-bold text-info">{$ ctrl.session_data.count_sessions_daily $}</div>
+                            <small>Total Sessions for today</small>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="stat-percent font-bold text-info">{$ ctrl.session_data.count_sessions_last_month $}</div>
+                            <small>Last Month Sessions</small>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="stat-percent font-bold text-info">{$ ctrl.session_data.count_sessions_total $}</div>
+                            <small><b>Total Sessions</b></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-4" ng-hide="true">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <a ng-click="ctrl.showUnenrolledSessionsGraph()"><span class="label label-primary pull-right">Annual</span></a>
+                    <h5>Unenrolled Sessions</h5>
+                </div>
+                <div class="ibox-content" layout="ibox-content"  ng-class="ctrl.page_loader.main ? 'sk-loading' : ''">
+                    {% include "common/loader.html" %}
+                    <h1 class="no-margins">{$ ctrl.session_data.count_unaccounted_sessions $}</h1>
+                    <!--<div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
+                    <small>New visits</small>-->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-3" ng-hide="true">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">Low value</span>
+                    <h5>User activity</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">80,600</h1>
+                    <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div>
+                    <small>In first month</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Today's Sessions</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="ibox-content" layout="ibox-content"  ng-class="ctrl.page_loader.main ? 'sk-loading' : ''">
+                    {% include "common/loader.html" %}
+                    <div class="feed-activity-list" style="height:500px; overflow:scroll">
+
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Student</th>
+                                    <th>Program</th>
+                                    <th>Remaining</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="feed-element" ng-class="record.class_row" ng-repeat="record in ctrl.session_data.expiring_sessions">
+                                    <td>{$ record.code $}</td>
+                                    <td>{$ record.student_full_name $}</td>
+                                    <td>{$ record.program_name $}</td>
+                                    <td class="text-center">{$ record.time_remaining | secondsDuration : "hh:mm" $}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Expiring Enrollments</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="ibox-content" layout="ibox-content"  ng-class="ctrl.page_loader.main ? 'sk-loading' : ''">
+                    {% include "common/loader.html" %}
+                    <div class="feed-activity-list" style="height:500px; overflow:scroll">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Student</th>
+                                    <th>Days Remaining</th>
+                                    <th>Credits Remaining</th>
+                                    <th>Expiry Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="feed-element" ng-repeat="record in ctrl.session_data.expiring_enrollments">
+                                    <td>{$ record.program.name $}</td>
+                                    <td>{$ record.student.full_name $}</td>
+                                    <td class="text-center" ng-class="{'text-red' : record.remaining_days <= 5 }">{$ record.remaining_days $}</td>
+                                    <td class="text-center">{$ record.remaining_credit | secondstoDuration $}</td>
+                                    <td>{$ record.session_end_date  $}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                      
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Depleting Student Credits</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="ibox-content" layout="ibox-content"  ng-class="ctrl.page_loader.main ? 'sk-loading' : ''">
+                    {% include "common/loader.html" %}
+                    <div class="feed-activity-list" style="height:500px; overflow:scroll">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Student</th>
+                                    <th>Credits Remaining</th>
+                                    <th>Expiry Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="feed-element" ng-repeat="record in ctrl.session_data.depleting_credits | orderBy : 'remaining_credit'">
+                                    <td>{$ record.program.name $}</td>
+                                    <td>{$ record.student.full_name $}</td>
+                                    <td class="text-center">{$ record.remaining_credit | secondstoDuration $}</td>
+                                    <td>{$ record.session_end_date  $}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                      
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Birthdays Of The Month</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="ibox-content" layout="ibox-content"  ng-class="ctrl.page_loader.main3 ? 'sk-loading' : ''">
+                    {% include "common/loader.html" %}
+                    <div class="feed-activity-list" style="height:500px; overflow:scroll">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Birthdate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="feed-element" ng-repeat="record in ctrl.student_birthdates">
+                                    <td>{$ record.full_name $}</td>
+                                    <td>{$ record.date_of_birth  $}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                      
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+</div>
+
+{% endblock %}

@@ -61,6 +61,12 @@ def log_out(request):
 	logout(request)
 	return redirect("loginpage")
 
+def dashb2oard(request):
+	return render(request, "dashboard/dashboard.html")
+
+def dashboard(request):
+	return render(request, "dashboard/dashboard.html", {"pagename" : "Student Evaluation"})
+
 def register(request):
 	if request.method == "POST":
 		data = json.loads(request.body.decode("utf-8"))
