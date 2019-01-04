@@ -5,7 +5,7 @@ from ..models.company import *
 from ..views.common import *
 import sys, traceback, os
 import requests
-
+import time
 
 def transaction_type(request):
 	if request.user.user_type.name.lower() != "technical":
@@ -139,6 +139,7 @@ def delete(request,id = None):
 		try:
 			record = Transaction_type.objects.get(pk = id)
 			record.is_active = False
+			record.transaction_code = str(record.transaction_code) + str(time.mktime(time.gmtime()))
 			record.save()
 			return success("Successfully deleted.")
 		except Transaction_type.DoesNotExist:
@@ -163,6 +164,7 @@ def delete_selected(request):
 			try:
 				record = Transaction_type.objects.get(pk = ids)
 				record.is_active = False
+				record.transaction_code = str(record.transaction_code) + str(time.mktime(time.gmtime()))
 				record.save()
 			except Transaction_type.DoesNotExist:
 				raise_error("%s doesn't exist."%(t_term))
