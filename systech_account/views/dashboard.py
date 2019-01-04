@@ -119,11 +119,6 @@ def read_sessions_status(request):
 
 		for enrollment in expiring_enrollments:
 
-			print(enrollment.get_dict(return_type=1))
-
-			print(enrollment.session_end_date)
-			print(date.today())
-
 			if enrollment.session_end_date:
 				remaining_days = enrollment.session_end_date - date.today()
 

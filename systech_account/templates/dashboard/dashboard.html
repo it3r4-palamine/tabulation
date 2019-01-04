@@ -197,8 +197,8 @@
                             </thead>
                             <tbody>
                                 <tr class="feed-element" ng-repeat="record in ctrl.session_data.expiring_enrollments">
-                                    <td>{$ record.program.name $}</td>
-                                    <td>{$ record.student.full_name $}</td>
+                                    <td>{$ record.company_rename.name $}</td>
+                                    <td>{$ record.user.fullname $}</td>
                                     <td class="text-center" ng-class="{'text-red' : record.remaining_days <= 5 }">{$ record.remaining_days $}</td>
                                     <td class="text-center">{$ record.remaining_credit | secondstoDuration $}</td>
                                     <td>{$ record.session_end_date  $}</td>
