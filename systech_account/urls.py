@@ -3,7 +3,7 @@ from django.conf.urls import url, handler404,patterns,include
 from django.conf import settings as root_settings
 from django.conf.urls.static import static
 
-from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs,enrollment,payment_reports,student_reports,session_evaluation, program,print_forms, dashboard, html_router
+from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs,enrollment,payment_reports,student_reports,session_evaluation, program,print_forms, dashboard, html_router, timeslot
 
 urlpatterns = [
 	url(r'^common/pagination/$',common.pagination),
@@ -93,6 +93,11 @@ urlpatterns = [
 	url(r'^users/read_user_credits/$', users.read_user_credits),
 	url(r'^users/create_student_dialog/$', users.create_student_dialog),
 	url(r'^users/create_user_dialog/$', users.create_user_dialog),
+
+	url(r'^timeslots/$', html_router.get_timeslot, name='get_timeslot'),
+	url(r'^timeslots/save_timeslot/$', timeslot.save_timeslot, name='save_timeslot'),
+	url(r'^timeslots/read_timeslots/$', timeslot.read, name='read'),
+
 	
 	url(r'^recommendations/$', recommendations.recommendations, name='recommendations'),
 	url(r'^recommendations/read/$', recommendations.read),

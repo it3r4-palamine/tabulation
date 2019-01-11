@@ -1,0 +1,159 @@
+{% load staticfiles %}
+<div class="modal-header">
+    
+    <div class="row">
+        <div class="col-sm-5">
+            <h3 style="margin:10px">Time Slot {$ main.session.code $} <span ng-show="!main.session.id" style="color: #18A689">(New)</span></h3>
+        </div>
+
+        <div class="col-sm-7">
+            <div class="pull-right">
+                <button class="btn btn-sm btn-link" ng-click="main.save_timeslot(main.timeslot, 'open')">
+                    <i class="fa fa-save dialog-button" class="dialog-button"></i>
+                    <span>Save</span>
+                </button>
+
+                <div class="btn-group" ng-hide="true">
+                    <button class="btn btn-sm btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" >
+                        <i class="fa fa-save dialog-button" class="dialog-button" style="width: 10px; float: left; margin-left: 25px;"></i>
+                        <i class="fa fa-angle-down dialog-button" class="dialog-button" style="width: -10px; font-size: 2em; padding-top: 8px; margin-bottom: 5px;"></i>
+                        <span>More Saving Options</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="" ng-click="main.save_session(main.session, 'close')">Save and Close</a></li>
+                        <li><a href="" ng-click="main.save_session(main.session, 'new')">Save and New</a></li>
+                        <li><a href="" ng-click="main.save_session(main.session, 'print')">Save and Print</a></li>
+                        <li ng-show="main.session.id"><a href="" ng-click="main.print_student_session(main.session)">Print</a></li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-sm btn-link" ng-click="main.close_dialog()">
+                    <i class="fa fa-times-circle dialog-button"></i>
+                    <span>Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div cclass="modal-body">
+    <div class="ibox-content no-padding-top gray-bg" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+    {% include "common/loader.html" %}
+        <form class="form-horizontal" name="form">
+            <div class="ibox float-e-margins" style="margin-bottom: 0px;">
+                <div class="ibox-title no-border-top">
+                    <!-- <h5>Total Payment ({$ main.total_payment | currency $})</h5> -->
+                    <div class="ibox-tools">
+                        <a class="collapse-link" id="top-ibox-collapse">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content no-padding-bottom">
+                    
+                    <div class="row"> 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Student:</label>
+                            <div class="col-sm-6">
+                                <ui-select ng-model="main.timeslot.student">
+                                    <ui-select-match>
+                                        
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <img alt="image" class="rounded-circle" style="width:20px; height:20px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
+                                                <span>{$ $select.selected.fullname $}</span> 
+                                            </div>
+                                        </div>
+
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="student in main.students | filter: $select.search | limitTo:50">
+                                        <div class="row">
+                                            <div class="col-xs-2">
+                                                <img alt="image" class="rounded-circle" style="width:38px; height:38px; margin-left: 10px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
+                                            </div>
+                                            <div class="col-xs-10">
+                                                <span ng-bind-html="student.fullname | highlight: $select.search"></span> 
+                                                <p ng-bind-html="student.user_type.name | highlight: $select.search"></p>
+                                            </div>
+                                        </div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            
+                        </div>
+                    </div>     
+                    
+                    <div class="row"> 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Time Start:</label>
+                            <div class="col-sm-3">
+                                <input type="time" class="form-control" ng-model="main.timeslot.time_start">
+                            </div>
+                            <label class="col-sm-2 control-label">Time End:</label>
+                            <div class="col-sm-3">
+                                <input type="time" class="form-control" ng-model="main.timeslot.time_end">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-xs-12">
+
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <input type="checkbox" class="form-control col-sm-2" ng-model="main.timeslot.has_monday">
+                                    <label>Monday</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" class="form-control col-sm-2" ng-model="main.timeslot.has_tuesday">
+                                    <label>Tuesday</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" class="form-control col-sm-2" ng-model="main.timeslot.has_wednesday">
+                                    <label>Wednesday</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" class="form-control col-sm-2" ng-model="main.timeslot.has_thursday">
+                                    <label>Thursday</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" class="form-control col-sm-2" ng-model="main.timeslot.has_friday">
+                                    <label>Friday</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" class="form-control col-sm-2" ng-model="main.timeslot.has_saturday">
+                                    <label>Saturday</label>
+                                </div>
+                               
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        
+                        <div class="col-xs-12">
+
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <input type="checkbox" class="form-control col-sm-2" ng-model="main.is_current">
+                                    <label>Current TimeSlot</label>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+
+        
+
+    </div>
+</div>
+<div class="modal-footer">
+</div>

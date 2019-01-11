@@ -18,3 +18,7 @@ def get_common_document(request,folder_name,file_name):
 	file_location = folder_name + "/" + file_name + ".html"
 
 	return render(request, file_location)
+
+def get_timeslot(request):
+
+	return render(request, "timeslot/timeslot.html")
