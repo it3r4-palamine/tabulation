@@ -8,6 +8,7 @@ class Enrollment_form(forms.ModelForm):
 				  'company_rename',
 				  'school', 
 				  'code',
+				  'timeslot',
 				  'session_credits',
 				  'session_start_date', 
 				  'session_end_date', 

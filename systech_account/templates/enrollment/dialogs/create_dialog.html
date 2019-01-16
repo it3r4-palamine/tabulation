@@ -51,8 +51,39 @@
 		                                	<a class="btn btn-info btn-rounded" ng-click="main.open_quickview_dialog()"><i class="glyphicon glyphicon-info-sign"></i></a>
 		                            	</span>
 			                    	</div>
+			                    </div>
+			                    <label class="col-sm-2 control-label">Tiem Slot</label>
+			                    <div class="col-sm-3">
 
-			                        
+			                    	<div class="input-group">
+										<ui-select ng-model="enrollment_data.timeslot" ng-change="get_excess_time();"> 
+										<ui-select-match>
+											
+											<div class="row">
+	                                            <div class="col-xs-12">
+	                                                <span>{$ $select.selected.description $}</span> 
+	                                            </div>
+                                        	</div>
+
+
+										</ui-select-match> 
+										<ui-select-choices repeat="student in timeslots | filter: $select.search | limitTo:50"> 
+											<div class="row">
+                                            <div class="col-xs-2">
+                                                
+                                            </div>
+                                            <div class="col-xs-10">
+                                                <span ng-bind-html="student.description | highlight: $select.search"></span> 
+                                                <p ng-bind-html="student.time_start | highlight: $select.search"></p>
+                                                <p ng-bind-html="student.time_end | highlight: $select.search"></p>
+                                            </div>
+                                        </div>
+										</ui-select-choices> 
+										</ui-select>
+			                    		<span class="input-group-btn">
+		                                	<a class="btn btn-info btn-rounded" ng-click="main.open_quickview_dialog()"><i class="glyphicon glyphicon-info-sign"></i></a>
+		                            	</span>
+			                    	</div>
 			                    </div>
 		                	</div>
 						</div>

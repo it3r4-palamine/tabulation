@@ -50,7 +50,7 @@
                 </div>
                 <div class="ibox-content no-padding-bottom">
                     
-                    <div class="row"> 
+                    <div class="row" ng-hide="true"> 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Student:</label>
                             <div class="col-sm-6">
@@ -80,6 +80,20 @@
                             </div>
                             
                         </div>
+                    </div>
+
+                    <div class="row">
+                        
+                        <div class="form-group">
+                            
+                            <label class="col-sm-2 control-label">Description:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="main.timeslot.description">
+                            </div>
+                           
+
+                        </div>
+
                     </div>     
                     
                     <div class="row"> 
@@ -131,7 +145,7 @@
 
                     </div>
 
-                    <div class="row">
+                    <div class="row" ng-hide="true">
                         
                         <div class="col-xs-12">
 

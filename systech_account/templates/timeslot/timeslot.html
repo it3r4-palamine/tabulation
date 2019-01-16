@@ -56,29 +56,35 @@
                 <div class="table-responsive">
                     <table class="table table-condensed">
                         <thead>
-                            <th>Fullname</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>User Type</th>
+                            <th>Description</th>
+                            <th>Time Start</th>
+                            <th>Time End</th>
+                            <th>Days</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="record in main.records" class="hand_cursor">
-                                <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">
-                                    <img alt="image" class="rounded-circle" style="width:35px; height:35px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'> {$ record.fullname $} 
+                            <tr ng-repeat="record in main.records" class="hand_cursor" >
+                                <td ng-hide="true" >
+                                    <img alt="image" class="rounded-circle" style="width:35px; height:35px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'> {$ record.student.fullname $} 
                                     <i class="fa fa-mars text-success" aria-hidden="true" ng-show="record.gender == 'Male'"></i>
                                     <i class="fa fa-venus text-pink" aria-hidden="true" ng-show="record.gender == 'Female'"></i>
                                 </td>
-                                <td class="text-vertical-middle" ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.username $}</td>
-                                <td class="text-vertical-middle" ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.email $}</td>
-                                <td class="text-vertical-middle" ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">{$ record.user_type.name $}</td>
                                 <td>
-                                    <button ng-show="record.user_type.id == 1" class="btn btn-primary btn-sm" ng-click="credits_summary(record)">View Credits Summary</button>
-                                    {% if request.user.id != 453 %}
-                                    <button class="btn btn-warning btn-sm" ng-if="record.user_type.name != 'Technical'" ng-click="change_pass_dialog(record)">Change Password</button>
-                                    {% endif %}
+                                    <p>{$ record.description $}</p>
+                                </td>
+                                <td ng-click="main.open_create_dialog(record, '{{request.user.user_type.name}}')" class="text-vertical-middle">{$ record.time_start | date : 'shortTime' $}</td>
+                                <td class="text-vertical-middle">{$ record.time_end | date : 'shortTime' $}</td>
+                                <td class="text-vertical-middle">
+                                    <span ng-show="record.has_monday">MON,</span>
+                                    <span ng-show="record.has_tuesday">TUE,</span>
+                                    <span ng-show="record.has_wednesday">WED,</span>
+                                    <span ng-show="record.has_thursday">THU,</span>
+                                    <span ng-show="record.has_friday">FRI,</span>
+                                    <span ng-show="record.has_saturday">SAT</span>
+                                </td>
+                                <td>
                                     {% if request.user.user_type.name == 'Technical' %}
-                                    <button class="btn btn-danger btn-sm" ng-click="delete(record)">Delete</button>
+                                    <button class="btn btn-danger btn-sm" ng-click="main.delete(record)">Delete</button>
                                     {% endif %}
                                 </td>
                             </tr>

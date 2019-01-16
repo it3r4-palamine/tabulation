@@ -10,8 +10,23 @@ app.controller('TimeSlotCtrl', function($scope, $http, $timeout, $element, $cont
 	self.records = [];
 	self.timeslot = {};
 
-	self.open_create_dialog = function()
+	self.open_create_dialog = function(data)
 	{
+		console.log(data);
+
+		if (data)
+		{
+			self.timeslot = angular.copy(data);
+
+			self.timeslot.time_start = new Date(data.time_start);
+			self.timeslot.time_end = new Date(data.time_end);
+
+		} else {
+
+			self.timeslot = {};
+
+		}
+
 		self.open_dialog("/get_dialog/timeslot/create_dialog/", 'dialog_width_50', 'main');
 	}
 
@@ -26,9 +41,22 @@ app.controller('TimeSlotCtrl', function($scope, $http, $timeout, $element, $cont
 		self.post_generic('/timeslots/save_timeslot/', post_data, null, false, null, false)
 			.success(function(response){
 				Notification.success(response)
+				self.close_dialog()
 			}).error(function(response){
 				Notification.error(response)
 			})
+	}
+
+	self.delete = function(data)
+	{
+		var confirmation = CommonFunc.confirmation("Delete Timeslot of " + data.student.fullname + "?");
+		confirmation.then(function(){
+
+			self.post_generic("/timeslots/delete_timeslot/" + data.id, null, true)
+				.success(function(response){
+					self.main_loader();
+				})
+		})
 	}
 
 	self.read = function(reset)
@@ -49,6 +77,11 @@ app.controller('TimeSlotCtrl', function($scope, $http, $timeout, $element, $cont
 			self.records = response.records;
 			self.generate_pagination(self,response,"records");
 		});
+	}
+
+	self.main_loader = function()
+	{
+		self.read();
 	}
 
 	self.read();

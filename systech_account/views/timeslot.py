@@ -12,20 +12,30 @@ def save_timeslot(request):
 	try:
 		data = req_data(request)
 
+		record_id = data.get("id", None)
 		student = data.get("student", None)
+		data["student"] = student["id"] if student else None
 
-		data["student"] = student["id"]
-
-		form = TimeSlotForm(data)
+		if record_id:
+			instance = TimeSlot.objects.get(id=record_id)
+			form = TimeSlotForm(data,instance=instance)
+		else:
+			form = TimeSlotForm(data)
 
 		if form.is_valid():
 			print("Pass")
 			form.save()
 		else:
 			print(form.errors)
+			raise ValueError(form.errors)
 
 		return success("Success")
+	except ValueError as e:
+		return error(e)
 	except Exception as e:
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		print(exc_type, fname, exc_tb.tb_lineno)
 		return error(e)
 
 def read(request):
@@ -42,8 +52,9 @@ def read(request):
 		for timeslot in timeslots:
 			records.append(timeslot.get_dict())
 
-		results.update(generate_pagination(pagination,timeslots))
-		records = records[results['starting']:results['ending']]
+		if pagination:
+			results.update(generate_pagination(pagination,timeslots))
+			records = records[results['starting']:results['ending']]
 
 		results["records"] = records
 
@@ -53,3 +64,16 @@ def read(request):
 		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
 		print(exc_type, fname, exc_tb.tb_lineno)
 		return error(e)
+
+def delete(request,id):
+	try:
+		data = req_data(request)
+
+		print(id)
+		record = TimeSlot.objects.get(id=id)
+		record.delete()
+
+		return success("Success")
+	except Exception as e:
+		return error(e)
+

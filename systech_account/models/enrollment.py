@@ -7,12 +7,14 @@ from ..models.company import *
 from ..models.payment import *
 from ..models.assessments import *
 from ..models.session import *
+from ..models.timeslot import TimeSlot
 from ..views.common import *
 from django.db.models import Count, Sum, Avg,Min,Q,F,Func
 from datetime import timedelta
 
 class Enrollment(models.Model):
     user 				= models.ForeignKey("User")
+    timeslot            = models.ForeignKey("TimeSlot", null=True, blank=True)
     company_rename 		= models.ForeignKey("Company_rename", blank=True, null=True)
     school 				= models.ForeignKey("School", blank=True,null=True,related_name="school_enrolled")
     enrollment_type 	= models.ForeignKey("EnrollmentType", blank=True, null=True)
@@ -55,6 +57,7 @@ class Enrollment(models.Model):
                 # instance['session_end_date'] 		= format_date_from_db(self.session_end_date)
                 instance['session_end_date']        = self.session_end_date
                 instance['enrollment_date'] 		= self.enrollment_date
+                instance['timeslot']                    = self.timeslot.get_dict() if self.timeslot else None
                 instance['is_expire'] 				= False if self.session_end_date and self.session_end_date >= datetime.now().date() else True
 
                 time_consumed 	= self.get_total_session_time()
@@ -82,7 +85,7 @@ class Enrollment(models.Model):
             instance['enrollment_date'] 			= format_date_from_db(self.enrollment_date)
             instance['is_expire'] 					= False if self.session_end_date and self.session_end_date >= datetime.now().date() else True
             instance['total_time_left_seconds'] 	= 0
-            
+            instance['timeslot']                    = self.timeslot.get_dict() if self.timeslot else None
             time_consumed 	= self.get_total_session_time()
             time_remaining 	= self.get_remaining_credit()
 

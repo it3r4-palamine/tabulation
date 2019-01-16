@@ -533,8 +533,8 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	    return RightClick.get_menu(me,record)
 	};
 
-	CommonRead.get_display_terms($scope)
-
+	CommonRead.get_display_terms($scope);
+	CommonRead.get_timeslots($scope);
 
 	self.read_user_types();
 	self.read_students();

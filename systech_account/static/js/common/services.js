@@ -926,6 +926,14 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
+        get_timeslots : function(scope)
+        {
+            var post = CommonRequests.read_common_records(scope, "timeslots", "/timeslots/read_timeslots/", {}, true);
+            return post.success(function(response){
+                scope["timeslots"] = response.records
+            })
+        },
+
         get_students : function(scope)
         {
             var post = CommonRequests.read_common_records(scope, "students", "/users/read_students/",{},true);

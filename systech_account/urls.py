@@ -97,6 +97,8 @@ urlpatterns = [
 	url(r'^timeslots/$', html_router.get_timeslot, name='get_timeslot'),
 	url(r'^timeslots/save_timeslot/$', timeslot.save_timeslot, name='save_timeslot'),
 	url(r'^timeslots/read_timeslots/$', timeslot.read, name='read'),
+	url(r'^timeslots/delete_timeslot/(?P<id>[0-9]+)$', timeslot.delete, name='delete'),
+
 
 	
 	url(r'^recommendations/$', recommendations.recommendations, name='recommendations'),

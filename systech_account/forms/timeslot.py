@@ -4,7 +4,8 @@ from ..models.timeslot import TimeSlot
 class TimeSlotForm(forms.ModelForm):
 	class Meta:
 		model = TimeSlot
-		fields = ('student', 
+		fields = ('student',
+				  'description', 
 				  'time_start', 
 				  'time_end', 
 				  'has_monday',
