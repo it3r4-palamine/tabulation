@@ -1,6 +1,7 @@
 from django.db import models
 from ..models.transaction_types import *
 from django.contrib.postgres.fields import ArrayField
+from utils.dict_types import *
 
 class Company(models.Model):
 	name             = models.CharField(max_length=200,blank=True,null=True)
@@ -33,11 +34,11 @@ class Company_rename(models.Model):
 		db_table  = "company_rename"
 
 
-	def get_dict(self,return_type = 0):
+	def get_dict(self,dict_type = DEFAULT):
 
 		instance = {}
 
-		if return_type == 0:
+		if dict_type == DEFAULT:
 			return {
 				"id" 		 		: self.pk,
 				"name" 		 		: self.name,
@@ -50,12 +51,20 @@ class Company_rename(models.Model):
 				"hours"				: self.hours.total_seconds() if self.hours else 0
 			}
 
+		if dict_type == DEVICE:
+			instance["id"] = self.pk
+			instance["name"] = self.name
+			instance["rate"] = self.rate
+			instance["hours"] = self.hours.total_seconds() if self.hours else 0
 
-		if return_type == FOR_LABEL:
+			return instance
+
+
+		if dict_type == FOR_LABEL:
 			instance['name'] = self.name
 			return instance
 
-		if return_type == UI_SELECT:
+		if dict_type == UI_SELECT:
 			instance['id'] = self.id
 			instance['name'] = self.name
 			return instance

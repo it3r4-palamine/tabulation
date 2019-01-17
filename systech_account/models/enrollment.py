@@ -9,6 +9,7 @@ from ..models.assessments import *
 from ..models.session import *
 from ..models.timeslot import TimeSlot
 from ..views.common import *
+from utils.dict_types import *
 from django.db.models import Count, Sum, Avg,Min,Q,F,Func
 from datetime import timedelta
 
@@ -41,23 +42,21 @@ class Enrollment(models.Model):
 
         return instance
 
-    def get_dict(self, return_type = 0):
+    def get_dict(self, dict_type = DEFAULT):
         try:
             instance = {}
 
-            if return_type == 1:
+            if dict_type == DEFAULT:
                 instance['id'] 						= self.id
                 instance['code'] 					= self.code
                 instance['user'] 					= self.user.get_dict()
                 instance['user_id'] 				= self.user.id
-                instance['company_rename'] 			= self.company_rename.get_dict() if self.company_rename else None
+                instance['company_rename'] 			= self.company_rename.get_dict(dict_type=DEVICE) if self.company_rename else None
                 instance['session_credits_seconds'] = self.session_credits.total_seconds() if self.session_credits else 0
-                # instance['session_start_date'] 		= format_date_from_db(self.session_start_date)
                 instance['session_start_date'] 		= self.session_start_date
-                # instance['session_end_date'] 		= format_date_from_db(self.session_end_date)
                 instance['session_end_date']        = self.session_end_date
                 instance['enrollment_date'] 		= self.enrollment_date
-                instance['timeslot']                    = self.timeslot.get_dict() if self.timeslot else None
+                instance['timeslot']                = self.timeslot.get_dict() if self.timeslot else None
                 instance['is_expire'] 				= False if self.session_end_date and self.session_end_date >= datetime.now().date() else True
 
                 time_consumed 	= self.get_total_session_time()
@@ -73,30 +72,42 @@ class Enrollment(models.Model):
 
                 return instance
 
-            instance['id'] 							= self.id
-            instance['code'] 						= self.code
-            instance['user'] 						= self.user.get_dict()
-            instance['school'] 					= self.school.get_dict() if self.school else None
-            instance['company_rename'] 				= self.company_rename.get_dict() if self.company_rename else None
-            instance['session_credits'] 			= str(self.session_credits)
-            instance['session_credits_seconds'] 	= self.session_credits.total_seconds() if self.session_credits else 0
-            instance['session_start_date'] 			= self.session_start_date
-            instance['session_end_date'] 			= self.session_end_date
-            instance['enrollment_date'] 			= format_date_from_db(self.enrollment_date)
-            instance['is_expire'] 					= False if self.session_end_date and self.session_end_date >= datetime.now().date() else True
-            instance['total_time_left_seconds'] 	= 0
-            instance['timeslot']                    = self.timeslot.get_dict() if self.timeslot else None
-            time_consumed 	= self.get_total_session_time()
-            time_remaining 	= self.get_remaining_credit()
+            if dict_type == DEVICE:
+                instance['id']                      = self.id
+                instance['code']                    = self.code
+                instance['program']                 = self.company_rename.get_dict(dict_type=DEVICE) if self.company_rename else None
+                instance['session_start_date']      = self.session_start_date
+                instance['session_end_date']        = self.session_end_date
+                instance['timeslot']                = self.timeslot.get_dict(dict_type=DEVICE) if self.timeslot else None
+                instance['special_reservations']    = []
+ 
+                return instance
+            else:
 
-            instance["total_session_time"] = format_time_consumed(time_consumed.total_seconds()) if time_consumed else None
-            instance['is_running'] = True
-            if time_remaining and time_remaining < 0:
-                instance['is_running'] = False
-                instance["total_time_left"] = "-" + format_time_consumed(abs(time_remaining))
-            elif time_remaining > 0:
-                instance['total_time_left'] = format_time_consumed(time_remaining)
-                instance['total_time_left_seconds'] = time_remaining
+                instance['id'] 							= self.id
+                instance['code'] 						= self.code
+                instance['user'] 						= self.user.get_dict()
+                instance['school'] 					    = self.school.get_dict() if self.school else None
+                instance['company_rename'] 				= self.company_rename.get_dict() if self.company_rename else None
+                instance['session_credits'] 			= str(self.session_credits)
+                instance['session_credits_seconds'] 	= self.session_credits.total_seconds() if self.session_credits else 0
+                instance['session_start_date'] 			= self.session_start_date
+                instance['session_end_date'] 			= self.session_end_date
+                instance['enrollment_date'] 			= format_date_from_db(self.enrollment_date)
+                instance['is_expire'] 					= False if self.session_end_date and self.session_end_date >= datetime.now().date() else True
+                instance['total_time_left_seconds'] 	= 0
+                instance['timeslot']                    = self.timeslot.get_dict() if self.timeslot else None
+                time_consumed 	= self.get_total_session_time()
+                time_remaining 	= self.get_remaining_credit()
+
+                instance["total_session_time"] = format_time_consumed(time_consumed.total_seconds()) if time_consumed else None
+                instance['is_running'] = True
+                if time_remaining and time_remaining < 0:
+                    instance['is_running'] = False
+                    instance["total_time_left"] = "-" + format_time_consumed(abs(time_remaining))
+                elif time_remaining > 0:
+                    instance['total_time_left'] = format_time_consumed(time_remaining)
+                    instance['total_time_left_seconds'] = time_remaining
 
             return instance
         except Exception as e:

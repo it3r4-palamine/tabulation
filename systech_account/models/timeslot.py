@@ -1,7 +1,7 @@
-
 from django.db import models
 from utils.date_handler import *
 from utils.response_handler import *
+from utils.dict_types import * 
 
 class TimeSlot(models.Model):
 
@@ -31,21 +31,38 @@ class TimeSlot(models.Model):
 		db_table  = "timeslots"
 		ordering  = ["id"]
 
-	def get_dict(self):
+	def get_dict(self, dict_type = DEFAULT):
 
 		instance = {}
 
-		instance["id"] = self.pk
-		instance["description"] = self.description
-		instance["student"] = self.student.get_dict() if self.student else None
-		instance["time_start"] = str(convert_24_12(self.time_start))
-		instance["time_end"] = str(convert_24_12(self.time_end))
-		instance["has_sunday"] = self.has_sunday
-		instance["has_monday"] = self.has_monday
-		instance["has_tuesday"] = self.has_tuesday
-		instance["has_wednesday"] = self.has_wednesday
-		instance["has_thursday"] = self.has_thursday
-		instance["has_friday"] = self.has_friday
-		instance["has_saturday"] = self.has_saturday
+		if dict_type == DEFAULT:
+
+			instance["id"] = self.pk
+			instance["description"] = self.description
+			instance["student"] = self.student.get_dict() if self.student else None
+			instance["time_start"] = str(convert_24_12(self.time_start))
+			instance["time_end"] = str(convert_24_12(self.time_end))
+			instance["has_sunday"] = self.has_sunday
+			instance["has_monday"] = self.has_monday
+			instance["has_tuesday"] = self.has_tuesday
+			instance["has_wednesday"] = self.has_wednesday
+			instance["has_thursday"] = self.has_thursday
+			instance["has_friday"] = self.has_friday
+			instance["has_saturday"] = self.has_saturday
+
+		if dict_type == DEVICE:
+
+			instance["id"] = self.pk
+			instance["description"] = self.description
+			instance["time_start"] = str(convert_24_12(self.time_start))
+			instance["time_end"] = str(convert_24_12(self.time_end))
+			instance["has_sunday"] = self.has_sunday
+			instance["has_monday"] = self.has_monday
+			instance["has_tuesday"] = self.has_tuesday
+			instance["has_wednesday"] = self.has_wednesday
+			instance["has_thursday"] = self.has_thursday
+			instance["has_friday"] = self.has_friday
+			instance["has_saturday"] = self.has_saturday
+
 
 		return instance

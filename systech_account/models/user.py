@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 # MODELS
 from ..models.transaction_types import *
 from ..models.company import *
-
+from ..models.enrollment import Enrollment
 from utils.dict_types import *
 
 # OTHERS
@@ -91,6 +91,15 @@ class User(AbstractBaseUser):
 				"user_type" : self.user_type.get_dict() if self.user_type else None
 			}
 
+		if dict_type == DEVICE:
+
+			instance = {
+				"id" 			: self.pk,
+				"first_name" 	: self.first_name,
+				"last_name"  	: self.last_name,
+				"fullname"		: self.fullname,
+			}
+
 		if is_local:
 			instance["username"]  		= self.username
 			instance["password"]		= self.password
@@ -114,6 +123,21 @@ class User(AbstractBaseUser):
 		self.save()
 
 		return True
+
+	def get_active_enrolled_programs(self):
+		records = []
+
+		enrollments = Enrollment.objects.filter(user=self.pk,is_active=True,is_deleted=False)
+
+		for enrollment in enrollments:
+
+			if enrollment.get_remaining_credit():
+				records.append(enrollment.get_dict(dict_type=DEVICE))
+
+		return records
+
+
+
 
 class User_type(models.Model):
 	name       = models.CharField(max_length=200,blank=True,null=True)

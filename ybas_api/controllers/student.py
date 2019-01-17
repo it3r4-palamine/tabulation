@@ -1,6 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from utils.response_handler import *
+from utils.dict_types import *
+from systech_account.models import User
 
 class StudentInfo(APIView):
 
@@ -195,3 +198,46 @@ class StudentInfo(APIView):
 		except Exception as e:
 			print(e)
 			return Response("ERROR")
+
+
+
+@api_view(["POST"])
+def get_students(request):
+    try:
+        results = {}
+        records = []
+
+        users = User.objects.filter(is_active=True,user_type=1)
+
+        for user in users:
+        	records.append(user.get_dict(dict_type=DEVICE))
+
+        results["records"] = records
+
+        return success_response(results)
+    except Exception as e:
+    	print e
+        return error_http_response(str(e))
+
+@api_view(["POST"])
+def get_students_with_information(request):
+    try:
+        results = {}
+        records = []
+
+        users = User.objects.filter(is_active=True,user_type=1)
+
+        for user in users:
+        	row = user.get_dict(dict_type=DEVICE)
+        	row["enrolled_programs"] = user.get_active_enrolled_programs()
+
+        	if row["enrolled_programs"]:
+        		records.append(row)
+
+        results["records"] = records
+
+        return success_response(results)
+    except Exception as e:
+    	print e
+        return error_http_response(str(e))
+
