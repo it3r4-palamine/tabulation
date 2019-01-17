@@ -73,13 +73,15 @@ class Enrollment(models.Model):
                 return instance
 
             if dict_type == DEVICE:
-                instance['id']                      = self.id
-                instance['code']                    = self.code
-                instance['program']                 = self.company_rename.get_dict(dict_type=DEVICE) if self.company_rename else None
-                instance['session_start_date']      = self.session_start_date
-                instance['session_end_date']        = self.session_end_date
-                instance['timeslot']                = self.timeslot.get_dict(dict_type=DEVICE) if self.timeslot else None
-                instance['special_reservations']    = []
+                instance['id']                       = self.id
+                instance['code']                     = self.code
+                instance['program']                  = self.company_rename.get_dict(dict_type=DEVICE) if self.company_rename else None
+                instance['session_start_date']       = self.session_start_date
+                instance['session_end_date']         = self.session_end_date
+                instance['timeslot']                 = self.timeslot.get_dict(dict_type=DEVICE) if self.timeslot else None
+                instance['special_reservations']     = []
+                instance['session_credits_duration'] = self.session_credits.total_seconds() if self.session_credits else 0
+                instance["session_credits_consumed"] = self.get_total_session_time()
  
                 return instance
             else:

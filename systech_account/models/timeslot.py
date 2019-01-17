@@ -52,6 +52,8 @@ class TimeSlot(models.Model):
 
 		if dict_type == DEVICE:
 
+			days_arrays = []
+
 			instance["id"] = self.pk
 			instance["description"] = self.description
 			instance["time_start"] = str(convert_24_12(self.time_start))
@@ -63,6 +65,30 @@ class TimeSlot(models.Model):
 			instance["has_thursday"] = self.has_thursday
 			instance["has_friday"] = self.has_friday
 			instance["has_saturday"] = self.has_saturday
+
+			if self.has_saturday:
+				days_arrays.append("SAT")
+
+			if self.has_sunday:
+				days_arrays.append("SUN")
+
+			if self.has_monday:
+				days_arrays.append("MON")
+
+			if self.has_tuesday:
+				days_arrays.append("TUE")
+
+			if self.has_wednesday:
+				days_arrays.append("WED")
+
+			if self.has_thursday:
+				days_arrays.append("THU")
+
+			if self.has_friday:
+				days_arrays.append("FRI")
+
+			instance["days"] = days_arrays
+
 
 
 		return instance
