@@ -48,7 +48,7 @@ class Company_rename(models.Model):
 				"transaction_type" 	: self.transaction_type,
 				"company" 	 		: self.company.pk,
 				"rate"				: self.rate,
-				"hours"				: self.hours.total_seconds() if self.hours else 0
+				"hours"				: self.hours.total_seconds() if self.hours else 0,
 			}
 
 		if dict_type == DEVICE:

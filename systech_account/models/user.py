@@ -64,6 +64,7 @@ class User(AbstractBaseUser):
 	grade_level 		= models.ForeignKey("Gradelevel", blank=True, null=True)
 	school 				= models.ForeignKey("School", blank=True, null=True)
 	description 		= models.TextField(null=True,blank=True)
+	rfid				= models.CharField(max_length=20,null=True,blank=True)
 
 	USERNAME_FIELD = 'username'
 
