@@ -99,6 +99,7 @@ class User(AbstractBaseUser):
 				"first_name" 	: self.first_name,
 				"last_name"  	: self.last_name,
 				"fullname"		: self.fullname,
+				"rfid"			: self.rfid,
 			}
 
 		if is_local:
