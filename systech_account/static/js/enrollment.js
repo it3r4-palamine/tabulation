@@ -119,6 +119,11 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		{
 			data["deleted_payments"] = $scope.deleted_payment_ids;
 
+			if (!data.hasOwnProperty("school"))
+			{
+				Notification.warning("Please Select a School")
+			}
+
 			if(data['school'].name == 'No School') delete(data['school'])
 
 			$http.post("/enrollments/save_enrollment/", data).success(function(response){
@@ -187,14 +192,14 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		var confirmation = CommonFunc.confirmation("Delete Enrollment \n" + data.user.fullname + "?");
 		confirmation.then(function(){
 
-			self.post_generic("/student_sessions/delete/" + student_session.id, null, true)
-			.success(function(response){
-				self.main_loader();
-			})
+			// self.post_generic("/student_sessions/delete/" + student_session.id, null, true)
+			// .success(function(response){
+			// 	self.main_loader();
+			// })
 			
-			// let response = me.post_generic("/enrollments/delete_enrollment/", data, null, true).then(function(response){
-			// 	$scope.main_loader();
-			// });
+			let response = me.post_generic("/enrollments/delete_enrollment/", data, null, true).then(function(response){
+				$scope.main_loader();
+			});
 		});
 	};
 

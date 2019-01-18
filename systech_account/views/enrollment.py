@@ -12,7 +12,7 @@ from django.db.models import *
 from ..views.common import *
 from utils.response_handler import *
 import sys, traceback, os
-
+import time
 
 def enrollment(request):
 	return render(request, 'enrollment/enrollment.html')
@@ -141,6 +141,9 @@ def save_enrollment(request):
 		data = req_data(request,True)
 		data = set_id(data)
 		data = format_dates(data)
+
+		if Enrollment.objects.filter(code=data["code"]).exists():
+			raise ValueError("Enrollment Code Exists")
 		
 		if data.get("session_credits", None) is not None:
 			session_credits = data["session_credits"]
@@ -189,9 +192,14 @@ def save_enrollment(request):
 			"message": "Saving Enrollment "+data["code"]+" Success!",
 			"enrollment_pk": enrollment.pk,
 		}
+
 		return success_list(result, False)
+
+	except ValueError as e:
+		return error_http_response(str(e))
 	except Exception as e:
-		return error_response(str(e))
+		print(e)
+		return error_http_response(str(e))
 
 def check_reference_no(request,isChecked=False):
 	try:
@@ -231,6 +239,7 @@ def delete_enrollment(request):
 		if check_assessment:
 			return error("Used in %s. Please be advised!"%(term))
 
+		instance.code = str(instance.code) + str(time.mktime(time.gmtime()))
 		instance.is_deleted = True
 		instance.save()
 		
