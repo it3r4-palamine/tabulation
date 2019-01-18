@@ -141,9 +141,6 @@ def save_enrollment(request):
 		data = req_data(request,True)
 		data = set_id(data)
 		data = format_dates(data)
-
-		if Enrollment.objects.filter(code=data["code"]).exists():
-			raise ValueError("Enrollment Code Exists")
 		
 		if data.get("session_credits", None) is not None:
 			session_credits = data["session_credits"]
@@ -157,7 +154,11 @@ def save_enrollment(request):
 		try: 
 			instance = Enrollment.objects.get(id=data.get("id", None)) 
 			form = Enrollment_form(data, instance=instance) 
-		except Enrollment.DoesNotExist: 
+		except Enrollment.DoesNotExist:
+
+			if Enrollment.objects.filter(code=data["code"]).exists():
+				raise ValueError("Enrollment Code Exists")
+
 			form = Enrollment_form(data) 
 
 		if form.is_valid(): 

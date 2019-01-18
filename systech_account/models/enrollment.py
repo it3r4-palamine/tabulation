@@ -49,6 +49,7 @@ class Enrollment(models.Model):
             if dict_type == DEFAULT:
                 instance['id'] 						= self.id
                 instance['code'] 					= self.code
+                instance['school']                  = self.school.get_dict() if self.school else None
                 instance['user'] 					= self.user.get_dict()
                 instance['user_id'] 				= self.user.id
                 instance['company_rename'] 			= self.company_rename.get_dict(dict_type=DEVICE) if self.company_rename else None

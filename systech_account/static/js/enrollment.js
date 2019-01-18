@@ -106,6 +106,9 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 				$scope.enrollment_data.session_end_date = new Date(enrollment.session_end_date);
 				$scope.enrollment_data.session_start_date = new Date(enrollment.session_start_date);
 
+				// $scope.enrollment_data.timeslot.time_start = new Date(enrollment.timeslot.time_start);
+				// $scope.enrollment_data.timeslot.time_end = new Date(enrollment.timeslot.time_end);
+
 				var session_credits = me.convert_seconds_duration(enrollment.session_credits_seconds)
 				$scope.enrollment_data.session_credits = {"hours" : session_credits.hours, "minutes" : session_credits.minutes }
 			});
@@ -501,7 +504,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		if($scope.total_payment >= $scope.enrollment_data.company_rename.rate)
 		{
 
-			$scope.enrollment_data.session_credits.hours = $scope.enrollment_data.company_rename.hours;
+			$scope.enrollment_data.session_credits.hours = $scope.enrollment_data.company_rename.hours / 3600;
 			$scope.enrollment_data.session_credits.minutes = 0;
 
 		}else{

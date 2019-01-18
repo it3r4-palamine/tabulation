@@ -930,6 +930,13 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
         {
             var post = CommonRequests.read_common_records(scope, "timeslots", "/timeslots/read_timeslots/", {}, true);
             return post.success(function(response){
+
+                for (var i in response.records)
+                {
+                    response.records[i].time_start = new Date(response.records[i].time_start)
+                    response.records[i].time_end = new Date(response.records[i].time_end)
+                }
+
                 scope["timeslots"] = response.records
             })
         },

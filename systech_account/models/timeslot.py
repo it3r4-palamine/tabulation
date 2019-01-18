@@ -31,6 +31,33 @@ class TimeSlot(models.Model):
 		db_table  = "timeslots"
 		ordering  = ["id"]
 
+	def generate_days(self):
+
+		days_arrays = []
+
+		if self.has_saturday:
+				days_arrays.append("SAT")
+
+		if self.has_sunday:
+			days_arrays.append("SUN")
+
+		if self.has_monday:
+			days_arrays.append("MON")
+
+		if self.has_tuesday:
+			days_arrays.append("TUE")
+
+		if self.has_wednesday:
+			days_arrays.append("WED")
+
+		if self.has_thursday:
+			days_arrays.append("THU")
+
+		if self.has_friday:
+			days_arrays.append("FRI")
+
+		return days_arrays
+
 	def get_dict(self, dict_type = DEFAULT):
 
 		instance = {}
@@ -49,6 +76,7 @@ class TimeSlot(models.Model):
 			instance["has_thursday"] = self.has_thursday
 			instance["has_friday"] = self.has_friday
 			instance["has_saturday"] = self.has_saturday
+			instance["days"] = self.generate_days()
 
 		if dict_type == DEVICE:
 
