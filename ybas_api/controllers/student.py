@@ -241,3 +241,14 @@ def get_students_with_information(request):
     	print e
         return error_http_response(str(e))
 
+@api_view(["POST"])
+def save_student_time_logs(request):
+	try:	
+		data = req_data(request)
+
+
+		return success_response("Success")
+	except Exception as e:
+		return error_http_response(str(e))
+
+

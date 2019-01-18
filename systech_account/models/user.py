@@ -12,6 +12,7 @@ from utils.dict_types import *
 import sys, traceback, os
 import time
 from django.core.validators import RegexValidator
+from django.utils import timezone
 
 
 class User_Manager(BaseUserManager):
@@ -194,6 +195,19 @@ class User_credit(models.Model):
 			user_credit['session_credits_left'] = self.session_credits_left
 
 		return user_credit
+
+class UserTimeLog(models.Model):
+
+	user 	 = models.ForeignKey("User")
+	log_type = models.CharField(max_length=20,null=True,blank=True)
+	log_time = models.TimeField(blank=True, null=True, default=None)
+	log_date = models.DateField(blank=False, null=False, default=timezone.now)
+	sync_id  = models.CharField(max_length=50, null=True, blank=True)
+
+	class Meta:
+		app_label = "systech_account"
+		db_table  = "user_time_logs"
+
 
 
 class Lesson_update_header(models.Model):
