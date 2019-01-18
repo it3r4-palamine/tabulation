@@ -148,6 +148,7 @@ class Enrollment(models.Model):
 
         student_session_filters = {
             "student_id" : self.user.id,
+            "enrollment_id" : self.pk,
             "is_deleted" : False
         }
 
