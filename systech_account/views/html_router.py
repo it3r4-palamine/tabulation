@@ -22,3 +22,7 @@ def get_common_document(request,folder_name,file_name):
 def get_timeslot(request):
 
 	return render(request, "timeslot/timeslot.html")
+
+def get_special_reservation(request):
+
+	return render(request, "timeslot/special_reservation.html")

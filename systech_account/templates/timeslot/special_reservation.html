@@ -1,0 +1,100 @@
+{% extends "base.html" %} 
+{% load static %} 
+{% block ngapp %}ng-app="special_reservation"{% endblock %} 
+{% block ngctrl %}ng-controller="SpecialReservationCtrl as main"{% endblock %} 
+{% block title %}Special Reservation {% endblock %} {% block loader_js_bottom %}
+
+<script type="text/javascript" src="{% static 'js/special_reservation.js' %}"></script>
+{% endblock loader_js_bottom %} {% block page_header %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Special Reservation</h2>
+    </div>
+</div>
+{% endblock %} 
+
+{% block editable_css %}
+    <style type="text/css">
+        .hand_cursor {
+            cursor: pointer !important;
+        }
+
+        .hand_cursor:hover {
+            background-color: #E8E8E8 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content_body %}
+<div class="wrapper wrapper-content animated fadeIn" ng-cloak="">
+
+
+    <div class="ibox">
+
+        <div class="ibox-content m-b-sm border-bottom">
+            <button class="btn btn-primary btn-outline" ng-click="main.open_create_dialog()">Create</button>
+        </div>
+        
+    </div>
+
+    <div class="ibox">
+
+        <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
+            {% include "common/loader.html" %} 
+
+            <div class="row" ng-show="main.records.length == 0">
+                
+                <div class="col-lg-12">
+
+                    <h2><i class="fa fa-frown-o"></i> No Records Found</h2>
+                </div>
+
+            </div>
+
+            <div class="row" ng-show="main.records.length >= 1">
+                
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <thead>
+                            <th>Description</th>
+                            <th>Time Start</th>
+                            <th>Time End</th>
+                            <th>Days</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="record in main.records" class="hand_cursor" >
+                                <td ng-hide="true" >
+                                    <img alt="image" class="rounded-circle" style="width:35px; height:35px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'> {$ record.student.fullname $} 
+                                    <i class="fa fa-mars text-success" aria-hidden="true" ng-show="record.gender == 'Male'"></i>
+                                    <i class="fa fa-venus text-pink" aria-hidden="true" ng-show="record.gender == 'Female'"></i>
+                                </td>
+                                <td>
+                                    <p>{$ record.description $}</p>
+                                </td>
+                                <td ng-click="main.open_create_dialog(record, '{{request.user.user_type.name}}')" class="text-vertical-middle">{$ record.time_start | date : 'shortTime' $}</td>
+                                <td class="text-vertical-middle">{$ record.time_end | date : 'shortTime' $}</td>
+                                <td class="text-vertical-middle">
+                                    <span ng-show="record.has_monday">MON,</span>
+                                    <span ng-show="record.has_tuesday">TUE,</span>
+                                    <span ng-show="record.has_wednesday">WED,</span>
+                                    <span ng-show="record.has_thursday">THU,</span>
+                                    <span ng-show="record.has_friday">FRI,</span>
+                                    <span ng-show="record.has_saturday">SAT</span>
+                                </td>
+                                <td>
+                                    {% if request.user.user_type.name == 'Technical' %}
+                                    <button class="btn btn-danger btn-sm" ng-click="main.delete(record)">Delete</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <pagination></pagination>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

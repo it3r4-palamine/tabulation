@@ -8,7 +8,7 @@ from ..models.assessments import *
 from django.db.models import *
 from ..views.common import *
 import sys, traceback, os
-
+from utils.dict_types import * 
 
 def company_assessment(request):
 	return render(request, 'company_assessment/company_assessment.html')
@@ -44,7 +44,7 @@ def read(request):
 			
 		data = []
 		for record in records:
-			row = record.get_dict()
+			row = record.get_dict(dict_type=DEFAULT)
 			data.append(row)
 		results['data'] = data
 		return success_list(results,False)

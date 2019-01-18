@@ -120,7 +120,7 @@ def read_enrollees(request):
 		related = ["user", "company_rename", "school"]
 		programs = Enrollment.objects.filter(q_filters).select_related(*related).order_by("-code")
 		for program in programs:
-			row = program.get_dict(return_type = 1)
+			row = program.get_dict(dict_type = DEFAULT)
 			row["payments"] = list(program.get_payments())
 			records.append(row)
 
@@ -134,7 +134,7 @@ def read_enrollees(request):
 		return success_list(results, False)
 	except Exception as e:	
 		print e
-		# return error_response(request, e, show_line=True)
+		return error_response(request, e, show_line=True)
 
 def save_enrollment(request):
 	try:
