@@ -117,6 +117,7 @@ def read(request):
             row['grade_level']          = record.grade_level
             row['school']               = record.school
             row['description']          = record.description
+            row['rfid']                 = record.rfid
             if record.user_type:
                 row['user_type'] = record.user_type.get_dict()
             data.append(row)
