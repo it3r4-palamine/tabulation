@@ -34,8 +34,11 @@ urlpatterns = [
 
     url(r'^get_student_information/$', student.StudentInfo.as_view()),
 
+    url(r'^get_student/', student.get_student),
     url(r'^get_students/$', student.get_students),
     url(r'^get_students_with_information/$', student.get_students_with_information),
+
+
 
     url(r'^save_student_time_logs/$', student.save_student_time_logs),
 ]

@@ -220,6 +220,26 @@ def get_students(request):
         return error_http_response(str(e))
 
 @api_view(["POST"])
+def get_student(request):
+    try:
+    	data = extract_json_data(request)
+        results = {}
+        records = []
+
+        users = User.objects.filter(is_active=True,pk=data["student_id"])
+
+        for user in users:
+        	row = user.get_dict(dict_type=DEVICE)
+        	row["enrolled_programs"] = user.get_active_enrolled_programs()
+    		records.append(row)
+
+        results["records"] = records
+
+        return success_response(results)
+    except Exception as e:
+        return error_http_response(str(e))
+
+@api_view(["POST"])
 def get_students_with_information(request):
     try:
         results = {}
