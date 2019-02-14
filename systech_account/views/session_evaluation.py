@@ -33,6 +33,8 @@ def read_student_session(request, session_id):
 		records = []
 		filters = get_data(request)
 
+		print('here')
+
 		pagination = filters.pop("pagination",None)
 		sort_by = filters.pop("sort",None)
 
@@ -65,7 +67,8 @@ def read_student_session(request, session_id):
 			# if not request.user.is_staff:
 				# student_id = request.user.studentprofile.student.id
 				
-
+			print(filters)
+			search = filters.pop("search","")
 			name_search = filters.pop("name","")
 			session_timein = filters.pop("session_timein","")
 			session_timeout = filters.pop("session_timeout","")
@@ -73,10 +76,15 @@ def read_student_session(request, session_id):
 			filters = format_times(filters)
 			filters = convert_date_key(filters, "session_date")
 			filters = set_id(filters)
-			filters = filter_obj_to_q(filters)
+			# filters = filter_obj_to_q(filters)
+			print(name_search)
+			# print(filters)
+			if search:
+				print("ere")
+				q_filters = Q(student__fullname__icontains=search)
 
 			if session_timein and session_timeout:
-				filters &= Q(session_timein__range=[session_timein,session_timeout])
+				q_filters &= Q(session_timein__range=[session_timein,session_timeout])
 
 			if name_search:
 
@@ -87,14 +95,17 @@ def read_student_session(request, session_id):
 				firstname = words[0]
 				lastname = words[-1]
 
-			filters &= (Q(code__icontains=name_search) | Q(student__first_name__icontains=firstname) | Q(student__last_name__icontains=lastname))
-			filters &= Q(is_deleted=False)
+			q_filters &= (Q(code__icontains=name_search) | Q(student__first_name__icontains=firstname) | Q(student__last_name__icontains=lastname))
+			q_filters &= Q(is_deleted=False)
 
 			if student_id:
-				filters &= Q(student_id=student_id)
+				q_filters &= Q(student_id=student_id)
 
 			related = ["student","program"]
-			sessions = StudentSession.objects.filter(filters).select_related(*related).order_by("-id","-code")
+
+			print(q_filters)
+
+			sessions = StudentSession.objects.filter(q_filters).select_related(*related).order_by("-id","-code")
 
 			for session in sessions:
 				records.append(session.get_dict(return_type=DEFAULT))
