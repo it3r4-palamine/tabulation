@@ -29,6 +29,34 @@
             <button class="btn btn-outline btn-primary" ng-click="enrollment_dialog()">Add Enrollment</button>             
         </div>
 
+
+        <div class="ibox">
+
+            <div class="ibox-content m-b-sm border-bottom">
+                <div class="row">
+
+                    <div class="col-xs-4">
+                        <label>Search</label>
+                        <input type="text" ng-model="main.filters.search" name="search" placeholder="Search..." class="form-control" ng-enter="read_pagination()">
+                    </div>
+
+                    <div class="col-xs-4">
+                        <label>Date From</label>
+                        <input type="date" name="date_from" class="form-control" ng-model="main.filters.date_from">
+                    </div>
+                
+                    <div class="col-xs-4">
+                        <label>Date To</label>
+                        <input type="date" name="date_from" class="form-control" ng-model="main.filters.date_to">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+
         <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
             {% include "common/loader.html" %} 
             <div class="row">
@@ -49,9 +77,9 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="record in main.records" context-menu="main.menu_options(record)" class="hand_cursor" style="text-align: center;" ng-click="enrollment_dialog(record)">
-                                <td>{$ record.code $}</td>
-                                <td>{$ record.user.fullname $}</td>
-                                <td>{$ record.company_rename.name $}</td>
+                                <td class="text-left">{$ record.code $}</td>
+                                <td class="text-left">{$ record.user.fullname $}</td>
+                                <td class="text-left">{$ record.company_rename.name $}</td>
                                 <td>{$ record.session_credits_seconds | secondstoDuration $}</td>
                                 <td>{$ record.total_session_time $}</td>
                                 <td ng-class="{'text-red' : record.total_seconds_left < 0 }">{$ record.total_time_left $}</td>

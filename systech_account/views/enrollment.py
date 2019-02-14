@@ -65,6 +65,10 @@ def read_enrollees(request):
 		pagination = None
 
 		# Get Filters
+
+		print(filters)
+
+		search = filters.pop("search", "")
 		name_search = filters.pop("name_search", "")
 		student_id = filters.pop("student_id",None)
 		program_id = filters.pop("program_id",None)
@@ -74,11 +78,18 @@ def read_enrollees(request):
 		session_end_date = filters.pop("session_end_date","")
 		school_id = filters.pop("school_id",None)
 
+		name_search = search
+		print(search)
 		# Bad Code. There should be a boolean variable for pagination.
 		if "pagination" in filters:
 			pagination = filters.pop("pagination", None)
 			sort_by = filters.pop("sort", None)
+
+		if search:
+			q_filters = Q(user__fullname__icontains=search) | Q(user__first_name__icontains=search)
 		
+		print(search)
+
 		# Q Filters
 		q_filters = (Q(is_active=True) & Q(is_deleted=False) & Q(company=filters['company']))
 
@@ -118,6 +129,10 @@ def read_enrollees(request):
 		# Query
 		# Use select related to improve query speed.
 		related = ["user", "company_rename", "school"]
+
+		print(q_filters)
+
+
 		programs = Enrollment.objects.filter(q_filters).select_related(*related).order_by("-code")
 		for program in programs:
 			row = program.get_dict(dict_type = DEFAULT)
