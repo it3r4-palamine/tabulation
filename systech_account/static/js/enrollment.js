@@ -27,7 +27,6 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	CommonRead.get_company2($scope);
 	CommonRead.get_schools2($scope);
 
-
 	$scope.enrollment_dialog = function(enrollment, is_renew)
 	{
 		if(enrollment && !is_renew)
@@ -244,6 +243,11 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		$scope.enrollment_data.session_start_date = new Date();
 		$scope.enrollment_data.session_end_date = new Date(now.setDate(now.getDate() + 30));
 	};
+
+	self.set_date_filter = function()
+	{
+		self.filters.date_to = angular.copy(self.filters.date_from)
+	}
 
 
 	self.main_loader = function()

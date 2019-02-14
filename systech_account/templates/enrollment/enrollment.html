@@ -33,24 +33,40 @@
         <div class="ibox">
 
             <div class="ibox-content m-b-sm border-bottom">
+
                 <div class="row">
 
-                    <div class="col-xs-4">
+                    <div class="col-xs-3">
                         <label>Search</label>
                         <input type="text" ng-model="main.filters.search" name="search" placeholder="Search..." class="form-control" ng-enter="read_pagination()">
                     </div>
+                    
+                    <div class="col-xs-4">
+                        <label>Enrollment Date Filter</label>
+                        <p class="input-group">
+                                                        
+                            <input type="date" 
+                                    class="form-control" 
+                                    placeholder="Date from" 
+                                    ng-model="main.filters.date_from" 
+                                    ng-change="main.set_date_filter()"
+                                    />
 
-                    <div class="col-xs-4">
-                        <label>Date From</label>
-                        <input type="date" name="date_from" class="form-control" ng-model="main.filters.date_from">
-                    </div>
-                
-                    <div class="col-xs-4">
-                        <label>Date To</label>
-                        <input type="date" name="date_from" class="form-control" ng-model="main.filters.date_to">
+                            <span class="input-group-addon" style="background-color: #e7eaec; ">to</span>
+                            
+                            <input type="date" 
+                                    class="form-control" 
+                                    placeholder="Date to" 
+                                    ng-model="main.filters.date_to" 
+                                     />
+
+                            <span class="input-group-addon hand_cursor" ng-click="read_pagination();"><i class="fa fa-search"></i></span>
+                        </p>
+
                     </div>
 
                 </div>
+                
             </div>
         </div>
         
