@@ -460,6 +460,11 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		});
 	};
 
+	self.set_date_filter = function()
+	{
+		self.filters.date_to = angular.copy(self.filters.date_from)
+	}
+
 	me.menu_options = function (record) {
 	    me.context_id = record.id;
 	    return RightClick.get_menu(me,record)

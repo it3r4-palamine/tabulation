@@ -14,7 +14,7 @@ from utils.response_handler import *
 from utils.view_utils import * 
 from ..forms.session import *
 from .common import *
-import datetime
+from datetime import *
 import sys, traceback, os
 
 
@@ -69,6 +69,8 @@ def read_student_session(request, session_id):
 				
 			print(filters)
 			search = filters.pop("search","")
+			date_from = filters.pop("date_from", None)
+			date_to = filters.pop("date_to", None)
 			name_search = filters.pop("name","")
 			session_timein = filters.pop("session_timein","")
 			session_timeout = filters.pop("session_timeout","")
@@ -79,6 +81,8 @@ def read_student_session(request, session_id):
 			# filters = filter_obj_to_q(filters)
 			print(name_search)
 			# print(filters)
+			q_filters = Q()
+
 			if search:
 				print("ere")
 				q_filters = Q(student__fullname__icontains=search)
@@ -100,6 +104,11 @@ def read_student_session(request, session_id):
 
 			if student_id:
 				q_filters &= Q(student_id=student_id)
+
+			if date_from and date_to:
+				dfrom = datetime.strptime(date_from, "%Y-%m-%d")
+				dto = datetime.strptime(date_to, "%Y-%m-%d")
+				q_filters &= (Q(session_date__range = [dfrom, dto]))
 
 			related = ["student","program"]
 
