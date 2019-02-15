@@ -92,8 +92,8 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="student_session in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(student_session,false)">
-                                <td>{$ student_session.code $}</td>
-                                <td>{$ student_session.student_full_name $}</td>
+                                <td class="text-left">{$ student_session.code $}</td>
+                                <td class="text-left">{$ student_session.student_full_name $}</td>
                                 <td>{$ student_session.session_date | date : "MM/dd/yyyy" $}</td>
                                 <td>{$ student_session.session_timein | dateInMillis | date: "hh:mm a" $} 
                                     - {$ student_session.session_timeout | dateInMillis | date: "hh:mm a" $}</td>

@@ -220,6 +220,33 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		})
 	};
 
+	self.display_existing_sessions = function()
+	{
+		self.open_dialog("/get_dialog/session_evaluation/session_list_dialog", "second_dialog dialog_height_100 dialog_weight_50")
+	}
+
+	self.check_for_existing_session = function()
+	{
+
+		if(self.session.id)
+		{
+			return;
+		}
+
+		var filters = {
+			"enrollment_id" : self.session.program.enrollment_id,
+			"session_date": self.session.session_date
+		}
+
+		$http.post('/student_sessions/read_student_session/' + self.session.student.id, filters)
+			.success(function(response){
+				self.existing_sessions = response;
+				if (response.length > 0){
+					self.display_existing_sessions();
+				}
+			})
+	}
+
 	self.save_session = function(datus, save_opt)
 	{
 
@@ -252,6 +279,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 				self.close_dialog();
 				init_student_session();
 				self.set_date_and_time();
+				self.main_loader();
 				success_notif_link(message, session, false);
 				break;
 			case "new":

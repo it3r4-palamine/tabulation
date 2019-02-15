@@ -45,7 +45,8 @@ def read_student_session(request, session_id):
 			else:
 				filters = format_dates(filters)
 				results = []
-				add_common_filters(filters)
+				filters["is_deleted"] = False
+				# add_common_filters(filters)
 
 				sessions = StudentSession.objects.filter(**filters)
 
