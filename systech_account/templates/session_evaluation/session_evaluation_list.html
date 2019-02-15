@@ -97,7 +97,7 @@
                                 <td>{$ student_session.session_date | date : "MM/dd/yyyy" $}</td>
                                 <td>{$ student_session.session_timein | dateInMillis | date: "hh:mm a" $} 
                                     - {$ student_session.session_timeout | dateInMillis | date: "hh:mm a" $}</td>
-                                <td>{$ student_session.program_name $}</td>
+                                <td class="text-left">{$ student_session.program_name $}</td>
                                 <td><span ng-class="{ 'text-red' : student_session.time_remaining <= 900  }">{$ student_session.time_remaining | secondsDuration : "hh:mm" $}</span></td>
                             </tr>
                         </tbody>
