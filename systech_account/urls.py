@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^dashboard/read_monthly_session_created/$', dashboard.read_monthly_session_created),
     url(r'^dashboard/unenrolled_sessions_graph/$', dashboard.unenrolled_sessions_graph),
     url(r'^dashboard/read_student_birthdate/$', dashboard.read_student_birthdate),
+    url(r'^dashboard/read_timeslot_summary/$', dashboard.read_timeslot_summary),
 
 	url(r'^assessments/$', assessments.home, name='home'),
 	url(r'^assessments/create_dialog/$', assessments.create_dialog),

@@ -30,6 +30,107 @@
 <div class="wrapper wrapper-content animated fadeIn" ng-cloak="">
 
     <div class="row">
+        
+        <div class="col-xs-12">
+            
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Time Slot</h5>
+                </div>
+
+                <div class="ibox-content" layout="ibox-content"  ng-class="ctrl.page_loader.main2 ? 'sk-loading' : ''">
+                    {% include "common/loader.html" %}
+
+                    <table class="table table-bordered">
+                        <thead>
+                            
+                            <tr>
+                                <th>Monday</th>
+                                <th>Tuesday</th>
+                                <th>Wednesday</th>
+                                <th>Thursday</th>
+                                <th>Friday</th>
+                                <th>Saturday</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            <tr ng-repeat="timeslot in ctrl.timeslots">
+
+                                <td ng-if="!timeslot.timeslot.has_monday"></td>
+                                <td ng-if="timeslot.timeslot.has_monday">
+                                    {$ timeslot.name $} 
+                                    <br>
+                                    {$ timeslot.student.fullname $}
+                                    <br>
+                                    <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
+                                    <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
+                                </td>
+                                
+                                <td ng-if="!timeslot.timeslot.has_tuesday"></td>
+                                <td ng-if="timeslot.timeslot.has_tuesday">
+                                    {$ timeslot.name $} 
+                                    <br>
+                                    {$ timeslot.student.fullname $}
+                                    <br>
+                                    <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
+                                    <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
+                                </td>
+
+                                <td ng-if="!timeslot.timeslot.has_wednesday"></td>
+                                <td ng-if="timeslot.timeslot.has_wednesday">
+                                    {$ timeslot.name $} 
+                                    <br>
+                                    {$ timeslot.student.fullname $}
+                                    <br>
+                                    <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
+                                    <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
+                                </td>
+
+                                <td ng-if="!timeslot.timeslot.has_thursday"></td>
+                                <td ng-if="timeslot.timeslot.has_thursday">
+                                    {$ timeslot.name $} 
+                                    <br>
+                                    {$ timeslot.student.fullname $}
+                                    <br>
+                                    <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
+                                    <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
+                                </td>
+
+                                <td ng-if="!timeslot.timeslot.has_friday"></td>
+                                <td ng-if="timeslot.timeslot.has_friday">
+                                    {$ timeslot.name $} 
+                                    <br>
+                                    {$ timeslot.student.fullname $}
+                                    <br>
+                                    <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
+                                    <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
+                                </td>
+                                
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+
+                   
+                    
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="row">
 
         <div class="col-xs-6">
             <div class="ibox float-e-margins">

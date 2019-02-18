@@ -135,6 +135,7 @@ class Enrollment(models.Model):
         instance['enrollment_id'] = self.id
         instance['name'] = self.company_rename.name
         instance["remaining_credit"] = format_time_consumed(self.get_remaining_credit())
+        instance["timeslot"] = self.timeslot.get_dict() if self.timeslot else None
 
         return instance
 

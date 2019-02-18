@@ -3,7 +3,7 @@ from utils.date_handler import *
 from ..models import *
 from ..models import Enrollment, StudentSession
 from utils.global_variables import *
-
+from ..views.program import *
 
 def read_student_status(request):
 	try:
@@ -256,5 +256,24 @@ def unenrolled_sessions_graph(request):
 		result["graph_data"] = graph_data
 		result["session_list"] = session_list
 		return success(result)
+	except Exception as e:
+		return error(e)
+
+def read_timeslot_summary(request):
+	try:
+
+		enrolled_students_active = read_enrolled_programs(request, from_api=True, has_user=False)
+		print('=====================')
+		print(enrolled_students_active)
+		print('=====================')
+
+		for enrolled_student in enrolled_students_active["records"]:
+			print(enrolled_student)
+
+
+		results = { "records" : enrolled_students_active["records"] }
+
+
+		return success_list(results, False)
 	except Exception as e:
 		return error(e)

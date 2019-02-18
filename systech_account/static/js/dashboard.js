@@ -25,6 +25,28 @@ angular.module("dashboard", ['common_module', 'common_config', 'angular-flot', '
        	},
 	};
 
+	self.read_timeslot_summary = function()
+	{
+		var response = self.post_generic("/dashboard/read_timeslot_summary/", null, "main", true)
+
+		response.success(function(response){
+			console.log(response)
+			self.timeslots = response.records
+
+			for(var i in self.timeslots)
+			{
+				var data = self.timeslots[i]
+				console.log(data)
+				self.timeslots[i].timeslot.time_start = new Date(data.timeslot.time_start);
+				self.timeslots[i].timeslot.time_end = new Date(data.timeslot.time_end);
+				console.log(self.timeslots[i].time_end)
+			}
+
+		});
+	}
+
+	self.read_timeslot_summary();
+
 
 	self.read_student_status = function()
 	{
