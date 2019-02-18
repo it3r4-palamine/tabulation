@@ -36,10 +36,11 @@ angular.module("dashboard", ['common_module', 'common_config', 'angular-flot', '
 			for(var i in self.timeslots)
 			{
 				var data = self.timeslots[i]
-				console.log(data)
-				self.timeslots[i].timeslot.time_start = new Date(data.timeslot.time_start);
-				self.timeslots[i].timeslot.time_end = new Date(data.timeslot.time_end);
-				console.log(self.timeslots[i].time_end)
+				if (data.timeslot)
+				{
+					self.timeslots[i].timeslot.time_start = new Date(data.timeslot.time_start);
+					self.timeslots[i].timeslot.time_end = new Date(data.timeslot.time_end);
+				}
 			}
 
 		});
