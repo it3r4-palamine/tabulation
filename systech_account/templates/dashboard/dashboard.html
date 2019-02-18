@@ -107,6 +107,16 @@
                                     <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
                                     <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
                                 </td>
+
+                                <td ng-if="!timeslot.timeslot.has_saturday"></td>
+                                <td ng-if="timeslot.timeslot.has_saturday">
+                                    {$ timeslot.name $} 
+                                    <br>
+                                    {$ timeslot.student.fullname $}
+                                    <br>
+                                    <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
+                                    <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
+                                </td>
                                 
                             </tr>
 
