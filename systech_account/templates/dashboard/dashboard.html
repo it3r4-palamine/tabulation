@@ -41,6 +41,16 @@
                 <div class="ibox-content" layout="ibox-content"  ng-class="ctrl.page_loader.main2 ? 'sk-loading' : ''">
                     {% include "common/loader.html" %}
 
+                    <div class="row">
+
+                        <div class="col-xs-4">
+                            <input type="text" ng-model="timeslot_search" class="form-control" placeholder="Search...">
+                        </div>
+
+                    </div>
+
+                    <br>
+
                     <table class="table table-bordered">
                         <thead>
                             
@@ -56,66 +66,66 @@
                         </thead>
                         <tbody>
 
-                            <tr ng-repeat="timeslot in ctrl.timeslots">
+                            <tr ng-repeat="timeslot in ctrl.timeslots | filter : timeslot_search ">
 
                                 <td ng-if="!timeslot.timeslot.has_monday"></td>
                                 <td ng-if="timeslot.timeslot.has_monday">
-                                    {$ timeslot.name $} 
+                                    <span ng-bind-html="timeslot.name | highlight: timeslot_search"></span>
                                     <br>
-                                    {$ timeslot.student.fullname $}
+                                    <span ng-bind-html="timeslot.student.fullname | highlight: timeslot_search"></span>
                                     <br>
-                                    <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
-                                    <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
+                                    <span ng-bind-html="timeslot.timeslot.time_start | date : 'shortTime' | highlight: timeslot_search"></span> -
+                                    <span ng-bind-html="timeslot.timeslot.time_end   | date : 'shortTime' | highlight: timeslot_search"></span>
                                 </td>
                                 
                                 <td ng-if="!timeslot.timeslot.has_tuesday"></td>
                                 <td ng-if="timeslot.timeslot.has_tuesday">
-                                    {$ timeslot.name $} 
+                                    <span ng-bind-html="timeslot.name | highlight: timeslot_search"></span>
                                     <br>
-                                    {$ timeslot.student.fullname $}
+                                    <span ng-bind-html="timeslot.student.fullname | highlight: timeslot_search"></span>
                                     <br>
-                                    <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
-                                    <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
+                                    <span ng-bind-html="timeslot.timeslot.time_start | date : 'shortTime' | highlight: timeslot_search"></span> -
+                                    <span ng-bind-html="timeslot.timeslot.time_end   | date : 'shortTime' | highlight: timeslot_search"></span>
                                 </td>
 
                                 <td ng-if="!timeslot.timeslot.has_wednesday"></td>
                                 <td ng-if="timeslot.timeslot.has_wednesday">
-                                    {$ timeslot.name $} 
+                                    <span ng-bind-html="timeslot.name | highlight: timeslot_search"></span>
                                     <br>
-                                    {$ timeslot.student.fullname $}
+                                    <span ng-bind-html="timeslot.student.fullname | highlight: timeslot_search"></span>
                                     <br>
-                                    <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
-                                    <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
+                                    <span ng-bind-html="timeslot.timeslot.time_start | date : 'shortTime' | highlight: timeslot_search"></span> -
+                                    <span ng-bind-html="timeslot.timeslot.time_end   | date : 'shortTime' | highlight: timeslot_search"></span>
                                 </td>
 
                                 <td ng-if="!timeslot.timeslot.has_thursday"></td>
                                 <td ng-if="timeslot.timeslot.has_thursday">
-                                    {$ timeslot.name $} 
+                                    <span ng-bind-html="timeslot.name | highlight: timeslot_search"></span>
                                     <br>
-                                    {$ timeslot.student.fullname $}
+                                    <span ng-bind-html="timeslot.student.fullname | highlight: timeslot_search"></span>
                                     <br>
-                                    <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
-                                    <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
+                                    <span ng-bind-html="timeslot.timeslot.time_start | date : 'shortTime' | highlight: timeslot_search"></span> -
+                                    <span ng-bind-html="timeslot.timeslot.time_end   | date : 'shortTime' | highlight: timeslot_search"></span>
                                 </td>
 
                                 <td ng-if="!timeslot.timeslot.has_friday"></td>
                                 <td ng-if="timeslot.timeslot.has_friday">
-                                    {$ timeslot.name $} 
+                                    <span ng-bind-html="timeslot.name | highlight: timeslot_search"></span>
                                     <br>
-                                    {$ timeslot.student.fullname $}
+                                    <span ng-bind-html="timeslot.student.fullname | highlight: timeslot_search"></span>
                                     <br>
-                                    <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
-                                    <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
+                                    <span ng-bind-html="timeslot.timeslot.time_start | date : 'shortTime' | highlight: timeslot_search"></span> -
+                                    <span ng-bind-html="timeslot.timeslot.time_end   | date : 'shortTime' | highlight: timeslot_search"></span>
                                 </td>
 
                                 <td ng-if="!timeslot.timeslot.has_saturday"></td>
                                 <td ng-if="timeslot.timeslot.has_saturday">
-                                    {$ timeslot.name $} 
+                                    <span ng-bind-html="timeslot.name | highlight: timeslot_search"></span>
                                     <br>
-                                    {$ timeslot.student.fullname $}
+                                    <span ng-bind-html="timeslot.student.fullname | highlight: timeslot_search"></span>
                                     <br>
-                                    <span>{$ timeslot.timeslot.time_start | date : 'shortTime' $}</span> -
-                                    <span>{$ timeslot.timeslot.time_end | date : 'shortTime' $}</span>
+                                    <span ng-bind-html="timeslot.timeslot.time_start | date : 'shortTime' | highlight: timeslot_search"></span> -
+                                    <span ng-bind-html="timeslot.timeslot.time_end   | date : 'shortTime' | highlight: timeslot_search"></span>
                                 </td>
                                 
                             </tr>

@@ -261,18 +261,16 @@ def unenrolled_sessions_graph(request):
 
 def read_timeslot_summary(request):
 	try:
-
+		results                  = { "records" : [] }
+		records                  = []
+		enrolled_students_active = []
 		enrolled_students_active = read_enrolled_programs(request, from_api=True, has_user=False)
-		print('=====================')
-		print(enrolled_students_active)
-		print('=====================')
 
 		for enrolled_student in enrolled_students_active["records"]:
-			print(enrolled_student)
+			if enrolled_student["timeslot"]:
+				records.append(enrolled_student)
 
-
-		results = { "records" : enrolled_students_active["records"] }
-
+		results["records"] = records
 
 		return success_list(results, False)
 	except Exception as e:
