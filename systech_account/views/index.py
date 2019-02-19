@@ -128,3 +128,7 @@ def register(request):
 		return success("Successfully created!")
 	else:
 		return redirect("loginpage")
+
+
+def get_questions_page(request):
+	return render(request, "questions/questions.html")

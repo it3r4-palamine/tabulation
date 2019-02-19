@@ -212,6 +212,11 @@ urlpatterns = [
     url(r'^print_forms/get_enrollment_document/$', print_forms.get_enrollment_document),
 
 
+    ### Math Online Module
+    url(r'^questions/$', index.get_questions_page), 
+
+
+
 
 ]
 urlpatterns += static(root_settings.STATIC_URL,document_root=root_settings.STATIC_ROOT)

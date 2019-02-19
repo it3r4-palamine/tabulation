@@ -1,0 +1,152 @@
+{% load staticfiles %}
+<div class="modal-header">
+    
+    <div class="row">
+        <div class="col-sm-5">
+            <h3 style="margin:10px">Student Session No. {$ main.session.code $} <span ng-show="!main.session.id" style="color: #18A689">(New)</span></h3>
+        </div>
+
+        <div class="col-sm-7">
+            <div class="pull-right">
+                <button class="btn btn-sm btn-link" ng-click="main.save_session(main.session, 'open')">
+                    <i class="fa fa-save dialog-button" class="dialog-button"></i>
+                    <span>Save</span>
+                </button>
+
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" >
+                        <i class="fa fa-save dialog-button" class="dialog-button" style="width: 10px; float: left; margin-left: 25px;"></i>
+                        <i class="fa fa-angle-down dialog-button" class="dialog-button" style="width: -10px; font-size: 2em; padding-top: 8px; margin-bottom: 5px;"></i>
+                        <span>More Saving Options</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="" ng-click="main.save_session(main.session, 'close')">Save and Close</a></li>
+                        <li><a href="" ng-click="main.save_session(main.session, 'new')">Save and New</a></li>
+                        <li><a href="" ng-click="main.save_session(main.session, 'print')">Save and Print</a></li>
+                        <li ng-show="main.session.id"><a href="" ng-click="main.print_student_session(main.session)">Print</a></li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-sm btn-link" ng-click="main.confirm_close_dialog()">
+                    <i class="fa fa-times-circle dialog-button"></i>
+                    <span>Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div cclass="modal-body">
+    <div class="ibox-content no-padding-top gray-bg" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+    {% include "common/loader.html" %}
+        <form class="form-horizontal" name="form">
+            
+        </form>
+
+        <form>
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <!-- <h5>Total Payment ({$ main.total_payment | currency $})</h5> -->
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="ibox-content">
+                    <div class="feed-activity-list">
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Exercise</th>
+                                    <th>Set No.</th>
+                                    <th>Score</th>
+                                    <th>Trainer Note</th>
+                                    <th>Facilitated By</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                 <tr ng-repeat="exercise in main.session.session_exercises track by $index">
+
+                                    <td class="col-sm-1">
+                                              <ui-select ng-model="exercise.exercise">>
+                                                <ui-select-match placeholder="{$ transaction_types[0] ? 'Select...' : 'Please wait...' $}">{$ $select.selected.name $}</ui-select-match>
+                                                <ui-select-choices repeat="transaction_type in transaction_types | filter: $select.search | limitTo:50">
+                                                    <span ng-bind-html="transaction_type.name | highlight: $select.search"></span>
+                                                     <div ng-bind-html="transaction_type.exercise_name_code | highlight: $select.search"></div>
+                                                    <small>Set No : {$ transaction_type.set_no $}</small>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                    </td>
+                                    <td width="1%" style="text-align: center; vertical-align: middle;">
+                                        <span>{$ exercise.exercise.set_no $}</span>
+                                    </td>
+                                    <td class="col-sm-1">
+                                        <form class="form-horizontal" name="form">
+                                            <input name="score"
+                                                    ng-model="exercise.score"
+                                                    class="form-control text-center"
+                                                    ng-class="{ 'text-red' : exercise.score > exercise.transaction_type.total_items }"
+                                                    type="number"
+                                                    min="0"
+                                                    placeholder="Max ({$ exercise.transaction_type.total_items $})"
+                                                    require="false">
+                                            <div class="m-t-xs" ng-show="exercise.score.$invalid && exercise.score.$dirty">
+                                                <small class="text-danger">Max Score({$ exercise.exercise.total_items $})</small>
+                                            </div>
+                                        </form>
+                                    </td>
+                                    <td class="col-sm-1">
+                                        <ui-select name="note" ng-model="exercise.trainer_note" require="false">
+                                            <ui-select-match>{$ $select.selected.name $}</ui-select-match>
+                                            <ui-select-choices repeat="trainer_note in main.trainers_notes | filter: $select.search | limitTo:50 | orderBy:'name'">
+                                                <div ng-bind-html="trainer_note.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </td>
+                                    <td class="col-sm-1">
+                                        <ui-select ng-model="exercise.facilitated_by" required>
+                                            <ui-select-match placeholder="Select...">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <img alt="image" class="rounded-circle" style="width:18px; height:18px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
+                                                        <span>{$ $select.selected.fullname $}</span> 
+                                                    </div>
+                                                </div>
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="facilitator in main.facilitators | filter: $select.search | limitTo:50">
+
+                                                <div class="row">
+                                                    <div class="col-xs-2">
+                                                        <img alt="image" class="rounded-circle" style="width:38px; height:38px; margin-left: 5px; margin-right: 2px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
+                                                    </div>
+                                                    <div class="col-xs-10">
+                                                        <span ng-bind-html="facilitator.fullname | highlight: $select.search"></span> 
+                                                        <p ng-bind-html="facilitator.user_type.name | highlight: $select.search"></p>
+                                                    </div>
+                                                </div>
+
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </td>
+                                    <td width="1%" style="text-align: center;">
+                                        <button type="button" class="btn btn-sm btn-circle btn-danger" ng-click="main.delete_session_excercise(exercise)"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <a ng-click="main.add_session_exercise(true)" style="text-decoration:underline">Add New Line</p>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<div class="modal-footer">
+</div>
