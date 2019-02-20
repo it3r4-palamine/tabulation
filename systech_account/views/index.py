@@ -132,3 +132,6 @@ def register(request):
 
 def get_questions_page(request):
 	return render(request, "questions/questions.html")
+
+def get_subjects_page(request):
+	return render(request, "subjects/subject.html")

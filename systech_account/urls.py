@@ -3,7 +3,7 @@ from django.conf.urls import url, handler404,patterns,include
 from django.conf import settings as root_settings
 from django.conf.urls.static import static
 
-from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs,enrollment,payment_reports,student_reports,session_evaluation, program,print_forms, dashboard, html_router, timeslot
+from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs,enrollment,payment_reports,student_reports,session_evaluation, program,print_forms, dashboard, html_router, timeslot, subject
 
 urlpatterns = [
 	url(r'^common/pagination/$',common.pagination),
@@ -214,6 +214,12 @@ urlpatterns = [
 
     ### Math Online Module
     url(r'^questions/$', index.get_questions_page), 
+    url(r'^subjects/$', index.get_subjects_page),
+    
+    url(r'^subjects/create/$', subject.create),
+    url(r'^subjects/read/$', subject.read),
+
+
 
 
 

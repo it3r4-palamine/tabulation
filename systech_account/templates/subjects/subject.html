@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
-{% block ngapp %}ng-app="questions"{% endblock %}
-{% block ngctrl %}ng-controller="QuestionCtrl as main"{% endblock %} 
-{% block title %} Questions {% endblock %} 
+{% block ngapp %}ng-app="subject"{% endblock %}
+{% block ngctrl %}ng-controller="SubjectCtrl as main"{% endblock %} 
+{% block title %} Subjects {% endblock %} 
 
 {% block loader_js_bottom %}
-<script type="text/javascript" src="{% static 'js/questions/question_controller.js'%}?ver=1"></script>
+<script type="text/javascript" src="{% static 'js/subjects/subject_controller.js'%}?ver=1"></script>
 {% endblock loader_js_bottom %} {% block page_header %}
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <h2>Questions</h2>
+        <h2>Subjects</h2>
     </div>
 </div>
 {% endblock %} 
@@ -31,7 +31,7 @@
     <div class="ibox">
 
         <div class="ibox-title">
-            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_session()">Add Question</button>             
+            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_session()">Add Subject</button>             
         </div>
 
         <div class="ibox">
@@ -82,23 +82,14 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Reference No</th>
-                                <th>Student Name</th>
-                                <th>Session Date</th>
-                                <th>Session Duration</th>
-                                <th>Program</th>
-                                <th>Time Remaining</th>
+                                <th>Subject</th>
+                                <th>Description</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="student_session in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(student_session,false)">
-                                <td class="text-left">{$ student_session.code $}</td>
-                                <td class="text-left">{$ student_session.student_full_name $}</td>
-                                <td>{$ student_session.session_date | date : "MM/dd/yyyy" $}</td>
-                                <td>{$ student_session.session_timein | dateInMillis | date: "hh:mm a" $} 
-                                    - {$ student_session.session_timeout | dateInMillis | date: "hh:mm a" $}</td>
-                                <td class="text-left">{$ student_session.program_name $}</td>
-                                <td><span ng-class="{ 'text-red' : student_session.time_remaining <= 900  }">{$ student_session.time_remaining | secondsDuration : "hh:mm" $}</span></td>
+                                <td class="text-left">{$ student_session.name $}</td>
+                                <td class="text-left">{$ student_session.description $}</td>
                             </tr>
                         </tbody>
                     </table>

@@ -1,0 +1,67 @@
+{% load staticfiles %}
+<div class="modal-header">
+    
+    <div class="row">
+        <div class="col-sm-5">
+            <h3 style="margin:10px">Subject <span ng-show="!main.record.id" style="color: #18A689">(New)</span></h3>
+        </div>
+
+        <div class="col-sm-7">
+            <div class="pull-right">
+                <button class="btn btn-sm btn-link" ng-click="main.save_session(main.record, 'open')">
+                    <i class="fa fa-save dialog-button" class="dialog-button"></i>
+                    <span>Save</span>
+                </button>
+
+                <button class="btn btn-sm btn-link" ng-click="main.confirm_close_dialog()">
+                    <i class="fa fa-times-circle dialog-button"></i>
+                    <span>Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div cclass="modal-body">
+    <div class="ibox-content no-padding-top gray-bg" ng-class="main.page_loader.dialog ? 'sk-loading' : ''" ng-style="modal_style">
+    {% include "common/loader.html" %}
+        <form class="form-horizontal" name="form">
+            
+        </form>
+
+        <form>
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="ibox-content">
+                    
+                    <div class="row">
+                        
+                        <div class="col-xs-6">
+                            <label>Name</label>
+                            <input type="text" ng-model="main.record.name" class="form-control">
+                        </div>
+                        <div class="col-xs-6">
+                            <label>Description</label>
+                            <input type="text" ng-model="main.record.description" class="form-control">
+                        </div>
+
+                    </div>
+
+
+                </div>
+                
+               
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<div class="modal-footer">
+</div>
