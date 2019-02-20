@@ -11,6 +11,6 @@ from systech_account.models.enrollment import *
 from systech_account.models.payment import *
 from systech_account.models.session import *
 from systech_account.models.timeslot import *
-from systech_account.models.common import *
+from systech_account.models.common_model import *
 from systech_account.models.subject import *
 from systech_account.models.question import *
