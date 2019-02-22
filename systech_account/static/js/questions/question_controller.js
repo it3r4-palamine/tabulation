@@ -20,8 +20,7 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 		if (record)
 		{
 			self.record = angular.copy(record);
-
-
+			self.get_record(record);
 
 
 		} else {
@@ -54,7 +53,7 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 	{
 		self.record.question_choices = self.question_choices;
 
-		self.post_api('/questions/create/', record, null, false, null, false)
+		self.post_api('question/create/', record, null, false, null, false)
 			.success(function(response){
 				self.main_loader();
 			}).error(function(response){
@@ -67,12 +66,13 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 		return true;
 	};
 
-	self.read_record = function(record)
+	self.get_record = function(record)
 	{
-		let response = self.post_api("/questions/read_questions/" + record.uuid);
+		let response = self.get_api("question/get/" + record.uuid + "/");
 
 		response.success(function(response){
-			Notification.success("Pogi")
+			self.record = response;
+			self.question_choices = response.question_choices;
 		})
 	};
 
@@ -88,7 +88,7 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 		self.pagination["limit"] = 20;
 		filters["pagination"] = self.pagination;
 
-		var post = self.post_generic("/questions/read_questions/", filters, "main");
+		var post = self.post_api("question/read/", filters, "main");
 		post.success(function(response){
 			self.records = response.records;
 			self.generate_pagination(self,response,"records");

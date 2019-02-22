@@ -1,10 +1,9 @@
 from django.conf.urls import url
-from api.views import question, download_data, login
-from api.controllers import answers, users
-from api.controllers import student
+from api.views import questionapiview, download_data, login, answers, student, users
 
 urlpatterns = [
-    url(r'^api-auth', login.ObtainAuthToken.as_view()), # Refactor
+
+    url(r'^api-auth', login.ObtainAuthToken.as_view()),
     url(r'^get-data', login.GetData.as_view()),
     url(r'^sync-assessments', login.SyncAssessments.as_view()),
     url(r'^file-upload/', login.FileUpload.as_view()),
@@ -37,11 +36,12 @@ urlpatterns = [
     url(r'^get_students_with_information/$', student.get_students_with_information),
 
 
-
     url(r'^save_student_time_logs/$', student.save_student_time_logs),
 
 
-    url(r'^question/create/$', question.Question.as_view()),
+    url(r'^question/create/$', questionapiview.QuestionAPIView.as_view()),
+    url(r'^question/get/(?P<uuid>[\w\-]+)/$', questionapiview.QuestionAPIView.as_view()),
+    url(r'^question/read/$', questionapiview.read_questions),
 
 
 ]

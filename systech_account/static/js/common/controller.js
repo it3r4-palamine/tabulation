@@ -1,30 +1,23 @@
-var app = angular.module("common_controller",[]).controller('CommonCtrl', function($scope,$http,$uibModal,$uibModalStack,$templateCache,CommonFunc,SweetAlert,toastr,Notification){
+var app = angular.module("common_controller",[]).controller('CommonCtrl', function($scope,$http,$uibModal,$uibModalStack,$templateCache,CommonFunc,SweetAlert,toastr,Notification,configSettings){
 	var me = this;
 	me.current_dialogs = []
 	me.page_loader = {"main" : false,"dialog" : false};
 	me.resizeMode = "BasicResizer";
 	me.controls = {"dynamic_columns": true,"advance_filters": true}
 	me.no_dynamic_columns = []
-	me.no_advance_filters = ["accounts","supplier","customer","employee","manage_company"]
-	// me.no_export = ["manage_company"]
 	me.uibdates = {}
 
-	// $(window).load(function () {
-	// 	$("#disney").load(function() {
-	// 	  $('#disney').loadgo();
-	// 	}).each(function() {
-	// 	  if(this.complete) $(this).load();
-	// 	});
-	// })
+
+	let baseUrl = configSettings.baseUrl;
 
 	me.update_default_columns = function(scope){
 		$http.post("/common/update_default_columns/"+scope.current_module,scope.columns);
-	}
+	};
 
 	me.open_date = function(key){
 		if(!key){key='date';}
 		me.uibdates[key] = true;
-	}
+	};
 
 	me.sort_default = function(){
 		default_sort_key = {
@@ -32,14 +25,14 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
 			"customers" : "code",
 			"inventory" : "code",
 			"inventory_cost_history_details" : "receive_inventory__date",
-		}
+		};
 
 		key = "id";
 		if(default_sort_key[$scope.module_code] !== undefined){
 			key = default_sort_key[$scope.module_code];
 		}
 		return key;
-	}
+	};
 
 	me.export = function(url,filters,fields,current_module){
 		if(!fields){
@@ -209,6 +202,39 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
 			}
 
 			if (notify) Notification.error(response);
+		})
+	};
+
+	me.get_api = function(url, params, loader_key, notify, assign_response, close_dialog){
+		if (loader_key) me.page_loader[loader_key] = true;
+		if (!params) params = {};
+
+		let absoluteUrl = baseUrl + url;
+		let api_token = me.apiToken = document.querySelector('input[name="token"]').getAttribute('value');
+
+		options = {
+			headers : {
+				"Authorization" : "Token " + api_token
+			},
+			params : params
+
+		};
+
+		return $http.get(absoluteUrl, options).success(function(response){
+			if (loader_key) me.page_loader[loader_key] = false;
+			if (assign_response) me[assign_response] = response; //not working
+			if (close_dialog) me.close_dialog();
+		}).error(function(response, status){
+			if (loader_key) me.page_loader[loader_key] = false;
+			if (status == -1)
+			{
+				if(notify) Notification.error("Can't Connect to Server.");
+				return;
+			}
+			if (status == 404 || status == 500){
+				if(notify) Notification.error("Connection error. Please contact administrator.");
+				return;
+			}
 		})
 	};
 

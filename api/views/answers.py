@@ -1,4 +1,4 @@
-from ..serializers import *
+from api.serializers import *
 
 from django.db.models import *
 
