@@ -34,7 +34,7 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 
 	self.add_question_choices = function(data)
 	{
-		self.question_choices.push({ name: '' });
+		self.question_choices.push({ name: '' , is_correct : false });
 	};
 
 	self.delete_question_choices = function(record){
@@ -45,7 +45,7 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 
 		self.record = {};
 		self.question_choices = [];
-		self.question_choices.push( { name: '', is_correct : false })
+		self.question_choices.push( { name: '', is_correct : false, options: false})
 
 	};
 
@@ -53,16 +53,19 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 	{
 		self.record.question_choices = self.question_choices;
 
-		self.post_api('question/create/', record, null, false, null, false)
+		self.post_api('question/create/', record, null, true, null, false)
 			.success(function(response){
+				self.close_dialog();
 				self.main_loader();
 			}).error(function(response){
-				Notification.error(response)
 			})
 	};
 
 	self.validate_record = function(data)
 	{
+
+
+
 		return true;
 	};
 
@@ -102,6 +105,7 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 	self.main_loader = function(){ self.read_pagination(); };
 
 	CommonRead.get_question_types(self);
+	CommonRead.get_subjects(self);
 
 	self.main_loader();
 });

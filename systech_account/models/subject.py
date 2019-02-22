@@ -1,6 +1,7 @@
 from .common_model import *
 from utils import dict_types
 
+
 class Subject(CommonModel):
 
 	class Meta:
@@ -10,12 +11,13 @@ class Subject(CommonModel):
 	def __str__(self):
 		return self.name
 
-	def get_dict(self):
+	def get_dict(self, dict_type = dict_types.DEFAULT):
+		instance = dict()
 
-		instance = {}
-
-		instance["name"] = self.name
-		instance["description"] = self.description
+		if dict_type == dict_types.DEFAULT:
+			instance["uuid"] 		= str(self.uuid)
+			instance["name"] 		= self.name
+			instance["description"] = self.description
 
 		return instance
 

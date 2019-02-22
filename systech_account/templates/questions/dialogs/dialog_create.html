@@ -30,24 +30,35 @@
             <div class="row">
                 <div class="col-xs-6">
                     <label for="">Question</label>
-                    <input type="text" class="form-control" ng-model="main.record.name">
+                    <textarea type="text" class="form-control" ng-model="main.record.name"></textarea>
                 </div>
                 <div class="col-xs-6">
                     <label for="">Question Type</label>
-                    <ui-select ng-model="main.session.program" required ng-change="main.check_for_existing_session()">
+                    <ui-select ng-model="main.record.question_type" required>
                         <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                       <ui-select-choices repeat="company in main.question_types | filter: $select.search | limitTo:50">
-                        <div ng-bind-html="company.name | highlight: $select.search"></div>
+                       <ui-select-choices repeat="record in main.question_types | filter: $select.search | limitTo:50">
+                        <div ng-bind-html="record.name | highlight: $select.search"></div>
                     </ui-select-choices>
                     </ui-select>
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="col-xs-6">
+                    <label for="">Subject</label>
+                    <ui-select ng-model="main.record.subject" required>
+                        <ui-select-match>{$ $select.selected.name $}</ui-select-match>
+                       <ui-select-choices repeat="record in main.subjects | filter: $select.search | limitTo:50">
+                        <div ng-bind-html="record.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                    </ui-select>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-12">
                     <br>
-                    <p>Choices</p>
+                    <b>Choices</b>
                     <table class="table table-condensed">
                         <thead>
                             <tr>
@@ -59,7 +70,10 @@
 
                             <tr ng-repeat="choice in main.question_choices">
                                 <td><input type="text" class="form-control" ng-model="choice.name"></td>
-                                <td><center><input type="checkbox" ng-model="choice.is_correct"></center></td>
+                                <td><center><input type="checkbox" name="choice" ng-model="choice.is_correct" ng-value="selected"></center></td>
+                                <td>
+                                    <button class="btn btn-danger btn-xs" ng-click="main.delete_question_choices(choice)"><i class="fa fa-remove"></i></button>
+                                </td>
                             </tr>
                         </tbody>
 

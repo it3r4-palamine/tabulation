@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from api.views import questionapiview, download_data, login, answers, student, users
+from api.views import question, download_data, login, answers, student, users, subject
 
 urlpatterns = [
 
@@ -39,9 +39,11 @@ urlpatterns = [
     url(r'^save_student_time_logs/$', student.save_student_time_logs),
 
 
-    url(r'^question/create/$', questionapiview.QuestionAPIView.as_view()),
-    url(r'^question/get/(?P<uuid>[\w\-]+)/$', questionapiview.QuestionAPIView.as_view()),
-    url(r'^question/read/$', questionapiview.read_questions),
+    url(r'^question/create/$', question.QuestionAPIView.as_view()),
+    url(r'^question/get/(?P<uuid>[\w\-]+)/$', question.QuestionAPIView.as_view()),
+    url(r'^question/read/$', question.read_questions),
+
+    url(r'^subject/read/$', subject.read_subjects),
 
 
 ]

@@ -975,6 +975,14 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
+        get_subjects : function(scope)
+        {
+            let response = scope.post_api("subject/read/");
+            response.success(function(response){
+                scope["subjects"] = response.records;
+            })
+        },
+
         get_display_terms: function(scope) {
             var post = CommonRequests.read_common_records(scope, "display_terms", "/settings/display_settings_read/",{},true);
             return post.success(function(response){

@@ -65,6 +65,7 @@
                         <tbody>
                             <tr ng-repeat="record in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(record,false)">
                                 <td class="text-left">{$ record.name $}</td>
+                                <td class="text-left">{$ record.subject.name $}</td>
                             </tr>
                         </tbody>
                     </table>

@@ -27,21 +27,34 @@ class QuestionAPIView(APIView):
 
     def post(self, request):
         try:
-            data = extract_json_data(request)
-            choices = data.get("question_choices", None)
+            data          = extract_json_data(request)
+            choices       = data.get("question_choices", None)
+            question_type = data.get("question_type", None)
+            subject       = data.get("subject", None)
+
+            if question_type:
+                data["question_type"] = question_type.get("uuid")
+
+            if subject:
+                data["subject"] = subject.get("uuid")
 
             if not choices:
                 raise_error(error_messages.QUESTION_NO_CHOICES)
 
-            question_form = QuestionSerializer(data=data)
+            # Update
+            if data.get("uuid", None):
+                instance = Question.objects.get(pk=data.get("uuid"))
+                serializer = QuestionSerializer(data=data, instance=instance)
+            else:
+                serializer = QuestionSerializer(data=data)
 
-            if question_form.is_valid():
-                record = question_form.save()
+            if serializer.is_valid():
+                record = serializer.save()
 
                 if record:
                     self.create_choices(record.pk, choices)
             else:
-                raise_error(question_form.errors)
+                raise_error(serializer.errors)
 
             return success_response("Success")
         except Exception as e:
@@ -54,12 +67,16 @@ class QuestionAPIView(APIView):
         for choice in choices:
             choice["question"] = pk
 
-            question_choice_form = QuestionChoiceSerializer(data=choice)
-
-            if question_choice_form.is_valid():
-                record = question_choice_form.save()
+            if choice.get("uuid", None):
+                instance   = QuestionChoices.objects.get(pk=choice.get("uuid"))
+                serializer = QuestionChoiceSerializer(data=choice, instance=instance)
             else:
-                raise_error(question_choice_form.errors)
+                serializer = QuestionChoiceSerializer(data=choice)
+
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                raise_error(serializer.errors)
 
 
 @api_view(["POST"])
@@ -68,7 +85,7 @@ def read_questions(request):
         results = {}
         records = []
 
-        questions = Question.objects.filter()
+        questions = Question.objects.filter().order_by("-date_created")
 
         for question in questions:
             row = question.get_dict()
