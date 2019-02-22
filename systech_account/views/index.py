@@ -1,21 +1,9 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect,JsonResponse, HttpResponse
-from django.contrib import auth
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
-from django.utils.encoding import force_bytes
-from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth import update_session_auth_hash
+from rest_framework.authtoken.models import Token
 
-
-from ..forms.transaction_types import *
 from ..forms.company import *
-from ..forms.user_type import *
-from ..models.transaction_types import *
-from ..models.assessments import *
-from ..models.company import *
 from ..forms.user_form import *
+from ..forms.user_type import *
 from ..models.user import *
 from ..views.common import *
 
@@ -45,7 +33,9 @@ def log_in(request):
 				return error("Invalid account..")
 
 			login(request, user)
-			request.session['user_id'] = user.pk
+			token, created = Token.objects.get_or_create(user=user)
+			request.session['token']      = str(token)
+			request.session['user_id']    = user.pk
 			request.session['company_id'] = user.company.id
 
 			if user.is_admin: # USER ACCOUNTS

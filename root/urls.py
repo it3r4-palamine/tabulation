@@ -2,6 +2,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
+    url(r'^admin/', admin.site.urls),
     url(r'', include('systech_account.urls')),
-    url(r'api/', include('ybas_api.urls')),
+    url(r'api/', include('api.urls')),
 ]

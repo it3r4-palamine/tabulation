@@ -177,7 +177,40 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
 			}
 			if(notify){Notification.error(response)}
 		})
-	}
+	};
+
+	me.post_api = function(url, params, loader_key, notify, dialog_notify, assign_response, close_dialog){
+
+		if (loader_key) me.page_loader[loader_key] = true;
+		if (dialog_notify )me.page_loader["dialog"] = true
+		if (!params) params = {};
+
+		let absoluteUrl = baseUrl + url;
+		let api_token = me.apiToken = document.querySelector('input[name="token"]').getAttribute('value');
+
+		options = {
+			headers : {
+				"Authorization" : "Token " + api_token
+			}
+		};
+
+		return $http.post(absoluteUrl, params, options).success(function(response){
+			if (dialog_notify) me.page_loader["dialog"] = false;
+			if (loader_key) me.page_loader[loader_key] = false;
+			if (notify) Notification.success(response);
+			if (assign_response) me[assign_response] = response; //not working
+			if (close_dialog) me.close_dialog();
+		}).error(function(response, status){
+			if (loader_key) me.page_loader[loader_key] = false;
+			if (dialog_notify) me.page_loader["dialog"] = false;
+			if (status == 404 || status == 500){
+				if(notify) Notification.error("Connection error. Please contact administrator.");
+				return;
+			}
+
+			if (notify) Notification.error(response);
+		})
+	};
 
 	me.loader2 = function(loader_key,status){
 		// console.log(loader_key)

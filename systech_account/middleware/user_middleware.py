@@ -12,6 +12,9 @@ class User_middleware(object):
 		urls = url.replace("//", "/").split("/")
 		first_url = urls[1]
 
+		if first_url == "admin":
+			return None
+
 		not_required_session = [
 			"login",
 			"logout",

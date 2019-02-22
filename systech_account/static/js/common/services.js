@@ -967,6 +967,14 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
+        get_question_types : function(scope)
+        {
+            var post = CommonRequests.read_common_records(scope, "question_types", "/question_types/read/",{},true);
+            return post.success(function(response){
+                scope["question_types"] = response.records;
+            })
+        },
+
         get_display_terms: function(scope) {
             var post = CommonRequests.read_common_records(scope, "display_terms", "/settings/display_settings_read/",{},true);
             return post.success(function(response){

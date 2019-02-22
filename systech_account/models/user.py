@@ -1,7 +1,7 @@
 # DJANGO
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-
+from django.contrib.auth.models import PermissionsMixin
 # MODELS
 from ..models.transaction_types import *
 from ..models.company import *
@@ -36,15 +36,15 @@ class User_Manager(BaseUserManager):
 		return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser,PermissionsMixin):
 	email            	= models.EmailField(max_length=100,unique=True,null=False,blank=False)
 	fullname        	= models.CharField(max_length=100,null=True,blank=True)
 	is_admin         	= models.BooleanField(default=False)
+	is_staff         	= models.BooleanField(default=False)
 	is_active        	= models.BooleanField(default=1)
 	user_type        	= models.ForeignKey("User_type",null=True,blank=True)
 	is_edit         	= models.BooleanField(default=False)
 	company			 	= models.ForeignKey("Company",blank=True,null=True)
-	objects          	= User_Manager()
 	is_intelex       	= models.BooleanField(default=False)
 	user_intelex_id	 	= models.IntegerField(blank=True,null=True)
 	username 		 	= models.CharField(max_length=100,unique=True,null=True,blank=True)
@@ -66,6 +66,7 @@ class User(AbstractBaseUser):
 	school 				= models.ForeignKey("School", blank=True, null=True)
 	description 		= models.TextField(null=True,blank=True)
 	rfid				= models.CharField(max_length=20,null=True,blank=True)
+	objects 			= User_Manager()
 
 	USERNAME_FIELD = 'username'
 
@@ -117,6 +118,8 @@ class User(AbstractBaseUser):
 
 		return instance
 
+	def get_short_name(self):
+		return self.username
 
 	def delete(self):
 		self.is_active = False

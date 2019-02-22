@@ -47,6 +47,8 @@
 <body {% block ngctrl %}{% endblock %} landing-scrollspy id="page-top" class="md-skin">
     <div id="wrapper">
         {% include "sidenav.html" %}
+
+        <input type="text" name="token" value = "{{ request.session.token }}" hidden="false">
         <div id="page-wrapper" class="page-wrapper gray-bg">
             {% include "header.html" %}
 

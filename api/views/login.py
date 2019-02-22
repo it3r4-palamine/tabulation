@@ -19,7 +19,7 @@ from systech_account.forms.assessments import *
 from systech_account.forms.user_form import *
 
 # OTHERS
-from .serializers import *
+from api.serializers import *
 from django.db.models import *
 from systech_account.views.common import *
 from datetime import datetime, timedelta

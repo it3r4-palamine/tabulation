@@ -3,8 +3,9 @@ from django.conf.urls import url, handler404,patterns,include
 from django.conf import settings as root_settings
 from django.conf.urls.static import static
 
-from systech_account.views import crud,assessments,transaction_type,company,company_assessment,settings,users,index,recommendations,generate_report,common, lesson_updates,user_logs,enrollment,payment_reports,student_reports,session_evaluation, program,print_forms, dashboard, html_router, timeslot, subject
-
+from systech_account.views import crud, assessments, transaction_type, company, company_assessment, settings, users, \
+	index, recommendations, generate_report, common, lesson_updates, user_logs, enrollment, payment_reports, \
+	student_reports, session_evaluation, program, print_forms, dashboard, html_router, timeslot, subject, question
 urlpatterns = [
 	url(r'^common/pagination/$',common.pagination),
 
@@ -75,7 +76,7 @@ urlpatterns = [
 	url(r'^import/import_recommendations/$', settings.import_recommendations),
 	url(r'^import/import_findings/$', settings.import_findings),
 	url(r'^import/import_transaction_types/$', settings.import_transaction_types),
-	
+
 	url(r'^users/$', users.users, name='users'),
 	url(r'^users/read/$', users.read),
 	url(r'^users/read_students/$', users.read_students),
@@ -104,7 +105,7 @@ urlpatterns = [
 	url(r'^timeslots/read_student_timeslot/$', timeslot.read_student_timeslot, name='read_student_timeslot'),
 
 
-	
+
 	url(r'^recommendations/$', recommendations.recommendations, name='recommendations'),
 	url(r'^recommendations/read/$', recommendations.read),
 	url(r'^recommendations/create_dialog/$', recommendations.create_dialog),
@@ -145,23 +146,23 @@ urlpatterns = [
 
 	### SETTINGS
 	url(r'^settings/$', settings.settings, name='settings'),
-	
+
 	url(r'^settings/display_settings/$', settings.display_settings),
 	url(r'^settings/display_settings_read/$', settings.display_settings_read),
 	url(r'^settings/save_display_terms/$', settings.save_display_terms),
-	
+
 	url(r'^settings/user_types/$', settings.user_types),
 	url(r'^settings/read_user_types/$', settings.read_user_types),
 	url(r'^settings/user_types_create_dialog/$', settings.user_types_create_dialog),
 	url(r'^settings/user_types_create/$', settings.user_types_create),
 	url(r'^settings/user_types_delete/(?P<id>[0-9]+)$', settings.user_types_delete),
-	
+
 	url(r'^settings/to_dos/$', settings.to_dos),
 	url(r'^settings/read_to_dos/$', settings.read_to_dos),
 	url(r'^settings/to_dos_create_dialog/$', settings.to_dos_create_dialog),
 	url(r'^settings/to_dos_create/$', settings.to_dos_create),
 	url(r'^settings/to_dos_delete/(?P<id>[0-9]+)$', settings.to_dos_delete),
-	
+
 	url(r'^settings/math_symbols/$', settings.math_symbols),
 	url(r'^settings/math_symbols_create_dialog/$', settings.math_symbols_create_dialog),
 	url(r'^settings/math_symbols_create/$', settings.math_symbols_create),
@@ -204,7 +205,7 @@ urlpatterns = [
 	url(r'^student_sessions/delete/(?P<session_id>\w{0,50})$', session_evaluation.delete),
 
 	### Program ###
-	url(r'^program/read_enrolled_programs/$', program.read_enrolled_programs), 
+	url(r'^program/read_enrolled_programs/$', program.read_enrolled_programs),
 
 	# Print
 	url(r'^get_dialog/(?P<folder_name>\w{0,50})/(?P<file_name>\w{0,50})/(?P<new>\w{0,50})$', html_router.get_dialog_document),
@@ -213,9 +214,14 @@ urlpatterns = [
 
 
     ### Math Online Module
-    url(r'^questions/$', index.get_questions_page), 
+    url(r'^questions/$', index.get_questions_page),
+    url(r'^questions/read_questions/$', question.read_questions),
+	url(r'^questions/create/$', question.create),
+
+    url(r'^question_types/read/$', question.read_question_types),
+
+
     url(r'^subjects/$', index.get_subjects_page),
-    
     url(r'^subjects/create/$', subject.create),
     url(r'^subjects/read/$', subject.read),
 
@@ -225,6 +231,7 @@ urlpatterns = [
 
 
 ]
+
 urlpatterns += static(root_settings.STATIC_URL,document_root=root_settings.STATIC_ROOT)
 urlpatterns += static(root_settings.MEDIA_URL,document_root=root_settings.MEDIA_ROOT)
 
@@ -232,6 +239,6 @@ urlpatterns += static(root_settings.MEDIA_URL,document_root=root_settings.MEDIA_
 if root_settings.ENVIRONMENT == "localhost":
 	from django.conf.urls import patterns
 	import debug_toolbar
-	urlpatterns += patterns('',
-	    url(r'^__debug__/', include(debug_toolbar.urls)),
-	)
+	# urlpatterns += patterns('',
+	#     # url(r'^__debug__/', include(debug_toolbar.urls)),
+	# )

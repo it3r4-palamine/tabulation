@@ -82,23 +82,13 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Reference No</th>
-                                <th>Student Name</th>
-                                <th>Session Date</th>
-                                <th>Session Duration</th>
-                                <th>Program</th>
-                                <th>Time Remaining</th>
+                                <th>Question Title</th>
+                                <th>Subject Name</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="student_session in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(student_session,false)">
-                                <td class="text-left">{$ student_session.code $}</td>
-                                <td class="text-left">{$ student_session.student_full_name $}</td>
-                                <td>{$ student_session.session_date | date : "MM/dd/yyyy" $}</td>
-                                <td>{$ student_session.session_timein | dateInMillis | date: "hh:mm a" $} 
-                                    - {$ student_session.session_timeout | dateInMillis | date: "hh:mm a" $}</td>
-                                <td class="text-left">{$ student_session.program_name $}</td>
-                                <td><span ng-class="{ 'text-red' : student_session.time_remaining <= 900  }">{$ student_session.time_remaining | secondsDuration : "hh:mm" $}</span></td>
+                            <tr ng-repeat="record in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(record,false)">
+                                <td class="text-left">{$ record.name $}</td>
                             </tr>
                         </tbody>
                     </table>

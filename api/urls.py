@@ -1,23 +1,21 @@
 from django.conf.urls import url
-from rest_framework.authtoken.views import obtain_auth_token
-from ybas_api import views
-from ybas_api.viewss import download_data
-from ybas_api.controllers import answers, users
-from ybas_api.controllers import student
+from api.views import question, download_data, login
+from api.controllers import answers, users
+from api.controllers import student
 
 urlpatterns = [
-    url(r'^api-auth', views.ObtainAuthToken.as_view()), # Refactor
-    url(r'^get-data', views.GetData.as_view()),
-    url(r'^sync-assessments', views.SyncAssessments.as_view()),
-    url(r'^file-upload/', views.FileUpload.as_view()),
-    url(r'^file-upload-ios', views.FileUploadIOS.as_view()),
-    url(r'^sync-lesson-update', views.LessonUpdate.as_view()),
+    url(r'^api-auth', login.ObtainAuthToken.as_view()), # Refactor
+    url(r'^get-data', login.GetData.as_view()),
+    url(r'^sync-assessments', login.SyncAssessments.as_view()),
+    url(r'^file-upload/', login.FileUpload.as_view()),
+    url(r'^file-upload-ios', login.FileUploadIOS.as_view()),
+    url(r'^sync-lesson-update', login.LessonUpdate.as_view()),
 
 
-    url(r'^get-base64-photo', views.GetBase64Photo.as_view()),
-    url(r'^get-photo', views.GetPhoto.as_view()),
-    url(r'^get-question-photo', views.GetQuestionPhoto.as_view()),
-    url(r'^get-answer-image-photo', views.GetAnswerImagePhoto.as_view()),
+    url(r'^get-base64-photo', login.GetBase64Photo.as_view()),
+    url(r'^get-photo', login.GetPhoto.as_view()),
+    url(r'^get-question-photo', login.GetQuestionPhoto.as_view()),
+    url(r'^get-answer-image-photo', login.GetAnswerImagePhoto.as_view()),
 
     url(r'^get-questions/$', answers.GetQuestionList.as_view()),
     url(r'^get-answers/(?P<question_id>[0-9]+)$', answers.GetAnswers.as_view()),
@@ -25,7 +23,7 @@ urlpatterns = [
     url(r'^get-profile/$', users.GetUserProfile.as_view()),
 
     # YIAS Local
-    url(r'^get-company-and-user-type/$', views.Get_company_and_user_types.as_view()),
+    url(r'^get-company-and-user-type/$', login.Get_company_and_user_types.as_view()),
     url(r'^get-programs-and-exercises/$', download_data.Get_programs_and_exercises.as_view()),
     url(r'^get-users/$', download_data.Get_users.as_view()),
     url(r'^get-settings/$', download_data.Get_settings.as_view()),
@@ -41,4 +39,9 @@ urlpatterns = [
 
 
     url(r'^save_student_time_logs/$', student.save_student_time_logs),
+
+
+    url(r'^question/create/$', question.Question.as_view()),
+
+
 ]

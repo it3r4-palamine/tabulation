@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'systech_account',
     'rest_framework',
-    'ybas_api',
+    'api',
     'rest_framework.authtoken',
     'corsheaders',
 ]
