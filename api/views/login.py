@@ -134,7 +134,7 @@ class GetQuestionPhoto(APIView):
     def post(self, request):
         data = req_data(request, True)
 
-        path = os.path.join(settings.STATIC_ROOT, data["imageLocation"][1:])
+        path = os.path.join(settings.STATIC_ROOT, data["imageLocation"][8:])
 
         if os.path.exists(path):
             image = open(path, 'rb')
