@@ -2,7 +2,7 @@ from django.shortcuts import redirect
 from ..views.common import *
 import json
 
-class User_middleware(object):
+class UserMiddleware(object):
 	"""Checks if the user is allowed to access the page they are requesting."""
 
 	def process_request(self, request):
@@ -12,8 +12,40 @@ class User_middleware(object):
 		urls = url.replace("//", "/").split("/")
 		first_url = urls[1]
 
+		try:
+			second_url = urls[2]
+		except IndexError:
+			second_url = None
+
+		if first_url == "logout":
+			return None
+
 		if first_url == "admin":
 			return None
+
+		if first_url == "student_portal" and second_url == "login" and request.user.is_authenticated():
+			return redirect("/student_portal/dashboard/")
+
+		if first_url == "student_portal" and request.user.is_authenticated():
+			return None
+
+		if first_url == "student_portal" and second_url == "login":
+			return None
+
+		if first_url == "student_portal" and second_url == "login_employee":
+			return None
+
+		if first_url == "student_portal" and not request.user.is_authenticated():
+			return redirect("/student_portal/login/")
+
+		if first_url == "student_portal" and second_url == "login":
+			return None
+
+		if first_url == "student_portal":
+			return None
+
+		if not request.user.is_anonymous() and request.user.is_authenticated() and request.user.is_student and not first_url == "student_portal":
+			return redirect("/student_portal/")
 
 		not_required_session = [
 			"login",
@@ -51,34 +83,5 @@ class User_middleware(object):
 			if request.method == "GET":
 				if first_url not in no_action:
 					return redirect("home")
-
-		# if first_url in modules and request.user.id:
-		# 	if "assessments" == first_url:
-		# 		if request.user.user_type.name.lower() != 'technical':				
-		# 			return redirect("company_assessment_redirect")
-
-		# 	if "related_questions" == first_url:
-		# 		if request.user.user_type.name.lower() != 'technical':
-		# 			return redirect("company_assessment_redirect")
-
-		# 	if "recommendations" == first_url:
-		# 		if request.user.user_type.name.lower() != 'technical':
-		# 			return redirect("company_assessment_redirect")
-
-		# 	if "transaction_types" == first_url:
-		# 		if request.user.user_type.name.lower() != 'technical':
-		# 			return redirect("company_assessment_redirect")
-
-		# 	if "company" == first_url:
-		# 		if request.user.user_type.name.lower() != 'technical':
-		# 			return redirect("company_assessment_redirect")
-
-		# 	if "import" == first_url:
-		# 		if request.user.user_type.name.lower() != 'technical':
-		# 			return redirect("company_assessment_redirect")
-
-		# 	if "settings" == first_url:
-		# 		if request.user.user_type.name.lower() != 'technical':
-		# 			return redirect("company_assessment_redirect")
 
 		return None

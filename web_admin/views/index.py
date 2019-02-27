@@ -41,15 +41,13 @@ def log_in(request):
 			if user.is_admin: # USER ACCOUNTS
 				request.session['admin'] = True
 
-			if user.is_student:
-				redirect("student_portal")
-
 			return success(request.user.user_type.name)
 		else: return error("Invalid username or password")
 	else:
 		return redirect("loginpage")
 
 def log_out(request):
+	print("dsfds")
 	request.session.clear()
 	logout(request)
 	return redirect("loginpage")

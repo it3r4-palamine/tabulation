@@ -35,11 +35,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'web_admin',
-    'rest_framework',
-    'api',
-    'rest_framework.authtoken',
     'corsheaders',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'web_admin',
+    'web_student',
+    'api',
 ]
 
 #INTERNAL_IPS = ('127.0.0.1','127.0.0.1:9000',)
@@ -63,7 +64,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'web_admin.middleware.user_middleware.User_middleware',
+    'web_admin.middleware.user_middleware.UserMiddleware',
 ]
 
 ROOT_URLCONF = 'root.urls'
@@ -142,41 +143,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'web_admin/static/uploads')
 
 
 ERROR_LEVEL = 'WARNING' # DEBUG -> INFO -> WARNING -> ERROR -> CRITICAL
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'formatters': {
-#         'verbose': {
-#             'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-#             'datefmt' : "%d/%b/%Y %H:%M:%S"
-#         },
-#         'simple': {
-#             'format': '%(levelname)s %(message)s'
-#         },
-#     },
-#     'handlers': {
-#         'file': {
-#             'level': ERROR_LEVEL,
-#             # 'class': 'logging.handlers.ConcurrentRotatingFileHandler',
-#             'class': 'logging.handlers.RotatingFileHandler',
-#             'filename': os.path.join(BASE_DIR, 'logs/errors.log'),
-#             'maxBytes': 1024 * 1024 * 100, # 100 MB
-#             'backupCount': 5,
-#             'formatter': 'verbose',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers':['file'],
-#             'propagate': True,
-#             'level':ERROR_LEVEL,
-#         },
-#         'web_admin': {
-#             'handlers': ['file'],
-#             'level': ERROR_LEVEL,
-#         },
-#     }
-# }
 CORS_ORIGIN_ALLOW_ALL = True
 
 if env == "staging":
