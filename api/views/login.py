@@ -10,18 +10,18 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # MODELS
-from systech_account.models.company_assessment import *
-from systech_account.models.assessments import *
-from systech_account.models.multiple_choice import *
+from web_admin.models.company_assessment import *
+from web_admin.models.assessments import *
+from web_admin.models.multiple_choice import *
 
 # FORMS
-from systech_account.forms.assessments import *
-from systech_account.forms.user_form import *
+from web_admin.forms.assessments import *
+from web_admin.forms.user_form import *
 
 # OTHERS
 from api.serializers import *
 from django.db.models import *
-from systech_account.views.common import *
+from web_admin.views.common import *
 from datetime import datetime, timedelta
 from PIL import Image
 import sys, traceback, os
@@ -29,13 +29,14 @@ import urllib
 
 
 class ObtainAuthToken(APIView):
-    throttle_classes = ()
-    permission_classes = ()
-    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
-    renderer_classes = (renderers.JSONRenderer,)
-    serializer_class = AuthTokenSerializer
 
-    def post(self, request, *args, **kwargs):
+    throttle_classes   = ()
+    permission_classes = ()
+    parser_classes     = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes   = (renderers.JSONRenderer,)
+    serializer_class   = AuthTokenSerializer
+
+    def post(self, request):
         try:
             request_data = request.data
             serializer = self.serializer_class(data=request_data, context={'request': request})
@@ -66,9 +67,6 @@ class ObtainAuthToken(APIView):
             return Response({ 'token': token.key })
 
         except Exception as e:
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print_error(filename, "ObtainAuthToken", e, sys.exc_traceback.tb_lineno)
             return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -101,7 +99,7 @@ class GetBase64Photo(APIView):
             print("here")
             assessmentImage = Assessment_image.objects.filter(question=21, is_active=True).first()
 
-            image = open('systech_account/static/uploads/%s'%(assessmentImage.image), 'rb')
+            image = open('web_admin/static/uploads/%s'%(assessmentImage.image), 'rb')
             image_read = image.read()
             image_64_encode = base64.standard_b64encode(image_read)
 
@@ -120,7 +118,7 @@ class GetPhoto(APIView):
     def post(self, request):
         try:
             assessmentImage = Assessment_image.objects.filter(question=21, is_active=True).first()
-            image = open('systech_account/static/uploads/%s'%(assessmentImage.image), 'rb')
+            image = open('web_admin/static/uploads/%s'%(assessmentImage.image), 'rb')
 
             return HttpResponse(image, content_type="image/png")
 
@@ -142,7 +140,7 @@ class GetQuestionPhoto(APIView):
         else:
             return Response("File does not exists", status=status.HTTP_404_NOT_FOUND)
         # assessmentImage = Assessment_image.objects.filter(question=21, is_active=True).first()
-        # image = open('systech_account/static/uploads/%s'%(assessmentImage.image), 'rb')
+        # image = open('web_admin/static/uploads/%s'%(assessmentImage.image), 'rb')
         return HttpResponse(image, content_type="image/png")
 
         # try:
@@ -157,7 +155,7 @@ class GetAnswerImagePhoto(APIView):
 
     def post(self, request):
         data = req_data(request, True)
-        image = open('systech_account/static/uploads/assessment/document_images/%s'%(data['imageLocation']), 'rb')
+        image = open('web_admin/static/uploads/assessment/document_images/%s'%(data['imageLocation']), 'rb')
 
         return HttpResponse(image, content_type="image/png")
 

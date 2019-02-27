@@ -1,4 +1,4 @@
-from systech_account.models import StudentSession
+from web_admin.models import StudentSession
 # from yahshua_intelex.models.trainer import Trainer
 # from yahshua_intelex.models.student import Student
 # from yahshua_intelex.models.program import Program

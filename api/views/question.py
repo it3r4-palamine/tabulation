@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
-from systech_account.views.common import raise_error
+from web_admin.views.common import raise_error
 from utils import error_messages
 from utils.response_handler import *
 from api.serializers.question import *

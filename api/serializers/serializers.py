@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
-from systech_account.models.assessments import *
-from systech_account.models.user import *
+from web_admin.models.assessments import *
+from web_admin.models.user import *
 
 
 class AnswerSerializer(serializers.ModelSerializer):

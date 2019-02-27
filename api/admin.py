@@ -1,5 +1,5 @@
 from django.contrib import admin
-from systech_account.models import *
+from web_admin.models import *
 
 
 # Register your models here.

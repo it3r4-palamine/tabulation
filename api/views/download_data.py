@@ -4,13 +4,13 @@ from rest_framework.response import Response
 from rest_framework import status
 
 # MODELS
-from systech_account.models.company import *
-from systech_account.models.user import *
-from systech_account.models.assessments import *
-from systech_account.models.company_assessment import *
+from web_admin.models.company import *
+from web_admin.models.user import *
+from web_admin.models.assessments import *
+from web_admin.models.company_assessment import *
 
 # OTHERS
-from systech_account.views.common import *
+from web_admin.views.common import *
 import sys, traceback, os
 
 

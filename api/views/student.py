@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from utils.response_handler import *
 from utils.dict_types import *
-from systech_account.models import User
+from web_admin.models import User
 
 class StudentInfo(APIView):
 

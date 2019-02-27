@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'systech_account',
+    'web_admin',
     'rest_framework',
     'api',
     'rest_framework.authtoken',
@@ -63,7 +63,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'systech_account.middleware.user_middleware.User_middleware',
+    'web_admin.middleware.user_middleware.User_middleware',
 ]
 
 ROOT_URLCONF = 'root.urls'
@@ -87,7 +87,7 @@ TEMPLATES = [
 FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
                         "django_excel.TemporaryExcelFileUploadHandler")
 
-AUTH_USER_MODEL = "systech_account.User"
+AUTH_USER_MODEL = "web_admin.User"
 
 WSGI_APPLICATION = 'root.wsgi.application'
 
@@ -138,7 +138,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/static/uploads/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'systech_account/static/uploads')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'web_admin/static/uploads')
 
 
 ERROR_LEVEL = 'WARNING' # DEBUG -> INFO -> WARNING -> ERROR -> CRITICAL
@@ -171,7 +171,7 @@ ERROR_LEVEL = 'WARNING' # DEBUG -> INFO -> WARNING -> ERROR -> CRITICAL
 #             'propagate': True,
 #             'level':ERROR_LEVEL,
 #         },
-#         'systech_account': {
+#         'web_admin': {
 #             'handlers': ['file'],
 #             'level': ERROR_LEVEL,
 #         },

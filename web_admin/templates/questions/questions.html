@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+{% block ngapp %}ng-app="questions"{% endblock %}
+{% block ngctrl %}ng-controller="QuestionCtrl as main"{% endblock %} 
+{% block title %} Questions {% endblock %} 
+
+{% block loader_js_bottom %}
+<script type="text/javascript" src="{% static 'js/questions/question_controller.js'%}?ver=1"></script>
+{% endblock loader_js_bottom %} {% block page_header %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Questions</h2>
+    </div>
+</div>
+{% endblock %} 
+
+{% block editable_css %}
+    <style type="text/css">
+        .hand_cursor {
+            cursor: pointer !important;
+        }
+
+        .hand_cursor:hover {
+            background-color: #E8E8E8 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content_body %}
+<div class="wrapper wrapper-content animated fadeIn" ng-cloak="">
+    <div class="ibox">
+
+        <div class="ibox-title">
+            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_session()">Add Question</button>
+            <button class="btn btn-outline btn-default pull-right" ng-click="main.open_import_dialog()">Import</button>
+        </div>
+
+        <div class="ibox-content">
+            {% include "common/loader.html" %}
+
+            <div class="row">
+
+                <div class="col-xs-3">
+                    <label>Search</label>
+                    <input type="text" ng-model="main.filters.search" name="search" placeholder="Search..." class="form-control" ng-enter="main.read_pagination()">
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="row">
+
+                <div class="col-lg-12">
+
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Question Title</th>
+                                    <th>Subject</th>
+                                    <th>Question Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="record in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(record,false)">
+                                    <td class="text-left">{$ record.name $}</td>
+                                    <td class="text-left">{$ record.subject.name $}</td>
+                                    <td class="text-left">{$ record.question_type.name $}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                </div>
+                <pagination></pagination>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

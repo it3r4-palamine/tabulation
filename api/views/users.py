@@ -8,13 +8,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import FileUploadParser
 
-from systech_account.views.common import *
+from web_admin.views.common import *
 
 # MODELS
-from systech_account.models.company_assessment import *
-from systech_account.models.assessments import *
-from systech_account.forms.assessments import *
-from systech_account.models.multiple_choice import *
+from web_admin.models.company_assessment import *
+from web_admin.models.assessments import *
+from web_admin.forms.assessments import *
+from web_admin.models.multiple_choice import *
 
 
 class GetUserProfile(APIView):

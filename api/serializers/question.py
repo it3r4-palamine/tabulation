@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from systech_account.models.question import Question, QuestionChoices
+from web_admin.models.question import Question, QuestionChoices
 
 
 class QuestionSerializer(serializers.ModelSerializer):

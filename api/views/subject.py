@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
-from systech_account.models.subject import Subject
+from web_admin.models.subject import Subject
 from utils import error_messages
 from utils.response_handler import *
 
