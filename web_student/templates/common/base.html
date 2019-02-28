@@ -16,7 +16,9 @@
 
 
 </head>
-<body class="top-navigation">
+<body class="top-navigation" ng-app="app">
+
+
 
     <div id="wrapper">
         <div id="page-wrapper" class="gray-bg">
@@ -30,14 +32,23 @@
 
             <div class="navbar-collapse collapse" id="navbar">
                 <ul class="nav navbar-nav mr-auto">
+
+                    <li>
+                        <a ui-sref="dashboard" role="button"> <i class="fa fa-dashboard"></i> Dashboard</a>
+                    </li>
+
+                     <li>
+                        <a ui-sref="sessions" role="button"> <i class="fa fa-dashboard"></i> Sessions</a>
+                    </li>
+
+
                 </ul>
                 <ul class="nav navbar-top-links navbar-right">
 
                     <li class="dropdown">
                         <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-bell-o"></i> Notifications</a>
                         <ul role="menu" class="dropdown-menu">
-                            <li><a href="">Account</a></li>
-                            <li><a href="">Logout</a></li>
+                            <li><a href="">No Notifcations</a></li>
                         </ul>
                     </li>
 
@@ -53,29 +64,17 @@
         </nav>
         </div>
         <div class="wrapper wrapper-content">
-            <div class="container">
 
-                <div class="row">
-
-                    <div class="col-sm-4">
-                        Activities
-                    </div>
-
-
-                </div>
-
-
-
-
-            </div>
+            <!-- Content UI View for angularjs -->
+            <ui-view></ui-view>
         </div>
 
         <div class="footer">
             <div class="float-right">
-                10GB of <strong>250GB</strong> Free.
+                <strong><a href="">Free Trial</a></strong>
             </div>
             <div>
-                <strong>Copyright</strong> Example Company &copy; 2014-2018
+                <strong>Copyright</strong> Yahshua &copy; 2014-2020
             </div>
         </div>
 
@@ -88,8 +87,6 @@
 
 </body>
 
-
-
-    {% include "footer.html" %}
+    {% include "common/footer_student.html" %}
 
 </html>
