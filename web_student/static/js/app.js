@@ -12,7 +12,7 @@ app.config(function($stateProvider) {
 
     var dashboardState = {
         name: 'dashboard',
-        url: 'dashboard',
+        url: '/dashboard',
         templateUrl: '/student_portal/dashboard/'
     };
 
@@ -28,6 +28,13 @@ app.config(function($stateProvider) {
         templateUrl: '/student_portal/learning_centers/programs/'
     };
 
+    var questionnaireState = {
+        name: 'questionnaire',
+        url: '/questionnaire',
+        templateUrl: '/student_portal/questionnaire/'
+    };
+
+    $stateProvider.state(questionnaireState);
     $stateProvider.state(sessionsState);
     $stateProvider.state(dashboardState);
     $stateProvider.state(centerState);

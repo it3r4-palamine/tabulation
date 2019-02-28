@@ -13,5 +13,9 @@ def get_session_page(request):
     return render(request, "sessions/session_list.html")
 
 
+def get_questionnaire_page(request):
+    return render(request, "questionnaire/questionnaire.html")
+
+
 def get_learning_center_programs_page(request):
     return render(request, "learning_centers/center_programs.html")
