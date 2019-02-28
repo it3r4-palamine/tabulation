@@ -8,11 +8,12 @@
     <title page-title>{% block title %}YAHSHUA System{%endblock%}</title>
     <link rel="icon" type="image/png"  href="{% static "img/favicon.png" %}">
 
-    <link href="{% static 'theme/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'theme/style.css' %}" rel="stylesheet">
-    <link href="{% static 'inspinia/css/bootstrap3.3.7.min.css' %}" rel="stylesheet">
-    <link href="{% static 'inspinia/font-awesome/css/font-awesome.css' %}" rel="stylesheet">
-    <link href="{% static 'theme/animate.css' %}" rel="stylesheet">
+    <link href="{% static 'theme/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'theme/css/bootstrap.css.map' %}" rel="stylesheet">
+    <link href="{% static 'theme/font-awesome/css/all.css' %}" rel="stylesheet">
+    <link href="{% static 'theme/css/style.css' %}" rel="stylesheet">
+
+
 
 
 </head>
@@ -34,15 +35,15 @@
                 <ul class="nav navbar-nav mr-auto">
 
                     <li>
-                        <a ui-sref="dashboard" role="button"> <i class="fa fa-dashboard"></i> Dashboard</a>
+                        <a ui-sref="dashboard" role="button"> <i class="fas fa-tachometer-alt"></i> Dashboard</a>
                     </li>
 
                     <li>
-                        <a ui-sref="sessions" role="button"> <i class="fa fa-bus"></i> Sessions</a>
+                        <a ui-sref="sessions" role="button"> <i class="fas fa-bus"></i> Sessions</a>
                     </li>
 
                     <li>
-                        <a ui-sref="courses" role="button"> <i class="fa fa-paper-plane"></i> Courses</a>
+                        <a ui-sref="courses" role="button"> <i class="fas fa-paper-plane"></i> Courses</a>
                     </li>
 
 
@@ -68,7 +69,6 @@
         </nav>
         </div>
         <div class="wrapper wrapper-content">
-
             <!-- Content UI View for angularjs -->
             <ui-view></ui-view>
         </div>

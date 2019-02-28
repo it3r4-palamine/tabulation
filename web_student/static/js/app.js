@@ -12,7 +12,7 @@ app.config(function($stateProvider) {
 
     var dashboardState = {
         name: 'dashboard',
-        url: '/dashboard',
+        url: 'dashboard',
         templateUrl: '/student_portal/dashboard/'
     };
 
