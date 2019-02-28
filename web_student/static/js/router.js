@@ -6,7 +6,7 @@ app.config(function($stateProvider) {
         name: 'dashboard',
         url: 'dashboard',
         templateUrl: '/student_portal/dashboard/',
-        controller : 'DashboardCtrl',
+        controller : 'DashboardCtrl as ctrl',
     };
 
     var sessionsState = {
@@ -25,7 +25,8 @@ app.config(function($stateProvider) {
     var questionnaireState = {
         name: 'questionnaire',
         url: '/questionnaire',
-        templateUrl: '/student_portal/questionnaire/'
+        templateUrl: '/student_portal/questionnaire/',
+        controller : 'QuestionnaireCtrl as ctrl'
     };
 
     $stateProvider.state(questionnaireState);

@@ -9,5 +9,4 @@ angular.module("app")
         alert("Session")
     };
 
-    self.test();
 });
