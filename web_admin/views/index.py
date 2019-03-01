@@ -29,25 +29,23 @@ def log_in(request):
 			if not user.is_active:
 				return error("Account Inactive. Please activate your account.")
 
-			if not user.is_admin or not user.user_type:
-				return error("Invalid account..")
-
 			login(request, user)
 			token, created = Token.objects.get_or_create(user=user)
 			request.session['token']      = str(token)
 			request.session['user_id']    = user.pk
 			request.session['company_id'] = user.company.id
 
-			if user.is_admin: # USER ACCOUNTS
+			# USER ACCOUNTS
+			if user.is_admin:
 				request.session['admin'] = True
 
 			return success(request.user.user_type.name)
-		else: return error("Invalid username or password")
+		else:
+			return error("Invalid username or password")
 	else:
 		return redirect("loginpage")
 
 def log_out(request):
-	print("dsfds")
 	request.session.clear()
 	logout(request)
 	return redirect("loginpage")

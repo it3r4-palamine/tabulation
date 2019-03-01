@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
 from ..views.common import *
-import json
+
 
 class UserMiddleware(object):
 	"""Checks if the user is allowed to access the page they are requesting."""
@@ -16,6 +16,9 @@ class UserMiddleware(object):
 			second_url = urls[2]
 		except IndexError:
 			second_url = None
+
+		if 'HTTP_AUTHORIZATION' in request.META or "api" in first_url:
+			return None
 
 		if first_url == "logout":
 			return None
@@ -53,26 +56,11 @@ class UserMiddleware(object):
 			"signin",
 		]
 
-		modules = [
-			"assessments",
-			"related_questions",
-			"recommendations",
-			"company_assessments",
-			"transaction_types",
-			"company",
-			"import",
-			"users",
-			"settings",
-		]
-
 		no_action = [
 			"logout",
 			"/",
 			"",
 		]
-
-		if 'HTTP_AUTHORIZATION' in request.META or "api" in first_url:
-			return None
 
 		if first_url not in not_required_session and not request.user.id:
 			if request.method == "GET":

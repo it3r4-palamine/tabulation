@@ -45,6 +45,7 @@ urlpatterns = [
 
     url(r'^subject/read/$', subject.read_subjects),
 
+    # Student API
     # Enrollment
     url(r'^enrollment/read/$', enrollment.read_enrolled_programs),
 

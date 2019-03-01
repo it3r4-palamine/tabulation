@@ -51,26 +51,14 @@
                         <div>
                             <div class="feed-activity-list">
 
-                                <div class="feed-element">
+                                <div class="feed-element" ng-repeat="record in ctrl.enrolled_programs">
                                     <a class="float-left" href="profile.html">
                                         <img alt="image" class="rounded-circle" src="{% static 'web_student/img/intelex_math.jpeg' %}">
                                     </a>
                                     <div class="media-body ">
                                         <small class="float-right">10 hours left</small>
-                                        <strong>Math</strong> Advance Algebra. <br>
-                                        <small class="text-muted">Expire on Mar 15</small>
-
-                                    </div>
-                                </div>
-
-                                <div class="feed-element">
-                                    <a class="float-left" href="profile.html">
-                                        <img alt="image" class="rounded-circle" src="{% static 'web_student/img/intelex_science.jpg' %}">
-                                    </a>
-                                    <div class="media-body ">
-                                        <small class="float-right">5m ago</small>
-                                        <strong>Science</strong> Physics. <br>
-                                        <small class="text-muted">Today 5:60 pm - 12.06.2014</small>
+                                        <strong>{$ record.program.name $}</strong><br>
+                                        <small class="text-muted">Expire on {$ record.session_start_date | date : 'shortDate' $}</small>
 
                                     </div>
                                 </div>

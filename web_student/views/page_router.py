@@ -19,3 +19,7 @@ def get_questionnaire_page(request):
 
 def get_learning_center_programs_page(request):
     return render(request, "web_student/learning_centers/center_programs.html")
+
+
+def get_courses_page(request):
+    return render(request, "web_student/courses/course_list.html")

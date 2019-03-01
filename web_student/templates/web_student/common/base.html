@@ -19,7 +19,7 @@
 </head>
 <body class="top-navigation" ng-app="app">
 
-
+    <input type="text" name="token" value = "{{ request.session.token }}" hidden="false">
 
     <div id="wrapper">
         <div id="page-wrapper" class="gray-bg">
@@ -58,7 +58,7 @@
                     </li>
 
                     <li id="side-menu" class="dropdown">
-                        <a aria-expanded="true" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-caret-down"></i> Account</a>
+                        <a aria-expanded="true" role="button" href="/logout/" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-caret-down"></i> Account</a>
                         <ul role="menu" class="dropdown-menu">
                             <li><a href="">Account</a></li>
                             <li><a href="/logout/">Logout</a></li>

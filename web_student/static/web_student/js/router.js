@@ -1,10 +1,10 @@
 var app = angular.module("app");
 
-app.config(function($stateProvider) {
+app.config(function($stateProvider,$urlRouterProvider) {
 
     var dashboardState = {
         name: 'dashboard',
-        url: 'dashboard',
+        url: '/dashboard',
         templateUrl: '/student_portal/dashboard/',
         controller : 'DashboardCtrl as ctrl',
     };
@@ -29,9 +29,18 @@ app.config(function($stateProvider) {
         controller : 'QuestionnaireCtrl as ctrl'
     };
 
+    var coursesState = {
+        name : 'courses',
+        url : '/courses',
+        templateUrl: '/student_portal/courses/'
+    };
+
     $stateProvider.state(questionnaireState);
     $stateProvider.state(sessionsState);
     $stateProvider.state(dashboardState);
     $stateProvider.state(centerState);
+    $stateProvider.state(coursesState);
+
+    $urlRouterProvider.otherwise('/dashboard');
 
 });

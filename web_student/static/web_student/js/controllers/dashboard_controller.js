@@ -12,7 +12,31 @@ angular.module("app")
 
     self.read_enrolled_programs = function()
     {
-        let response = self.post_api("test");
-    }
+        let response = self.post_api("enrollment/read/");
+
+        response.then(function (response) {
+
+            let data = response.data;
+            self.enrolled_programs = data.records;
+
+        }, function (response) {
+
+        });
+
+    };
+
+    self.read_sessions = function()
+    {
+        let response = self.post_api("sessions/read/");
+
+        response.then(function (response) {
+
+        }, function (response) {
+
+        });
+    };
+
+    self.read_sessions();
+    self.read_enrolled_programs();
 
 });
