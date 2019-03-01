@@ -1,4 +1,4 @@
-var app = angular.module("common_controller",[]).controller('CommonCtrl', function($scope,$http){
+var app = angular.module("common_controller",["common_config"]).controller('CommonCtrl', function($scope,$http, configSettings){
 
 	var me = this;
 	me.current_dialogs = [];
@@ -9,7 +9,7 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
 	me.uibdates = {};
 
 
-	// let baseUrl = configSettings.baseUrl;
+	let baseUrl = configSettings.baseUrl;
 
 
 	me.open_date = function(key){
@@ -18,27 +18,8 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
 	};
 
 	me.post_generic = function(url,params,loader_key,notify,assign_response,closedialog){
-		// url = me.clean_url(url);
 		me.loader2(loader_key,true)
 		if(!params){params = {};}
-		// $(window).load(function () {
-		// 	var p = 0;
-		// 	$('#disney').loadgo('resetprogress');
-		// 	window.setTimeout(function () {
-		// 	  interval = window.setInterval(function (){
-		// 	    if ($('#disney').loadgo('getprogress') === 100) {
-		// 	      p = 0
-		// 	      var prog = p * 10;
-		// 	      $('#disney').loadgo('setprogress', prog);
-		// 	    }
-		// 	    else {
-		// 	      var prog = p * 10;
-		// 	      $('#disney').loadgo('setprogress', prog);
-		// 	      p++;
-		// 	    }
-		// 	  }, 150);
-		// 	}, 300);
-		// })
 		return $http.post(url, params)
 		.success(function(response){
 			me.loader2(loader_key,false)
@@ -471,5 +452,4 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
     /*Place some of the defaults if can be change or depends on some functions.*/
     me.pagination = {"limit" : 10,"current_page" : 1,"total_records" : 0,"total_pages" : 0,"limit_options_orig" : [20,50,100,150],"limit_options" : []}
     me.filters = {}
-    me.sort = {"sort_by": me.sort_default(),"reverse": false};
 });
