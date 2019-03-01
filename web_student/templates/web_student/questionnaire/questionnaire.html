@@ -68,86 +68,21 @@
 
                     <div class="feed-activity-list">
 
-                        <div class="feed-element">
+                        <div class="feed-element" ng-repeat="record in ctrl.questions">
                             <div class="media-body ">
-                                <strong>1. Which of the folliwng</strong>
+                                <h3 class="pull-left">{$ record.name $}</h3>
                                 <small class="float-right">30 Points</small>
 
-                                <br>
+                                <form action="test">
+                                    <label for="test" ng-repeat="choice in record.question_choices">
+                                        <input type="radio" name="test" > {$ choice.name $}
+                                        <br>
+                                    </label>
 
-                                <form action="">
-                                  <input type="radio" name="gender" value="male"> Male<br>
-                                  <input type="radio" name="gender" value="female"> Female<br>
-                                  <input type="radio" name="gender" value="other"> Other
                                 </form>
 
                             </div>
                         </div>
-
-                        <div class="feed-element">
-                            <div class="media-body ">
-                                <strong>1. Which of the folliwng</strong>
-                                <small class="float-right">30 Points</small>
-
-                                <br>
-
-                                <form action="">
-                                  <input type="radio" name="gender" value="male"> Male<br>
-                                  <input type="radio" name="gender" value="female"> Female<br>
-                                  <input type="radio" name="gender" value="other"> Other
-                                </form>
-
-                            </div>
-                        </div>
-
-                        <div class="feed-element">
-                            <div class="media-body ">
-                                <strong>1. Which of the folliwng</strong>
-                                <small class="float-right">30 Points</small>
-
-                                <br>
-
-                                <form action="">
-                                  <input type="radio" name="gender" value="male"> Male<br>
-                                  <input type="radio" name="gender" value="female"> Female<br>
-                                  <input type="radio" name="gender" value="other"> Other
-                                </form>
-
-                            </div>
-                        </div>
-
-                        <div class="feed-element">
-                            <div class="media-body ">
-                                <strong>1. Which of the folliwng</strong>
-                                <small class="float-right">30 Points</small>
-
-                                <br>
-
-                                <form action="">
-                                  <input type="radio" name="gender" value="male"> Male<br>
-                                  <input type="radio" name="gender" value="female"> Female<br>
-                                  <input type="radio" name="gender" value="other"> Other
-                                </form>
-
-                            </div>
-                        </div>
-
-                        <div class="feed-element">
-                            <div class="media-body ">
-                                <strong>1. Which of the folliwng</strong>
-                                <small class="float-right">30 Points</small>
-
-                                <br>
-
-                                <form action="">
-                                  <input type="radio" name="gender" value="male"> Male<br>
-                                  <input type="radio" name="gender" value="female"> Female<br>
-                                  <input type="radio" name="gender" value="other"> Other
-                                </form>
-
-                            </div>
-                        </div>
-
 
                     </div>
 

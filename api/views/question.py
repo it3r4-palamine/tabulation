@@ -85,11 +85,12 @@ def read_questions(request):
         results = {}
         records = []
 
-        question_choices = []
+
         questions = Question.objects.filter().order_by("-date_created")
 
         for question in questions:
-            question_choices_record = QuestionChoices.objects.filter(question=question.pk)
+            question_choices = []
+            question_choices_record = QuestionChoices.objects.filter(question=question.uuid)
 
             for question_choice in question_choices_record:
                 question_choices.append(question_choice.get_dict())

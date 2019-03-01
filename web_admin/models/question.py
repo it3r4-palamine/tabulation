@@ -11,6 +11,9 @@ class Question(CommonModel):
 		app_label = "web_admin"
 		db_table = "questions"
 
+	def __str__(self):
+		return self.name
+
 	def get_dict(self):
 		instance = dict()
 
@@ -30,6 +33,9 @@ class QuestionChoices(CommonModel):
 	class Meta:
 		app_label = "web_admin"
 		db_table = "question_choices"
+
+	def __str__(self):
+		return self.name
 
 	def get_dict(self):
 		instance = dict()
