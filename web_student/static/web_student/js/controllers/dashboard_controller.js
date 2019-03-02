@@ -1,13 +1,28 @@
 angular.module("app")
 
-.controller("DashboardCtrl", function ($scope,$controller) {
+.controller("DashboardCtrl", function ($scope,$controller,$uibModal) {
 
     angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
     var self = this;
 
     self.test = function()
     {
-        alert("Working")
+        // self.open_dialog("", "animated slideInLeft left");
+
+        var dialog = $uibModal.open({
+	        templateUrl: "/student_portal/get_dialog/user/dialog_search/",
+	        windowClass : "slide-in-left left-side-modal",
+	        backdrop : 'static',
+	        keyboard : false,
+	        scope : $scope,
+            animation : true,
+	    });
+
+	    dialog.opened.then(function(){
+			// self.page_loader[key] = false;
+	    	// self.current_dialogs.push(dialog)
+	    });
+
     };
 
     self.read_enrolled_programs = function()
@@ -35,6 +50,8 @@ angular.module("app")
 
         });
     };
+
+
 
     self.read_sessions();
     self.read_enrolled_programs();

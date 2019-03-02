@@ -23,3 +23,14 @@ def get_learning_center_programs_page(request):
 
 def get_courses_page(request):
     return render(request, "web_student/courses/course_list.html")
+
+
+def get_dialog_document(request, folder_name, file_name, new):
+    try:
+        file_location = "web_student/" + folder_name + "/dialogs/" + file_name + ".html"
+
+        return_data = {}
+
+        return render(request, file_location, return_data)
+    except Exception:
+        return render(request, file_location)

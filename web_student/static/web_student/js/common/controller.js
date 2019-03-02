@@ -1,4 +1,4 @@
-var app = angular.module("common_controller",["common_config"]).controller('CommonCtrl', function($scope,$http, configSettings){
+var app = angular.module("common_controller",["common_config"]).controller('CommonCtrl', function($scope,$http,$uibModal,$uibModalStack,$templateCache,configSettings){
 
 	var me = this;
 	me.current_dialogs = [];
@@ -129,28 +129,30 @@ var app = angular.module("common_controller",["common_config"]).controller('Comm
 				me.page_loader[loader_key] = status
 			}
 		}
-	}
+	};
 
 	me.common_filter_dialog = function(){
 		me.open_dialog("/common/filter_dialog2/","dialog_height_100 dialog_width_50");
-	}
+	};
 
-	me.open_dialog = function(url,dialog_class,key){
+	me.open_dialog = function(url,dialog_class,key)
+	{
 		if(!key){key = "main";}
 		me.page_loader[key] = true;
 		$templateCache.remove(url);
+
 		var dialog = $uibModal.open({
 	        templateUrl: url,
 	        windowClass : dialog_class,
 	        backdrop : 'static',
 	        keyboard : false,
 	        scope : $scope,
-	    })
+	    });
 
 	    dialog.opened.then(function(){
 			me.page_loader[key] = false;
 	    	me.current_dialogs.push(dialog)
-	    })
+	    });
 
 	    return dialog
 	};

@@ -10,4 +10,6 @@ urlpatterns = [
     url(r'^learning_centers/programs/$', get_learning_center_programs_page),
     url(r'^courses/$', get_courses_page),
 
+    url(r'^get_dialog/(?P<folder_name>\w{0,50})/(?P<file_name>\w{0,50})/(?P<new>\w{0,50})$',
+        get_dialog_document),
 ]
