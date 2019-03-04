@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('web_admin', '0029_studentanswer'),
+        ('web_admin', '0029_studentanswer_rerun'),
     ]
 
     operations = [
