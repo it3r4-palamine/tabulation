@@ -3,22 +3,68 @@
     <div class="sidebar-collapse">
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
-                <div class="dropdown profile-element">
-                    <div class="container_profile" style="background: url('{% static 'inspinia/img/gallery/assessment.jpg'%}') no-repeat center center;height:175px;background-size: contain;-webkit-background-size: contain;
-  -moz-background-size: cover;
-  -o-background-size: cover; width: 220px;margin-left: -25px;">
-                        <!-- <img style="width: 250px;margin-left: -40px;" src="{% static "inspinia/img/gallery/7.jpg"%}" style="display:none;" alt="YBAS"> -->
-                    </div>
-                    <!-- <a href="/">Yahshua Business Assessment System</a> -->
+                <div class="dropdown profile-element" style="padding-top:30px; padding-bottom: 18px;">
+
+                    <img alt="image"
+                         class="img-circle"
+                         src="{% static 'img/profile_small.jpg' %}"
+                         />
+
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="false">
+                        <span class="clear">
+                            <span class="block m-t-xs">
+                                <strong class="font-bold">Hello! {{ request.user.email }}</strong>
+                            </span>
+
+                            <span class="text-muted text-xs block">Admin <b class="caret"></b></span>
+
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a ng-click="ctrl.open_profile_dialog()">Profile</a></li>
+                    </ul>
                 </div>
-                <div class="logo-element">
-                    {% if request.user.user_type.name == 'Technical' %}
-                        <a href="/">YIAS</a>
-                    {% else %}
-                        <span>YIAS</span>
-                    {% endif %}
-                </div>
+                <div class="logo-element"></div>
             </li>
+
+            <li id="math_online">
+                <a id="math_online" href="#">
+                    <i class="fa fa-pencil"></i>
+                    <span class="nav-label">Learning Materials</span>
+                    <span class="fa arrow"></span>
+                </a>
+
+                <ul class="nav nav-second-level collapse">
+
+                     <li id="subjects">
+                        <a href="/subjects/">
+                            <i class="fa fa-university"></i>
+                            <span class="nav-label">Subjects</span>
+                        </a>
+                    </li>
+
+                    <li id="questions">
+                        <a href="/questions/">
+                            <i class="fa fa-university"></i>
+                            <span class="nav-label">Questions</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/company">
+                            <i class="fa fa-building"></i>
+                            <span class="nav-label">Programs</span>
+                        </a>
+
+                    </li>
+
+
+                </ul>
+            </li>
+
+            {% if request.user.is_intelex %}
+
             <li>
                 <a href="/dashboard/">
                     <i class="fa fa-tachometer"></i>
@@ -48,6 +94,7 @@
                         </a>
                     </li>
 
+
                     <li id="subjects">
                         <a href="/subjects/">
                             <i class="fa fa-university"></i>
@@ -75,6 +122,8 @@
             <li>
                 <a href="/recommendations"><i class="fa fa-smile-o"></i> <span class="nav-label">Recommendations</span></a>
             </li>
+
+            {% endif %}
 
             <li id="enrollment">
                 <a id="enrollment" href="#">

@@ -1,16 +1,16 @@
-from django.db import models
 from ..models.transaction_types import *
 from django.contrib.postgres.fields import ArrayField
 from utils.dict_types import *
 
+
 class Company(models.Model):
 	name             = models.CharField(max_length=200,blank=True,null=True)
 	is_active        = models.BooleanField(default=1)
+	is_intelex       = models.BooleanField(default=0)
 
 	class Meta:
 		app_label = "web_admin"
 		db_table  = "company"
-
 
 	def get_dict(self):
 		return {

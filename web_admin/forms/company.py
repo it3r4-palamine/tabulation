@@ -2,10 +2,11 @@ from django import forms
 from ..models.company import *
 
 
-class Company_form(forms.ModelForm):
+class CompanyForm(forms.ModelForm):
 	class Meta:
 		model  = Company
-		fields = ('name','is_active')
+		fields = ('name',)
+
 
 class Company_rename_form(forms.ModelForm):
 	class Meta:

@@ -6,7 +6,7 @@ from ..forms.user_form import *
 from ..forms.user_type import *
 from ..models.user import *
 from ..views.common import *
-
+from utils.response_handler import extract_json_data
 
 def loginpage(request):
 	if request.user.id:
@@ -56,6 +56,53 @@ def dashb2oard(request):
 def dashboard(request):
 	return render(request, "dashboard/dashboard.html", {"pagename" : "Student Evaluation"})
 
+def register_company(request):
+	company_instance = None
+	user_instance    = None
+	try:
+		data     = extract_json_data(request)
+		company  = {}
+		print(data)
+
+		if data['password1'] != data['password2']:
+			return error("Password do not match!")
+
+		if 'company_name' in data:
+			company['name'] = data.get("company_name", None)
+
+		if Company.objects.filter(name=company["name"]).exists():
+			return error("This company name is already taken")
+
+		company_form = CompanyForm(company)
+
+		if company_form.is_valid():
+			company_instance = company_form.save()
+
+			data["company"] = company_instance.pk
+			data["user_type"]  = 1
+			data["is_active"]  = True
+
+			user_form = CustomUserCreationForm(data)
+
+			if user_form.is_valid():
+				user_instance = user_form.save()
+			else:
+				raise_error(user_form.errors)
+
+		else:
+			raise_error(company_form.errors)
+
+		return success("Successful")
+	except Exception as e:
+
+		if user_instance:
+			user_instance.delete()
+
+		if company_instance:
+			company_instance.delete()
+
+		return error(e)
+
 def register(request):
 	if request.method == "POST":
 		data = json.loads(request.body.decode("utf-8"))
@@ -71,7 +118,7 @@ def register(request):
 			if User.objects.filter(email=data['email']).exists():
 				return error('Email already exists.')
 
-			company_form = Company_form(company)
+			company_form = CompanyForm(company)
 			if company_form.is_valid():
 				company_data = company_form.save()
 
@@ -91,14 +138,12 @@ def register(request):
 							user_type_id = user_type_data.id
 
 				user_email = data['email']
-				user_fullname = data['fullname']
 				password1 = data['password1']
 				password2 = data['password2']
 				data['company'] = company_data.id
 				data['is_admin'] = True
 				data['is_active'] = True
 				data['email'] = user_email
-				data['fullname'] = user_fullname
 				data['password1'] = password1
 				data['password2'] = password2
 				data['user_type'] = user_type_id
