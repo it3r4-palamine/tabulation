@@ -29,6 +29,9 @@ class UserMiddleware(object):
 		if first_url == "learning_center_signup":
 			return None
 
+		if first_url == "select_user":
+			return None
+
 		if first_url == "student_portal" and second_url == "login" and request.user.is_authenticated():
 			return redirect("/student_portal/dashboard/")
 

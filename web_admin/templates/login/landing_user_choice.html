@@ -46,7 +46,7 @@
 
     <div class="row full-div-height" ng-controller="indexCtrl">
 
-        <div class="col-lg-5 full-div-height">
+        <div class="col-lg-6 full-div-height" style="background-image: url({% static 'img/student_stock_photo.jpg' %}); background-repeat: no-repeat; background-position: center; background-size: cover;">
 
             <div class="">
 
@@ -63,17 +63,68 @@
                     <div class="col-lg-1"></div>
                     <div class="col-lg-10">
 
-                        <div class="row">
+                        <br>
 
-                            <div class="col-xs-12">
-                                <h1 class="text-center">Sign up as a Learning Center</h1>
+                        <div class="ibox" style="background-color: white; opacity: 0.5">
+
+                            <br>
+                            <h1 class="text-center text-warning">Sign in as Student</h1>
+
+                            <div class="ibox-content">
+
+                                <br>
+
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control">
+                                <br>
+                                <label for="email">Password</label>
+                                <input type="password" class="form-control">
+
+                                <br>
+                                <label for="email">Confirm Password</label>
+                                <input type="password" class="form-control">
+
+                                <br>
+
+                                <button class="btn btn-lg btn-rounded btn-warning btn-block">Create Account</button>
+
                             </div>
                         </div>
+                    </div>
+                    <div class="col-lg-1"></div>
+                </div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="col-lg-6 orange-fun full-div-height" style="background-image: url({% static 'img/learning_center_2.jpg' %}); background-repeat: no-repeat; background-position: center; background-size: cover;">
+
+            <div class="">
+
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+
+                <div class="row">
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-10">
 
                         <br>
 
                         <div class="ibox">
                             <div class="ibox-content">
+
+                                <br>
+                                <h1 class="text-center text-warning">Sign in as Student</h1>
 
                                 <br>
                                 <label for="company">Learning Center Name</label>
@@ -108,19 +159,12 @@
 
             </div>
 
-
-
-
-        </div>
-        <div class="col-lg-7 orange-fun full-div-height">
-            <div class="row full-div-height" style="background-image: url({% static 'img/learning_center_abstract.png' %}); background-repeat: no-repeat; background-position: center;">
-
-                <h1 class="text-center text-vertical-middle text-white" style="margin-top: 300px; font-size: 54px; font-weight: lighter;">Yahshua Intelex</h1>
-
-            </div>
-
         </div>
 
+    </div>
+
+    <div class="footer">
+        <h5 class="text-center">Copyright © 2019 - 2020 Yahshua Intelex. All rights reserved.</h5>
     </div>
 
     {% include "footer.html" %}

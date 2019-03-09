@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'^logout/$', index.log_out, name="logout"),
     url(r'^register/$', index.register_company, name="register"),
 
+
+    url(r'^select_user/$', page_router.get_user_selection,),
     url(r'^learning_center_signup/$', page_router.get_company_sign_up,),
 
 
