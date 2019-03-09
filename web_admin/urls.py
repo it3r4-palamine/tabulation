@@ -4,7 +4,8 @@ from django.conf.urls.static import static
 
 from web_admin.views import crud, assessments, transaction_type, company, company_assessment, settings, users, \
     index, recommendations, generate_report, common, lesson_updates, user_logs, enrollment, payment_reports, \
-    student_reports, session_evaluation, program, print_forms, dashboard, html_router, timeslot, subject, question
+    student_reports, session_evaluation, program, print_forms, dashboard, html_router, timeslot, subject, question, \
+    page_router
 
 urlpatterns = [
     url(r'^common/pagination/$', common.pagination),
@@ -15,6 +16,10 @@ urlpatterns = [
     url(r'^signin/$', index.signin),
     url(r'^logout/$', index.log_out, name="logout"),
     url(r'^register/$', index.register_company, name="register"),
+
+    url(r'^learning_center_signup/$', page_router.get_company_sign_up,),
+
+
 
     # Dashboard
     url(r'^dashboard/$', index.dashboard, name="dashboard"),

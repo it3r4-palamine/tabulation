@@ -1,0 +1,117 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html {% block ngapp %}ng-app="index"{% endblock %}>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title page-title>{% block title %}YIAS{%endblock%}</title>
+    <link href="{% static 'inspinia/css/bootstrap3.3.6.min.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/font-awesome/css/font-awesome.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/animate.css'%}" rel="stylesheet">
+    <link href="{% static 'css/lib/select2.min.css'%}" rel="stylesheet">
+    <link href="{% static 'css/lib/select2-theme.css'%}" rel="stylesheet">
+    <link href="{% static 'css/lib/table-resize.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/sweetalert/sweetalert.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/toastr/angular-toaster.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/style.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/sweetalert/sweetalert.css'%}" rel="stylesheet">
+
+    <link href="{% static 'css/common/lib_common.css'%}" rel="stylesheet">
+
+    <link href="{% static 'inspinia/css/plugins/dropzone/basic.css' %}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/dropzone/dropzone.css' %}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/blueimp/css/blueimp-gallery.min.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/toastr/angular-toaster.css'%}" rel="stylesheet">
+
+    <link href="{% static 'inspinia/css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
+    <link href="{% static 'css/common/site.css'%}" rel="stylesheet">
+    <link href="{% static 'css/common/gradient.css'%}" rel="stylesheet">
+
+
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+
+    {% block editable_css %}{% endblock %}
+
+    {% block loader_css %}{% endblock %}
+</head>
+
+<!-- ControllerAs syntax -->
+<!-- Main controller with serveral data used in Inspinia theme on diferent view -->
+{% csrf_token %}
+<body class="md-skin">
+
+
+    <div class="row full-div-height" ng-controller="indexCtrl">
+
+        <div class="col-lg-5 full-div-height">
+
+            <div class="">
+
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+
+                <div class="row">
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-10">
+
+                        <div class="row">
+                            <div class="col-xs-4">
+                            </div>
+                            <div class="col-xs-8">
+                                <h1>Yahshua Intelex</h1>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control">
+
+                                <label for="email">Passord</label>
+                                <input type="password" class="form-control">
+
+                                <br>
+
+                                <button class="btn btn-lg btn-rounded btn-primary btn-block">Create Account</button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1"></div>
+                </div>
+
+
+
+
+            </div>
+
+
+
+
+        </div>
+        <div class="col-lg-7 orange-fun full-div-height">
+            <div class="row full-div-height">
+
+                <h1 class="text-center text-vertical-middle text-white">Lorem Ipsum Dolor Minatos jutsu</h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% include "footer.html" %}
+    {% block loader_js_bottom %}
+        <script type="text/javascript" src="{% static "js/index.js" %}"></script>
+    {% endblock %}
+</body>
+</html>

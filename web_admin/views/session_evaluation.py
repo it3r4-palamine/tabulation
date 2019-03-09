@@ -1,21 +1,14 @@
-from ..forms.transaction_types import *
-from ..models.transaction_types import *
-from ..forms.company import *
-from ..models.company import *
-from ..forms.company_assessment import *
 from ..models.company_assessment import *
-from ..models.assessments import *
-from django.db.models import *
-from ..views.common import *
-from utils.date_handler import *
-from utils.model_utils import *
-from utils.dict_types import *
-from utils.response_handler import *
-from utils.view_utils import * 
-from ..forms.session import *
-from .common import *
+import os
+import sys
 from datetime import *
-import sys, traceback, os
+
+from django.db.models import *
+
+from utils.dict_types import *
+from .common import *
+from ..forms.session import *
+from ..models.company_assessment import *
 
 
 def session_evaluation_list(request):
