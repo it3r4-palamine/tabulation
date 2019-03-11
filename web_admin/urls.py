@@ -7,6 +7,7 @@ from web_admin.views import crud, assessments, transaction_type, company, compan
     student_reports, session_evaluation, program, print_forms, dashboard, html_router, timeslot, subject, question, \
     page_router
 
+
 urlpatterns = [
     url(r'^common/pagination/$', common.pagination),
 
@@ -20,7 +21,9 @@ urlpatterns = [
 
     url(r'^select_user/$', page_router.get_user_selection,),
     url(r'^learning_center_signup/$', page_router.get_company_sign_up,),
-
+    url(r'^sign_in/$', page_router.get_signin),
+    url(r'^sign_in/student/$', page_router.get_signin_student),
+    url(r'^sign_in/learning_center/$', page_router.get_signin_learning_center),
 
 
     # Dashboard
@@ -229,6 +232,5 @@ urlpatterns = [
     url(r'^subjects/read/$', subject.read),
 
 ]
-
 urlpatterns += static(root_settings.STATIC_URL, document_root=root_settings.STATIC_ROOT)
 urlpatterns += static(root_settings.MEDIA_URL, document_root=root_settings.MEDIA_ROOT)

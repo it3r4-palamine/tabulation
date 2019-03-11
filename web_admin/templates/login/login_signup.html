@@ -1,0 +1,65 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html {% block ngapp %}ng-app="index"{% endblock %}>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title page-title>{% block title %}YIAS{%endblock%}</title>
+    <link href="{% static 'inspinia/css/bootstrap3.3.6.min.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/font-awesome/css/font-awesome.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/animate.css'%}" rel="stylesheet">
+    <link href="{% static 'css/lib/select2.min.css'%}" rel="stylesheet">
+    <link href="{% static 'css/lib/select2-theme.css'%}" rel="stylesheet">
+    <link href="{% static 'css/lib/table-resize.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/sweetalert/sweetalert.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/toastr/angular-toaster.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/style.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/sweetalert/sweetalert.css'%}" rel="stylesheet">
+
+    <link href="{% static 'css/common/lib_common.css'%}" rel="stylesheet">
+
+    <link href="{% static 'inspinia/css/plugins/dropzone/basic.css' %}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/dropzone/dropzone.css' %}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/blueimp/css/blueimp-gallery.min.css'%}" rel="stylesheet">
+    <link href="{% static 'inspinia/css/plugins/toastr/angular-toaster.css'%}" rel="stylesheet">
+
+    <link href="{% static 'inspinia/css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
+    <link href="{% static 'css/common/site.css'%}" rel="stylesheet">
+    <link href="{% static 'css/common/gradient.css'%}" rel="stylesheet">
+
+
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+
+    {% block editable_css %}{% endblock %}
+
+    {% block loader_css %}{% endblock %}
+</head>
+
+<!-- ControllerAs syntax -->
+<!-- Main controller with serveral data used in Inspinia theme on diferent view -->
+{% csrf_token %}
+<body class="md-skin" ng-controller="indexCtrl">
+
+    <div class="row full-div-height" style="background-image: url({% static 'img/sign_up_bg.jpg' %});">
+
+        <br>
+
+        <ui-view></ui-view>
+
+
+
+    </div>
+
+    <div class="footer">
+        <h5 class="text-center">Copyright © 2019 - 2020 Yahshua Intelex. All rights reserved.</h5>
+    </div>
+
+    {% include "footer.html" %}
+    {% block loader_js_bottom %}
+        <script type="text/javascript" src="{% static "js/index.js" %}"></script>
+    {% endblock %}
+</body>
+</html>

@@ -1,4 +1,4 @@
-var app = angular.module("index",['ngAnimate','ngSanitize','ui.bootstrap','ui.select','toastr','oitozero.ngSweetAlert','jutaz.ngSweetAlertAsPromised',]);
+var app = angular.module("index",['ngAnimate','ngSanitize','ui.bootstrap','ui.select','toastr','oitozero.ngSweetAlert','jutaz.ngSweetAlertAsPromised','ui.router']);
 
 app.config(['$httpProvider', '$interpolateProvider', function($httpProvider, $interpolateProvider) {
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
@@ -41,4 +41,25 @@ app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,Sweet
 			toastr.error(err)
 		})
 	}
+});
+
+app.config(function($stateProvider,$urlRouterProvider) {
+
+    var studentState = {
+        name: 'student',
+        url: '/student',
+        templateUrl: '/sign_in/student/',
+    };
+
+    var learningCenterState = {
+        name: 'learning_center',
+        url: '/learning_center',
+        templateUrl: '/sign_in/learning_center/',
+    };
+
+    $stateProvider.state(studentState);
+    $stateProvider.state(learningCenterState);
+
+    $urlRouterProvider.otherwise('student');
+
 });

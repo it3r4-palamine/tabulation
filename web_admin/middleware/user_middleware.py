@@ -13,32 +13,50 @@ class UserMiddleware(object):
 	def __call__(self, request):
 		return self.process_request(request)
 
+	def is_public_page(self, request, first_url):
+
+		public_urls = [
+			"logout",
+			"admin",
+			"select_user",
+			"learning_center_signup",
+			"sign_in",
+		]
+
+		if first_url not in public_urls:
+			return self.get_response(request)
+
+
+
 	def process_request(self, request):
 		"""The main part of the middleware, called each time a user makes a request."""
 		# Initialization.
 		url = request.path
 		urls = url.replace("//", "/").split("/")
-		first_url = urls[1]
+		first_url = urls[0]
 
 		try:
-			second_url = urls[2]
+			second_url = urls[1]
 		except IndexError:
 			second_url = None
 
 		if 'HTTP_AUTHORIZATION' in request.META or "api" in first_url:
 			return self.get_response(request)
 
-		if first_url == "logout":
+		public_urls = [
+			"sign_in",
+			"logout",
+			"admin",
+			"select_user",
+			"learning_center_signup",
+		]
+
+		print(first_url)
+
+		if first_url in public_urls:
 			return self.get_response(request)
 
-		if first_url == "admin":
-			return self.get_response(request)
-
-		if first_url == "learning_center_signup":
-			return self.get_response(request)
-
-		if first_url == "select_user":
-			return self.get_response(request)
+		# self.is_public_page(request, first_url)
 
 		if first_url == "student_portal" and second_url == "login" and request.user.is_authenticated():
 			return redirect("/student_portal/dashboard/")

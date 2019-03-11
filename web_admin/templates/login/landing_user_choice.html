@@ -46,9 +46,7 @@
 
     <div class="row full-div-height" ng-controller="indexCtrl">
 
-        <h1 class="text-center">Yahshua Intelex Assessment System</h1>
-
-        <div class="col-lg-6 full-div-height" style="background-image: url({% static 'img/student_stock_photo.jpg' %}); background-repeat: no-repeat; background-position: center; background-size: cover;">
+        <div class="col-lg-5 full-div-height" style="background-image: url({% static 'img/student_stock_photo.jpg' %}); background-repeat: no-repeat; background-position: center; background-size: cover;">
 
             <div class="">
 
@@ -66,13 +64,16 @@
                     <div class="col-lg-10">
 
                         <br>
+                        <br>
+
+                        <button class="btn center-block btn-rounded btn-warning btn-lg">Sign up as Student</button>
 
                         <div class="ibox" style="background-color: white; opacity: 0.5">
 
-                            <br>
-                            <h1 class="text-center text-warning">Sign in as Student</h1>
+                            <div class="ibox-content" ng-hide="true">
 
-                            <div class="ibox-content">
+                                <br>
+                                <h1 class="text-center text-warning">Sign up as Student</h1>
 
                                 <br>
 
@@ -107,7 +108,8 @@
             </div>
 
         </div>
-        <div class="col-lg-6 orange-fun full-div-height" style="background-image: url({% static 'img/learning_center_2.jpg' %}); background-repeat: no-repeat; background-position: center; background-size: cover;">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-5 orange-fun full-div-height" style="background-image: url({% static 'img/learning_center_2.jpg' %}); background-repeat: no-repeat; background-position: center; background-size: cover;">
 
             <div class="">
 
@@ -126,11 +128,11 @@
 
                         <br>
 
-                        <div class="ibox">
+                        <div class="ibox" ng-hide="true">
                             <div class="ibox-content">
 
                                 <br>
-                                <h1 class="text-center text-warning">Sign in as Student</h1>
+                                <h1 class="text-center text-warning">Sign up as Learning Center</h1>
 
                                 <br>
                                 <label for="company">Learning Center Name</label>
