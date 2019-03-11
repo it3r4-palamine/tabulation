@@ -4,8 +4,8 @@ from utils import dict_types
 
 class Question(CommonModel):
 
-	subject       = models.ForeignKey("Subject", null=True, blank=True)
-	question_type = models.ForeignKey("QuestionType", null=True, blank=True)
+	subject       = models.ForeignKey("Subject", null=True, blank=True, on_delete=models.CASCADE)
+	question_type = models.ForeignKey("QuestionType", null=True, blank=True, on_delete=models.CASCADE)
 
 	class Meta:
 		app_label = "web_admin"
@@ -27,7 +27,7 @@ class Question(CommonModel):
 
 class QuestionChoices(CommonModel):
 
-	question  	= models.ForeignKey("Question")
+	question  	= models.ForeignKey("Question", on_delete=models.CASCADE)
 	is_correct 	= models.BooleanField(default=False)
 
 	class Meta:

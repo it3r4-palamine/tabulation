@@ -23,7 +23,7 @@ class Company_rename(models.Model):
 	name             = models.CharField(max_length=200,blank=True,null=True)
 	is_active        = models.BooleanField(default=1)
 	transaction_type = ArrayField(models.IntegerField("Transaction_type"),blank=True,null=True)
-	company 		 = models.ForeignKey("Company",blank=True,null=True)
+	company 		 = models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
 	is_intelex		 = models.BooleanField(default=0)
 	program_id		 = models.IntegerField(blank=True,null=True)
 	rate 			 = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=8)

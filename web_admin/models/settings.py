@@ -1,14 +1,14 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from utils.view_utils import *
 
-from utils.view_utils import * 
 
 class Display_setting(models.Model):
 	company_assessments = models.CharField(max_length=200,blank=True,null=True)
 	transaction_types 	= models.CharField(max_length=200,blank=True,null=True)
 	questions 			= models.CharField(max_length=200,blank=True,null=True)
 	company_rename		= models.CharField(max_length=200,blank=True,null=True)
-	company 			= models.ForeignKey("Company")
+	company 			= models.ForeignKey("Company", on_delete=models.CASCADE)
 
 	class Meta:
 		app_label = "web_admin"
@@ -24,10 +24,12 @@ class Display_setting(models.Model):
 			"company_rename" 	  : self.company_rename,
 		}
 
+
 class Math_symbol(models.Model):
+
 	symbol     = models.TextField(blank=True,null=True)
 	name       = models.TextField(blank=True,null=True)
-	company    = models.ForeignKey("Company")
+	company    = models.ForeignKey("Company", on_delete=models.CASCADE)
 	is_active  = models.BooleanField(default=1)
 	category   = models.TextField(blank=True,null=True)
 	above_text = models.BooleanField(default=0)
@@ -48,9 +50,11 @@ class Math_symbol(models.Model):
 			"syntax" 	 : self.syntax,
 		}
 
+
 class To_dos_topic(models.Model):
+
 	name 	   = models.TextField(blank=True,null=True)
-	company    = models.ForeignKey("Company")
+	company    = models.ForeignKey("Company", on_delete=models.CASCADE)
 	is_active  = models.BooleanField(default=1)
 
 	class Meta:
@@ -72,7 +76,7 @@ class School(models.Model):
 	contact_number 	= models.CharField(max_length=15, validators=[phone_regex], blank=True, null=True) # validators should be a list
 	is_active 		= models.BooleanField(default=True)
 	is_deleted 		= models.BooleanField(default=False)
-	company    		= models.ForeignKey("Company",blank=True,null=True)
+	company    		= models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
 
 	class Meta:
 	    app_label = "web_admin"
@@ -88,22 +92,22 @@ class School(models.Model):
 
 	    return instance
 
-class GradeLevel(models.Model):
-    name 		= models.CharField(max_length=50, blank=False, null=False)
-    is_active 	= models.BooleanField(default=True)
-    is_deleted 	= models.BooleanField(default=False)
-    company    	= models.ForeignKey("Company",blank=True,null=True)
-     
-    class Meta:
-        app_label = "web_admin"
-        db_table  = "grade_level"
-        ordering  = ["id"]
 
-    def get_dict(self):
-		instance 		 = {}
+class GradeLevel(models.Model):
+	name 		= models.CharField(max_length=50, blank=False, null=False)
+	is_active 	= models.BooleanField(default=True)
+	is_deleted 	= models.BooleanField(default=False)
+	company    	= models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
+
+	class Meta:
+		app_label = "web_admin"
+		db_table  = "grade_level"
+		ordering  = ["id"]
+
+	def get_dict(self):
+		instance = {}
 		instance["id"] 	 = self.id
 		instance["name"] = self.name
-		instance["is_active"] = self.is_active
 
 		return instance
 

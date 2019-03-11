@@ -1,24 +1,16 @@
-from django.db import models
-from django.utils import timezone
-from ..models.settings import *
-from ..models.transaction_types import *
-from ..models.user import *
-from ..models.company import *
-from ..models.payment import *
-from ..models.assessments import *
-from ..models.session import *
-from ..models.timeslot import TimeSlot
-from ..views.common import *
 from utils.dict_types import *
-from django.db.models import Count, Sum, Avg,Min,Q,F,Func
-from datetime import timedelta
+from ..models.assessments import *
+from ..models.payment import *
+from ..models.session import *
+from ..views.common import *
+
 
 class Enrollment(models.Model):
-    user 				= models.ForeignKey("User")
-    timeslot            = models.ForeignKey("TimeSlot", null=True, blank=True)
-    company_rename 		= models.ForeignKey("Company_rename", blank=True, null=True)
-    school 				= models.ForeignKey("School", blank=True,null=True,related_name="school_enrolled")
-    enrollment_type 	= models.ForeignKey("EnrollmentType", blank=True, null=True)
+    user 				= models.ForeignKey("User", on_delete=models.CASCADE)
+    timeslot            = models.ForeignKey("TimeSlot", null=True, blank=True, on_delete=models.CASCADE)
+    company_rename 		= models.ForeignKey("Company_rename", blank=True, null=True, on_delete=models.CASCADE)
+    school 				= models.ForeignKey("School", blank=True,null=True,related_name="school_enrolled", on_delete=models.CASCADE)
+    enrollment_type 	= models.ForeignKey("EnrollmentType", blank=True, null=True, on_delete=models.CASCADE)
     code 				= models.CharField(max_length=100,blank=True,null=True,unique=True)
     is_active 			= models.BooleanField(default=True)
     is_deleted 			= models.BooleanField(default=False)
@@ -26,7 +18,7 @@ class Enrollment(models.Model):
     session_start_date 	= models.DateField(blank=True,null=True)    
     session_end_date  	= models.DateField(blank=True,null=True)
     enrollment_date 	= models.DateField(blank=True,null=True)
-    company 			= models.ForeignKey("Company")
+    company 			= models.ForeignKey("Company", on_delete=models.CASCADE)
 
     class Meta:
         app_label = "web_admin"
@@ -114,7 +106,7 @@ class Enrollment(models.Model):
 
             return instance
         except Exception as e:
-            print e
+            print(e)
 
     def get_payments(self):
         payments = Payment.objects.filter(enrollment=self.id,is_deleted=False).values()
@@ -191,7 +183,7 @@ class EnrollmentType(models.Model):
     code 		= models.CharField(max_length=50, blank=True, null=True) 
     is_active 	= models.BooleanField(default=True) 
     is_deleted 	= models.BooleanField(default=False) 
-    company 	= models.ForeignKey("Company")
+    company 	= models.ForeignKey("Company", on_delete=models.CASCADE)
  
     class Meta: 
         app_label = "web_admin"

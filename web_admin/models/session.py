@@ -1,24 +1,21 @@
 from __future__ import unicode_literals
 from django.db import models
-from django.utils import timezone
-from django.core.validators import RegexValidator
-from django.db.models import ExpressionWrapper, DurationField
-from utils.date_handler import *
 from utils.response_handler import *
+
 
 class StudentSession(models.Model):
     
-    student = models.ForeignKey("User")
-    program = models.ForeignKey("Company_rename")
-    evaluated_by  = models.ForeignKey("User",blank=True,null=True, related_name="evaluated_by")
-    enrollment = models.ForeignKey("Enrollment",blank=True,null=True,related_name="enrollment")    
-    code = models.CharField(max_length=100, blank=True, null=True)
-    session_date = models.DateField(blank=False, null=False, default=timezone.now)
-    session_timein = models.TimeField(blank=True, null=True, default=None)
+    student         = models.ForeignKey("User", on_delete=models.CASCADE)
+    program         = models.ForeignKey("Company_rename", on_delete=models.CASCADE)
+    evaluated_by    = models.ForeignKey("User", blank=True, null=True, related_name="evaluated_by", on_delete=models.CASCADE)
+    enrollment      = models.ForeignKey("Enrollment", blank=True, null=True, related_name="enrollment", on_delete=models.CASCADE)
+    code            = models.CharField(max_length=100, blank=True, null=True)
+    session_date    = models.DateField(blank=False, null=False, default=datetime.today())
+    session_timein  = models.TimeField(blank=True, null=True, default=None)
     session_timeout = models.TimeField(blank=True, null=True, default=None)
-    comments = models.TextField(blank=True, null=True)
-    is_active = models.BooleanField(default=True)
-    is_deleted = models.BooleanField(default=False)
+    comments        = models.TextField(blank=True, null=True)
+    is_active       = models.BooleanField(default=True)
+    is_deleted      = models.BooleanField(default=False)
 
     class Meta:
         app_label = "web_admin"
@@ -28,8 +25,7 @@ class StudentSession(models.Model):
     def __str__(self):
         return self.code + " " + str(self.session_timein) + " - " + str(self.session_timeout)
 
-
-    def get_dict(self, complete_instance = False, return_type = 0):
+    def get_dict(self, complete_instance=False, return_type=0):
         
         instance = {}
         
@@ -142,15 +138,13 @@ class StudentSession(models.Model):
         return exercise_count
 
 
-
-
 class SessionExercise(models.Model):
     
-    session = models.ForeignKey("StudentSession", blank=True, null=True,related_name="student_session")
-    exercise = models.ForeignKey("Transaction_type", blank=True, null=True)
+    session = models.ForeignKey("StudentSession", blank=True, null=True,related_name="student_session", on_delete=models.CASCADE)
+    exercise = models.ForeignKey("Transaction_type", blank=True, null=True, on_delete=models.CASCADE)
     score = models.DecimalField(decimal_places=2, max_digits=5, blank=True, null=True)
-    trainer_note = models.ForeignKey("TrainerNote", blank=True, null=True)    
-    facilitated_by = models.ForeignKey("User", blank=True, null=True)    
+    trainer_note = models.ForeignKey("TrainerNote", blank=True, null=True, on_delete=models.CASCADE)
+    facilitated_by = models.ForeignKey("User", blank=True, null=True, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
 
@@ -192,11 +186,8 @@ class SessionExercise(models.Model):
                 if self.facilitated_by:
                     instance['facilitated_by'] = self.facilitated_by.get_dict()
 
-            print(instance)
-
             return instance
         except Exception as e:
-            print e
             return None
 
     def get_score_percentage(self):

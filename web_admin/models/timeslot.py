@@ -1,11 +1,11 @@
 from django.db import models
-from utils.date_handler import *
 from utils.response_handler import *
 from utils.dict_types import * 
 
+
 class TimeSlot(models.Model):
 
-	student = models.ForeignKey("User", null=True, blank=True)
+	student = models.ForeignKey("User", null=True, blank=True, on_delete=models.CASCADE)
 	description = models.CharField(max_length=100,null=True,blank=True)
 
 	time_start = models.TimeField(blank=True, null=True, default=None)

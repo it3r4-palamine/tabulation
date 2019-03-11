@@ -270,12 +270,12 @@ def format_date_from_db(date):
 	if date:
 		return date.strftime("%Y-%m-%d")
 
-def clean_list(lists):
 
+def clean_list(lists):
 	try:
 		new_lists = []
 
-		for index,item in enumerate(lists):
+		for index, item in enumerate(lists):
 
 			if item or bool(item):
 				new_lists.append(item)
@@ -283,7 +283,7 @@ def clean_list(lists):
 		return new_lists
 
 	except Exception as e:
-		print None
+		return []
 
 def format_time_consumed(time_seconds):
     # Converts Seconds to HH:MM:SS

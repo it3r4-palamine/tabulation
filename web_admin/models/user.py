@@ -1,18 +1,15 @@
 # DJANGO
-from django.db import models
+# OTHERS
+import time
+
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
-# MODELS
-from ..models.transaction_types import *
-from ..models.company import *
-from ..models.enrollment import Enrollment
-from utils.dict_types import *
-
-# OTHERS
-import sys, traceback, os
-import time
 from django.core.validators import RegexValidator
 from django.utils import timezone
+
+# MODELS
+from ..models.company import *
+from ..models.enrollment import Enrollment
 
 
 class User_Manager(BaseUserManager):
@@ -43,9 +40,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_admin         	= models.BooleanField(default=False)
 	is_staff         	= models.BooleanField(default=False)
 	is_active        	= models.BooleanField(default=1)
-	user_type        	= models.ForeignKey("User_type",null=True,blank=True)
+	user_type        	= models.ForeignKey("User_type",null=True,blank=True, on_delete=models.CASCADE)
 	is_edit         	= models.BooleanField(default=False)
-	company			 	= models.ForeignKey("Company",blank=True,null=True)
+	company			 	= models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
 	is_intelex       	= models.BooleanField(default=False)
 	user_intelex_id	 	= models.IntegerField(blank=True,null=True)
 	username 		 	= models.CharField(max_length=100,unique=True,null=True,blank=True)
@@ -63,8 +60,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 	fathers_contact_no 	= models.CharField(max_length=200, blank=True, null=True)
 	mothers_contact_no 	= models.CharField(max_length=200, blank=True, null=True)
 	guardian_name 		= models.CharField(max_length=200, blank=True, null=True)
-	grade_level 		= models.ForeignKey("Gradelevel", blank=True, null=True)
-	school 				= models.ForeignKey("School", blank=True, null=True)
+	grade_level 		= models.ForeignKey("Gradelevel", blank=True, null=True, on_delete=models.CASCADE)
+	school 				= models.ForeignKey("School", blank=True, null=True, on_delete=models.CASCADE)
 	description 		= models.TextField(null=True,blank=True)
 	rfid				= models.CharField(max_length=20,null=True,blank=True)
 	is_student          = models.BooleanField(default=False)
@@ -154,7 +151,7 @@ class User_type(models.Model):
 	name       = models.CharField(max_length=200,blank=True,null=True)
 	is_active  = models.BooleanField(default=1)
 	is_default = models.BooleanField(default=0)
-	company    = models.ForeignKey("Company",blank=True,null=True)
+	company    = models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
 
 	class Meta:
 		app_label = "web_admin"
@@ -169,7 +166,7 @@ class User_type(models.Model):
 		}
 
 class User_credit(models.Model):
-	user 			     = models.ForeignKey("User")
+	user 			     = models.ForeignKey("User", on_delete=models.CASCADE)
 	enrollment_id 	     = models.IntegerField(blank=True, null=True)
 	enrollment_code      = models.CharField(max_length=200,blank=True,null=True)
 	session_credits      = models.DurationField(blank=True, null=True)
@@ -206,7 +203,7 @@ class User_credit(models.Model):
 
 class UserTimeLog(models.Model):
 
-	user 	 = models.ForeignKey("User")
+	user 	 = models.ForeignKey("User", on_delete=models.CASCADE)
 	log_type = models.CharField(max_length=20,null=True,blank=True)
 	log_time = models.TimeField(blank=True, null=True, default=None)
 	log_date = models.DateField(blank=False, null=False, default=timezone.now)
@@ -219,10 +216,10 @@ class UserTimeLog(models.Model):
 
 
 class Lesson_update_header(models.Model):
-	user 		 = models.ForeignKey("User")
+
+	user 		 = models.ForeignKey("User", on_delete=models.CASCADE)
 	date 		 = models.DateField(blank=True, null=True)
 	is_active 	 = models.BooleanField(default=1)
-
 
 	class Meta:
 		app_label = "web_admin"
@@ -238,9 +235,9 @@ class Lesson_update_header(models.Model):
 
 
 class Lesson_update_detail(models.Model):
-	lesson_update_header 	= models.ForeignKey("Lesson_update_header")
+	lesson_update_header 	= models.ForeignKey("Lesson_update_header", on_delete=models.CASCADE)
 	lesson 					= models.TextField(blank=True, null=True)
-	to_dos_topic 			= models.ForeignKey("To_dos_topic")
+	to_dos_topic 			= models.ForeignKey("To_dos_topic", on_delete=models.CASCADE)
 
 
 	class Meta:

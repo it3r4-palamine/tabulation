@@ -1,26 +1,23 @@
-from django.db import models
-# from ..models.assessments import *
-from ..models.transaction_types import *
-from ..models.company import *
 from ..models.user import *
 from ..views.common import *
 
+
 class Company_assessment(models.Model):
-	date_from        = models.DateField(blank=True,null=True)
-	date_to          = models.DateField(blank=True,null=True)
+	date_from        = models.DateField(blank=True, null=True)
+	date_to          = models.DateField(blank=True, null=True)
 	is_active        = models.BooleanField(default=1)
-	transaction_type = ArrayField(models.IntegerField("Transaction_type"),blank=True,null=True)
-	company          = models.ForeignKey("Company")
+	transaction_type = ArrayField(models.IntegerField("Transaction_type"), blank=True, null=True)
+	company          = models.ForeignKey("Company", on_delete=models.CASCADE)
 	is_synced        = models.BooleanField(default=0)
 	is_complete      = models.BooleanField(default=0)
 	is_expired       = models.BooleanField(default=0)
-	reference_no     = models.CharField(max_length=200,blank=True,null=True,unique=True)
-	consultant       = models.ForeignKey("User",blank=True,null=True,related_name="consultant")
+	reference_no     = models.CharField(max_length=200, blank=True, null=True, unique=True)
+	consultant       = models.ForeignKey("User", blank=True, null=True, related_name="consultant", on_delete=models.CASCADE)
 	is_generated     = models.BooleanField(default=0)
-	company_rename	 = models.ForeignKey("Company_rename",blank=True,null=True)
+	company_rename	 = models.ForeignKey("Company_rename",blank=True,null=True, on_delete=models.CASCADE)
 	session_credits	 = models.DurationField(blank=True, null=True)
 	credits_left	 = models.DurationField(blank=True, null=True)
-	facilitator      = models.ForeignKey("User",blank=True,null=True,related_name="facilitator")
+	facilitator      = models.ForeignKey("User", blank=True, null=True, related_name="facilitator", on_delete=models.CASCADE)
 
 
 	class Meta:

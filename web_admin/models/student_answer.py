@@ -1,12 +1,10 @@
-from common_model import *
-from session import SessionExercise
-from question import Question, QuestionChoices
-from user import User
+from web_admin.models import CommonModel, SessionExercise, Question, QuestionChoices
+from django.db import models
 
 
 class StudentAnswer(CommonModel):
 
-    student  = models.ForeignKey(User)
+    student  = models.ForeignKey("User", on_delete=models.CASCADE)
     exercise = models.ForeignKey(SessionExercise)
     question = models.ForeignKey(Question)
     answer   = models.ForeignKey(QuestionChoices)
