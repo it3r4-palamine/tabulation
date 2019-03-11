@@ -8,11 +8,13 @@ from ..models.user import *
 from ..views.common import *
 from utils.response_handler import extract_json_data
 
+
 def loginpage(request):
 	if request.user.id:
 		return redirect("home")
 	else:
 		return render(request, 'login/landing_page.html')
+
 
 def signin(request):
 	if request.user.id:
@@ -44,6 +46,7 @@ def log_in(request):
 			return error("Invalid username or password")
 	else:
 		return redirect("loginpage")
+
 
 def log_out(request):
 	request.session.clear()
