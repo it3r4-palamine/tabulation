@@ -1,34 +1,30 @@
-from django.db import models
-from django.conf import settings
+import base64
+import os
+import sys
+from datetime import *
+
 from django.contrib.postgres.fields import ArrayField
-
-from ..models.multiple_choice import *
-
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFit
 
-from django.db.models import ExpressionWrapper, DurationField
-
-from datetime import *
-import sys, traceback, os
-import base64
+from ..models.multiple_choice import *
 
 
 class Assessment_question(models.Model):
-	value               = models.CharField(max_length=200,blank=True,null=True)
+	value               = models.CharField(max_length=200, blank=True,null=True)
 	is_active           = models.BooleanField(default=1)
-	transaction_type    = models.ForeignKey("Transaction_type",null=True,blank=True)
+	transaction_type    = models.ForeignKey("Transaction_type" ,null=True, blank=True, on_delete=models.CASCADE)
 	is_multiple 	    = models.BooleanField(default=0)
 	is_document         = models.BooleanField(default=0)
-	parent_question     = models.ForeignKey("Assessment_question",null=True,blank=True)
+	parent_question     = models.ForeignKey("Assessment_question", null=True, blank=True, on_delete=models.CASCADE)
 	has_follow_up		= models.BooleanField(default=0)
-	code                = models.CharField(max_length=200,blank=True,null=True)
+	code                = models.CharField(max_length=200, blank=True,null=True)
 	is_import   	    = models.BooleanField(default=0)
 	has_multiple_answer = models.BooleanField(default=0)
 	is_general			= models.BooleanField(default=0)
-	transaction_types	= ArrayField(models.IntegerField("Transaction_type"),blank=True,null=True)
-	company 			= models.ForeignKey("Company",blank=True,null=True)
-	answer_type			= models.CharField(max_length=200,blank=True,null=True)
+	transaction_types	= ArrayField(models.IntegerField("Transaction_type"), blank=True, null=True)
+	company 			= models.ForeignKey("Company", blank=True,null=True, on_delete=models.CASCADE)
+	answer_type			= models.CharField(max_length=200, blank=True,null=True)
 	has_related			= models.BooleanField(default=0)
 	uploaded_question	= models.BooleanField(default=0)
 	timer 				= models.DurationField(blank=True,null=True)
@@ -141,11 +137,11 @@ class Assessment_question(models.Model):
 
 
 class Assessment_effect(models.Model):
-	question  = models.ForeignKey("Assessment_question")
+	question  = models.ForeignKey("Assessment_question", on_delete=models.CASCADE)
 	value     = models.CharField(max_length=200,blank=True,null=True)
 	is_active = models.BooleanField(default=1)
 	is_import = models.BooleanField(default=0)
-	company   = models.ForeignKey("Company",blank=True,null=True)
+	company   = models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
 
 	class Meta:
 		app_label = "web_admin"
@@ -160,11 +156,13 @@ class Assessment_effect(models.Model):
 			"is_import" : self.is_import,
 		}
 
+
 class Assessment_recommendation(models.Model):
+
 	value     = models.CharField(max_length=200,blank=True,null=True)
 	is_active = models.BooleanField(default=1)
 	is_import = models.BooleanField(default=0)
-	company   = models.ForeignKey("Company",blank=True,null=True)
+	company   = models.ForeignKey("Company",blank=True,null=True ,on_delete=models.CASCADE)
 
 	class Meta:
 		app_label = "web_admin"
@@ -178,9 +176,11 @@ class Assessment_recommendation(models.Model):
 			"is_import" : self.is_import,
 		}
 
+
 class Assessment_answer(models.Model):
-	question           = models.ForeignKey("Assessment_question")
-	company_assessment = models.ForeignKey("Company_assessment")
+
+	question           = models.ForeignKey("Assessment_question" ,on_delete=models.CASCADE)
+	company_assessment = models.ForeignKey("Company_assessment", on_delete=models.CASCADE)
 	choice             = ArrayField(models.IntegerField("Choice"),blank=True,null=True)
 	text_answer        = models.CharField(max_length=200,null=True,blank=True)
 	document_image	   = ProcessedImageField(upload_to='assessment/document_images/',
@@ -189,8 +189,8 @@ class Assessment_answer(models.Model):
 									   options = {'quality': 100},
 									   blank=True,
 									   null=True)
-	transaction_type   = models.ForeignKey("Transaction_type",blank=True,null=True)
-	company 		   = models.ForeignKey("Company",blank=True,null=True)
+	transaction_type   = models.ForeignKey("Transaction_type",blank=True,null=True ,on_delete=models.CASCADE)
+	company 		   = models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
 	created_on 		   = models.DateTimeField(auto_now_add=True,null=True,blank=True)
 	is_deleted		   = models.BooleanField(default=0)
 	uploaded_question  = models.BooleanField(default=0)
@@ -255,11 +255,11 @@ class Assessment_answer(models.Model):
 		return assessment_answers
 
 class Assessment_finding(models.Model):
-	question  = models.ForeignKey("Assessment_question")
+	question  = models.ForeignKey("Assessment_question", on_delete=models.CASCADE)
 	value     = models.CharField(max_length=200,blank=True,null=True)
 	is_active = models.BooleanField(default=1)
 	is_import = models.BooleanField(default=0)
-	company   = models.ForeignKey("Company",blank=True,null=True)
+	company   = models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
 
 	class Meta:
 		app_label = "web_admin"
@@ -274,20 +274,24 @@ class Assessment_finding(models.Model):
 			"is_import" : self.is_import,
 		}
 
+
 class Generated_assessment_recommendation(models.Model):
-	company_assessment = models.ForeignKey("Company_assessment")
+
+	company_assessment = models.ForeignKey("Company_assessment", on_delete=models.CASCADE)
 	recommendations    = ArrayField(models.IntegerField("Assessment_recommendation"),blank=True,null=True)
-	company 		   = models.ForeignKey("Company",blank=True,null=True)
+	company 		   = models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
 
 	class Meta:
 		app_label = "web_admin"
 		db_table  = "generated_assessment_recommendations"
 
+
 class Related_question(models.Model):
-	related_questions = ArrayField(models.IntegerField("Assessment_question"),blank=True,null=True)
+
+	related_questions = ArrayField(models.IntegerField("Assessment_question"), blank=True, null=True)
 	is_active 		  = models.BooleanField(default=1)
 	is_import 		  = models.BooleanField(default=0)
-	company 		  = models.ForeignKey("Company",blank=True,null=True)
+	company 		  = models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
 
 	class Meta:
 		app_label = "web_admin"
@@ -313,12 +317,14 @@ class Related_question(models.Model):
 
 		return related_questions 
 
+
 class Assessment_score(models.Model):
-	company_assessment = models.ForeignKey("Company_assessment")
-	transaction_type   = models.ForeignKey("Transaction_type")
+
+	company_assessment = models.ForeignKey("Company_assessment", on_delete=models.CASCADE)
+	transaction_type   = models.ForeignKey("Transaction_type", on_delete=models.CASCADE)
 	is_active 		   = models.BooleanField(default=1)
 	score 			   = models.IntegerField(blank=True, null=True)
-	question 		   = models.ForeignKey("Assessment_question",blank=True,null=True)
+	question 		   = models.ForeignKey("Assessment_question",blank=True,null=True, on_delete=models.CASCADE)
 	uploaded_question  = models.BooleanField(default=0)
 
 	class Meta:
@@ -334,14 +340,16 @@ class Assessment_score(models.Model):
 			'uploaded_question'  : self.uploaded_question,
 		}
 
+
 class Assessment_session(models.Model):
-	company_assessment = models.ForeignKey("Company_assessment")
+
+	company_assessment = models.ForeignKey("Company_assessment", on_delete=models.CASCADE)
 	date 			   = models.DateField(blank=True,null=True)
 	time_start		   = models.TimeField(auto_now=False, auto_now_add=False, blank = True, null = True)
 	time_end		   = models.TimeField(auto_now=False, auto_now_add=False, blank = True, null = True)
 	is_deleted 		   = models.BooleanField(default=0)
-	transaction_type   = models.ForeignKey("Transaction_type",blank=True,null=True)
-	question 		   = models.ForeignKey("Assessment_question",blank=True,null=True)
+	transaction_type   = models.ForeignKey("Transaction_type",blank=True,null=True, on_delete=models.CASCADE)
+	question 		   = models.ForeignKey("Assessment_question",blank=True,null=True, on_delete=models.CASCADE)
 
 	class Meta:
 		app_label = "web_admin"
@@ -357,7 +365,7 @@ class Assessment_session(models.Model):
 		}
 
 class Assessment_image(models.Model):
-	question  = models.ForeignKey("Assessment_question")
+	question  = models.ForeignKey("Assessment_question", on_delete=models.CASCADE)
 	is_active = models.BooleanField(default=1)
 	image 	  = ProcessedImageField(upload_to='assessment/questions/',
 								   processors=[ResizeToFit(1000,1000)],
@@ -365,7 +373,7 @@ class Assessment_image(models.Model):
 								   options = {'quality': 100},
 								   blank=True,
 								   null=True)
-	company   = models.ForeignKey("Company",blank=True,null=True)
+	company   = models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
 	order 	  = models.IntegerField(blank=True,null=True)
 
 	class Meta:
@@ -399,11 +407,11 @@ class Assessment_image(models.Model):
 		return questionImage
 
 class Assessment_image_answer(models.Model):
-	question  = models.ForeignKey("Assessment_question")
+	question  = models.ForeignKey("Assessment_question", on_delete=models.CASCADE)
 	is_active = models.BooleanField(default=1)
 	item_no   = models.IntegerField(blank=True, null=True)
 	answer    = models.CharField(max_length=200,blank=True,null=True)
-	company   = models.ForeignKey("Company",blank=True,null=True)
+	company   = models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
 
 	class Meta:
 		app_label = "web_admin"
@@ -431,7 +439,7 @@ class Assessment_image_answer(models.Model):
 		return row
 
 class Multiple_image_answer(models.Model):
-	image_answer = models.ForeignKey("Assessment_image_answer")
+	image_answer = models.ForeignKey("Assessment_image_answer", on_delete=models.CASCADE)
 	name 		 = models.CharField(max_length=200,blank=True,null=True)
 	is_active 	 = models.BooleanField(default=1)
 
@@ -450,13 +458,13 @@ class Multiple_image_answer(models.Model):
 
 
 class Assessment_upload_answer(models.Model):
-	question 		   = models.ForeignKey("Assessment_question")
+	question 		   = models.ForeignKey("Assessment_question", on_delete=models.CASCADE)
 	is_active 		   = models.BooleanField(default=1)
 	item_no 		   = models.IntegerField(blank=True,null=True)
 	answer 			   = models.CharField(max_length=200,blank=True,null=True)
 	answer_syntax	   = models.CharField(max_length=200,blank=True,null=True)
-	transaction_type   = models.ForeignKey("Transaction_type")
-	company_assessment = models.ForeignKey("Company_assessment")
+	transaction_type   = models.ForeignKey("Transaction_type", on_delete=models.CASCADE)
+	company_assessment = models.ForeignKey("Company_assessment", on_delete=models.CASCADE)
 	is_deleted 		   = models.BooleanField(default=0)
 
 	class Meta:
@@ -475,9 +483,9 @@ class Assessment_upload_answer(models.Model):
 		}
 
 class Assessment_answer_image(models.Model):
-	question 		   = models.ForeignKey("Assessment_question")
-	company_assessment = models.ForeignKey("Company_assessment")
-	transaction_type   = models.ForeignKey("Transaction_type")
+	question 		   = models.ForeignKey("Assessment_question", on_delete=models.CASCADE)
+	company_assessment = models.ForeignKey("Company_assessment", on_delete=models.CASCADE)
+	transaction_type   = models.ForeignKey("Transaction_type", on_delete=models.CASCADE)
 	image 			   = ProcessedImageField(upload_to='assessment/document_images/',
 						   processors=[ResizeToFit(1000,1000)],
 						   format='PNG',
