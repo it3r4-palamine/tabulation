@@ -51,35 +51,36 @@ class UserMiddleware(object):
 			"learning_center_signup",
 		]
 
-		print(first_url)
+		student_urls = [
+			"student_portal"
+		]
 
 		if first_url in public_urls:
 			return self.get_response(request)
 
-		# self.is_public_page(request, first_url)
-
-		if first_url == "student_portal" and second_url == "login" and request.user.is_authenticated():
-			return redirect("/student_portal/dashboard/")
-
-		if first_url == "student_portal" and request.user.is_authenticated():
+		if first_url in student_urls and request.user.is_student:
 			return self.get_response(request)
 
-		if first_url == "student_portal" and second_url == "login":
+		if first_url not in student_urls and request.user.is_student:
 			return self.get_response(request)
+			return redirect("/student_portal/")
 
-		if first_url == "student_portal" and second_url == "login_employee":
-			return self.get_response(request)
+		# if first_url == "student_portal" and request.user.is_authenticated():
+		# 	return redirect("/student_portal/dashboard/")
+		#
+		# if first_url == "student_portal" and request.user.is_authenticated():
+		# 	return self.get_response(request)
+		#
+		# if first_url == "student_portal" and second_url == "login":
+		# 	return self.get_response(request)
+		#
+		# if first_url == "student_portal" and second_url == "login":
+		# 	return self.get_response(request)
 
-		if first_url == "student_portal" and not request.user.is_authenticated():
-			return redirect("/student_portal/login/")
+		# if first_url == "student_portal":
+		# 	return self.get_response(request)
 
-		if first_url == "student_portal" and second_url == "login":
-			return self.get_response(request)
-
-		if first_url == "student_portal":
-			return self.get_response(request)
-
-		# if not request.user.is_anonymous() and request.user.is_authenticated() and request.user.is_student and not first_url == "student_portal":
+		# if request.user.is_authenticated and request.user.is_student and not first_url == "student_portal":
 		# 	return redirect("/student_portal/")
 
 		not_required_session = [
@@ -107,13 +108,7 @@ class UserMiddleware(object):
 		return self.get_response(request)
 
 	def redirect_to(self, page, error_message=None, actually_redirect=True):
-		"""Redirects the user to another page.
 
-        Keyword arguments:
-        page -- the page to redirect the user to.
-        error_message -- the error message to print to the terminal (default: None)
-        actually_redirect -- used for testing. If False, the error message is printed but no actual redirection is done. (default: True)
-        """
 		if error_message:
 			print("AUTHENTICATION ERROR: " + error_message)
 
