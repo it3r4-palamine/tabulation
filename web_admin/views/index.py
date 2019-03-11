@@ -1,13 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.authtoken.models import Token
-
 from ..forms.company import *
 from ..forms.user_form import *
 from ..forms.user_type import *
 from ..models.user import *
 from ..views.common import *
 from utils.response_handler import extract_json_data
-
+import re
 
 def loginpage(request):
 	if request.user.id:
@@ -25,7 +24,13 @@ def signin(request):
 def log_in(request):
 	if request.method == "POST":
 		data = json.loads(request.body.decode("utf-8"))
-		user = authenticate(username=data['email'], password=data['password'])
+		username = data.get("email", None)
+
+		if re.match(r"[^@]+@[^@]+\.[^@]+", username):
+			test = User.objects.get(email=username)
+			username = test.username
+
+		user = authenticate(username=username, password=data['password'])
 
 		if user:
 			if not user.is_active:

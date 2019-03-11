@@ -8,26 +8,26 @@
 
                 <div class="col-lg-6" style="background-color: rgba(255, 255, 255, 1); padding : 30px">
 
-                    <h1>Sign In as Student</h1>
+                    <h1>Sign in as Student</h1>
 
                     <br>
                     <label for="login">Email</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" ng-model="credentials.email">
 
                     <br>
                     <label for="login">Password</label>
-                    <input type="password" class="form-control">
+                    <input type="password" class="form-control" ng-model="credentials.password" ng-enter="login()">
 
                     <br>
 
-                    <button class="btn btn-block btn-lg btn-rounded text-white" style="background-color: #FFE53B; background-image: linear-gradient(45deg, #FFE53B 0%, #FF2525 74%);">Login</button>
+                    <button class="btn btn-block btn-lg btn-rounded text-white" style="background-color: #FFE53B; background-image: linear-gradient(45deg, #FFE53B 0%, #FF2525 74%);" ng-click="login(credentials)">Login</button>
 
                     <br>
 
                 </div>
                 <div class="col-lg-6" style="margin-top:-25px; padding : 40px; background-color: #FFE53B; background-image: linear-gradient(45deg, #FFE53B 0%, #FF2525 74%);">
 
-                    <h1 class="text-white">Sign Up as Student</h1>
+                    <h1 class="text-white">Sign up as Student</h1>
 
                     <br>
                     <label for="login" class="text-white">Email</label>

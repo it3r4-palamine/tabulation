@@ -12,6 +12,7 @@ app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,Sweet
 	$scope.reg_form = {};
 	
 	$scope.login = function(credentials){
+
 		$http.post('/login/',credentials)
 		.success(function(response){
 			toastr.success("Loggin In...")
@@ -41,6 +42,8 @@ app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,Sweet
 			toastr.error(err)
 		})
 	}
+
+
 });
 
 app.config(function($stateProvider,$urlRouterProvider) {
