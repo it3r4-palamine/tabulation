@@ -53,23 +53,22 @@ def sentence_matching(target_sentence,model,pk,model_pk=None):
     if model != "Assessment_recommendation":
         filters["question"] = pk
 
-	model = str2model(model)
+    model = str2model(model)
 
-	if model_pk:
-		sentences = model.objects.filter(**filters).exclude(id=model_pk).values_list('value',flat=True)
-	else:
-		sentences = model.objects.filter(**filters).values_list('value',flat=True)
+    if model_pk:
+        sentences = model.objects.filter(**filters).exclude(id=model_pk).values_list('value',flat=True)
+    else:
+        sentences = model.objects.filter(**filters).values_list('value',flat=True)
 
-	similar_sentences = None
-	sentences = [x.lower() for x in sentences]
-	if target_sentence.lower() in sentences:
-		similar_sentences = target_sentence
-	else:
-		for sentence in sentences:
-			result = is_ci_partial_set_token_stopword_lemma_match(target_sentence, sentence)
-			if result:
-				similar_sentences = sentence
-	
+    similar_sentences = None
+    sentences = [x.lower() for x in sentences]
+    if target_sentence.lower() in sentences:
+        similar_sentences = target_sentence
+    else:
+        for sentence in sentences:
+            result = is_ci_partial_set_token_stopword_lemma_match(target_sentence, sentence)
+            if result:
+                similar_sentences = sentence
 
-	return similar_sentences
+    return similar_sentences
 

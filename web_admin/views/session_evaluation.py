@@ -26,7 +26,6 @@ def read_student_session(request, session_id):
 		records = []
 		filters = get_data(request)
 
-		print('here')
 
 		pagination = filters.pop("pagination",None)
 		sort_by = filters.pop("sort",None)
@@ -214,10 +213,9 @@ def create(request,from_api=False,session=None):
 					if exercise_form.is_valid():
 						exercise_form.save()
 					else:
-						print exercise_form.errors
+						raise_error(exercise_form.errors)
 
 				if from_api:
-					print "api"
 					response = {
 						'status' : True,
 						'message' : "Success",
@@ -251,7 +249,6 @@ def create(request,from_api=False,session=None):
 					if exercise_form.is_valid():
 						exercise_form.save()
 					else:
-						print exercise_form.errors
 						raise ValueError(exercise_form.errors)
 		else:
 			raise ValueError(session_form.errors)
@@ -271,10 +268,6 @@ def create(request,from_api=False,session=None):
 		
 		return success_list(result, False)
 	except Exception as e:
-		exc_type, exc_obj, exc_tb = sys.exc_info()
-		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-		print(exc_type, fname, exc_tb.tb_lineno)
-
 		cprint(e)
 		if result:
 			result.delete()

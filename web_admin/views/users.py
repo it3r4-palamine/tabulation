@@ -194,21 +194,6 @@ def change_password(request):
         else:
             return error(user_form.errors)
 
-        if request.method == "POST":
-            try:
-                user_data = req_data(request)
-                user_data['is_active'] = True
-                user_form = CustomUserChangeForm(data=user_data, instance=request.user)
-                if user_form.is_valid():
-                    user_form.save()
-                    return success("Account editing success!")
-                else:
-                    print(user_form.errors)
-                    return error(user_form.errors)
-            except Exception, e:
-                return error(e)
-        else:
-            return error("Invalid request method")
     except Exception as e:
         return HttpResponse(e, status=400)
 
@@ -309,7 +294,6 @@ def read_user_reconciled_credits(request):
 
         return success_list(results, False)
     except Exception as e:
-        print str(e)
         return HttpResponse(e, status=400)
 
 
@@ -336,7 +320,6 @@ def reconcile_student_credits(request):
 
         return HttpResponse("Reconcile Complete", status=200)
     except Exception as e:
-        print e
         return HttpResponse(e, status=400)
 
 
@@ -374,18 +357,16 @@ def get_intelex_students(request):
                     for credits in record['enrollments']:
                         session_credits = credits["session_credits"]
 
-                        user_credits = {
-                            'user': user_id,
-                            'enrollment_id': credits['enrollment_id'],
-                            'program_id': credits['program_id'],
-                            'program_name': credits["program"]["name"],
-                            'session_start_date': datetime.strptime(credits['session_start_date'], '%Y-%m-%d').date(),
-                            'session_end_date': datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
-							'enrollment_code' : credits["code"]
-                            # 'session_credits' : credits['session_credits']
-                        }
-                        user_credits["session_credits"] = timedelta(seconds=credits['total_time_left_seconds']) if \
-                        credits['total_time_left_seconds'] > 0 else timedelta(seconds=credits['session_credits'])
+                        user_credits = {'user': user_id, 'enrollment_id': credits['enrollment_id'],
+                                        'program_id': credits['program_id'], 'program_name': credits["program"]["name"],
+                                        'session_start_date': datetime.strptime(credits['session_start_date'],
+                                                                                '%Y-%m-%d').date(),
+                                        'session_end_date': datetime.strptime(credits['session_end_date'],
+                                                                              '%Y-%m-%d').date(),
+                                        'enrollment_code': credits["code"],
+                                        "session_credits": timedelta(seconds=credits['total_time_left_seconds']) if \
+                                            credits['total_time_left_seconds'] > 0 else timedelta(
+                                            seconds=credits['session_credits'])}
                         try:
                             instance = User_credit.objects.get(enrollment_id=credits['enrollment_id'])
                             user_credits_form = User_credit_form(user_credits, instance=instance)
@@ -394,8 +375,6 @@ def get_intelex_students(request):
 
                         if user_credits_form.is_valid():
                             user_credits_form.save()
-                        else:
-                            print user_credits_form
                 continue
             else:
                 student_user = User_type.objects.filter(is_active=True, company=datus['company'],
@@ -425,17 +404,15 @@ def get_intelex_students(request):
                     if 'enrollments' in record:
                         for credits in record['enrollments']:
                             session_credits = credits["session_credits"]
-                            user_credits = {
-                                'user': user_id,
-                                'enrollment_id': credits['enrollment_id'],
-                                'program_id': credits['program_id'],
-                                'session_start_date': datetime.strptime(credits['session_start_date'],
-                                                                        '%Y-%m-%d').date(),
-                                'session_end_date': datetime.strptime(credits['session_end_date'], '%Y-%m-%d').date(),
-                                # 'session_credits' : credits['session_credits']
-                            }
-                            user_credits["session_credits"] = timedelta(seconds=credits['total_time_left_seconds']) if \
-                            credits['total_time_left_seconds'] > 0 else timedelta(seconds=credits['session_credits'])
+                            user_credits = {'user': user_id, 'enrollment_id': credits['enrollment_id'],
+                                            'program_id': credits['program_id'],
+                                            'session_start_date': datetime.strptime(credits['session_start_date'],
+                                                                                    '%Y-%m-%d').date(),
+                                            'session_end_date': datetime.strptime(credits['session_end_date'],
+                                                                                  '%Y-%m-%d').date(),
+                                            "session_credits": timedelta(seconds=credits['total_time_left_seconds']) if \
+                                                credits['total_time_left_seconds'] > 0 else timedelta(
+                                                seconds=credits['session_credits'])}
                             try:
                                 instance = User_credit.objects.get(enrollment_id=credits['enrollment_id'])
                                 user_credits_form = User_credit_form(user_credits, instance=instance)
@@ -445,15 +422,11 @@ def get_intelex_students(request):
                             if user_credits_form.is_valid():
                                 user_credits_form.save()
                             else:
-                                print user_credits_form
+                                print(user_credits_form)
                 else:
-                    print user_type
+                    print(user_type)
         return HttpResponse("Successfully saved.", status=200)
     except Exception as e:
-        print e
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
         return HttpResponse(e, status=400)
 
 

@@ -113,7 +113,8 @@ def create(request):
 	except Exception as err:
 		return HttpResponse(err, status = 400)
 
-def delete(request,id = None):
+
+def delete(request, id=None):
 	try:
 		c_term = "Company"
 		terms  = get_display_terms(request)
@@ -133,6 +134,7 @@ def delete(request,id = None):
 	except Exception as e:
 		return HttpResponse(e, status = 400)
 
+
 def get_intelex_subjects(request):
 	try:
 		datus 			= req_data(request,True)
@@ -144,7 +146,6 @@ def get_intelex_subjects(request):
 		records 		= result.json()
 
 		for record in records['records']:
-			print record
 			has_exists = Company_rename.objects.filter(name__iexact=record['name'],program_id=record['id'],is_active=True,company=datus['company']).first()
 			if has_exists:
 				t_type 			  = has_exists.transaction_type

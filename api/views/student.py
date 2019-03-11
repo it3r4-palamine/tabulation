@@ -11,7 +11,6 @@ class StudentInfo(APIView):
 		try:
 			data = extract_json_data(request)
 
-			print(data)
 
 			student = { 
 				"code" : "00001",
@@ -200,44 +199,43 @@ class StudentInfo(APIView):
 			return Response("ERROR")
 
 
-
 @api_view(["POST"])
 def get_students(request):
-    try:
-        results = {}
-        records = []
+	try:
+		results = {}
+		records = []
 
-        users = User.objects.filter(is_active=True,user_type=1)
+		users = User.objects.filter(is_active=True,user_type=1)
 
-        for user in users:
-        	records.append(user.get_dict(dict_type=DEVICE))
+		for user in users:
+			records.append(user.get_dict(dict_type=DEVICE))
 
-        results["records"] = records
+		results["records"] = records
 
-        return success_response(results)
-    except Exception as e:
-    	print e
-        return error_http_response(str(e))
+		return success_response(results)
+	except Exception as e:
+		return error_http_response(str(e))
+
 
 @api_view(["POST"])
 def get_student(request):
-    try:
-    	data = extract_json_data(request)
-        results = {}
-        records = []
+	try:
+		data = extract_json_data(request)
+		results = {}
+		records = []
 
-        users = User.objects.filter(is_active=True,pk=data["student_id"])
+		users = User.objects.filter(is_active=True, pk=data["student_id"])
 
-        for user in users:
-        	row = user.get_dict(dict_type=DEVICE)
-        	row["enrolled_programs"] = user.get_active_enrolled_programs()
-    		records.append(row)
+		for user in users:
+			row = user.get_dict(dict_type=DEVICE)
+			row["enrolled_programs"] = user.get_active_enrolled_programs()
+			records.append(row)
 
-        results["records"] = records
+		results["records"] = records
 
-        return success_response(results)
-    except Exception as e:
-        return error_http_response(str(e))
+		return success_response(results)
+	except Exception as e:
+		return error_http_response(str(e))
 
 @api_view(["POST"])
 def get_students_with_information(request):
@@ -258,14 +256,12 @@ def get_students_with_information(request):
 
         return success_response(results)
     except Exception as e:
-    	print e
         return error_http_response(str(e))
 
 @api_view(["POST"])
 def save_student_time_logs(request):
 	try:	
 		data = req_data(request)
-
 
 		return success_response("Success")
 	except Exception as e:

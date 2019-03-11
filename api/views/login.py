@@ -42,7 +42,6 @@ class ObtainAuthToken(APIView):
             serializer = self.serializer_class(data=request_data, context={'request': request})
             
             if not serializer.is_valid():
-                print serializer.errors
                 if serializer.errors.get("non_field_errors", None) and serializer.errors["non_field_errors"][0] == "Unable to log in with provided credentials.":
                     return Response("Invalid Username/Password", status=status.HTTP_400_BAD_REQUEST)
             
@@ -87,7 +86,6 @@ class Get_company_and_user_types(APIView):
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print_error(filename, "Get_company_and_user_types", e, sys.exc_traceback.tb_lineno)
             return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
@@ -96,7 +94,6 @@ class GetBase64Photo(APIView):
 
     def post(self, request):
         try:
-            print("here")
             assessmentImage = Assessment_image.objects.filter(question=21, is_active=True).first()
 
             image = open('web_admin/static/uploads/%s'%(assessmentImage.image), 'rb')
@@ -109,7 +106,6 @@ class GetBase64Photo(APIView):
             return Response(data)
 
         except Exception as e:
-            print(e)
             return Response(str(e), status = 500)
 
 # Actual File
@@ -123,7 +119,6 @@ class GetPhoto(APIView):
             return HttpResponse(image, content_type="image/png")
 
         except Exception as e:
-            print(e)
             return Response(str(e), status = 500)
 
 # Final
@@ -163,12 +158,6 @@ class GetAnswerImagePhoto(APIView):
 class GetData(APIView):
 
     def post(self, request, *args, **kwargs):
-
-        if 'isMobile' in request.data:
-            print "werk werk"
-
-        print request.META.get('HTTP_MOBILE')
-
 
         if 'isV2' in request.data and request.data['isV2']:
             isV2 = request.data['isV2']
@@ -546,12 +535,6 @@ class SyncAssessments(APIView):
 
             return Response({})
         except Exception as e:
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-
-            print(e)
-            print(fname)
-            print(sys.exc_traceback.tb_lineno)
             return HttpResponse(e, status = 400)
 
 class FileUpload(APIView):
@@ -587,11 +570,9 @@ class FileUpload(APIView):
                 raise_error(json.dumps(serializer.errors))
 
 
-            print file_obj
             # do some stuff with uploaded file
             return Response(status=204)
         except Exception as e:
-            print str(e)
             return Response("" + str(e),status=500)
 
 

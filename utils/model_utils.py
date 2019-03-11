@@ -64,7 +64,6 @@ def increment_code(code):
 			raise_error()
 
 	except Exception as e:
-		print e
 		return "0001"
 
 def code_model_selector(folder_name):

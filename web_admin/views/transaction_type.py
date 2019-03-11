@@ -210,5 +210,4 @@ def get_intelex_exercises(request):
 		return HttpResponse("Successfully saved.", status = 200)
 		# return HttpResponse("Success", status=200)
 	except Exception as e:
-		print e
 		return HttpResponse(e,status=400)

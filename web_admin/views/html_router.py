@@ -9,8 +9,7 @@ def get_dialog_document(request, folder_name, file_name, new):
 
 		return render(request, file_location, return_data)
 	except Exception as e:
-		print e
-		return render(request, file_location) 
+		return render(request, file_location)
 
 
 def get_common_document(request,folder_name,file_name):

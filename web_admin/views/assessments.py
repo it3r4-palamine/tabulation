@@ -404,23 +404,15 @@ def upload(request):
 					for newImage in json.loads(data["newImages"]):
 						if image.name == newImage['name']:
 							image_Q['order'] = newImage['order']
-							print image_Q
 
 					image_question = Assessment_image_form(image_Q, image_F)
 
 					if image_question.is_valid():
 						image_question.save()
 
-			# saveData(request, data, assessment_save.pk)
 			return success(assessment_save.pk)
 
 		except Exception as e:
-			exc_type, exc_obj, exc_tb = sys.exc_info()
-			filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-			linenum = sys.exc_traceback.tb_lineno,
-			print(filename)
-			print(linenum)
-			print(e)
 			return error(e)
 
 	else: return error('method error')

@@ -143,7 +143,6 @@ def read_enrollees(request):
 
 		return success_list(results, False)
 	except Exception as e:	
-		print e
 		return error_response(request, e, show_line=True)
 
 def save_enrollment(request):
@@ -193,7 +192,7 @@ def save_enrollment(request):
 					if payment_form.is_valid():
 						payment_form.save()
 					else:
-						print payment_form.errors
+						raise_error(payment_form.errors)
 
 		else:
 			raise ValueError(form.errors)
@@ -209,7 +208,6 @@ def save_enrollment(request):
 	except ValueError as e:
 		return error_http_response(str(e))
 	except Exception as e:
-		print(e)
 		return error_http_response(str(e))
 
 def check_reference_no(request,isChecked=False):

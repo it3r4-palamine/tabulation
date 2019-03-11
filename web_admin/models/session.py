@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from utils.response_handler import *
+from django.utils import timezone
 
 
 class StudentSession(models.Model):
@@ -10,7 +11,7 @@ class StudentSession(models.Model):
     evaluated_by    = models.ForeignKey("User", blank=True, null=True, related_name="evaluated_by", on_delete=models.CASCADE)
     enrollment      = models.ForeignKey("Enrollment", blank=True, null=True, related_name="enrollment", on_delete=models.CASCADE)
     code            = models.CharField(max_length=100, blank=True, null=True)
-    session_date    = models.DateField(blank=False, null=False, default=datetime.today())
+    session_date    = models.DateField(blank=False, null=False, default=timezone.now)
     session_timein  = models.TimeField(blank=True, null=True, default=None)
     session_timeout = models.TimeField(blank=True, null=True, default=None)
     comments        = models.TextField(blank=True, null=True)
