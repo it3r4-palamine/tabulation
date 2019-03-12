@@ -18,8 +18,6 @@ def authenticate_user(request):
 		username = data.get("email", None)
 		password = data.get("password", None)
 
-		print(data)
-
 		if not username or not password:
 			raise_error("Please provide Email and Password")
 
@@ -67,13 +65,13 @@ def dashb2oard(request):
 def dashboard(request):
 	return render(request, "dashboard/dashboard.html", {"pagename" : "Student Evaluation"})
 
+
 def register_company(request):
 	company_instance = None
 	user_instance    = None
 	try:
 		data     = extract_json_data(request)
 		company  = {}
-		print(data)
 
 		if data['password1'] != data['password2']:
 			return error("Password do not match!")
@@ -97,6 +95,11 @@ def register_company(request):
 
 			if user_form.is_valid():
 				user_instance = user_form.save()
+				user = authenticate(username= user_instance.username, password=data['password1'])
+
+				if user:
+					return redirect("/")
+
 			else:
 				raise_error(user_form.errors)
 
@@ -114,65 +117,76 @@ def register_company(request):
 
 		return error(e)
 
-def register(request):
-	if request.method == "POST":
-		data = json.loads(request.body.decode("utf-8"))
+def register_student(request):
+	try:
+		data = extract_json_data(request)
 
-		if data['password1'] != data['password2']:
-			return error("Password do not match!")
-		company = {}
-		if 'company_name' in data:
-			company['name'] = data['company_name']
-			company['is_active'] = True
+		print(data)
+		# return succe
+	except Exception as e:
+		return error(e)
 
-		if not Company.objects.filter(name=company['name']).exists():
-			if User.objects.filter(email=data['email']).exists():
-				return error('Email already exists.')
 
-			company_form = CompanyForm(company)
-			if company_form.is_valid():
-				company_data = company_form.save()
 
-				user_types = ['Technical','Facilitator','Student']
-				user_type_id = None
-				for user_type in user_types:
-					datus = {}
-					datus['name'] = user_type
-					datus['is_active'] = True
-					datus['is_default'] = True
-					datus['company'] = company_data.id
-					user_type_form = User_type_form(datus)
-
-					if user_type_form.is_valid():
-						user_type_data = user_type_form.save()
-						if user_type == 'Technical':
-							user_type_id = user_type_data.id
-
-				user_email = data['email']
-				password1 = data['password1']
-				password2 = data['password2']
-				data['company'] = company_data.id
-				data['is_admin'] = True
-				data['is_active'] = True
-				data['email'] = user_email
-				data['password1'] = password1
-				data['password2'] = password2
-				data['user_type'] = user_type_id
-
-				user_form = CustomUserCreationForm(data)
-				if user_form.is_valid():
-					user_data = user_form.save()
-				else:
-					company_data.delete()
-					return error(user_form.errors)
-			else:
-				return error(company_form.errors)
-		else:
-			return error("Company already exists.")
-
-		return success("Successfully created!")
-	else:
-		return redirect("loginpage")
+	#
+	# if request.method == "POST":
+	# 	data = json.loads(request.body.decode("utf-8"))
+	#
+	# 	if data['password1'] != data['password2']:
+	# 		return error("Password do not match!")
+	# 	company = {}
+	# 	if 'company_name' in data:
+	# 		company['name'] = data['company_name']
+	# 		company['is_active'] = True
+	#
+	# 	if not Company.objects.filter(name=company['name']).exists():
+	# 		if User.objects.filter(email=data['email']).exists():
+	# 			return error('Email already exists.')
+	#
+	# 		company_form = CompanyForm(company)
+	# 		if company_form.is_valid():
+	# 			company_data = company_form.save()
+	#
+	# 			user_types = ['Technical','Facilitator','Student']
+	# 			user_type_id = None
+	# 			for user_type in user_types:
+	# 				datus = {}
+	# 				datus['name'] = user_type
+	# 				datus['is_active'] = True
+	# 				datus['is_default'] = True
+	# 				datus['company'] = company_data.id
+	# 				user_type_form = User_type_form(datus)
+	#
+	# 				if user_type_form.is_valid():
+	# 					user_type_data = user_type_form.save()
+	# 					if user_type == 'Technical':
+	# 						user_type_id = user_type_data.id
+	#
+	# 			user_email = data['email']
+	# 			password1 = data['password1']
+	# 			password2 = data['password2']
+	# 			data['company'] = company_data.id
+	# 			data['is_admin'] = True
+	# 			data['is_active'] = True
+	# 			data['email'] = user_email
+	# 			data['password1'] = password1
+	# 			data['password2'] = password2
+	# 			data['user_type'] = user_type_id
+	#
+	# 			user_form = CustomUserCreationForm(data)
+	# 			if user_form.is_valid():
+	# 				user_data = user_form.save()
+	# 			else:
+	# 				company_data.delete()
+	# 				return error(user_form.errors)
+	# 		else:
+	# 			return error(company_form.errors)
+	# 	else:
+	# 		return error("Company already exists.")
+	#
+	# 	return success("Successfully created!")
+	# else:
+	# 	return redirect("loginpage")
 
 
 def get_questions_page(request):

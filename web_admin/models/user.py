@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.core.validators import RegexValidator
 from django.utils import timezone
+from django.contrib.auth.hashers import make_password
 
 # MODELS
 from ..models.company import *
@@ -14,22 +15,19 @@ from ..models.enrollment import Enrollment
 
 class UserManager(BaseUserManager):
 
-	def create_user(self, email, password=None, **extra_fields):
-		if not email:
+	def create_superuser(self, username, password, email=None):
+		if not username:
 			raise ValueError('The given email must be set')
 
-		user = self.model(email=email, **extra_fields)
-		user.set_password(password)
-		user.save()
-		return user
+		user = self.model(
+			username=username,
+			password=make_password(password),
+			email=email,
+		)
 
-	def create_superuser(self, email, password):
-		if not email:
-			raise ValueError('The given email must be set')
-
-		user = self.model(email=email)
-		user.set_password(password)
+		user.is_staff = True
 		user.is_admin = True
+		user.is_superuser = True
 		user.save()
 		return user
 
@@ -69,6 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	objects 			= UserManager()
 
 	USERNAME_FIELD = 'username'
+	REQUIRED_FIELDS = ['email']
 
 	class Meta:
 		app_label = "web_admin"

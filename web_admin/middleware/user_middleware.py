@@ -72,10 +72,10 @@ class UserMiddleware(object):
 			"",
 		]
 
-		if first_url not in not_required_session and not request.user.id:
-			if request.method == "GET":
-				if first_url not in no_action:
-					return redirect("loginpage")
+		# if first_url not in not_required_session and not request.user.id:
+		# 	if request.method == "GET":
+		# 		if first_url not in no_action:
+		# 			return redirect("loginpage")
 
 		if first_url in not_required_session and request.user.id:
 			if request.method == "GET":

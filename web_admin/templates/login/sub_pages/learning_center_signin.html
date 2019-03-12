@@ -12,23 +12,23 @@
 
                     <br>
                     <label for="login" class="text-white">Name of your Learning Center</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" ng-model="learning_center_form.name">
 
                     <br>
                     <label for="login" class="text-white">Email</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" ng-model="learning_center_form.email">
 
                     <br>
                     <label for="login" class="text-white">Password</label>
-                    <input type="password" class="form-control">
+                    <input type="password" class="form-control" ng-model="learning_center_form.password1">
 
                     <br>
                     <label for="login" class="text-white">Confirm Password</label>
-                    <input type="password" class="form-control">
+                    <input type="password" class="form-control" ng-model="learning_center_form.password2">
 
                     <br>
 
-                    <button class="btn btn-default btn-outline btn-block btn-lg btn-rounded text-white">Login</button>
+                    <button class="btn btn-default btn-outline btn-block btn-lg btn-rounded text-white" ng-click="sign_up_learning_center(learning_center_form)">Register</button>
 
                 </div>
                 <div class="col-lg-3"></div>

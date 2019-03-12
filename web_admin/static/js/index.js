@@ -8,8 +8,9 @@ app.config(['$httpProvider', '$interpolateProvider', function($httpProvider, $in
 
 app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,SweetAlert,toastr){
 
-	$scope.record 	   = {};
-	$scope.reg_form    = {};
+	$scope.record 	   			= {};
+	$scope.reg_form    			= {};
+	$scope.learning_center_form = {};
 	$scope.credentials = { "email" : null, password : null };
 
 	function validate_credentials(credentials)
@@ -25,7 +26,6 @@ app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,Sweet
 	
 	$scope.login = function(credentials)
 	{
-		console.log(credentials)
 		if (validate_credentials(credentials))
 		{
 			$http.post('/login/',credentials)
@@ -46,6 +46,19 @@ app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,Sweet
 				swal(err, null, "info")
 			})
 		}
+	};
+
+	$scope.sign_up_learning_center = function(learning_center_form)
+	{
+		let response = $http.post("/register/", learning_center_form);
+
+		response.success(function (response){
+
+		});
+
+		response.error(function (response){
+
+		})
 	};
 
 	$scope.reg_company = function(data){
