@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponseRedirect
 from rest_framework.authtoken.models import Token
 from ..forms.company import *
 from ..forms.user_form import *
@@ -8,23 +9,19 @@ from ..views.common import *
 from utils.response_handler import extract_json_data
 import re
 
-def loginpage(request):
-	if request.user.id:
-		return redirect("home")
-	else:
-		return render(request, 'login/landing_page.html')
 
 
-def signin(request):
-	if request.user.id:
-		return redirect("home")
-	else:
-		return render(request, 'login/login.html')
 
-def log_in(request):
-	if request.method == "POST":
-		data = json.loads(request.body.decode("utf-8"))
+def authenticate_user(request):
+	try:
+		data 	 = extract_json_data(request)
 		username = data.get("email", None)
+		password = data.get("password", None)
+
+		print(data)
+
+		if not username or not password:
+			raise_error("Please provide Email and Password")
 
 		if re.match(r"[^@]+@[^@]+\.[^@]+", username):
 			test = User.objects.get(email=username)
@@ -38,25 +35,31 @@ def log_in(request):
 
 			login(request, user)
 			token, created = Token.objects.get_or_create(user=user)
-			request.session['token']      = str(token)
-			request.session['user_id']    = user.pk
+			request.session['token'] = str(token)
+			request.session['user_id'] = user.pk
 			request.session['company_id'] = user.company.id
 
 			# USER ACCOUNTS
 			if user.is_admin:
 				request.session['admin'] = True
 
+			if user.is_student:
+				print('sdfsdf')
+				return redirect("student_portal")
+
 			return success(request.user.user_type.name)
 		else:
 			return error("Invalid username or password")
-	else:
-		return redirect("loginpage")
+
+	except Exception as e:
+		print(e)
+		return error(str(e))
 
 
 def log_out(request):
 	request.session.clear()
 	logout(request)
-	return redirect("loginpage")
+	return redirect("landing_page")
 
 def dashb2oard(request):
 	return render(request, "dashboard/dashboard.html")

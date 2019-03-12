@@ -11,12 +11,12 @@
                     <h1>Sign in</h1>
 
                     <br>
-                    <label for="login">Email</label>
+                    <label for="login">Email or Username</label>
                     <input type="text" class="form-control" ng-model="credentials.email">
 
                     <br>
                     <label for="login">Password</label>
-                    <input type="password" class="form-control" ng-model="credentials.password" ng-enter="login()">
+                    <input type="password" class="form-control" ng-model="credentials.password" ng-enter="login(credentials)">
 
                     <br>
 

@@ -11,14 +11,12 @@ from web_admin.views import crud, assessments, transaction_type, company, compan
 urlpatterns = [
     url(r'^common/pagination/$', common.pagination),
 
-    # url(r'^$', assessments.home, name='home'),
-    url(r'^$', index.loginpage, name='loginpage'),
-    url(r'^login/$', index.log_in),
-    url(r'^signin/$', index.signin),
+    url(r'^login/$', index.authenticate_user),
     url(r'^logout/$', index.log_out, name="logout"),
     url(r'^register/$', index.register_company, name="register"),
 
-
+    url(r'^$', page_router.get_login_page, name="landing_page"),
+    url(r'^signin/$', page_router.get_sign_in_page),
     url(r'^select_user/$', page_router.get_user_selection,),
     url(r'^learning_center_signup/$', page_router.get_company_sign_up,),
     url(r'^sign_in/$', page_router.get_signin),

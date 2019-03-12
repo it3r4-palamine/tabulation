@@ -1,4 +1,4 @@
-var app = angular.module("index",['ngAnimate','ngSanitize','ui.bootstrap','ui.select','toastr','oitozero.ngSweetAlert','jutaz.ngSweetAlertAsPromised','ui.router']);
+var app = angular.module("index",['ngAnimate','ngSanitize','ui.bootstrap','ui.select','toastr','oitozero.ngSweetAlert','jutaz.ngSweetAlertAsPromised','ui.router',"common_directives"]);
 
 app.config(['$httpProvider', '$interpolateProvider', function($httpProvider, $interpolateProvider) {
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
@@ -7,28 +7,46 @@ app.config(['$httpProvider', '$interpolateProvider', function($httpProvider, $in
 }]);
 
 app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,SweetAlert,toastr){
-	$scope.record = {}
-	$scope.credentials = {};
-	$scope.reg_form = {};
-	
-	$scope.login = function(credentials){
 
-		$http.post('/login/',credentials)
-		.success(function(response){
-			toastr.success("Loggin In...")
-			$scope.credentials = {};
-			console.log(response)
-			var redirect = "/company_assessment"
-			if(response == 'Technical'){
-				redirect = "/assessments"
-			}
-			setTimeout(function(){
-			    window.location.href = redirect;
-			}, 500);
-		}).error(function(err){
-			toastr.error(err)
-		})
+	$scope.record 	   = {};
+	$scope.reg_form    = {};
+	$scope.credentials = { "email" : null, password : null };
+
+	function validate_credentials(credentials)
+	{
+		if (credentials.email == null || credentials.password == null)
+		{
+			swal("Enter email and password", null, "warning");
+			return false;
+		}
+
+		return true;
 	}
+	
+	$scope.login = function(credentials)
+	{
+		console.log(credentials)
+		if (validate_credentials(credentials))
+		{
+			$http.post('/login/',credentials)
+			.success(function(response){
+				toastr.success("Loggin In...");
+				$scope.credentials = {};
+
+				console.log(response)
+
+				var redirect = "/"
+				// if(response == 'Technical'){
+				// 	redirect = "/assessments"
+				// }
+				setTimeout(function(){
+				    window.location.href = redirect;
+				}, 500);
+			}).error(function(err){
+				swal(err, null, "info")
+			})
+		}
+	};
 
 	$scope.reg_company = function(data){
 		$http.post('/register/',data)

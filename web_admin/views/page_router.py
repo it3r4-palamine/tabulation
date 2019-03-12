@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
 def get_company_sign_up(request):
@@ -6,7 +6,7 @@ def get_company_sign_up(request):
 
 
 def get_user_selection(request):
-    return  render(request, "login/landing_user_choice.html")
+    return render(request, "login/landing_user_choice.html")
 
 
 def get_signin(request):
@@ -19,3 +19,17 @@ def get_signin_student(request):
 
 def get_signin_learning_center(request):
     return render(request, "login/sub_pages/learning_center_signin.html")
+
+
+def get_login_page(request):
+    if request.user.id:
+        return redirect("home")
+    else:
+        return render(request, 'login/landing_page.html')
+
+
+def get_sign_in_page(request):
+    if request.user.id:
+        return redirect("home")
+    else:
+        return render(request, 'login/login.html')

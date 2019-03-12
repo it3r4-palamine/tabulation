@@ -26,17 +26,15 @@ class UserMiddleware(object):
 		if first_url not in public_urls:
 			return self.get_response(request)
 
-
-
 	def process_request(self, request):
-		"""The main part of the middleware, called each time a user makes a request."""
+
 		# Initialization.
 		url = request.path
 		urls = url.replace("//", "/").split("/")
-		first_url = urls[0]
+		first_url = urls[1]
 
 		try:
-			second_url = urls[1]
+			second_url = urls[2]
 		except IndexError:
 			second_url = None
 
@@ -52,36 +50,17 @@ class UserMiddleware(object):
 		]
 
 		student_urls = [
-			"student_portal"
+			"student_portal",
 		]
 
 		if first_url in public_urls:
 			return self.get_response(request)
 
-		if first_url in student_urls and request.user.is_student:
+		if first_url in student_urls and request.user.is_authenticated and request.user.is_student:
 			return self.get_response(request)
 
-		if first_url not in student_urls and request.user.is_student:
-			return self.get_response(request)
+		if request.user.is_authenticated and request.user.is_student and not first_url == "student_portal":
 			return redirect("/student_portal/")
-
-		# if first_url == "student_portal" and request.user.is_authenticated():
-		# 	return redirect("/student_portal/dashboard/")
-		#
-		# if first_url == "student_portal" and request.user.is_authenticated():
-		# 	return self.get_response(request)
-		#
-		# if first_url == "student_portal" and second_url == "login":
-		# 	return self.get_response(request)
-		#
-		# if first_url == "student_portal" and second_url == "login":
-		# 	return self.get_response(request)
-
-		# if first_url == "student_portal":
-		# 	return self.get_response(request)
-
-		# if request.user.is_authenticated and request.user.is_student and not first_url == "student_portal":
-		# 	return redirect("/student_portal/")
 
 		not_required_session = [
 			"login",
@@ -106,13 +85,3 @@ class UserMiddleware(object):
 					return redirect("home")
 
 		return self.get_response(request)
-
-	def redirect_to(self, page, error_message=None, actually_redirect=True):
-
-		if error_message:
-			print("AUTHENTICATION ERROR: " + error_message)
-
-		if actually_redirect:
-			return redirect(page, permanent=True)
-		else:
-			return None
