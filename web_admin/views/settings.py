@@ -511,7 +511,7 @@ def read_user_types(request):
 		filters['is_active'] = True
 		filters['company']   = data['company']
 		
-		records = User_type.objects.filter(**filters).order_by("id")
+		records = UserType.objects.filter(**filters).order_by("id")
 		
 		results = {'data':[]}
 		results['total_records'] = records.count()
@@ -535,9 +535,9 @@ def user_types_create(request):
 	try: 
 		postdata = req_data(request,True)
 		try:
-			instance = User_type.objects.get(id=postdata.get('id',None))
+			instance = UserType.objects.get(id=postdata.get('id', None))
 			user_types = User_type_form(postdata, instance=instance)
-		except User_type.DoesNotExist:
+		except UserType.DoesNotExist:
 			user_types = User_type_form(postdata)
 
 		if user_types.is_valid():
@@ -551,11 +551,11 @@ def user_types_create(request):
 def user_types_delete(request,id=None):
 	try:
 		try:
-			record = User_type.objects.get(pk = id)
+			record = UserType.objects.get(pk = id)
 			record.is_active = False
 			record.save()
 			return success("Successfully deleted.")
-		except User_type.DoesNotExist:
+		except UserType.DoesNotExist:
 			raise_error("User doesn't exists.")
 	except Exception as e:
 		return HttpResponse(e, status = 400)

@@ -170,7 +170,7 @@ def delete(request, id=None):
 def read_user_types(request):
     try:
         data = req_data(request, True)
-        records = User_type.objects.filter(company=data['company'], is_active=True).values("id", "name",
+        records = UserType.objects.filter(company=data['company'], is_active=True).values("id", "name",
                                                                                            "is_active").order_by("id")
         return success_list(records)
     except Exception as e:
@@ -206,7 +206,7 @@ def read_user_credits(request):
         i = datetime.today()
         date_now = i.strftime('%Y-%m-%d')
         # user_credits = User_credit.objects.filter(program_id=datus['company_rename']['program_id'],user=datus['consultant']['id'])
-        user_credits = User_credit.objects.filter(
+        user_credits = UserCredit.objects.filter(
             program_id=datus['company_rename']['program_id'],
             user=datus['consultant']['id'],
             session_start_date__lte=date_now,
@@ -263,7 +263,7 @@ def read_user_reconciled_credits(request):
         results = {"yias": [], "yiss": []}
         data = req_data(request)
 
-        user_credits = User_credit.objects.filter(user=data["id"])
+        user_credits = UserCredit.objects.filter(user=data["id"])
 
         yias_credits = []
         for user_credit in user_credits:
@@ -310,7 +310,7 @@ def reconcile_student_credits(request):
         for record in records:
 
             for enrollment in record["enrollments"]:
-                user_credits = User_credit.objects.filter(enrollment_id=enrollment["enrollment_id"]).first()
+                user_credits = UserCredit.objects.filter(enrollment_id=enrollment["enrollment_id"]).first()
 
                 if user_credits:
                     user_credits.session_credits_left = timedelta(seconds=enrollment['credits_consumed']) if enrollment[
@@ -368,17 +368,17 @@ def get_intelex_students(request):
                                             credits['total_time_left_seconds'] > 0 else timedelta(
                                             seconds=credits['session_credits'])}
                         try:
-                            instance = User_credit.objects.get(enrollment_id=credits['enrollment_id'])
+                            instance = UserCredit.objects.get(enrollment_id=credits['enrollment_id'])
                             user_credits_form = User_credit_form(user_credits, instance=instance)
-                        except User_credit.DoesNotExist:
+                        except UserCredit.DoesNotExist:
                             user_credits_form = User_credit_form(user_credits)
 
                         if user_credits_form.is_valid():
                             user_credits_form.save()
                 continue
             else:
-                student_user = User_type.objects.filter(is_active=True, company=datus['company'],
-                                                        name="Student").first()
+                student_user = UserType.objects.filter(is_active=True, company=datus['company'],
+                                                       name="Student").first()
                 if student_user:
                     record['user_type'] = student_user.pk
                 else:
@@ -414,9 +414,9 @@ def get_intelex_students(request):
                                                 credits['total_time_left_seconds'] > 0 else timedelta(
                                                 seconds=credits['session_credits'])}
                             try:
-                                instance = User_credit.objects.get(enrollment_id=credits['enrollment_id'])
+                                instance = UserCredit.objects.get(enrollment_id=credits['enrollment_id'])
                                 user_credits_form = User_credit_form(user_credits, instance=instance)
-                            except User_credit.DoesNotExist:
+                            except UserCredit.DoesNotExist:
                                 user_credits_form = User_credit_form(user_credits)
 
                             if user_credits_form.is_valid():

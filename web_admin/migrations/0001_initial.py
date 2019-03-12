@@ -600,6 +600,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='user_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='web_admin.User_type'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='web_admin.UserType'),
         ),
     ]

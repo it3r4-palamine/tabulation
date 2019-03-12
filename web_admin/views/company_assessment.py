@@ -1,13 +1,9 @@
-from ..forms.transaction_types import *
-from ..models.transaction_types import *
-from ..forms.company import *
-from ..models.company import *
 from ..forms.company_assessment import *
 from ..models.company_assessment import *
 from ..models.assessments import *
 from django.db.models import *
 from ..views.common import *
-import sys, traceback, os
+import sys, os
 from utils.dict_types import * 
 
 def company_assessment(request):
@@ -54,6 +50,7 @@ def read(request):
 		print(sys.exc_traceback.tb_lineno)
 		print(filename)
 		return HttpResponse(e,status=400)
+
 
 def create(request):
 	try: 

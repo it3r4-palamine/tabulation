@@ -4,7 +4,7 @@ from django.db.models import Q
 
 class User_type_form(forms.ModelForm):
 	class Meta:
-		model  = User_type
+		model  = UserType
 		fields = ('name','is_active','company','is_default')
 
 
@@ -13,7 +13,7 @@ class User_type_form(forms.ModelForm):
 
 		user_type = (Q(name = raw_data["name"]) & Q(is_active = True) & Q(company = raw_data["company"]))
 
-		instance = User_type.objects.filter(user_type)
+		instance = UserType.objects.filter(user_type)
 		if instance.exists():
 			instance = instance.first()
 			if instance.pk != self.instance.pk and raw_data["name"]:

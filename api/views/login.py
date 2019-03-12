@@ -73,7 +73,7 @@ class Get_company_and_user_types(APIView):
     def post(self, request, *args, **kwargs):
         try:
             company = request.user.company.get_dict()
-            user_types_qs = User_type.objects.filter(company=company["id"], is_active=True).values()
+            user_types_qs = UserType.objects.filter(company=company["id"], is_active=True).values()
 
             response_data = {
                 "company": company,

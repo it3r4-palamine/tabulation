@@ -39,18 +39,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_admin         	= models.BooleanField(default=False)
 	is_staff         	= models.BooleanField(default=False)
 	is_active        	= models.BooleanField(default=1)
-	user_type        	= models.ForeignKey("User_type",null=True,blank=True, on_delete=models.CASCADE)
+	user_type        	= models.ForeignKey("UserType", null=True, blank=True, on_delete=models.CASCADE)
 	is_edit         	= models.BooleanField(default=False)
-	company			 	= models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
+	company			 	= models.ForeignKey("Company", blank=True, null=True, on_delete=models.CASCADE)
 	is_intelex       	= models.BooleanField(default=False)
 	user_intelex_id	 	= models.IntegerField(blank=True,null=True)
-	username 		 	= models.CharField(max_length=100,unique=True,null=True,blank=True)
-	first_name 		 	= models.CharField(max_length=200,blank=True,null=True)
-	last_name 		 	= models.CharField(max_length=200,blank=True,null=True)
-	nick_name 		 	= models.CharField(max_length=200,blank=True,null=True)
+	username 		 	= models.CharField(max_length=100, unique=True, null=True, blank=True)
+	first_name 		 	= models.CharField(max_length=200, blank=True, null=True)
+	last_name 		 	= models.CharField(max_length=200, blank=True, null=True)
+	nick_name 		 	= models.CharField(max_length=200, blank=True, null=True)
 	address 		 	= models.TextField(blank=True, null=True)
-	gender 			 	= models.CharField(max_length=50,blank=True,null=True)
-	nationality 	 	= models.CharField(max_length=50,blank=True,null=True)
+	gender 			 	= models.CharField(max_length=50, blank=True, null=True)
+	nationality 	 	= models.CharField(max_length=50, blank=True, null=True)
 	date_of_birth 	 	= models.DateField(blank=True, null=True)
 	phone_regex 	 	= RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 	contact_number 	 	= models.CharField(max_length=15, validators=[phone_regex], blank=True, null=True)
@@ -73,8 +73,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 		app_label = "web_admin"
 		db_table  = "User"
 
-
-	def get_dict(self,is_local=False,dict_type=DEFAULT):
+	def get_dict(self, is_local=False, dict_type=DEFAULT):
 
 		instance = {}
 
@@ -145,9 +144,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 		return records
 
 
-
-
-class User_type(models.Model):
+class UserType(models.Model):
 	name       = models.CharField(max_length=200,blank=True,null=True)
 	is_active  = models.BooleanField(default=1)
 	is_default = models.BooleanField(default=0)
@@ -165,7 +162,9 @@ class User_type(models.Model):
 			"is_default" : self.is_default
 		}
 
-class User_credit(models.Model):
+
+class UserCredit(models.Model):
+
 	user 			     = models.ForeignKey("User", on_delete=models.CASCADE)
 	enrollment_id 	     = models.IntegerField(blank=True, null=True)
 	enrollment_code      = models.CharField(max_length=200,blank=True,null=True)
@@ -201,6 +200,7 @@ class User_credit(models.Model):
 
 		return user_credit
 
+
 class UserTimeLog(models.Model):
 
 	user 	 = models.ForeignKey("User", on_delete=models.CASCADE)
@@ -212,7 +212,6 @@ class UserTimeLog(models.Model):
 	class Meta:
 		app_label = "web_admin"
 		db_table  = "user_time_logs"
-
 
 
 class Lesson_update_header(models.Model):

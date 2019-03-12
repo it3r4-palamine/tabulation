@@ -57,7 +57,7 @@ class Get_users(APIView):
 				user_list.append(user.get_dict(True))
 
 				# User credits
-				user_credit_qs = User_credit.objects.filter(user=user.pk)
+				user_credit_qs = UserCredit.objects.filter(user=user.pk)
 				for _user_credit in user_credit_qs:
 					user_credit = _user_credit.get_dict(True)
 					user_credit["user"] = user_credit["user"]["id"]
