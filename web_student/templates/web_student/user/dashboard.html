@@ -129,54 +129,23 @@
                 </div>
                 <div class="ibox-content">
 
-                    <input type="text" class="form-control" placeholder="Search for Learning Centers...">
+                    <input type="text" class="form-control" placeholder="Search for Learning Centers..." ng-model="filter">
 
                     <br>
 
                     <div class="feed-activity-list">
 
-                        <div class="feed-element">
-                            <a class="float-left" href="profile.html">
+                        <div class="feed-element" ng-repeat="record in ctrl.learning_centers | filter: filter | limitTo : 10">
+                            <a class="float-left">
                                 <img alt="image" class="rounded-circle" src="{% static 'web_student/img/intelex.png' %}">
                             </a>
                             <div class="media-body ">
                                 <small class="float-right"></small>
-                                <strong>Intelex</strong>. <br>
-                                <small class="text-muted"><a href="">Learn More</a></small>
-                            </div>
-                        </div>
-                        <div class="feed-element">
-                            <a class="float-left" href="profile.html">
-                                <img alt="image" class="rounded-circle" src="{% static 'web_student/img/kumon.jpg' %}">
-                            </a>
-                            <div class="media-body ">
-                                <small class="float-right"></small>
-                                <strong>Kumon</strong><br>
+                                <span ng-bind="record.name"></span> <br>
                                 <small class="text-muted"><a ui-sref="learning_centers">Learn More</a></small>
                             </div>
                         </div>
 
-                        <div class="feed-element">
-                            <a class="float-left" href="profile.html">
-                                <img alt="image" class="rounded-circle" src="{% static 'web_student/img/xavier.jpeg' %}">
-                            </a>
-                            <div class="media-body ">
-                                <small class="float-right"></small>
-                                <strong>Xavier</strong><br>
-                                <small class="text-muted"><a href="">Learn More</a></small>
-                            </div>
-                        </div>
-
-                        <div class="feed-element">
-                            <a class="float-left" href="profile.html">
-                                <img alt="image" class="rounded-circle" src="{% static 'web_student/img/ustp.jpg' %}">
-                            </a>
-                            <div class="media-body ">
-                                <small class="float-right"></small>
-                                <strong>USTP</strong><br>
-                                <small class="text-muted"><a href="">Learn More</a></small>
-                            </div>
-                        </div>
 
                     </div>
 

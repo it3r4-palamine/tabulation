@@ -40,6 +40,20 @@ angular.module("app")
 
     };
 
+    self.read_learning_centers = function()
+    {
+        let response = self.get_api("learning_center/read/");
+
+        response.then(function (response) {
+
+            let data = response.data;
+            self.learning_centers = data.records;
+
+        }, function (response){
+
+        });
+    };
+
     self.read_sessions = function()
     {
         let response = self.post_api("sessions/read/");
@@ -55,5 +69,6 @@ angular.module("app")
 
     self.read_sessions();
     self.read_enrolled_programs();
+    self.read_learning_centers();
 
 });

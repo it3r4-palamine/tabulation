@@ -48,6 +48,7 @@ urlpatterns = [
     # Student API
     # Enrollment
     url(r'^enrollment/read/$', enrollment.read_enrolled_programs),
+    url(r'^sessions/read/$', enrollment.read_enrolled_programs),
     url(r'^learning_center/read/$', learning_center.LearningCenterAPI.as_view()),
 
 

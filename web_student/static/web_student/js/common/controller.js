@@ -86,7 +86,8 @@ var app = angular.module("common_controller",["common_config"]).controller('Comm
 		// });
 	};
 
-	me.get_api = function(url, params, loader_key, notify, assign_response, close_dialog){
+	me.get_api = function(url, params, loader_key, notify, assign_response, close_dialog)
+	{
 		if (loader_key) me.page_loader[loader_key] = true;
 		if (!params) params = {};
 
@@ -101,22 +102,9 @@ var app = angular.module("common_controller",["common_config"]).controller('Comm
 
 		};
 
-		return $http.get(absoluteUrl, options).success(function(response){
-			if (loader_key) me.page_loader[loader_key] = false;
-			if (assign_response) me[assign_response] = response; //not working
-			if (close_dialog) me.close_dialog();
-		}).error(function(response, status){
-			if (loader_key) me.page_loader[loader_key] = false;
-			if (status == -1)
-			{
-				if(notify) Notification.error("Can't Connect to Server.");
-				return;
-			}
-			if (status == 404 || status == 500){
-				if(notify) Notification.error("Connection error. Please contact administrator.");
-				return;
-			}
-		})
+		console.log(options)
+
+		return $http.get(absoluteUrl, options);
 	};
 
 	me.loader2 = function(loader_key,status){
