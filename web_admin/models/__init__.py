@@ -15,3 +15,4 @@ from web_admin.models.common_model import *
 from web_admin.models.subject import *
 from web_admin.models.question import *
 from web_admin.models.student_answer import *
+from web_admin.models.program import *
