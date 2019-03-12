@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from api.views import question, download_data, login, answers, student, users, subject, enrollment
+from api.views import question, download_data, login, answers, student, users, subject, enrollment, learning_center
 
 urlpatterns = [
 
@@ -48,6 +48,7 @@ urlpatterns = [
     # Student API
     # Enrollment
     url(r'^enrollment/read/$', enrollment.read_enrolled_programs),
+    url(r'^learning_center/read/$', learning_center.LearningCenterAPI.as_view()),
 
 
 
