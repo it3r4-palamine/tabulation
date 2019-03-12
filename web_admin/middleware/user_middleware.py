@@ -33,11 +33,6 @@ class UserMiddleware(object):
 		urls = url.replace("//", "/").split("/")
 		first_url = urls[1]
 
-		try:
-			second_url = urls[2]
-		except IndexError:
-			second_url = None
-
 		if 'HTTP_AUTHORIZATION' in request.META or "api" in first_url:
 			return self.get_response(request)
 
@@ -61,6 +56,9 @@ class UserMiddleware(object):
 
 		if request.user.is_authenticated and request.user.is_student and first_url not in student_urls:
 			return redirect("/student_portal/")
+
+		if request.user.is_authenticated and not request.user.is_student and first_url in student_urls:
+			return redirect("/")
 
 		not_required_session = [
 			"login",
