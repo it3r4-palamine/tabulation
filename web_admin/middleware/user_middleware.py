@@ -59,7 +59,7 @@ class UserMiddleware(object):
 		if first_url in student_urls and request.user.is_authenticated and request.user.is_student:
 			return self.get_response(request)
 
-		if request.user.is_authenticated and request.user.is_student and not first_url == "student_portal":
+		if request.user.is_authenticated and request.user.is_student and first_url not in student_urls:
 			return redirect("/student_portal/")
 
 		not_required_session = [
