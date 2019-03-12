@@ -12,7 +12,8 @@ from ..models.company import *
 from ..models.enrollment import Enrollment
 
 
-class User_Manager(BaseUserManager):
+class UserManager(BaseUserManager):
+
 	def create_user(self, email, password=None, **extra_fields):
 		if not email:
 			raise ValueError('The given email must be set')
@@ -65,7 +66,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	description 		= models.TextField(null=True,blank=True)
 	rfid				= models.CharField(max_length=20,null=True,blank=True)
 	is_student          = models.BooleanField(default=False)
-	objects 			= User_Manager()
+	objects 			= UserManager()
 
 	USERNAME_FIELD = 'username'
 
