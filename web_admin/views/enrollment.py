@@ -15,7 +15,8 @@ import sys, traceback, os
 import time
 
 def create_dialog(request):
-	return render(request, 'enrollment/dialogs/create_dialog.html')
+	pass
+	# return render(request, 'enrollment/dialogs/create_dialog.html')
 
 def get_excess_time(request):
 	try:

@@ -31,18 +31,17 @@ app.controller("EnrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	{
 		if(enrollment && !is_renew)
 		{
+			self.read_enrollment(enrollment);
 
-			$scope.read_enrollment(enrollment);
-			
 		} else if (is_renew) {
 			$scope.enrollment_data = angular.copy(enrollment);
-			delete $scope.enrollment_data.id
-			delete $scope.enrollment_data.code
-			$scope.enrollment_data.payments = []
+			delete $scope.enrollment_data.id;
+			delete $scope.enrollment_data.code;
+			$scope.enrollment_data.payments = [];
 			$scope.enrollment_data.payments.push(angular.copy($scope.payment));
 
-			var session_credits = me.convert_seconds_duration(enrollment.session_credits_seconds)
-			$scope.enrollment_data.session_credits = {"hours" : session_credits.hours, "minutes" : session_credits.minutes }
+			var session_credits = me.convert_seconds_duration(enrollment.session_credits_seconds);
+			$scope.enrollment_data.session_credits = {"hours" : session_credits.hours, "minutes" : session_credits.minutes };
 
 			$scope.is_renew = is_renew;
 			$scope.set_date_and_time();
@@ -60,7 +59,28 @@ app.controller("EnrollmentCtrl", function($scope, $http, $timeout, $element, $co
 			})
 		}
 		
-		me.open_dialog("/enrollments/create_dialog/", 'dialog_width_90','main');
+		me.open_dialog("/get_dialog/enrollment/create_dialog/", 'dialog_width_90','main');
+	};
+
+	self.read_enrollment = function(enrollment)
+	{
+		let response = self.post_generic("/enrollments/read_enrollment/" + enrollment.id, "", "main")
+
+		response.success(function (response){
+
+			for(var i in enrollment.payments)
+			{
+				enrollment.payments[i].payment_date = new Date(enrollment.payments[i].payment_date);
+			}
+
+			$scope.enrollment_data = angular.copy(enrollment);
+			$scope.enrollment_data.enrollment_date = new Date(enrollment.enrollment_date);
+			$scope.enrollment_data.session_start_date = new Date(enrollment.session_start_date);
+			$scope.enrollment_data.session_end_date = new Date(enrollment.session_end_date);
+
+			var session_credits = me.convert_seconds_duration(enrollment.session_credits_seconds);
+			$scope.enrollment_data.session_credits = { "hours" : session_credits.hours, "minutes" : session_credits.minutes }
+		})
 	};
 
 	self.open_student_dialog = function()
