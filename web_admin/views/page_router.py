@@ -33,3 +33,10 @@ def get_sign_in_page(request):
         return redirect("home")
     else:
         return render(request, 'login/login.html')
+
+
+def get_enrollment_page(request):
+	return render(request, 'enrollment/enrollment.html')
+
+
+

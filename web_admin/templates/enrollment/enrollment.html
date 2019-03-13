@@ -1,9 +1,8 @@
-{% extends "base.html" %} {% load static %} {% block ngapp %}ng-app="enrollment"{% endblock %} {% block ngctrl %}ng-controller="enrollmentCtrl as main"{% endblock %} {% block title %}Enrollment {% endblock %} {% block loader_js_bottom %}
+{% extends "base.html" %} {% load static %} {% block ngapp %}ng-app="enrollment"{% endblock %} {% block ngctrl %}ng-controller="EnrollmentCtrl as main"{% endblock %} {% block title %}Enrollment {% endblock %} {% block loader_js_bottom %}
 <script type="text/javascript" src="{% static 'js/enrollment.js' %}"></script>
 {% endblock loader_js_bottom %} {% block page_header %}
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <!-- <h2><span ng-if="!display_terms[0].company_rename" ng-cloak="">Company</span><span ng-if="display_terms[0].company_rename" ng-cloak="">{$ display_terms[0].company_rename $}</span></h2> -->
         <h2>Enrollment</h2>
     </div>
 </div>
@@ -23,6 +22,7 @@
 
 {% block content_body %}
 <div class="wrapper wrapper-content animated fadeIn" ng-cloak="">
+
     <div class="ibox">
 
         <div class="ibox-title">
@@ -74,7 +74,7 @@
 
 
         <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
-            {% include "common/loader.html" %} 
+            {% include "common/loader.html" %}
             <div class="row">
                
                 <div class="table-responsive" style="min-height: 400px;">
@@ -92,8 +92,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="record in main.records" context-menu="main.menu_options(record)" class="hand_cursor" style="text-align: center;" ng-click="enrollment_dialog(record)">
-                                <td class="text-left">{$ record.code $}</td>
+                            <tr ng-repeat="record in main.records | filter : main.filters.search " context-menu="main.menu_options(record)" class="hand_cursor" style="text-align: center;" ng-click="enrollment_dialog(record)">
+                                <td class="text-left">{$ record.code | highlight : main.filters.search $}</td>
                                 <td class="text-left">{$ record.user.fullname $}</td>
                                 <td class="text-left">{$ record.company_rename.name $}</td>
                                 <td>{$ record.session_credits_seconds | secondstoDuration $}</td>

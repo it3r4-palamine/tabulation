@@ -118,8 +118,9 @@ urlpatterns = [
     url(r'^recommendations/create/$', recommendations.create),
     url(r'^recommendations/delete/(?P<id>[0-9]+)$', recommendations.delete),
 
-    ### ENROLLMENT
-    url(r'^enrollments/enrollments/$', enrollment.enrollment, name='enrollment'),
+    # Enrollment
+
+    url(r'^enrollments/enrollments/$', page_router.get_enrollment_page, name='enrollment'),
     url(r'^enrollments/create_dialog/$', enrollment.create_dialog),
     url(r'^enrollments/read_enrollees/$', enrollment.read_enrollees),
     url(r'^enrollments/get_excess_time/$', enrollment.get_excess_time),

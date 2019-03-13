@@ -14,9 +14,6 @@ from utils.response_handler import *
 import sys, traceback, os
 import time
 
-def enrollment(request):
-	return render(request, 'enrollment/enrollment.html')
-
 def create_dialog(request):
 	return render(request, 'enrollment/dialogs/create_dialog.html')
 

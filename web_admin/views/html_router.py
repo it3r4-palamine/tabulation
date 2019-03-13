@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from utils.model_utils import *
+
 
 def get_dialog_document(request, folder_name, file_name, new):
 	try:
@@ -18,9 +18,11 @@ def get_common_document(request,folder_name,file_name):
 
 	return render(request, file_location)
 
+
 def get_timeslot(request):
 
 	return render(request, "timeslot/timeslot.html")
+
 
 def get_special_reservation(request):
 

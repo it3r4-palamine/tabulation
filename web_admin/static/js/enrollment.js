@@ -1,14 +1,14 @@
 var app = angular.module("enrollment", ['common_module','ui.bootstrap.contextMenu'])
 
-app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $controller, Notification, CommonRead, CommonFunc, RightClick){
+app.controller("EnrollmentCtrl", function($scope, $http, $timeout, $element, $controller, Notification, CommonRead, CommonFunc, RightClick){
 	
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
-	var self = this;
-	var me = this;
+	let self = this;
+	let me = this;
 
 	self.student = {};
 	
-	me.current_module = "enrollment_list"
+	me.current_module = "enrollment_list";
 	$scope.enrollment_data = {};
 	$scope.total_payment = 0;
 	me.filters = {};
@@ -21,7 +21,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		amount_paid : null
 	};
 	
-	$scope.filter = {}
+	$scope.filter = {};
 
 	CommonRead.get_students($scope);
 	CommonRead.get_company2($scope);
@@ -67,20 +67,22 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	{
 		self.init_new_student();
 		self.open_dialog("/users/create_student_dialog/", 'dialog_width_50 second_dialog', 'main');
-	}
+	};
 
 	self.open_quickview_dialog = function()
 	{
 		self.open_dialog("/get_dialog/enrollment/quickview_dialog/", 'dialog_width_50 second_dialog', 'main');
-	}
+	};
 
-	$scope.get_excess_time = function(){
+	$scope.get_excess_time = function()
+	{
 		$scope.excess_time = 0;
 		if (!$scope.enrollment_data.user || !$scope.enrollment_data.company_rename) return;
+
 		var data = {
 			student_id: $scope.enrollment_data.user.id,
 			program_id: $scope.enrollment_data.company_rename.id,
-		}
+		};
 
 		me.post_generic("/enrollments/get_excess_time/", data, 'dialog')
 		.success(function(response){
@@ -88,32 +90,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		}).error(function(error){
 			Notification.error(error);
 		});
-	}
-
-	$scope.read_enrollment = function(enrollment)
-	{
-
-		me.post_generic("/enrollments/read_enrollment/" + enrollment.id, "", 'main')
-			.success(function(enrollment){
-				for(var i in enrollment.payments)
-				{
-					enrollment.payments[i].payment_date = new Date(enrollment.payments[i].payment_date);
-				}
-
-				$scope.enrollment_data = angular.copy(enrollment);
-				$scope.enrollment_data.enrollment_date = new Date(enrollment.enrollment_date);
-				$scope.enrollment_data.session_end_date = new Date(enrollment.session_end_date);
-				$scope.enrollment_data.session_start_date = new Date(enrollment.session_start_date);
-
-				// $scope.enrollment_data.timeslot.time_start = new Date(enrollment.timeslot.time_start);
-				// $scope.enrollment_data.timeslot.time_end = new Date(enrollment.timeslot.time_end);
-
-				var session_credits = me.convert_seconds_duration(enrollment.session_credits_seconds)
-				$scope.enrollment_data.session_credits = {"hours" : session_credits.hours, "minutes" : session_credits.minutes }
-			});
-
-
-	}
+	};
 
 	$scope.save_enrollment = function(data, save_opt)
 	{
@@ -126,7 +103,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 				Notification.warning("Please Select a School")
 			}
 
-			if(data['school'].name == 'No School') delete(data['school'])
+			if (data['school'].name === 'No School') delete(data['school']);
 
 			$http.post("/enrollments/save_enrollment/", data).success(function(response){
 				data.id = response.enrollment_pk;
@@ -149,7 +126,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
             $scope.enrollment_data.session_start_date = moment($scope.enrollment_data.session_end_date).subtract(30,'d').format('YYYY-MM-DD');
             $scope.enrollment_data.session_start_date = new Date($scope.enrollment_data.session_start_date)
         }
-	}
+	};
 
 	success_notif_link = function(title, data, is_new){
 		var config = {
@@ -158,10 +135,10 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
             	if (is_new) me.close_dialog();
             	$scope.enrollment_dialog(data);
             },
-        }
+        };
 
         toastr.success("", title, config);
-	}
+	};
 
 	check_save_options = function(save_opt, enrollment, message){
 		switch(save_opt){
@@ -209,7 +186,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	{
 		var session_credits = me.convert_seconds_duration(seconds)
 		$scope.enrollment_data.session_credits = {"hours" : session_credits.hours, "minutes" : session_credits.minutes }
-	}
+	};
 
 	$scope.validate_enrollment = function()
 	{
@@ -219,7 +196,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 			return false;
 		}
 		return true;
-	}
+	};
 
 	$scope.read_pagination = function(reset){
 		if(reset){me.reset_filter()}
@@ -230,7 +207,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		filters["pagination"] = me.pagination;
 		filters['name_search'] = $scope.filter.name
 
-		var post = me.post_generic("/enrollments/read_enrollees/",filters,"main");
+		var post = me.post_generic("/enrollments/read_enrollees/",filters,"all");
 		post.success(function(response){
 			self.records = response.records;
 			self.generate_pagination(self,response,"records");
@@ -247,15 +224,10 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	self.set_date_filter = function()
 	{
 		self.filters.date_to = angular.copy(self.filters.date_from)
-	}
-
-
-	self.main_loader = function()
-	{
-		$scope.read_pagination();
 	};
 
-	self.main_loader();
+
+
 
 
 	// Session Reconciler Module Functions
@@ -385,7 +357,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
     	.success(function(response){
     		self.facilitators = response.records;
     	})
-    }
+    };
 
     
 
@@ -458,7 +430,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
     	.success(function(response){
     		$scope.user_types = response;
     	})
-    }
+    };
 
     self.init_new_student = function()
     {
@@ -467,7 +439,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 			"password2" : "yahshuagrace"
 		};
 		self.student.user_type = { 'name' : "Student", 'id': 1 }
-    }
+    };
 
     self.init_new_enrollment = function()
     {
@@ -484,11 +456,11 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 			official_receipt_no : null,
 			payment_date: new Date(),
 			amount_paid : null
-		}
+		};
 
 		$scope.enrollment_data.payments.push(angular.copy(payment));
 
-	}
+	};
 
 	$scope.delete_payment = function(payment)
 	{
@@ -498,7 +470,7 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		}
 
 		$scope.enrollment_data.payments.splice($scope.enrollment_data.payments.indexOf(payment), 1);
-	}
+	};
 
 	$scope.compute_session_credits = function()
 	{
@@ -550,5 +522,12 @@ app.controller("enrollmentCtrl", function($scope, $http, $timeout, $element, $co
 
 	self.read_user_types();
 	self.read_students();
+
+	self.main_loader = function()
+	{
+		$scope.read_pagination();
+	};
+
+	self.main_loader();
 
 })

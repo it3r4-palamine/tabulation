@@ -111,7 +111,7 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
 		url += ("?fields="+fields)
 		url += ("&filters="+filters)
 		window.open(url,"_blank")
-	}
+	};
 	
 	me.clean_url = function(url){
 		url = url.replace(/\s+/g, '-').toLowerCase();
@@ -120,33 +120,16 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
 			url += "/";	
 		}
 		return url;
-	}
+	};
 
-	me.post_generic = function(url,params,loader_key,notify,assign_response,closedialog){
-		// url = me.clean_url(url);
-		me.loader2(loader_key,true)
-		if(!params){params = {};}
-		// $(window).load(function () {
-		// 	var p = 0;
-		// 	$('#disney').loadgo('resetprogress');
-		// 	window.setTimeout(function () {
-		// 	  interval = window.setInterval(function (){
-		// 	    if ($('#disney').loadgo('getprogress') === 100) {
-		// 	      p = 0
-		// 	      var prog = p * 10;
-		// 	      $('#disney').loadgo('setprogress', prog);
-		// 	    }
-		// 	    else {
-		// 	      var prog = p * 10;
-		// 	      $('#disney').loadgo('setprogress', prog);
-		// 	      p++;
-		// 	    }
-		// 	  }, 150);
-		// 	}, 300);
-		// })
+	me.post_generic = function(url,params,loader_key,notify,assign_response,closedialog)
+	{
+		me.loader2(loader_key,true);
+		if(!params){ params = {}; }
+
 		return $http.post(url, params)
 		.success(function(response){
-			me.loader2(loader_key,false)
+			me.loader2(loader_key,false);
 			if(notify){
 				if(response){
 					if(typeof(response) == "object"){

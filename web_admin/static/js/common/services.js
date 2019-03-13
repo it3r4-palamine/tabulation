@@ -652,20 +652,6 @@ app.factory("Notification", function(toastr) {
 
 });
 
-app.factory("HttpRequest", function($http, Notification) {
-    return {
-        post_generic: function(url, params) {
-            $http.post(url, params)
-                .success(function(response) {
-                    Notification.success(response)
-                })
-                .error(function(response) {
-                    Notification.error(response)
-                })
-        }
-    }
-});
-
 app.factory("CommonRequests", function($http, Notification) {
     return {
         read_common_records: function(scope, key, url, params, no_success) {
