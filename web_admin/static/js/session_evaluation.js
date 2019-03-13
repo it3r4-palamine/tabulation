@@ -450,7 +450,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
     }
 	
     $scope.read_student_session = function(){
-		self.post_generic("/student_sessions/read_student_session/",null,"main")
+		self.post_generic("/student_sessions/read_student_session/", null, "ctrl")
 		.success(function(response){
 			console.log(response);
 			self.records = response.records;
@@ -466,7 +466,9 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 			// self.pagination.limit_options.push(response.total_records);
 			self.pagination["total_records"] = response.total_records;
 			self.pagination["total_pages"] = response.total_pages;
-		})		
+		}).error(function(response){
+			Notification.warning(response)
+		})
     }
 
     self.read_pagination = function(reset){
@@ -481,11 +483,15 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
 		filters["pagination"] = self.pagination;
 
-		var post = self.post_generic("/student_sessions/read_student_session/", filters, "main");
+		var post = self.post_generic("/student_sessions/read_student_session/", filters, "ctrl");
 		post.success(function(response){
 			self.records = response.records;
 			self.generate_pagination(self,response,"records");
 		});
+
+		post.error(function(response){
+			Notification.warning(response);
+		})
 	};
 
 	self.set_date_filter = function()

@@ -26,7 +26,7 @@ def convert_24_12(time,get_object=False):
 
 def filter_obj_to_q(obj,or_q = ()):
     q_filters = Q()
-    for value in obj.iteritems():
+    for value in obj.items():
         if value[0] in or_q:
             q_filters |= Q((value[0],value[1]))
         else:
@@ -35,8 +35,9 @@ def filter_obj_to_q(obj,or_q = ()):
     return q_filters
 
 def convert_date_key(filters,key):
+    print('here')
     converted = {}
-    for value in filters.iteritems():
+    for value in filters.items():
         if "date_from" in value:
             converted[key] = value[1]
         elif "date_to" in value:

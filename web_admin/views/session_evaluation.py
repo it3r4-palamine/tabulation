@@ -1,12 +1,4 @@
-from ..models.company_assessment import *
-import os
-import sys
-from datetime import *
-
-from django.db.models import *
-
-from utils.dict_types import *
-from .common import *
+from utils.date_handler import *
 from ..forms.session import *
 from ..models.company_assessment import *
 
@@ -14,9 +6,11 @@ from ..models.company_assessment import *
 def session_evaluation_list(request):
 	return render(request, "session_evaluation/session_evaluation_list.html", {"pagename" : "Student Evaluation"})
 
+
 def create_dialog(request):
 	return render(request, 'session_evaluation/dialogs/create_dialog.html')
-	
+
+
 def read_student_session(request, session_id):
 	try:
 		student_id = None
@@ -102,12 +96,14 @@ def read_student_session(request, session_id):
 				dfrom = datetime.strptime(date_from, "%Y-%m-%d")
 				dto = datetime.strptime(date_to, "%Y-%m-%d")
 				q_filters &= (Q(session_date__range = [dfrom, dto]))
+			# elif not date_from and not date_to:
+
+				# q_filters &= (Q(session_date__))
+
 
 			related = ["student","program"]
 
-			print(q_filters)
-
-			sessions = StudentSession.objects.filter(q_filters).select_related(*related).order_by("-id","-code")
+			sessions = StudentSession.objects.filter(q_filters).select_related(*related).order_by("-id","-code")[:150]
 
 			for session in sessions:
 				records.append(session.get_dict(return_type=DEFAULT))
@@ -121,6 +117,10 @@ def read_student_session(request, session_id):
 
 		return success_list(results,False)
 	except Exception as e:
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		print(exc_type, fname, exc_tb.tb_lineno)
+
 		return error(e)
 
 def read(request):

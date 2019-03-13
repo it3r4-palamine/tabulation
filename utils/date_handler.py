@@ -25,7 +25,7 @@ def format_times(data):
 			'session_timeout'
 		]
 
-		for value in data.iteritems():
+		for value in data.items():
 			for field in fields:
 				if value[0] == field:
 					data[field] = format_time(value[1])
