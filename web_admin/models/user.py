@@ -13,6 +13,25 @@ from ..models.company import *
 from ..models.enrollment import Enrollment
 
 
+class UserType(models.Model):
+	name       = models.CharField(max_length=200, blank=True, null=True)
+	is_active  = models.BooleanField(default=1)
+	is_default = models.BooleanField(default=0)
+	company    = models.ForeignKey("Company", blank=True, null=True, on_delete=models.CASCADE)
+
+	class Meta:
+		app_label = "web_admin"
+		db_table  = "user_type"
+
+	def get_dict(self):
+		return {
+			"id" 		 : self.pk,
+			"name" 		 : self.name,
+			"is_active"  : self.is_active,
+			"is_default" : self.is_default
+		}
+
+
 class UserManager(BaseUserManager):
 
 	def create_superuser(self, username, password, email=None):
@@ -34,12 +53,12 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
 
-	email            	= models.EmailField(max_length=100,unique=True,null=False,blank=False)
-	fullname        	= models.CharField(max_length=100,null=True,blank=True)
+	email            	= models.EmailField(max_length=100, unique=True, null=False, blank=False)
+	fullname        	= models.CharField(max_length=100, null=True, blank=True)
 	is_admin         	= models.BooleanField(default=False)
 	is_staff         	= models.BooleanField(default=False)
 	is_active        	= models.BooleanField(default=1)
-	user_type        	= models.ForeignKey("UserType", null=True, blank=True, on_delete=models.CASCADE)
+	user_type        	= models.ForeignKey(UserType, null=True, blank=True, on_delete=models.CASCADE)
 	is_edit         	= models.BooleanField(default=False)
 	company			 	= models.ForeignKey("Company", blank=True, null=True, on_delete=models.CASCADE)
 	is_intelex       	= models.BooleanField(default=False)
@@ -61,8 +80,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 	guardian_name 		= models.CharField(max_length=200, blank=True, null=True)
 	grade_level 		= models.ForeignKey("Gradelevel", blank=True, null=True, on_delete=models.CASCADE)
 	school 				= models.ForeignKey("School", blank=True, null=True, on_delete=models.CASCADE)
-	description 		= models.TextField(null=True,blank=True)
-	rfid				= models.CharField(max_length=20,null=True,blank=True)
+	description 		= models.TextField(null=True, blank=True)
+	rfid				= models.CharField(max_length=20, null=True, blank=True)
 	is_student          = models.BooleanField(default=False)
 	objects 			= UserManager()
 
@@ -144,23 +163,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 		return records
 
 
-class UserType(models.Model):
-	name       = models.CharField(max_length=200,blank=True,null=True)
-	is_active  = models.BooleanField(default=1)
-	is_default = models.BooleanField(default=0)
-	company    = models.ForeignKey("Company",blank=True,null=True, on_delete=models.CASCADE)
-
-	class Meta:
-		app_label = "web_admin"
-		db_table  = "user_type"
-
-	def get_dict(self):
-		return {
-			"id" 		 : self.pk,
-			"name" 		 : self.name,
-			"is_active"  : self.is_active,
-			"is_default" : self.is_default
-		}
 
 
 class UserCredit(models.Model):

@@ -79,7 +79,7 @@ def read_student_session(request, session_id):
 
 			if name_search:
 
-				# If user enters full name of students, split string
+				# If user enters full name pyof students, split string
 				# and get first and last element
 
 				words = name_search.split(' ')
