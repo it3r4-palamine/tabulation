@@ -63,7 +63,7 @@ class Enrollment(models.Model):
                 if time_remaining and time_remaining < 0:
                     instance["total_seconds_left"] 	= time_remaining
                     instance["total_time_left"] 	= "-" + format_time_consumed(abs(time_remaining))
-                elif time_remaining > 0:
+                elif not time_remaining or time_remaining > 0:
                     instance['total_time_left'] = format_time_consumed(time_remaining)
 
                 return instance

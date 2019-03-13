@@ -191,13 +191,8 @@ app.controller("EnrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		var confirmation = CommonFunc.confirmation("Delete Enrollment \n" + data.user.fullname + "?");
 		confirmation.then(function(){
 
-			// self.post_generic("/student_sessions/delete/" + student_session.id, null, true)
-			// .success(function(response){
-			// 	self.main_loader();
-			// })
-			
 			let response = me.post_generic("/enrollments/delete_enrollment/", data, null, true).then(function(response){
-				$scope.main_loader();
+				self.main_loader();
 			});
 		});
 	};

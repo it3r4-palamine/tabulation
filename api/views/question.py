@@ -26,6 +26,7 @@ class QuestionAPIView(APIView):
             return error_response(error_messages.RECORD_DOES_NOT_EXIST)
 
     def post(self, request):
+        record = None
         try:
             data          = extract_json_data(request)
             choices       = data.get("question_choices", None)
@@ -58,7 +59,10 @@ class QuestionAPIView(APIView):
 
             return success_response("Success")
         except Exception as e:
-            print(e)
+
+            if record:
+                record.delete()
+
             return error_response(str(e))
 
     @staticmethod
