@@ -55,8 +55,10 @@ def extract_json_data(request):
         "utf-8") else {}
     return post_params
 
+
 def extract_get_parameters(data):
     return ast.literal_eval(data)
+
 
 def round_off_req_data(s):
     amount = decimal.Decimal(str(round(float(s), 2)))
@@ -67,16 +69,25 @@ def success_response(response_data):
     return Response(response_data, status=200)
 
 
-def error_response(response_data):
+def error_response(response_data, show_line=False):
+
+    if show_line:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
+
     return Response(response_data, status=400)
 
+
 def error_http_response(response_data,show_line=False):
+
     if show_line:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(exc_type, fname, exc_tb.tb_lineno)
 
     return HttpResponse(content=response_data, status=400)
+
 
 def error_response_with_email(request, exception, response_value="Something Went Wrong", show_line=False, email=True):
     if show_line:

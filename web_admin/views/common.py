@@ -1,3 +1,5 @@
+import sys
+
 from django.shortcuts import render, get_object_or_404,redirect
 from django.utils.dateparse import parse_date
 from django.db import models
@@ -166,7 +168,14 @@ def get_display_terms(request):
 
 	return display_terms
 
-def error(to_return = "Something went wrong. Please contact your administrator"):
+def error(to_return = "Something went wrong. Please contact your administrator", show_line=False):
+
+	if show_line:
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		print(exc_type, fname, exc_tb.tb_lineno)
+
+
 	return HttpResponse(to_return, status = 400)
 
 def clean_string(strr,remove_delimeters = []): #remove spaces and delimeters
@@ -226,6 +235,12 @@ def generate_sorting(sort_dict = None,replace_id = None):
 	return [sort_by,"-id"]
 
 
+def print_error_logs(e):
+	exc_type, exc_obj, exc_tb = sys.exc_info()
+	fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+	print(exc_type, fname, exc_tb.tb_lineno)
+
+
 def print_error(filename, method_name, error, line_number):
 	print("======ERROR=======")
 	print("Filename: " + filename)
@@ -244,7 +259,9 @@ def set_id(data):
 	except Exception as e:
 		print(e)
 
+
 def format_dates(data):
+
 	fields = [
 		'date_of_birth',
 		'session_date',
@@ -254,15 +271,17 @@ def format_dates(data):
 		'payment_date'
 	]
 
-	for value in data.iteritems():
+	for value in data.items():
 		for field in fields:
 			if value[0] == field and value[1]:
 				data[field] = format_date(value[1])
 
 	return data
 
+
 def format_date(date):
 	return datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%Y-%m-%d')
+
 
 def format_date_from_db(date):
 	# Convert Datetime Object to String date 
