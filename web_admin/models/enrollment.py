@@ -1,3 +1,5 @@
+from django.db.models import ExpressionWrapper, DurationField
+
 from utils.dict_types import *
 from ..models.assessments import *
 from ..models.payment import *
@@ -6,6 +8,7 @@ from ..views.common import *
 
 
 class Enrollment(models.Model):
+    reference_no        = models.IntegerField(default=0, blank=True, null=True)
     user 				= models.ForeignKey("User", on_delete=models.CASCADE)
     timeslot            = models.ForeignKey("TimeSlot", null=True, blank=True, on_delete=models.CASCADE)
     company_rename 		= models.ForeignKey("Company_rename", blank=True, null=True, on_delete=models.CASCADE)
@@ -106,6 +109,7 @@ class Enrollment(models.Model):
 
             return instance
         except Exception as e:
+            print_error_logs(e)
             print(e)
 
     def get_payments(self):
@@ -176,6 +180,12 @@ class Enrollment(models.Model):
             return time_left.total_seconds()
         elif self.session_credits:
             return self.session_credits.total_seconds()
+
+    def save(self):
+        top = Enrollment.objects.order_by("-reference_no")[0]
+
+        self.reference_no = top.reference_no + 1
+        super(Enrollment, self).save()
 
 
 class EnrollmentType(models.Model): 

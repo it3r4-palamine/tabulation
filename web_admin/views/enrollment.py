@@ -128,7 +128,7 @@ def read_enrollees(request):
 		# Use select related to improve query speed.
 		related = ["user", "company_rename", "school"]
 
-		programs = Enrollment.objects.filter(q_filters).select_related(*related).order_by("-code")
+		programs = Enrollment.objects.filter(q_filters).select_related(*related).order_by("-id")
 		for program in programs:
 			row = program.get_dict(dict_type = DEFAULT)
 
@@ -137,8 +137,8 @@ def read_enrollees(request):
 
 			records.append(row)
 
-
 		if pagination:
+			pagination["limit"] = 30
 			results.update(generate_pagination(pagination, programs))
 			records = records[results['starting']:results['ending']]
 		
