@@ -1,6 +1,7 @@
 import re
 
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect
 from rest_framework.authtoken.models import Token
 
 from utils import error_messages
@@ -38,12 +39,11 @@ def authenticate_user(request):
 				return error("Account Inactive. Please activate your account.")
 
 			login(request, user)
-			token, created = Token.objects.get_or_create(user=user)
-			request.session['token'] = str(token)
+			token, created 			   = Token.objects.get_or_create(user=user)
+			request.session['token']   = str(token)
 			request.session['user_id'] = user.pk
-			request.company = user.company
+			request.session['company'] = user.company.id
 
-			# USER ACCOUNTS
 			if user.is_admin:
 				request.session['admin'] = True
 

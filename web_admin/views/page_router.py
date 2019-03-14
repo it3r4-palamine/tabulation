@@ -59,4 +59,8 @@ def get_exercise_page(request):
     return render(request, "exercise/exercise.html")
 
 
+def get_session_evaluation_page(request):
+    return render(request, "session_evaluation/session_evaluation_list.html", {"pagename" : "Student Evaluation"})
+
+
 

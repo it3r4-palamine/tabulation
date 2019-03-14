@@ -1,26 +1,15 @@
+import datetime as idatetime
+import json
+import os
 import sys
-
-from django.shortcuts import render, get_object_or_404,redirect
-from django.utils.dateparse import parse_date
-from django.db import models
-from math import ceil,floor
-from django.http import HttpResponse,JsonResponse,StreamingHttpResponse
-from random import randint
-from datetime import datetime,timedelta,date
-from copy import copy
-import math,json,time,datetime as idatetime,copy as icopy,decimal,ast,csv,os,copy,re
-from django.core import serializers
-from operator import itemgetter
+from datetime import datetime
 from decimal import Decimal
-from time import mktime
-from django.utils.termcolors import colorize
-from django.core.serializers.json import DjangoJSONEncoder
-from django.utils.encoding import smart_str
-from django.conf import settings
-from collections import OrderedDict
-from django.db.models.functions import Coalesce
-from django.forms.models import model_to_dict
+from math import ceil
+
 from django.apps import apps
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.utils.termcolors import colorize
 
 from ..models.settings import *
 
@@ -148,15 +137,17 @@ def req_data(request,has_company = False, common_filter = False):
 
 	return post_params
 
+
 def get_current_company(request,company_obj = False):
-	company = request.session.get('company_id',None)
+	company = request.session.get('company_id', None)
+
+	if not company:
+		return request.session["company"]
+
 	if company_obj:
 		company = str_to_model("Company").objects.get(pk = company)
-		# try:
-		# 	company_settings = Company_settings.objects.get(company = company.pk)
-		# except Company_settings.DoesNotExist:
-		# 	raise e
-	return company 
+
+	return company
 
 def get_display_terms(request):
 	company = request.session.get('company_id',None)

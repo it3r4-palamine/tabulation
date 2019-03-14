@@ -202,7 +202,7 @@ urlpatterns = [
     url(r'^user_logs/read/$', user_logs.read),
 
     # Session
-    url(r'^student_sessions/$', session_evaluation.session_evaluation_list, name='home'),
+    url(r'^student_sessions/$', page_router.get_session_evaluation_page, name='home'),
     url(r'^student_sessions/read_student_session/(?P<session_id>\w{0,50})$', session_evaluation.read_student_session),
     url(r'^student_sessions/create_dialog/$', session_evaluation.create_dialog),
     url(r'^student_sessions/check_reference_no/$', session_evaluation.check_reference_no),

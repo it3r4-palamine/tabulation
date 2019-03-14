@@ -1,7 +1,30 @@
 from __future__ import unicode_literals
-from django.db import models
+from web_admin.models.common_model import *
 from utils.response_handler import *
+from utils.date_handler import *
 from django.utils import timezone
+
+
+class Session(CommonModel):
+
+    company = models.ForeignKey("Company", on_delete=models.CASCADE)
+
+    class Meta:
+        app_label = "web_admin"
+        db_table  = "sessions"
+
+    def __str__(self):
+        return self.name
+
+    def get_dict(self):
+        instance = dict()
+
+        instance["uuid"]        = self.uuid
+        instance["name"]        = self.name
+        instance["description"] = self.description
+        instance["company"]     = str(self.company)
+
+        return instance
 
 
 class StudentSession(models.Model):
@@ -17,6 +40,7 @@ class StudentSession(models.Model):
     comments        = models.TextField(blank=True, null=True)
     is_active       = models.BooleanField(default=True)
     is_deleted      = models.BooleanField(default=False)
+    company         = models.ForeignKey("Company", default=2, on_delete=models.CASCADE)
 
     class Meta:
         app_label = "web_admin"
@@ -54,19 +78,6 @@ class StudentSession(models.Model):
             instance["student_obj"] = {"full_name" : self.student.fullname }
 
             return instance
-
-
-        # instance['id'] = self.id
-        # instance['code'] = self.code if self.code else ""
-        # instance['student_full_name'] = self.student.fullname
-        # instance['program_name'] = self.program.name
-        # instance['session_date'] = str(self.session_date)
-        # instance['session_timein'] = str(convert_24_12(self.session_timein))
-        # instance['session_timeout'] = str(convert_24_12(self.session_timeout))
-        # instance['time_in'] = time_to_datetime(self.session_timein,True)
-        # instance['total_session_time'] = self.format_total_time(self.get_total_session_time())
-        # instance['total_session_time_seconds'] = float(self.get_total_session_time().total_seconds())
-        # instance['comments'] = self.comments
 
         if complete_instance:
 

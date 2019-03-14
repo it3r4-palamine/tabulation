@@ -57,6 +57,8 @@ def convert_date_key(filters,key):
 
 
 def get_current_company(request):
+    print("what the fuck")
+    print("heeeeeeeeeeeeeee")
     return request.user.company.id
 
 

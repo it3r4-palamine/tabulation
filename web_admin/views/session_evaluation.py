@@ -1,10 +1,8 @@
-from utils.date_handler import *
 from ..forms.session import *
 from ..models.company_assessment import *
-
-
-def session_evaluation_list(request):
-	return render(request, "session_evaluation/session_evaluation_list.html", {"pagename" : "Student Evaluation"})
+from utils.date_handler import *
+from utils.response_handler import *
+from web_admin.views.common import *
 
 
 def create_dialog(request):
@@ -13,15 +11,15 @@ def create_dialog(request):
 
 def read_student_session(request, session_id):
 	try:
-		student_id = None
+		results 			= {}
+		student_id 			= None
 		firstname, lastname = "", ""
-		results = {}
-		exercises = []
-		records = []
-		filters = get_data(request)
+		exercises 			= []
+		records 			= []
+		filters 			= req_data(request)
+		company 			= get_current_company(request)
 
-		pagination = filters.pop("pagination",None)
-		sort_by = filters.pop("sort",None)
+		pagination = filters.pop("pagination", None)
 
 		if session_id:
 
@@ -50,9 +48,7 @@ def read_student_session(request, session_id):
 			results['session_exercises'] = exercises
 
 		else:
-			# if not request.user.is_staff:
-				# student_id = request.user.studentprofile.student.id
-				
+
 			search = filters.pop("search","")
 			date_from = filters.pop("date_from", None)
 			date_to = filters.pop("date_to", None)
@@ -66,7 +62,6 @@ def read_student_session(request, session_id):
 			q_filters = Q()
 
 			if search:
-				print("ere")
 				q_filters = Q(student__fullname__icontains=search)
 
 			if session_timein and session_timeout:
@@ -82,7 +77,7 @@ def read_student_session(request, session_id):
 				lastname = words[-1]
 
 			q_filters &= (Q(code__icontains=name_search) | Q(student__first_name__icontains=firstname) | Q(student__last_name__icontains=lastname))
-			q_filters &= Q(is_deleted=False)
+			q_filters &= Q(is_deleted=False) & Q(company=company)
 
 			if student_id:
 				q_filters &= Q(student_id=student_id)
@@ -91,10 +86,6 @@ def read_student_session(request, session_id):
 				dfrom = datetime.strptime(date_from, "%Y-%m-%d")
 				dto = datetime.strptime(date_to, "%Y-%m-%d")
 				q_filters &= (Q(session_date__range = [dfrom, dto]))
-			# elif not date_from and not date_to:
-
-				# q_filters &= (Q(session_date__))
-
 
 			related = ["student","program"]
 
@@ -109,7 +100,6 @@ def read_student_session(request, session_id):
 
 			results['records'] = records
 
-
 		return success_list(results,False)
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -117,6 +107,7 @@ def read_student_session(request, session_id):
 		print(exc_type, fname, exc_tb.tb_lineno)
 
 		return error(e)
+
 
 def read(request):
 	try:

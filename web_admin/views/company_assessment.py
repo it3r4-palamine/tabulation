@@ -40,15 +40,11 @@ def read(request):
 			
 		data = []
 		for record in records:
-			row = record.get_dict(dict_type=DEFAULT)
+			row = record.get_dict()
 			data.append(row)
 		results['data'] = data
 		return success_list(results,False)
 	except Exception as e:
-		exc_type, exc_obj, exc_tb = sys.exc_info()
-		filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-		print(sys.exc_traceback.tb_lineno)
-		print(filename)
 		return HttpResponse(e,status=400)
 
 
