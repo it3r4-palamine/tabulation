@@ -35,8 +35,20 @@ def get_sign_in_page(request):
         return render(request, 'login/login.html')
 
 
+def get_questions_page(request):
+    return render(request, "questions/questions.html")
+
+
 def get_enrollment_page(request):
-	return render(request, 'enrollment/enrollment.html')
+    return render(request, 'enrollment/enrollment.html')
+
+
+def get_subjects_page(request):
+    return render(request, "subjects/subject.html")
+
+
+def get_exercise_page(request):
+    return render(request, "exercise/exercise.html")
 
 
 

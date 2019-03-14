@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^dashboard/read_student_birthdate/$', dashboard.read_student_birthdate),
     url(r'^dashboard/read_timeslot_summary/$', dashboard.read_timeslot_summary),
 
-    url(r'^assessments/$', assessments.home, name='home'),
+    url(r'^assessments/$', assessments.home,),
     url(r'^assessments/create_dialog/$', assessments.create_dialog),
     url(r'^assessments/upload_dialog/$', assessments.upload_dialog),
     url(r'^assessments/create/$', assessments.create),
@@ -201,8 +201,8 @@ urlpatterns = [
     url(r'^user_logs/$', user_logs.user_logs),
     url(r'^user_logs/read/$', user_logs.read),
 
-    ### Session ###
-    url(r'^student_sessions/$', session_evaluation.session_evaluation_list),
+    # Session
+    url(r'^student_sessions/$', session_evaluation.session_evaluation_list, name='home'),
     url(r'^student_sessions/read_student_session/(?P<session_id>\w{0,50})$', session_evaluation.read_student_session),
     url(r'^student_sessions/create_dialog/$', session_evaluation.create_dialog),
     url(r'^student_sessions/check_reference_no/$', session_evaluation.check_reference_no),
@@ -210,7 +210,7 @@ urlpatterns = [
     url(r'^student_sessions/create/$', session_evaluation.create),
     url(r'^student_sessions/delete/(?P<session_id>\w{0,50})$', session_evaluation.delete),
 
-    ### Program ###
+    # Program
     url(r'^program/read_enrolled_programs/$', program.read_enrolled_programs),
 
     # Print
@@ -219,14 +219,12 @@ urlpatterns = [
     url(r'^print_forms/get_document/$', print_forms.get_document),
     url(r'^print_forms/get_enrollment_document/$', print_forms.get_enrollment_document),
 
-    ### Math Online Module
-    url(r'^questions/$', index.get_questions_page),
-    url(r'^questions/read_questions/$', question.read_questions),
-    url(r'^questions/create/$', question.create),
-
+    # Math Online Module
     url(r'^question_types/read/$', question.read_question_types),
 
-    url(r'^subjects/$', index.get_subjects_page),
+    url(r'^questions/$', page_router.get_questions_page),
+    url(r'^subjects/$',  page_router.get_subjects_page),
+    url(r'^exercise/$',  page_router.get_exercise_page),
 
 ]
 urlpatterns += static(root_settings.STATIC_URL, document_root=root_settings.STATIC_ROOT)

@@ -106,6 +106,8 @@ def register_company(request):
 
 				if user:
 					login(request, user)
+					token, created = Token.objects.get_or_create(user=user)
+					request.session['token'] = str(token)
 					request.session['user_id'] = user.pk
 					request.session['company'] = company_instance.pk
 			else:
@@ -125,11 +127,13 @@ def register_company(request):
 
 		return error(e)
 
+
 def register_student(request):
 	try:
 		data = extract_json_data(request)
 
 		print(data)
+		return success("Sucess")
 		# return succe
 	except Exception as e:
 		return error(e)
@@ -198,9 +202,6 @@ def register_student(request):
 
 
 
-def get_questions_page(request):
-	return render(request, "questions/questions.html")
 
 
-def get_subjects_page(request):
-	return render(request, "subjects/subject.html")
+

@@ -9,7 +9,7 @@ class Transaction_type(models.Model):
 	total_items 	 = models.IntegerField(blank=True, null=True)
 	is_active 		 = models.BooleanField(default=1)
 	is_intelex 		 = models.BooleanField(default=0)
-	company	  		 = models.ForeignKey("Company",blank=True,null=True,on_delete=models.CASCADE)
+	company	  		 = models.ForeignKey("Company", blank=True, null=True, on_delete=models.CASCADE)
 
 
 	class Meta:
