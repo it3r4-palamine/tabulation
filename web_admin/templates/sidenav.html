@@ -170,6 +170,8 @@
                 </ul>
             </li>
 
+            {% if request.user.is_intelex %}
+
             <!-- SESSION EVALUATION -->
             <li id="session_evaluation">
                 <a id="session_evaluation" href="#"><i class="fa fa-pencil-square-o"></i> <span class="nav-label">Session Evaluation</span><span class="fa arrow"></span></a>
@@ -181,7 +183,7 @@
                             <a href="/company_assessment/"><i class="fa fa-list"></i> <span class="nav-label">Assessment List</span> </a>
                     </li>
 
-                    {% if request.user.is_intelex %}
+
 
                     <li id="session_report">
                             <a href="/session_report/"><i class="fa fa-tachometer"></i> <span class="nav-label">Session Reports</span> </a>
@@ -190,9 +192,11 @@
                             <a href="/student_todo/"><i class="fa fa-list-ol"></i> <span class="nav-label">Student To Do</span> </a>
                     </li>
 
-                    {% endif %}
+
                 </ul>
             </li>
+
+            {% endif %}
             
             
 

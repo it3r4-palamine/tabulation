@@ -7,6 +7,7 @@ class Subject(CommonModel):
 	class Meta:
 		app_label = "web_admin"
 		db_table = "subjects"
+		unique_together = ('name', 'company',)
 
 	def __str__(self):
 		return self.name
