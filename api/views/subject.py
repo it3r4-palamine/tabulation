@@ -18,7 +18,7 @@ class SubjectAPIView(APIView):
                 serializer = SubjectSerializer(data=data, instance=instance)
             else:
                 data["company"] = company
-                serializer = SubjectSerializer(data=data)
+                serializer      = SubjectSerializer(data=data)
 
             if serializer.is_valid():
                 serializer.save()
@@ -36,8 +36,6 @@ def read_subjects(request):
         results = {}
         records = []
         company = get_current_company(request)
-
-        print(company)
 
         subjects = Subject.objects.filter(company=company).order_by("-date_created")
 
