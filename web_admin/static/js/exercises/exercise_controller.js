@@ -4,7 +4,7 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 {
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope }));
 
-	let self = this;
+	var self = this;
 	let me = this;
 
 	self.current_module 	= "subjects";
@@ -22,13 +22,13 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 
 	self.create_edit_session = function(record)
 	{
-		$scope.record = {};
+		self.record = {};
+
+		console.log(record);
 
 		if ( record ) {
-			self.record = record;
+			self.record["exercise"] = record;
 			self.read_exercise_questions(record);
-		} else {
-			self.record.exercise = record;
 		}
 
 		self.open_dialog("/get_dialog/exercise/dialog_create/", 'dialog_width_80', 'main')
