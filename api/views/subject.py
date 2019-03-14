@@ -1,21 +1,33 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
+from api.serializers.subject import SubjectSerializer
 from web_admin.models.subject import Subject
-from utils import error_messages
 from utils.response_handler import *
 
 
 class SubjectAPIView(APIView):
 
-    def post(self):
+    def post(self, request):
         try:
-            pass
+            data            = extract_json_data(request)
+            company         = get_current_company(request)
 
+            if data.get("uuid", None):
+                instance = Subject.objects.get(pk=data.get("uuid"))
+                serializer = SubjectSerializer(data=data, instance=instance)
+            else:
+                data["company"] = company
+                serializer = SubjectSerializer(data=data)
+
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                raise_error(serializer.errors)
 
             return success_response("Success")
         except Exception as e:
-            return error_messages(str(e))
+            return error_response(str(e))
 
 
 @api_view(["POST"])
@@ -24,6 +36,8 @@ def read_subjects(request):
         results = {}
         records = []
         company = get_current_company(request)
+
+        print(company)
 
         subjects = Subject.objects.filter(company=company).order_by("-date_created")
 

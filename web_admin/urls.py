@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 
 from web_admin.views import crud, assessments, transaction_type, company, company_assessment, settings, users, \
     index, recommendations, generate_report, common, lesson_updates, user_logs, enrollment, payment_reports, \
-    student_reports, session_evaluation, program, print_forms, dashboard, html_router, timeslot, subject, question, \
+    student_reports, session_evaluation, program, print_forms, dashboard, html_router, timeslot, question, \
     page_router
 
 
@@ -227,8 +227,6 @@ urlpatterns = [
     url(r'^question_types/read/$', question.read_question_types),
 
     url(r'^subjects/$', index.get_subjects_page),
-    url(r'^subjects/create/$', subject.create),
-    url(r'^subjects/read/$', subject.read),
 
 ]
 urlpatterns += static(root_settings.STATIC_URL, document_root=root_settings.STATIC_ROOT)

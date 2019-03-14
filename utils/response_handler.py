@@ -8,6 +8,10 @@ from datetime import *
 import sys, traceback, os
 
 
+def raise_error(msg = "Testing Stopper"):
+    raise ValueError(msg)
+
+
 def convert_24_12(time,get_object=False):
     if time is None:
         return ""

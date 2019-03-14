@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^question/get/(?P<uuid>[\w\-]+)/$', question.QuestionAPIView.as_view()),
     url(r'^question/read/$', question.read_questions),
 
+    url(r'^subject/create/$', subject.SubjectAPIView.as_view()),
     url(r'^subject/read/$', subject.read_subjects),
 
     # Student API

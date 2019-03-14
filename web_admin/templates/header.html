@@ -4,12 +4,13 @@
         <div class="col-sm-6 pull-left">
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
             <div class="minimalize-styl-22">
-                <h3 style="padding-left: 10px; color: white">Yahshua Intelex Activities System</h3>
+                <h3 style="padding-left: 10px; color: white">{{ request.user.company }}</h3>
             </div>
         </div>
         <div class="navbar-header col-sm-6">
             <ul class="nav navbar-top-links navbar-right">
                 <li>
+
                     <a href="#" class="dropdown-toggle " data-toggle="dropdown">{{request.user.fullname}} <b class="caret"></b></a>
                     <ul class="dropdown-menu dropdown row">
                         <li>

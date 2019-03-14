@@ -41,6 +41,7 @@ def authenticate_user(request):
 			token, created = Token.objects.get_or_create(user=user)
 			request.session['token'] = str(token)
 			request.session['user_id'] = user.pk
+			request.company = user.company
 
 			# USER ACCOUNTS
 			if user.is_admin:

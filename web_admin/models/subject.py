@@ -18,6 +18,7 @@ class Subject(CommonModel):
 			instance["uuid"] 		= str(self.uuid)
 			instance["name"] 		= self.name
 			instance["description"] = self.description
+			instance["company"]		= self.company.id if self.company else None
 
 		return instance
 

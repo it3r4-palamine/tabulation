@@ -35,8 +35,6 @@ class QuestionAPIView(APIView):
             subject         = data.get("subject", None)
             data["company"] = company
 
-            print(data)
-
             if question_type:
                 data["question_type"] = question_type.get("uuid")
 
