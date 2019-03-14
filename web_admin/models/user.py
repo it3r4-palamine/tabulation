@@ -97,11 +97,34 @@ class User(AbstractBaseUser, PermissionsMixin):
 		instance = {}
 
 		if dict_type == DEFAULT:
-			instance = {
-				"id" 	    : self.pk,
-				"fullname"  : self.fullname,
-				"user_type" : self.user_type.get_dict() if self.user_type else None
-			}
+
+			instance = dict()
+			instance['id']					= self.pk
+			instance['email']				= self.email
+			instance['username']			= self.username
+			instance['fullname']			= self.fullname
+			instance['is_active']			= self.is_active
+			instance['is_admin']			= self.is_admin
+			instance['password']			= self.password
+			instance['is_edit']				= self.is_edit
+			instance['first_name']			= self.first_name
+			instance['last_name']			= self.last_name
+			instance['nick_name']			= self.nick_name
+			instance['address']				= self.address
+			instance['gender']				= self.gender
+			instance['nationality']			= self.nationality
+			instance['date_of_birth']		= self.date_of_birth
+			instance['contact_number']		= self.contact_number
+			instance['fathers_name'] 	  	= self.fathers_name
+			instance['mothers_name']		= self.mothers_name
+			instance['fathers_contact_no']	= self.fathers_contact_no
+			instance['mothers_contact_no']	= self.mothers_contact_no
+			instance['grade_level']			= self.grade_level
+			instance['school']				= self.school
+			instance['description']			= self.description
+			instance['rfid']				= self.rfid
+			instance['is_intelex']			= self.is_intelex
+			instance['user_type']			= self.user_type.get_dict() if self.user_type else None
 
 		if dict_type == UI_SELECT:
 

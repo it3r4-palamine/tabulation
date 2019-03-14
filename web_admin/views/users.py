@@ -64,14 +64,16 @@ def read_facilitators(request):
     except Exception as e:
         return error(str(e))
 
+
 def read(request):
     try:
-        data = req_data(request, True)
-        pagination = None
+        data        = req_data(request, True)
+        pagination  = None
+        results     = dict(data=[])
+        records     = []
 
-        code = data.pop("code", "")
-        user_type = data.pop("user_type", None)
-
+        code        = data.pop("code", "")
+        user_type   = data.pop("user_type", None)
 
         if 'pagination' in data:
             pagination = data.pop("pagination", None)
@@ -84,47 +86,22 @@ def read(request):
         if user_type:
             filters &= Q(user_type=user_type["id"])
 
-        records = User.objects.filter(filters).order_by("id")
-        results = {'data': []}
-        results['total_records'] = records.count()
+        queryset = User.objects.filter(filters).order_by("fullname")
+
+        for qs in queryset:
+            records.append(qs.get_dict())
+
+        results['total_records'] = records
 
         if pagination:
-            results.update(generate_pagination(pagination, records))
+            results.update(generate_pagination(pagination, queryset))
             records = records[results['starting']:results['ending']]
-        data = []
-        for record in records:
-            row                         = {}
-            row['id']                   = record.pk
-            row['email']                = record.email
-            row['username']             = record.username
-            row['fullname']             = record.fullname
-            row['is_active']            = record.is_active
-            row['is_admin']             = record.is_admin
-            row['password']             = record.password
-            row['is_edit']              = record.is_edit
-            row['first_name']           = record.first_name
-            row['last_name']            = record.last_name
-            row['nick_name']            = record.nick_name
-            row['address']              = record.address
-            row['gender']               = record.gender
-            row['nationality']          = record.nationality
-            row['date_of_birth']        = record.date_of_birth
-            row['contact_number']       = record.contact_number
-            row['fathers_name']         = record.fathers_name
-            row['mothers_name']         = record.mothers_name
-            row['fathers_contact_no']   = record.fathers_contact_no
-            row['mothers_contact_no']   = record.mothers_contact_no
-            row['grade_level']          = record.grade_level
-            row['school']               = record.school
-            row['description']          = record.description
-            row['rfid']                 = record.rfid
-            if record.user_type:
-                row['user_type'] = record.user_type.get_dict()
-            data.append(row)
-        results['data'] = data
+
+        results['data'] = records
+
         return success_list(results, False)
     except Exception as e:
-        return HttpResponse(e, status=400)
+        return error(e, show_line=True)
 
 
 def create(request):
@@ -135,9 +112,9 @@ def create(request):
         postdata['user_type'] = postdata['user_type']['id']
         try:
             instance = User.objects.get(id=postdata.get('id', None))
-            user_type = CustomUserChangeForm(postdata, instance=instance)
+            user_type = AdminUserForm(postdata, instance=instance)
         except User.DoesNotExist:
-            user_type = CustomUserCreationForm(postdata)
+            user_type = AdminUserForm(postdata)
 
         if user_type.is_valid():
             instance = user_type.save()

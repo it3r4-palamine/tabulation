@@ -7,6 +7,7 @@ import decimal
 from datetime import *
 import sys, traceback, os
 
+
 def convert_24_12(time,get_object=False):
     if time is None:
         return ""
@@ -24,6 +25,7 @@ def convert_24_12(time,get_object=False):
 
     return converted_time
 
+
 def filter_obj_to_q(obj,or_q = ()):
     q_filters = Q()
     for value in obj.items():
@@ -34,8 +36,8 @@ def filter_obj_to_q(obj,or_q = ()):
 
     return q_filters
 
+
 def convert_date_key(filters,key):
-    print('here')
     converted = {}
     for value in filters.items():
         if "date_from" in value:
@@ -46,9 +48,15 @@ def convert_date_key(filters,key):
             converted[value[0]] = value[1]
 
     return converted
-    
+
+
+def get_current_company(request):
+    return request.user.company.id
+
+
 def get_data(request):
     return json.loads(request.body.decode("utf-8")) if request.body.decode("utf-8") else {}
+
 
 def extract_json_data(request):
     post_params = json.loads(request.body.decode("utf-8"), parse_float=round_off_req_data) if request.body.decode(

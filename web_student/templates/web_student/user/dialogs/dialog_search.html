@@ -1,15 +1,20 @@
 {% load staticfiles %}
-<div class="modal-header">
-    
-    <div class="row">
 
-        <button class="button btn-circle btn-primary">Close</button>
+<div class="modal-body full-div-height">
+    <div class="ibox-content no-padding-top">
 
-    </div>
-</div>
-<div class="modal-body">
-    <div class="ibox-content no-padding-top gray-bg">
-        <h3>test</h3>
+        <button class="btn pull-right btn-rounded btn-primary" ng-click="ctrl.close_dialog()">Close</button>
+
+
+        <h3>Search</h3>
+        <input type="text" class="form-control" ng-model="filter">
+
+        <br>
+
+        <li class="list-group" ng-repeat="learning_center in ctrl.learning_centers | filter : filter">
+            <p>{$ learning_center.name $}</p>
+
+        </li>
 
     </div>
 </div>

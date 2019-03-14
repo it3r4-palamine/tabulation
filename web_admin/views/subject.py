@@ -1,19 +1,11 @@
+from utils.response_handler import *
 from ..forms.form_subject import *
 from ..views.common import *
-from ..models.timeslot import *
-from ..models.enrollment import Enrollment
-from utils.date_handler import *
-from utils.model_utils import *
-from utils.dict_types import *
-from utils.response_handler import *
-from utils.view_utils import * 
 
 
 def create(request):
 	try:
 		data = req_data(request)
-
-		print(data)
 
 		form = SubjectForm(data)
 
@@ -26,12 +18,14 @@ def create(request):
 	except Exception as e:
 		return error(str(e))
 
+
 def read(request):
 	try:
 		results = {}
 		records = []
+		company = get_current_company(request)
 
-		subjects = Subject.objects.filter()
+		subjects = Subject.objects.filter(company=company, is_deleted=False)
 
 		for subject in subjects:
 			records.append(subject.get_dict())

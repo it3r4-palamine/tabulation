@@ -12,12 +12,16 @@ class Company(models.Model):
 		app_label = "web_admin"
 		db_table  = "company"
 
+	def __str__(self):
+		return self.name
+
 	def get_dict(self):
 		return {
 			"id" 		: self.pk,
 			"name" 		: self.name,
 			"is_active" : self.is_active
 		}
+
 
 class Company_rename(models.Model):
 	name             = models.CharField(max_length=200,blank=True,null=True)

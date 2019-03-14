@@ -17,14 +17,14 @@ app.controller('SubjectCtrl', function($scope, $http, $timeout, $element, $contr
 	// self.session = {};
 	self.exercise_arr = [];
 	self.record = {}
-	self.filter = { name : "" }
-	$scope.filter = { name : "" }
+	self.filter = { name : "" };
+	$scope.filter = { name : "" };
 
 
 	self.create_edit_session = function(student_session, fromDraft, record)
 	{
-		$scope.record = {}
-		$scope.record['is_active'] = true
+		$scope.record = {};
+		$scope.record['is_active'] = true;
 
 		if (student_session && !fromDraft ) {
 
@@ -37,7 +37,7 @@ app.controller('SubjectCtrl', function($scope, $http, $timeout, $element, $contr
 				self.session.session_timeout = new Date(response.session_timeout);
 
 				self.read_programs(self.session, true);
-			})
+			});
 
 			response.error(function(response){
 				self.session.exercise = [];
@@ -60,7 +60,7 @@ app.controller('SubjectCtrl', function($scope, $http, $timeout, $element, $contr
 		read_drafted_sessions();
 		self.programs = [];
 		self.close_dialog();
-	}
+	};
 
 	self.read_records = function(session, silent_notification)
 	{
@@ -118,7 +118,7 @@ app.controller('SubjectCtrl', function($scope, $http, $timeout, $element, $contr
 	self.display_existing_sessions = function()
 	{
 		self.open_dialog("/get_dialog/session_evaluation/session_list_dialog", "second_dialog dialog_height_100 dialog_weight_50")
-	}
+	};
 
 	self.check_for_existing_session = function()
 	{
@@ -131,7 +131,7 @@ app.controller('SubjectCtrl', function($scope, $http, $timeout, $element, $contr
 		var filters = {
 			"enrollment_id" : self.session.program.enrollment_id,
 			"session_date": self.session.session_date
-		}
+		};
 
 		$http.post('/student_sessions/read_student_session/' + self.session.student.id, filters)
 			.success(function(response){
@@ -140,7 +140,7 @@ app.controller('SubjectCtrl', function($scope, $http, $timeout, $element, $contr
 					self.display_existing_sessions();
 				}
 			})
-	}
+	};
 
 	self.save_session = function(datus, save_opt)
 	{
@@ -150,6 +150,7 @@ app.controller('SubjectCtrl', function($scope, $http, $timeout, $element, $contr
 
 		self.post_generic('/subjects/create/', post_data, null, false, null, false)
 			.success(function(response){
+				self.close_dialog();
 				self.main_loader();
 			}).error(function(response){
 				Notification.error(response)

@@ -192,7 +192,8 @@ def list_to_string(arr,separator=","):
 def pagination(request):
 	return render(request, 'common/pagination.html')
 
-def generate_pagination(pagination_data,records):
+
+def generate_pagination(pagination_data, records):
 	page = pagination_data["current_page"] - 1
 	page_size = pagination_data["limit"]
 	total_records = records.count()
@@ -207,15 +208,18 @@ def generate_pagination(pagination_data,records):
 	}
 	return dictt
 
+
 def str_to_model(model_str):
 	model = apps.get_model(app_label='web_admin', model_name=model_str)
 	return model
+
 
 def str2model(model_name,get_instance = False,filters = {}):
 	model = apps.get_model(app_label='web_admin', model_name=model_name)
 	if get_instance:
 		model = model.objects.get(**filters)
 	return model
+
 
 def generate_sorting(sort_dict = None,replace_id = None):
 	if not sort_dict:

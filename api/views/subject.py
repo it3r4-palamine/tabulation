@@ -13,7 +13,7 @@ class SubjectAPIView(APIView):
             pass
 
 
-            return success_response()
+            return success_response("Success")
         except Exception as e:
             return error_messages(str(e))
 
@@ -23,8 +23,9 @@ def read_subjects(request):
     try:
         results = {}
         records = []
+        company = get_current_company(request)
 
-        subjects = Subject.objects.filter().order_by("-date_created")
+        subjects = Subject.objects.filter(company=company).order_by("-date_created")
 
         for subject in subjects:
             row = subject.get_dict()

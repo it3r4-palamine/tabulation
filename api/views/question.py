@@ -28,10 +28,14 @@ class QuestionAPIView(APIView):
     def post(self, request):
         record = None
         try:
-            data          = extract_json_data(request)
-            choices       = data.get("question_choices", None)
-            question_type = data.get("question_type", None)
-            subject       = data.get("subject", None)
+            data            = extract_json_data(request)
+            company         = get_current_company(request)
+            choices         = data.get("question_choices", None)
+            question_type   = data.get("question_type", None)
+            subject         = data.get("subject", None)
+            data["company"] = company
+
+            print(data)
 
             if question_type:
                 data["question_type"] = question_type.get("uuid")
@@ -88,9 +92,9 @@ def read_questions(request):
     try:
         results = {}
         records = []
+        company = get_current_company(request)
 
-
-        questions = Question.objects.filter().order_by("-date_created")
+        questions = Question.objects.filter(company=company).order_by("-date_created")
 
         for question in questions:
             question_choices = []

@@ -33,8 +33,6 @@ app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,Sweet
 				toastr.success("Loggin In...");
 				$scope.credentials = {};
 
-				console.log(response)
-
 				var redirect = "/"
 				// if(response == 'Technical'){
 				// 	redirect = "/assessments"
@@ -53,18 +51,21 @@ app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,Sweet
 		let response = $http.post("/register/", learning_center_form);
 
 		response.success(function (response){
-
+			toastr.success(response);
+			setTimeout(function(){
+				    window.location.href = "/";
+				}, 500);
 		});
 
 		response.error(function (response){
-
+			toastr.error(response);
 		})
 	};
 
 	$scope.reg_company = function(data){
 		$http.post('/register/',data)
 		.success(function(response){
-			toastr.success(response)
+			toastr.success(response);
 			$scope.reg_form = {};
 			setTimeout(function(){
 			    window.location.href = "/login";

@@ -8,6 +8,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ('name',
                   'subject',
                   'question_type',
+                  'company',
                   )
 
 

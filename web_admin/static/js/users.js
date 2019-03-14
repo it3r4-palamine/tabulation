@@ -78,7 +78,7 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 		}
 
 		return true;
-	}
+	};
 
 	$scope.create = function()
 	{
@@ -97,7 +97,7 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 				Notification.error(err)
 			})
 		}
-	}
+	};
 
 	$scope.get_intelex_students = function()
 	{
@@ -108,7 +108,7 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 			$scope.read()
 		})
 
-	}
+	};
 
 	$scope.reconcile_student_credits = function()
 	{
@@ -118,17 +118,17 @@ app.controller('usersCtrl', function($scope, $http, $timeout, $element, $control
 			Notification.success(data)
 			$scope.read()
 		})
-	}
+	};
 
 	$scope.load_to_edit = function(record, type){
 		if(type == 'Technical')
 			$scope.create_dialog(record);
-	}
+	};
 
 	$scope.change_pass_dialog = function(record){
 		$scope.pwd_form = record
 		me.open_dialog("/users/change_pass_dialog/","","main")
-	}
+	};
 
 	$scope.credits_summary = function(record)
 	{

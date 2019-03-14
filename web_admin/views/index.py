@@ -1,15 +1,21 @@
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect
-from rest_framework.authtoken.models import Token
-from ..forms.company import *
-from ..forms.user_form import *
-from ..forms.user_type import *
-from ..models.user import *
-from ..views.common import *
-from utils.response_handler import extract_json_data
 import re
 
+from django.contrib.auth import authenticate, login, logout
+from rest_framework.authtoken.models import Token
 
+from utils import error_messages
+from utils.response_handler import extract_json_data
+from ..forms.company import *
+from ..forms.user_form import *
+from ..models.user import *
+from ..views.common import *
+
+
+def check_if_user_exist(username):
+	try:
+		return User.objects.get(email=username)
+	except User.DoesNotExist:
+		raise_error(error_messages.USER_NOT_EXIST)
 
 
 def authenticate_user(request):
@@ -22,8 +28,8 @@ def authenticate_user(request):
 			raise_error("Please provide Email and Password")
 
 		if re.match(r"[^@]+@[^@]+\.[^@]+", username):
-			test = User.objects.get(email=username)
-			username = test.username
+			user = check_if_user_exist(username)
+			username = user.username
 
 		user = authenticate(username=username, password=data['password'])
 
@@ -35,14 +41,12 @@ def authenticate_user(request):
 			token, created = Token.objects.get_or_create(user=user)
 			request.session['token'] = str(token)
 			request.session['user_id'] = user.pk
-			request.session['company_id'] = user.company.id
 
 			# USER ACCOUNTS
 			if user.is_admin:
 				request.session['admin'] = True
 
 			if user.is_student:
-				print('sdfsdf')
 				return redirect("student_portal")
 
 			return success(request.user.user_type.name)
@@ -50,8 +54,7 @@ def authenticate_user(request):
 			return error("Invalid username or password")
 
 	except Exception as e:
-		print(e)
-		return error(str(e))
+		return error(str(e), show_line=True)
 
 
 def log_out(request):
@@ -62,8 +65,9 @@ def log_out(request):
 def dashb2oard(request):
 	return render(request, "dashboard/dashboard.html")
 
+
 def dashboard(request):
-	return render(request, "dashboard/dashboard.html", {"pagename" : "Student Evaluation"})
+	return render(request, "dashboard/dashboard.html", { "pagename" : "Student Evaluation"})
 
 
 def register_company(request):
@@ -73,11 +77,13 @@ def register_company(request):
 		data     = extract_json_data(request)
 		company  = {}
 
+		if 'name' in data:
+			company['name'] = data['name']
+		else:
+			raise_error(error_messages.LACK_NAME)
+
 		if data['password1'] != data['password2']:
 			return error("Password do not match!")
-
-		if 'company_name' in data:
-			company['name'] = data.get("company_name", None)
 
 		if Company.objects.filter(name=company["name"]).exists():
 			return error("This company name is already taken")
@@ -91,15 +97,16 @@ def register_company(request):
 			data["user_type"]  = 1
 			data["is_active"]  = True
 
-			user_form = CustomUserCreationForm(data)
+			user_form = AdminUserForm(data)
 
 			if user_form.is_valid():
 				user_instance = user_form.save()
-				user = authenticate(username= user_instance.username, password=data['password1'])
+				user = authenticate(username=user_instance.username, password=data['password1'])
 
 				if user:
-					return redirect("/")
-
+					login(request, user)
+					request.session['user_id'] = user.pk
+					request.session['company'] = company_instance.pk
 			else:
 				raise_error(user_form.errors)
 
@@ -189,8 +196,10 @@ def register_student(request):
 	# 	return redirect("loginpage")
 
 
+
 def get_questions_page(request):
 	return render(request, "questions/questions.html")
+
 
 def get_subjects_page(request):
 	return render(request, "subjects/subject.html")
