@@ -953,6 +953,14 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
+        get_programs : function(scope)
+        {
+            let response = scope.post_api("program/read/");
+            response.success(function(response){
+                scope["programs"] = response.records;
+            })
+        },
+
         get_question_types : function(scope)
         {
             var post = CommonRequests.read_common_records(scope, "question_types", "/question_types/read/",{},true);

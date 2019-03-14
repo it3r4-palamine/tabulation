@@ -7,6 +7,8 @@ import decimal
 from datetime import *
 import sys, traceback, os
 
+from utils import error_messages
+
 
 def raise_error(msg = "Testing Stopper"):
     raise ValueError(msg)
@@ -77,7 +79,7 @@ def round_off_req_data(s):
     return amount
 
 
-def success_response(response_data):
+def success_response(response_data = error_messages.SUCCESS):
     return Response(response_data, status=200)
 
 

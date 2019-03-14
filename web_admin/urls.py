@@ -222,6 +222,8 @@ urlpatterns = [
     # Math Online Module
     url(r'^question_types/read/$', question.read_question_types),
 
+    url(r'^courses/$',   page_router.get_courses_page),
+    url(r'^programs/$',  page_router.get_programs_page),
     url(r'^questions/$', page_router.get_questions_page),
     url(r'^subjects/$',  page_router.get_subjects_page),
     url(r'^exercise/$',  page_router.get_exercise_page),

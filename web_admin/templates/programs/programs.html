@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static %}
+{% block ngapp %}ng-app="subject"{% endblock %}
+{% block ngctrl %}ng-controller="SubjectCtrl as main"{% endblock %} 
+{% block title %} Subjects {% endblock %} 
+
+{% block loader_js_bottom %}
+<script type="text/javascript" src="{% static 'js/subjects/subject_controller.js'%}?ver=1"></script>
+{% endblock loader_js_bottom %} {% block page_header %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Subjects</h2>
+    </div>
+</div>
+{% endblock %} 
+
+{% block editable_css %}
+    <style type="text/css">
+        .hand_cursor {
+            cursor: pointer !important;
+        }
+
+        .hand_cursor:hover {
+            background-color: #E8E8E8 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content_body %}
+<div class="wrapper wrapper-content animated fadeIn" ng-cloak="">
+    <div class="ibox">
+
+        <div class="ibox-title">
+            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_session()">Add Subject</button>             
+        </div>
+
+        <div class="ibox">
+
+            <div class="ibox-content m-b-sm border-bottom">
+
+                <div class="row">
+
+                    <div class="col-xs-3">
+                        <label>Search</label>
+                        <input type="text" ng-model="main.filters.search" name="search" placeholder="Search..." class="form-control" ng-enter="main.read_pagination()">
+                    </div>
+                    
+                    <div class="col-xs-4">
+                        <label>Session Date Filter</label>
+                        <p class="input-group">
+                                                        
+                            <input type="date" 
+                                    class="form-control" 
+                                    placeholder="Date from" 
+                                    ng-model="main.filters.date_from" 
+                                    ng-change="main.set_date_filter()"
+                                    />
+
+                            <span class="input-group-addon" style="background-color: #e7eaec; ">to</span>
+                            
+                            <input type="date" 
+                                    class="form-control" 
+                                    placeholder="Date to" 
+                                    ng-model="main.filters.date_to" 
+                                     />
+
+                            <span class="input-group-addon hand_cursor" ng-click="main.read_pagination();"><i class="fa fa-search"></i></span>
+                        </p>
+
+                    </div>
+
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="ibox-content" ng-class="main.page_loader.main ? 'sk-loading' : ''">
+            {% include "common/loader.html" %} 
+            <div class="row">
+               
+                <div class="table-responsive" style="min-height: 400px;">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="student_session in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(student_session,false)">
+                                <td class="text-left">{$ student_session.name $}</td>
+                                <td class="text-left">{$ student_session.description $}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <pagination></pagination>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

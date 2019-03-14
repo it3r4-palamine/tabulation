@@ -10,6 +10,17 @@ class Course(CommonModel):
         app_label = "web_admin"
         db_table = "course"
 
+    def __str__(self):
+        return self.name
+
+    def get_dict(self):
+        instance = dict()
+
+        instance["name"]    = self.name
+        instance["company"] = self.company.id
+
+        return instance
+
 
 class Program(CommonModel):
 

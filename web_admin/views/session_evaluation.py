@@ -20,7 +20,6 @@ def read_student_session(request, session_id):
 		records = []
 		filters = get_data(request)
 
-
 		pagination = filters.pop("pagination",None)
 		sort_by = filters.pop("sort",None)
 
@@ -54,7 +53,6 @@ def read_student_session(request, session_id):
 			# if not request.user.is_staff:
 				# student_id = request.user.studentprofile.student.id
 				
-			print(filters)
 			search = filters.pop("search","")
 			date_from = filters.pop("date_from", None)
 			date_to = filters.pop("date_to", None)
@@ -65,9 +63,6 @@ def read_student_session(request, session_id):
 			filters = format_times(filters)
 			filters = convert_date_key(filters, "session_date")
 			filters = set_id(filters)
-			# filters = filter_obj_to_q(filters)
-			print(name_search)
-			# print(filters)
 			q_filters = Q()
 
 			if search:
@@ -103,7 +98,7 @@ def read_student_session(request, session_id):
 
 			related = ["student","program"]
 
-			sessions = StudentSession.objects.filter(q_filters).select_related(*related).order_by("-id","-code")[:150]
+			sessions = StudentSession.objects.filter(q_filters).select_related(*related).order_by("-id","-code")
 
 			for session in sessions:
 				records.append(session.get_dict(return_type=DEFAULT))

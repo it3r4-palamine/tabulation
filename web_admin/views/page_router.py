@@ -35,6 +35,14 @@ def get_sign_in_page(request):
         return render(request, 'login/login.html')
 
 
+def get_courses_page(request):
+    return render(request, "courses/courses.html")
+
+
+def get_programs_page(request):
+    return render(request, "programs/programs.html")
+
+
 def get_questions_page(request):
     return render(request, "questions/questions.html")
 

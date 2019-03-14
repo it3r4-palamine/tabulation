@@ -291,14 +291,23 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             })
         },
 
-        get_questions: function(scope,transaction_types) {
-            data = {"all": true}
+        get_questions: function(scope,transaction_types)
+        {
+            data = {"all": true};
             if(transaction_types){
                 data['transaction_type'] = transaction_types
             }
             var post = CommonRequests.read_common_records(scope, "questions", "/assessments/read/",data,true);
             return post.success(function(response){
                 scope["questions"] = response.data;
+            })
+        },
+
+        get_programs : function(scope)
+        {
+            let response = scope.post_api("programs/read/");
+            response.success(function(response){
+                scope["programs"] = response.records;
             })
         },
 
