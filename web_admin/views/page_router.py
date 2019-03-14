@@ -43,6 +43,10 @@ def get_programs_page(request):
     return render(request, "programs/programs.html")
 
 
+def get_sessions_page(request):
+    return render(request, "session_evaluation/sessions.html")
+
+
 def get_questions_page(request):
     return render(request, "questions/questions.html")
 

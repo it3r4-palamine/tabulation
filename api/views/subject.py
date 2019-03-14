@@ -17,7 +17,7 @@ class ProgramAPIView(APIView):
 
             if data.get("uuid", None):
                 instance = Program.objects.get(pk=data.get("uuid"))
-                serializer = SubjectSerializer(data=data, instance=instance)
+                serializer = ProgramSerializer(data=data, instance=instance)
             else:
                 data["company"] = company
                 serializer = ProgramSerializer(data=data)
