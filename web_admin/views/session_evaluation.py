@@ -89,7 +89,7 @@ def read_student_session(request, session_id):
 
 			related = ["student","program"]
 
-			sessions = StudentSession.objects.filter(q_filters).select_related(*related).order_by("-id","-code")
+			sessions = StudentSession.objects.filter(q_filters).select_related(*related).order_by("-id","-code")[:200]
 
 			for session in sessions:
 				records.append(session.get_dict(return_type=DEFAULT))
