@@ -1,4 +1,4 @@
-var app = angular.module("enrollment", ['common_module','ui.bootstrap.contextMenu'])
+var app = angular.module("enrollment", ['common_module','ui.bootstrap.contextMenu']);
 
 app.controller("EnrollmentCtrl", function($scope, $http, $timeout, $element, $controller, Notification, CommonRead, CommonFunc, RightClick){
 	
@@ -7,11 +7,10 @@ app.controller("EnrollmentCtrl", function($scope, $http, $timeout, $element, $co
 	let me = this;
 
 	self.student = {};
-	
-	me.current_module = "enrollment_list";
+	self.current_module = "enrollment_list";
 	$scope.enrollment_data = {};
 	$scope.total_payment = 0;
-	me.filters = {};
+	self.filters = {};
 	$scope.deleted_payment_ids = [];
 	$scope.is_renew = false;
 	$scope.excess_time = 0;
@@ -53,7 +52,7 @@ app.controller("EnrollmentCtrl", function($scope, $http, $timeout, $element, $co
 			$scope.enrollment_data.payments.push(angular.copy($scope.payment));
 			$scope.set_date_and_time();
 
-			me.post_generic("/enrollments/check_reference_no/","","main")
+			me.post_api("enrollment/check_reference_no/","","main")
 			.success(function(response){
 				$scope.enrollment_data.code = response
 			})

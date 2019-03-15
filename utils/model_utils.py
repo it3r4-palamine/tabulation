@@ -8,6 +8,39 @@ STUDENT_MODEL = "Student"
 TRAINER_MODEL = "Trainer"
 
 
+def get_next(st):
+    next_str    = ""
+    increment   = '0'*(len(st)-1) + '1'
+    index       = len(st) -1
+    carry       = 0
+
+    while index >= 0:
+
+        if st[index].isalpha():
+
+            curr_digit = (ord(st[index]) + int(increment[index]) + carry)
+            if curr_digit > ord('z'):
+                curr_digit -= ord('a')
+                curr_digit %= 26
+                curr_digit += ord('a')
+                carry = 1
+            else:
+                carry = 0
+            curr_digit = chr(curr_digit)
+            next_str += curr_digit
+
+        elif st[index].isdigit():
+            curr_digit = int(st[index]) + int(increment[index]) + carry
+            if curr_digit > 9:
+                curr_digit %= 10
+                carry = 1
+            else:
+                carry = 0
+            next_str += str(curr_digit)
+        index -= 1
+    return next_str[::-1]
+
+
 def StringToObject(model_name, get_instance = False, filters = {}):
 	model = apps.get_model(app_label='yahshua_intelex', model_name=model_name)
 	if get_instance:

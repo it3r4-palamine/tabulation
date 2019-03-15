@@ -66,6 +66,9 @@ urlpatterns = [
     url(r'^learning_center/read/$', learning_center.LearningCenterAPI.as_view()),
 
 
+    url(r'^enrollment/check_reference_no/$', enrollment.check_reference_no),
+
+
 
 
 
