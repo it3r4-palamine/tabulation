@@ -247,7 +247,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 			})
 	}
 
-	self.save_session = function(datus, save_opt)
+	self.save_record = function(datus, save_opt)
 	{
 
 		if (datus) var post_data = angular.copy(datus);
