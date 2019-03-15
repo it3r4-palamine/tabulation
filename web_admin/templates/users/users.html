@@ -96,7 +96,7 @@
                         <tbody>
                             <tr ng-repeat="record in records" class="hand_cursor">
                                 <td ng-click="load_to_edit(record, '{{request.user.user_type.name}}')">
-                                    <img alt="image" class="rounded-circle" style="width:35px; height:35px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'> {$ record.fullname $} 
+                                    <img alt="image" class="rounded-circle" style="width:35px; height:35px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "img/student_icon.jpeg" %}'> {$ record.fullname $}
                                     <i class="fa fa-mars text-success" aria-hidden="true" ng-show="record.gender == 'Male'"></i>
                                     <i class="fa fa-venus text-pink" aria-hidden="true" ng-show="record.gender == 'Female'"></i>
                                 </td>

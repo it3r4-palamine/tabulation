@@ -97,7 +97,7 @@
 											
 											<div class="row">
 	                                            <div class="col-xs-12">
-	                                                <img alt="image" class="rounded-circle" style="width:20px; height:20px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
+	                                                <img alt="image" class="rounded-circle" style="width:20px; height:20px; margin-left: 5px; margin-right: 5px; border-radius: 50%!important;" src='{% static "img/student_icon.jpeg" %}'>
 	                                                <span>{$ $select.selected.fullname $}</span> 
 	                                            </div>
                                         	</div>
@@ -107,7 +107,7 @@
 										<ui-select-choices repeat="student in students | filter: $select.search | limitTo:50"> 
 											<div class="row">
                                             <div class="col-xs-2">
-                                                <img alt="image" class="rounded-circle" style="width:38px; height:38px; margin-left: 5px; margin-right: 10px; border-radius: 50%!important;" src='{% static "inspinia/img/a1.jpg" %}'>
+                                                <img alt="image" class="rounded-circle" style="width:38px; height:38px; margin-left: 5px; margin-right: 10px; border-radius: 50%!important;" src='{% static "img/student_icon.jpeg" %}'>
                                             </div>
                                             <div class="col-xs-10">
                                                 <span ng-bind-html="student.fullname | highlight: $select.search"></span> 
