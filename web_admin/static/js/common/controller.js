@@ -1,11 +1,12 @@
 var app = angular.module("common_controller",[]).controller('CommonCtrl', function($scope,$http,$uibModal,$uibModalStack,$templateCache,CommonFunc,SweetAlert,toastr,Notification,configSettings){
+
 	var me = this;
-	me.current_dialogs = []
-	me.page_loader = {"main" : false,"dialog" : false};
+	me.current_dialogs = [];
+	me.page_loader = { "main" : false, "dialog" : false};
 	me.resizeMode = "BasicResizer";
 	me.controls = {"dynamic_columns": true,"advance_filters": true}
-	me.no_dynamic_columns = []
-	me.uibdates = {}
+	me.no_dynamic_columns = [];
+	me.uibdates = {};
 
 
 	let baseUrl = configSettings.baseUrl;
@@ -225,10 +226,10 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
 		// console.log(loader_key)
 		if(loader_key){
 			if(loader_key == "all"){
-				me.page_loader["dialog"] = status
-				me.page_loader["main"] = status
+				me.page_loader["dialog"] = status;
+				me.page_loader["main"] = status;
 			}else{
-				me.page_loader[loader_key] = status
+				me.page_loader[loader_key] = status;
 			}
 		}
 	}
@@ -518,16 +519,13 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
     }
 
     me.generate_pagination = function(scope, response, key){
-
-    	console.log(response);
-
 		scope.starting = response.starting;
 		scope.ending = response[key].length;
 		scope.pagination.limit_options = angular.copy(scope.pagination.limit_options_orig);
 		scope.pagination.limit_options.push(response.total_records);
 		scope.pagination["total_records"] = response.total_records;
 		scope.pagination["total_pages"] = response.total_pages;
-	}
+	};
 
     me.values_list = function(arr,key){
     	if(!key){

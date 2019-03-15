@@ -70,28 +70,27 @@ def current_date(to_return = None):
 	just call this function for testing stopper
 	instead of calling raise ValueError('test'), just use raise_error() function
 '''
+
+
 def raise_error(msg = "Testing Stopper"):
 	raise ValueError(msg)
 
-# def success_list(listt):
-# 	listt = listt if listt else []
-# 	return HttpResponse(json_encode(listt), status = 200)
 
 def success_obj(listt):
 	listt = listt if listt else {}
 	return HttpResponse(json_encode(listt), status = 200)
 
+
 def success(to_return = "Successfully saved."):
 	return HttpResponse(to_return, status = 200)
 
-# def json_encode(listt):
-# 	return json.dumps(list(listt))
 
 def json_encode(var_list,use_list_function = True):
 	if use_list_function:
 		var_list = list(var_list)
 
 	return json.dumps(var_list, cls = DecimalEncoder)
+
 
 def success_list(to_return_list, to_list = True):
 	if to_list:
@@ -104,6 +103,7 @@ def success_list(to_return_list, to_list = True):
 	to_return_list = json_encode(to_return_list,to_list)
 
 	return HttpResponse(to_return_list, status = 200, content_type="application/json")
+
 
 def obj_dates_to_str(objs,remove_time = False):
 	try:
@@ -119,21 +119,21 @@ def obj_dates_to_str(objs,remove_time = False):
 	except Exception as e:
 		raise ValueError(e)
 
+
 def list_dates_to_str(lists):
 	results = []
 	for value in lists:
 		results.append(obj_dates_to_str(value))
 	return results
 
-def req_data(request,has_company = False, common_filter = False):
+
+def req_data(request, has_company=False, common_filter = False):
 	post_params = json.loads(request.body.decode("utf-8"),parse_float=decimal.Decimal) if request.body.decode("utf-8") else {}
 	if has_company:
 		post_params["company"] = get_current_company(request)
 
 	if common_filter:
 		post_params["is_deleted"] = False
-
-
 
 	return post_params
 

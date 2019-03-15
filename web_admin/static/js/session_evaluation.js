@@ -202,7 +202,6 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
 		$http.post('/student_sessions/read_student_session/' + student_session.id)
 			.success(function(response){
-				console.log(response)
 				sessionStorage.form_data = angular.toJson(response);
 				window.open('/print_forms/get_document/')
 			})
@@ -210,10 +209,10 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
 	self.delete_student_session = function(student_session)
 	{
-		var confirmation = CommonFunc.confirmation("Delete Session of " + student_session.student_full_name + "?");
+		let confirmation = CommonFunc.confirmation("Delete Session of " + student_session.student_full_name + "?");
 		confirmation.then(function(){
 
-			self.post_generic("/student_sessions/delete/" + student_session.id, null, true)
+			self.post_generic("/student_sessions/delete/" + student_session.id, null, "main")
 				.success(function(response){
 					self.main_loader();
 				})
@@ -223,7 +222,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	self.display_existing_sessions = function()
 	{
 		self.open_dialog("/get_dialog/session_evaluation/session_list_dialog", "second_dialog dialog_height_100 dialog_weight_50")
-	}
+	};
 
 	self.check_for_existing_session = function()
 	{
@@ -236,7 +235,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		var filters = {
 			"enrollment_id" : self.session.program.enrollment_id,
 			"session_date": self.session.session_date
-		}
+		};
 
 		$http.post('/student_sessions/read_student_session/' + self.session.student.id, filters)
 			.success(function(response){
@@ -245,7 +244,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 					self.display_existing_sessions();
 				}
 			})
-	}
+	};
 
 	self.save_record = function(datus, save_opt)
 	{
@@ -438,7 +437,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
     	.success(function(response){
     		$scope.companies = response.data;
     	})
-    }
+    };
 
     self.read_trainer_notes = function(record)
     {
@@ -447,12 +446,12 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
     	response.success(function(response){
     		self.trainers_notes = response.data
     	});
-    }
+    };
 	
-    $scope.read_student_session = function(){
-		self.post_generic("/student_sessions/read_student_session/", null, "ctrl")
+    $scope.read_student_session = function()
+	{
+		self.post_generic("/student_sessions/read_student_session/", null, "main")
 		.success(function(response){
-			console.log(response);
 			self.records = response.records;
 			for(var record in $scope.records){
 				var credits_left = $scope.records[record].credits_left ? $scope.records[record].credits_left : 0 
@@ -469,7 +468,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 		}).error(function(response){
 			Notification.warning(response)
 		})
-    }
+    };
 
     self.read_pagination = function(reset){
 		if(reset) self.reset_filter();
@@ -483,7 +482,7 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 
 		filters["pagination"] = self.pagination;
 
-		var post = self.post_generic("/student_sessions/read_student_session/", filters, "ctrl");
+		var post = self.post_generic("/student_sessions/read_student_session/", filters, "main");
 		post.success(function(response){
 			self.records = response.records;
 			self.generate_pagination(self,response,"records");

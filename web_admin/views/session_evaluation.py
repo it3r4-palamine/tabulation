@@ -267,11 +267,11 @@ def create(request,from_api=False,session=None):
 
 		return error(e)
 
+
 def delete(request, session_id):
 	try:
-
 		student_session = StudentSession.objects.get(id=session_id)
-		student_session.code = remove_non_numeric_str(str(datetime.datetime.now()))
+		student_session.code = remove_non_numeric_str(str(datetime.now()))
 		student_session.is_deleted = True
 		student_session.save()
 
