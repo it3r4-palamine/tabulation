@@ -96,9 +96,11 @@
                                 <td class="text-left">{$ record.code | highlight : main.filters.search $}</td>
                                 <td class="text-left">{$ record.user.fullname $}</td>
                                 <td class="text-left">{$ record.company_rename.name $}</td>
-                                <td>{$ record.session_credits_seconds | secondstoDuration $}</td>
-                                <td>{$ record.total_session_time $}</td>
-                                <td ng-class="{'text-red' : record.total_seconds_left < 0 }">{$ record.total_time_left $}</td>
+                                <td class="text-right">{$ record.session_credits_seconds | secondstoDuration $}</td>
+                                <td class="text-right">{$ record.total_session_time $}</td>
+                                <td class="text-right" ng-class="{'text-red' : record.total_seconds_left < 0 }">
+                                    <span class="text-right">{$ record.total_time_left $}</span>
+                                </td>
                                 <td><span ng-show="{$record.is_expire$}">Expired</span></td>
                                 <td ng-hide="true"></td>
                             </tr>
