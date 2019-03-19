@@ -40,6 +40,7 @@ class GetAnswers(APIView):
 		except Exception as e:
 			return Response(str(e), status = 500)
 
+
 class GetQuestionList(APIView):
 
 	def get(self,request):

@@ -204,8 +204,9 @@ def get_students(request):
 	try:
 		results = {}
 		records = []
+		company = get_current_company(request)
 
-		users = User.objects.filter(is_active=True,user_type=1)
+		users = User.objects.filter(is_active=True, user_type=1, company=company)
 
 		for user in users:
 			records.append(user.get_dict(dict_type=DEVICE))
@@ -214,7 +215,7 @@ def get_students(request):
 
 		return success_response(results)
 	except Exception as e:
-		return error_http_response(str(e))
+		return error_response(str(e))
 
 
 @api_view(["POST"])
