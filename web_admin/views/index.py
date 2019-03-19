@@ -39,10 +39,11 @@ def authenticate_user(request):
 				return error("Account Inactive. Please activate your account.")
 
 			login(request, user)
-			token, created 			   = Token.objects.get_or_create(user=user)
-			request.session['token']   = str(token)
-			request.session['user_id'] = user.pk
-			request.session['company'] = user.company.id if user.company else None
+			token, created 			   	= Token.objects.get_or_create(user=user)
+			request.session['token']   	= str(token)
+			request.session['user_id'] 	= user.pk
+			request.session['company'] 	= user.company.id if user.company else None
+			request.session["fullname"] = user.fullname
 
 			if user.is_admin:
 				request.session['admin'] = True
@@ -127,10 +128,12 @@ def register_student(request):
 	try:
 		data = extract_json_data(request)
 
-		data["username"]  = data["email"].split("@")[0]
-		data["is_active"] = True
-		data["is_student"] = True
-		data["user_type"] = 2
+		data["username"]	= data["email"].split("@")[0]
+		data["fullname"]	= data["first_name"] + " " + data["last_name"]
+		data["user_type"] 	= 2
+		data["is_active"] 	= True
+		data["is_student"] 	= True
+
 		form = StudentUserForm(data)
 
 		if form.is_valid():
