@@ -6,12 +6,12 @@ app.config(['$httpProvider', '$interpolateProvider', function($httpProvider, $in
     $interpolateProvider.startSymbol('{$').endSymbol('$}');
 }]);
 
-app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,SweetAlert,toastr){
+app.controller('indexCtrl', function($scope, $http, $uibModal, $uibModalStack, SweetAlert, toastr){
 
 	$scope.record 	   			= {};
-	$scope.reg_form    			= {};
+	$scope.student_form			= {};
 	$scope.learning_center_form = {};
-	$scope.credentials = { "email" : null, password : null };
+	$scope.credentials 			= { "email" : null, password : null };
 
 	function validate_credentials(credentials)
 	{
@@ -34,9 +34,7 @@ app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,Sweet
 				$scope.credentials = {};
 
 				var redirect = "/"
-				// if(response == 'Technical'){
-				// 	redirect = "/assessments"
-				// }
+
 				setTimeout(function(){
 				    window.location.href = redirect;
 				}, 500);
@@ -51,6 +49,22 @@ app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,Sweet
 		let response = $http.post("/register/", learning_center_form);
 
 		response.success(function (response){
+			toastr.success(response);
+			setTimeout(function(){
+				    window.location.href = "/";
+				}, 500);
+		});
+
+		response.error(function (response){
+			toastr.error(response);
+		})
+	};
+
+	$scope.sign_up_student = function(student_form)
+	{
+		let response = $http.post("/register_student/", student_form);
+
+		response.success( function (response){
 			toastr.success(response);
 			setTimeout(function(){
 				    window.location.href = "/";
@@ -78,15 +92,16 @@ app.controller('indexCtrl', function($scope,$http,$uibModal,$uibModalStack,Sweet
 
 });
 
-app.config(function($stateProvider,$urlRouterProvider) {
+app.config(function($stateProvider,$urlRouterProvider)
+{
 
-    var studentState = {
+    let studentState = {
         name: 'student',
         url: '/student',
         templateUrl: '/sign_in/student/',
     };
 
-    var learningCenterState = {
+    let learningCenterState = {
         name: 'learning_center',
         url: '/learning_center',
         templateUrl: '/sign_in/learning_center/',

@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^login/$', index.authenticate_user),
     url(r'^logout/$', index.log_out, name="logout"),
     url(r'^register/$', index.register_company, name="register"),
+    url(r'^register_student/$', index.register_student, name="register"),
 
     url(r'^$', page_router.get_login_page, name="landing_page"),
     url(r'^signin/$', page_router.get_sign_in_page),

@@ -30,27 +30,27 @@
 
                     <br>
                     <label for="login" class="text-white">Email</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" ng-model="student_form.email">
 
                     <br>
                     <label for="login" class="text-white">First Name</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" ng-model="student_form.first_name">
 
                     <br>
                     <label for="login" class="text-white">Last Name</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" ng-model="student_form.last_name">
 
                     <br>
                     <label for="login" class="text-white">Password</label>
-                    <input type="password" class="form-control">
+                    <input type="password" class="form-control" ng-model="student_form.password1">
 
                     <br>
                     <label for="login" class="text-white">Confirm Password</label>
-                    <input type="password" class="form-control">
+                    <input type="password" class="form-control" ng-model="student_form.password2" ng-enter="sign_up_student(student_form)">
 
                     <br>
 
-                    <button class="btn btn-default btn-outline btn-block btn-lg btn-rounded text-white">Register</button>
+                    <button class="btn btn-default btn-outline btn-block btn-lg btn-rounded text-white" ng-click="sign_up_student(student_form)">Register</button>
 
                     <br>
 

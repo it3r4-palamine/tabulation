@@ -42,7 +42,7 @@ def authenticate_user(request):
 			token, created 			   = Token.objects.get_or_create(user=user)
 			request.session['token']   = str(token)
 			request.session['user_id'] = user.pk
-			request.session['company'] = user.company.id
+			request.session['company'] = user.company.id if user.company else None
 
 			if user.is_admin:
 				request.session['admin'] = True
@@ -62,6 +62,7 @@ def log_out(request):
 	request.session.clear()
 	logout(request)
 	return redirect("landing_page")
+
 
 def dashb2oard(request):
 	return render(request, "dashboard/dashboard.html")
@@ -102,14 +103,7 @@ def register_company(request):
 
 			if user_form.is_valid():
 				user_instance = user_form.save()
-				user = authenticate(username=user_instance.username, password=data['password1'])
-
-				if user:
-					login(request, user)
-					token, created = Token.objects.get_or_create(user=user)
-					request.session['token'] = str(token)
-					request.session['user_id'] = user.pk
-					request.session['company'] = company_instance.pk
+				login_user(request, user_instance.username, data["password1"])
 			else:
 				raise_error(user_form.errors)
 
@@ -129,79 +123,36 @@ def register_company(request):
 
 
 def register_student(request):
+	user_instance = None
 	try:
 		data = extract_json_data(request)
 
-		print(data)
-		return success("Sucess")
-		# return succe
+		data["username"]  = data["email"].split("@")[0]
+		data["is_active"] = True
+		data["is_student"] = True
+		data["user_type"] = 2
+		form = StudentUserForm(data)
+
+		if form.is_valid():
+			user_instance = form.save()
+			login_user(request, user_instance.username, data["password1"])
+		else:
+			raise_error(form.errors)
+
+		return success()
 	except Exception as e:
+
+		if user_instance:
+			user_instance.delete()
+
 		return error(e)
 
 
-
-	#
-	# if request.method == "POST":
-	# 	data = json.loads(request.body.decode("utf-8"))
-	#
-	# 	if data['password1'] != data['password2']:
-	# 		return error("Password do not match!")
-	# 	company = {}
-	# 	if 'company_name' in data:
-	# 		company['name'] = data['company_name']
-	# 		company['is_active'] = True
-	#
-	# 	if not Company.objects.filter(name=company['name']).exists():
-	# 		if User.objects.filter(email=data['email']).exists():
-	# 			return error('Email already exists.')
-	#
-	# 		company_form = CompanyForm(company)
-	# 		if company_form.is_valid():
-	# 			company_data = company_form.save()
-	#
-	# 			user_types = ['Technical','Facilitator','Student']
-	# 			user_type_id = None
-	# 			for user_type in user_types:
-	# 				datus = {}
-	# 				datus['name'] = user_type
-	# 				datus['is_active'] = True
-	# 				datus['is_default'] = True
-	# 				datus['company'] = company_data.id
-	# 				user_type_form = User_type_form(datus)
-	#
-	# 				if user_type_form.is_valid():
-	# 					user_type_data = user_type_form.save()
-	# 					if user_type == 'Technical':
-	# 						user_type_id = user_type_data.id
-	#
-	# 			user_email = data['email']
-	# 			password1 = data['password1']
-	# 			password2 = data['password2']
-	# 			data['company'] = company_data.id
-	# 			data['is_admin'] = True
-	# 			data['is_active'] = True
-	# 			data['email'] = user_email
-	# 			data['password1'] = password1
-	# 			data['password2'] = password2
-	# 			data['user_type'] = user_type_id
-	#
-	# 			user_form = CustomUserCreationForm(data)
-	# 			if user_form.is_valid():
-	# 				user_data = user_form.save()
-	# 			else:
-	# 				company_data.delete()
-	# 				return error(user_form.errors)
-	# 		else:
-	# 			return error(company_form.errors)
-	# 	else:
-	# 		return error("Company already exists.")
-	#
-	# 	return success("Successfully created!")
-	# else:
-	# 	return redirect("loginpage")
-
-
-
-
-
+def login_user(request, username, password):
+	user = authenticate(username=username, password=password)
+	if user:
+		login(request, user)
+		token, created = Token.objects.get_or_create(user=user)
+		request.session['token'] = str(token)
+		request.session['user_id'] = user.pk
 

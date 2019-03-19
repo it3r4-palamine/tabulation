@@ -186,8 +186,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 		return records
 
 
-
-
 class UserCredit(models.Model):
 
 	user 			     = models.ForeignKey("User", on_delete=models.CASCADE)
