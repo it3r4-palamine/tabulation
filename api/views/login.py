@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # MODELS
+from root import settings
 from web_admin.models.company_assessment import *
 from web_admin.models.assessments import *
 from web_admin.models.multiple_choice import *
@@ -122,6 +123,7 @@ class GetPhoto(APIView):
             return Response(str(e), status = 500)
 
 # Final
+
 class GetQuestionPhoto(APIView):
 
     def post(self, request):

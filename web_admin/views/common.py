@@ -142,7 +142,7 @@ def get_current_company(request,company_obj = False):
 	company = request.session.get('company_id', None)
 
 	if not company:
-		return request.session["company"]
+		return request.session.get("company", None)
 
 	if company_obj:
 		company = str_to_model("Company").objects.get(pk = company)
