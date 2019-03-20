@@ -19,7 +19,12 @@ app.config(function($stateProvider,$urlRouterProvider) {
     var centerState = {
         name: 'learning_centers',
         url: '/learning_centers',
-        templateUrl: '/student_portal/learning_centers/programs/'
+        templateUrl: '/student_portal/learning_centers/programs/',
+        controller : "LearningCenterCtrl",
+        params : {
+            id : null,
+        }
+
     };
 
     var questionnaireState = {

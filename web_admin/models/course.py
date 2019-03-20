@@ -19,7 +19,7 @@ class Course(CommonModel):
 
         instance["uuid"]    = self.uuid
         instance["name"]    = self.name
-        instance["company"] = self.company.id
+        instance["company"] = self.company.id if self.company else None
 
         return instance
 

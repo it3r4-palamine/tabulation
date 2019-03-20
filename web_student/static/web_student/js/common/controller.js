@@ -102,8 +102,6 @@ var app = angular.module("common_controller",["common_config"]).controller('Comm
 
 		};
 
-		console.log(options)
-
 		return $http.get(absoluteUrl, options);
 	};
 

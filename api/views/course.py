@@ -54,11 +54,18 @@ class CourseAPIView(APIView):
 @api_view(["POST"])
 def read_course(request):
     try:
+        print("kani")
         results = {}
         records = []
+        filters = extract_json_data(request)
         company = get_current_company(request)
 
-        query_set = Course.objects.filter(company=company).order_by("-date_created")
+        if "center_id" in filters:
+            q_filters = Q(company=filters["center_id"])
+        else:
+            q_filters = Q(company=company)
+
+        query_set = Course.objects.filter().order_by("-date_created")
 
         for qs in query_set:
             row = qs.get_dict()
@@ -68,7 +75,7 @@ def read_course(request):
 
         return success_response(results)
     except Exception as e:
-        return error_response(str(e))
+        return error_response(str(e),show_line=True)
 
 
 @api_view(["POST"])
