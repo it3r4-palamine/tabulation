@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from web_admin.models.session import Session
+from web_admin.models.session import Session, SessionExercise
 
 
 class SessionSerializer(serializers.ModelSerializer):
@@ -9,3 +9,13 @@ class SessionSerializer(serializers.ModelSerializer):
                   'description',
                   'company',
                   )
+
+
+class SessionExerciseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SessionExercise
+        fields = (
+            'session',
+            'exercise',
+        )

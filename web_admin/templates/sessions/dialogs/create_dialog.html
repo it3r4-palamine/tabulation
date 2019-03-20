@@ -63,7 +63,7 @@
 
                                 <tr ng-repeat="record in main.session_exercises">
                                     <td>
-                                        <ui-select ng-model="record.question">
+                                        <ui-select ng-model="record.exercise">
                                             <ui-select-match>{$ $select.selected.transaction_code $} {$ $select.selected.name $} {$ $select.selected.set_no $}</ui-select-match>
                                             <ui-select-choices repeat="record in main.exercises | filter: $select.search | limitTo:50">
                                                 <div ng-bind-html="record.name | highlight: $select.search"></div>

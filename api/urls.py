@@ -55,6 +55,7 @@ urlpatterns = [
 
     url(r'^session/read/$', session.read_sessions),
     url(r'^session/create/$', session.SessionAPIView.as_view()),
+    url(r'^session/read_session_exercise/$', session.read_session_exercise),
 
     url(r'^exercise/create/$', exercise.ExerciseAPIView.as_view()),
     url(r'^exercise/read/$', exercise.read_exercise),

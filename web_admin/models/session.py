@@ -28,16 +28,23 @@ class Session(CommonModel):
         return instance
 
 
-# class SessionExercise(CommonModel):
-#
-#     session = models.ForeignKey(Session, on_delete=models.CASCADE)
-#     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
-#
-#     class Meta:
-#         app_label = "web_admin"
-#         db_table  = "session_exercises"
+class SessionExercise(CommonModel):
 
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
 
+    class Meta:
+        app_label = "web_admin"
+        db_table  = "session_exercises"
+
+    def get_dict(self):
+        instance = dict()
+
+        instance["uuid"]     = self.uuid
+        instance["session"]  = self.session.pk
+        instance["exercise"] = self.exercise.get_dict() if self.exercise else None
+
+        return instance
 
 
 class StudentSession(models.Model):

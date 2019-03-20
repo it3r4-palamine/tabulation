@@ -26,19 +26,20 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 
 		if ( record ) {
 			self.record = angular.copy(record);
+			self.read_session_exercises(record);
 		} else {
-			self.session_exercises.push({})
+			self.session_exercises.push({});
 		}
 
 		self.open_dialog("/get_dialog/sessions/create_dialog/", 'dialog_width_80', 'main')
 	};
 
-	self.read_exercise_questions = function(record)
+	self.read_session_exercises = function(record)
 	{
-		let response = self.post_api("exercise/read_exercise_questions/", record, null, false, null, null)
+		let response = self.post_api("session/read_session_exercise/", record, null, false, null, null)
 
 		response.success(function(response){
-			self.exercise_questions = response.records;
+			self.session_exercises = response.records;
 
 			if(response.records.length === 0)
 			{
