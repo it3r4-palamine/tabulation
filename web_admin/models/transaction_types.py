@@ -1,4 +1,6 @@
 from django.db import models
+from web_admin.models.exercise import ExerciseQuestion
+
 
 class Transaction_type(models.Model):
 	name      		 = models.CharField(max_length=200,blank=True,null=True)
@@ -11,11 +13,9 @@ class Transaction_type(models.Model):
 	is_intelex 		 = models.BooleanField(default=0)
 	company	  		 = models.ForeignKey("Company", blank=True, null=True, on_delete=models.CASCADE)
 
-
 	class Meta:
 		app_label = "web_admin"
 		db_table  = "transaction_types"
-
 
 	def get_dict(self, isV2=False):
 		transaction_type = {}
@@ -36,3 +36,6 @@ class Transaction_type(models.Model):
 			transaction_type['company'] = self.company.pk
 
 		return transaction_type
+
+	def get_question_count(self):
+		return ExerciseQuestion.objects.filter(exercise=self.id, is_deleted=False).count()

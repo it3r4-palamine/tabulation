@@ -20,6 +20,7 @@ class ExerciseQuestion(models.Model):
         try:
             instance = dict()
 
+            instance["uuid"]     = self.uuid
             instance["exercise"] = self.exercise.name
             instance["question"] = self.question.get_dict() if self.question else None
 

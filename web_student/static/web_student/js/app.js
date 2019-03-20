@@ -4,6 +4,7 @@ var app = angular.module('app', [
     'toaster',
     'ui.select',
     'common_controller',
+    'slick',
 ]);
 
 app.config(['$httpProvider', '$interpolateProvider', function($httpProvider, $interpolateProvider) {

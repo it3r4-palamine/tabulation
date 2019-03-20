@@ -79,15 +79,17 @@
                         <thead>
                             <tr>
                                 <th>Code</th>
-                                <th>Subject</th>
-                                <th>Description</th>
+                                <th>Exercise Name</th>
+                                <th>Set</th>
+                                <th>Question Count</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="record in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(record)">
                                 <td class="text-left">{$ record.transaction_code $}</td>
                                 <td class="text-left">{$ record.name $}</td>
-                                <td class="text-left">{$ record.description $}</td>
+                                <td class="text-right">{$ record.set_no $}</td>
+                                <td class="text-right">{$ record.question_count $}</td>
                             </tr>
                         </tbody>
                     </table>

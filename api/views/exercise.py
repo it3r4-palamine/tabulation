@@ -15,12 +15,16 @@ class ExerciseAPIView(APIView):
 
             for exercise_question in exercise_questions:
 
-                print(exercise_question)
-
                 exercise_question["exercise"] = exercise["id"]
                 exercise_question["question"] = exercise_question["question"]["uuid"]
 
-                serializer = ExerciseQuestionSerializer(data=exercise_question)
+                print(exercise_question)
+
+                if "uuid" in exercise_question:
+                    instance    = ExerciseQuestion.objects.get(pk=exercise_question["uuid"])
+                    serializer  = ExerciseQuestionSerializer(data=exercise_question, instance=instance)
+                else:
+                    serializer  = ExerciseQuestionSerializer(data=exercise_question)
 
                 if serializer.is_valid():
                     serializer.save()
@@ -58,10 +62,11 @@ def read_exercise(request):
         records = []
         company = get_current_company(request)
 
-        subjects = Transaction_type.objects.filter(company=company,is_active=True).order_by("name")[:100]
+        query_set = Transaction_type.objects.filter(company=company,is_active=True).order_by("name", "set_no")[:100]
 
-        for subject in subjects:
-            row = subject.get_dict()
+        for qs in query_set:
+            row = qs.get_dict()
+            row["question_count"] = qs.get_question_count()
             records.append(row)
 
         results["records"] = records
