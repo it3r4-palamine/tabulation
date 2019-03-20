@@ -26,7 +26,12 @@ class Session(CommonModel):
 
         return instance
 
-# class SessionExercise(CommonModel):
+
+class SessionExercise(CommonModel):
+    x = 1
+    pass
+
+    # exercise = models.ForeignKey("")
 
 class StudentSession(models.Model):
     
