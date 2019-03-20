@@ -136,7 +136,7 @@ class StudentSession(models.Model):
     def get_exercises(self):
         results = []
 
-        exercises = SessionExercise.objects.filter(session = self.id)
+        exercises = StudentSessionExercise.objects.filter(session = self.id)
 
         for exercise in exercises:
             results.append(exercise.get_dict(complete_instance=True))
@@ -145,12 +145,12 @@ class StudentSession(models.Model):
 
     def get_exercise_count(self):
 
-        exercise_count = SessionExercise.objects.filter(session = self.id, is_deleted = False).count()
+        exercise_count = StudentSessionExercise.objects.filter(session = self.id, is_deleted = False).count()
 
         return exercise_count
 
 
-class SessionExercise(models.Model):
+class StudentSessionExercise(models.Model):
     
     session = models.ForeignKey("StudentSession", blank=True, null=True,related_name="student_session", on_delete=models.CASCADE)
     exercise = models.ForeignKey("Transaction_type", blank=True, null=True, on_delete=models.CASCADE)

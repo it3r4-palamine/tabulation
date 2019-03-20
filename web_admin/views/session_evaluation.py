@@ -39,7 +39,7 @@ def read_student_session(request, session_id):
 				return success_list(results)
 
 			student_session = StudentSession.objects.filter(**filters).prefetch_related('student_session').first()
-			session_exercises = SessionExercise.objects.filter(session_id=student_session.id)
+			session_exercises = StudentSessionExercise.objects.filter(session_id=student_session.id)
 
 			for exercise in student_session.student_session.all():
 				exercises.append(exercise.get_dict(complete_instance=True))
@@ -186,7 +186,7 @@ def create(request,from_api=False,session=None):
 				update_result = form.save()
 				session_pk = update_result.pk
 
-				SessionExercise.objects.filter(session=session['id']).delete()
+				StudentSessionExercise.objects.filter(session=session['id']).delete()
 
 				for exercise in clean_list(session['session_exercises']):
 
