@@ -3,7 +3,7 @@
     
     <div class="row">
         <div class="col-sm-5">
-            <h3 style="margin:10px">Subject <span ng-show="!main.record.id" style="color: #18A689">(New)</span></h3>
+            <h3 style="margin:10px">Session <span ng-show="!main.record.id" style="color: #18A689">(New)</span></h3>
         </div>
 
         <div class="col-sm-7">
@@ -32,32 +32,14 @@
                 <div class="row">
 
                     <div class="col-xs-6">
-                        <label>Exercise Name</label>
-                        <ui-select ng-model="main.record.exercise" ng-change="main.read_exercise_questions(main.record.exercise)">
-                            <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                            <ui-select-choices repeat="company in main.exercises | filter: $select.search | limitTo:50">
-                                <div ng-bind-html="company.name | highlight: $select.search"></div>
-                                <small>{$ company.transaction_code | json $}</small>
-
-                            </ui-select-choices>
-                        </ui-select>
+                        <label>Name</label>
+                        <input type="text" class="form-control" ng-model="main.record.name">
 
                     </div>
 
                     <div class="col-xs-6">
-                        <label for="">Exercise Code</label>
-                        <input type="text" class="form-control" ng-model="main.record.exercise.transaction_code">
-                    </div>
-
-                </div>
-
-                <br>
-
-                <div class="row">
-
-                    <div class="col-xs-6">
-                        <label for="">Set No</label>
-                        <input type="text" class="form-control" ng-model="main.record.exercise.set_no">
+                        <label for="">Description</label>
+                        <input type="text" class="form-control" ng-model="main.record.description">
                     </div>
 
                 </div>
@@ -79,13 +61,14 @@
 
                             <tbody>
 
-                                <tr ng-repeat="record in main.exercise_questions">
+                                <tr ng-repeat="record in main.session_exercises">
                                     <td>
                                         <ui-select ng-model="record.question">
-                                            <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                                           <ui-select-choices repeat="company in main.questions | filter: $select.search | limitTo:50">
-                                            <div ng-bind-html="company.name | highlight: $select.search"></div>
-                                        </ui-select-choices>
+                                            <ui-select-match>{$ $select.selected.transaction_code $} {$ $select.selected.name $} {$ $select.selected.set_no $}</ui-select-match>
+                                            <ui-select-choices repeat="record in main.exercises | filter: $select.search | limitTo:50">
+                                                <div ng-bind-html="record.name | highlight: $select.search"></div>
+                                                <small ng-bind-html="record.transaction_code | highlight : $select.search "></small> <span ng-bind-html="record.set_no | highlight : $select.search"></span>
+                                             </ui-select-choices>
                                         </ui-select>
                                     </td>
                                     <td>

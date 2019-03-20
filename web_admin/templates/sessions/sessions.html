@@ -5,7 +5,7 @@
 {% block title %} Sessions {% endblock %}
 
 {% block loader_js_bottom %}
-<script type="text/javascript" src="{% static 'js/sessions/session_controller.js'%}?ver=1"></script>
+<script type="text/javascript" src="{% static 'js/sessions/session_controller.js' %}?ver=1"></script>
 {% endblock loader_js_bottom %}
 
 {% block page_header %}
@@ -23,7 +23,7 @@
     <div class="ibox">
 
         <div class="ibox-title">
-            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_session()">Add Subject</button>             
+            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_record()">Create Session</button>
         </div>
 
         <div class="ibox">
@@ -79,9 +79,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="student_session in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(student_session,false)">
-                                <td class="text-left">{$ student_session.name $}</td>
-                                <td class="text-left">{$ student_session.description $}</td>
+                            <tr ng-repeat="record in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_record(record)">
+                                <td class="text-left">{$ record.name $}</td>
+                                <td class="text-left">{$ record.description $}</td>
                             </tr>
                         </tbody>
                     </table>

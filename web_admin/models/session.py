@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from web_admin.models.common_model import *
+from web_admin.models.transaction_types import Exercise
 from utils.response_handler import *
 from utils.date_handler import *
 from django.utils import timezone
@@ -22,16 +23,22 @@ class Session(CommonModel):
         instance["uuid"]        = self.uuid
         instance["name"]        = self.name
         instance["description"] = self.description
-        instance["company"]     = str(self.company)
+        instance["company"]     = self.company.id
 
         return instance
 
 
-class SessionExercise(CommonModel):
-    x = 1
-    pass
+# class SessionExercise(CommonModel):
+#
+#     session = models.ForeignKey(Session, on_delete=models.CASCADE)
+#     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
+#
+#     class Meta:
+#         app_label = "web_admin"
+#         db_table  = "session_exercises"
 
-    # exercise = models.ForeignKey("")
+
+
 
 class StudentSession(models.Model):
     
@@ -168,7 +175,7 @@ class StudentSessionExercise(models.Model):
 
     class Meta:
         app_label = "web_admin"
-        db_table  = "session_exercise"
+        db_table  = "student_session_exercise"
         ordering  = ["id"]
 
     def get_dict(self, complete_instance=False):

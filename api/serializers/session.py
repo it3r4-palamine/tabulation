@@ -7,6 +7,5 @@ class SessionSerializer(serializers.ModelSerializer):
         model = Session
         fields = ('name',
                   'description',
-                  'price',
                   'company',
                   )

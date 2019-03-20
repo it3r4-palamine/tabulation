@@ -18,8 +18,6 @@ class ExerciseAPIView(APIView):
                 exercise_question["exercise"] = exercise["id"]
                 exercise_question["question"] = exercise_question["question"]["uuid"]
 
-                print(exercise_question)
-
                 if "uuid" in exercise_question:
                     instance    = ExerciseQuestion.objects.get(pk=exercise_question["uuid"])
                     serializer  = ExerciseQuestionSerializer(data=exercise_question, instance=instance)

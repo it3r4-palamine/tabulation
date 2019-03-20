@@ -43,7 +43,7 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 
 			if(response.records.length === 0)
 			{
-				self.add_exercise_question();
+				self.add_session_exercise();
 			}
 		});
 

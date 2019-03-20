@@ -44,7 +44,7 @@ def get_programs_page(request):
 
 
 def get_sessions_page(request):
-    return render(request, "session_evaluation/sessions.html")
+    return render(request, "sessions/sessions.html")
 
 
 def get_questions_page(request):
@@ -64,7 +64,7 @@ def get_exercise_page(request):
 
 
 def get_session_evaluation_page(request):
-    return render(request, "session_evaluation/session_evaluation_list.html", {"pagename" : "Student Evaluation"})
+    return render(request, "session_evaluation/session_evaluation_list.html", {"pagename": "Student Evaluation"})
 
 
 

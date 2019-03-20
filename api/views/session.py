@@ -6,10 +6,24 @@ from api.serializers.session import *
 
 class SessionAPIView(APIView):
 
+    @staticmethod
+    def save_session_exercises(session_id, session_exercises):
+        try:
+
+            for session_exercise in session_exercises:
+
+                session_exercise["session"] = session_id
+
+        except Exception as e:
+            raise_error(e)
+
     def post(self, request):
         try:
             data    = extract_json_data(request)
             company = get_current_company(request)
+
+            print(data)
+            print(company)
 
             if data.get("uuid", None):
                 instance = Session.objects.get(pk=data.get("uuid"))
@@ -21,11 +35,13 @@ class SessionAPIView(APIView):
             if serializer.is_valid():
                 serializer.save()
             else:
+                print(serializer.errors)
                 raise_error(serializer.errors)
 
             return success_response()
         except Exception as e:
-            return error_response(e)
+            print(e)
+            return error_response(e, show_line=True)
 
 
 @api_view(["POST"])
@@ -35,10 +51,10 @@ def read_sessions(request):
         records = []
         company = get_current_company(request)
 
-        subjects = Session.objects.filter(company=company).order_by("-date_created")
+        query_set = Session.objects.filter(company=company).order_by("-date_created")
 
-        for subject in subjects:
-            row = subject.get_dict()
+        for qs in query_set:
+            row = qs.get_dict()
             records.append(row)
 
         results["records"] = records

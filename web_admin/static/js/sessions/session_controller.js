@@ -16,22 +16,21 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 	self.today 				= new Date();
 	self.filters 			= { name : ''};
 	self.filter 			= { name : "" };
-	self.exercise_questions = [];
+	self.session_exercises  = [];
 	$scope.filter 			= { name : "" };
 
 
-	self.create_edit_session = function(record)
+	self.create_edit_record = function(record)
 	{
 		self.record = {};
 
-		console.log(record);
-
 		if ( record ) {
-			self.record["exercise"] = record;
-			self.read_exercise_questions(record);
+			self.record = angular.copy(record);
+		} else {
+			self.session_exercises.push({})
 		}
 
-		self.open_dialog("/get_dialog/exercise/dialog_create/", 'dialog_width_80', 'main')
+		self.open_dialog("/get_dialog/sessions/create_dialog/", 'dialog_width_80', 'main')
 	};
 
 	self.read_exercise_questions = function(record)
@@ -43,7 +42,7 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 
 			if(response.records.length === 0)
 			{
-				self.add_exercise_question();
+				self.add_session_exercise();
 			}
 		});
 
@@ -53,24 +52,23 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 		});
 	};
 
-	self.add_exercise_question = function()
+	self.add_session_exercise = function()
     {
-        self.exercise_questions.push({});
+        self.session_exercises.push({});
     };
 
-	self.remove_exercise_question = function(record)
+	self.remove_session_exercise = function(record)
 	{
-		self.exercise_questions.splice(self.exercise_questions.indexOf(record), 1);
+		self.session_exercises.splice(self.session_exercises.indexOf(record), 1);
 	};
 
 	self.save_record = function(record)
 	{
-	    let post_data = record;
+	    let post_data = angular.copy(record);
 
-	    post_data["exercise_questions"] = self.exercise_questions;
-        console.log(post_data);
+	    post_data["session_exercises"] = self.session_exercises;
 
-		self.post_api('exercise/create/', post_data, null, false, null, false)
+		self.post_api('session/create/', post_data, null, false, null, false)
 			.success(function(response){
 
 				self.record = {};
@@ -97,7 +95,7 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 
 		filters["pagination"] = self.pagination;
 
-		var post = self.post_api("exercise/read/", filters, "main");
+		var post = self.post_api("session/read/", filters, "main");
 		post.success(function(response){
 			self.records = response.records;
 			// self.generate_pagination(self,response,"records");
