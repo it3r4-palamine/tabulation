@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from api.views import question, download_data, login, answers, student, users, subject, enrollment, learning_center, \
-    exercise ,course, session
+    exercise ,course, session, program
 
 urlpatterns = [
 
@@ -47,8 +47,8 @@ urlpatterns = [
     url(r'^subject/create/$', subject.SubjectAPIView.as_view()),
     url(r'^subject/read/$', subject.read_subjects),
 
-    url(r'^program/create/$', subject.ProgramAPIView.as_view()),
-    url(r'^program/read/$', subject.read_programs),
+    url(r'^program/create/$', program.ProgramAPIView.as_view()),
+    url(r'^program/read/$', program.read_programs),
 
     url(r'^course/create/$', course.CourseAPIView.as_view()),
     url(r'^course/read/$', course.read_course),

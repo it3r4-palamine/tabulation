@@ -573,7 +573,8 @@ app.factory("RightClick", function(Notification){
 
 
             if(scope.key_in_list(scope.current_module,[
-                "enrollment_list",])){
+                "enrollment_list",
+                "sessions"])){
                 menu.push(delete_menu)
             }
 
@@ -975,6 +976,14 @@ app.factory("CommonRead", function($http, CommonRequests, Charts) {
             response.success(function (response) {
                 scope["questions"] = response.records;
             });
+        },
+
+        get_sessions : function(scope)
+        {
+            let response = scope.post_api("session/read/");
+            response.success( function (response) {
+                scope["sessions"] = response.records;
+            })
         },
 
         get_subjects : function(scope)

@@ -3,7 +3,7 @@
     
     <div class="row">
         <div class="col-sm-5">
-            <h3 style="margin:10px">Session <span ng-show="!main.record.id" style="color: #18A689">(New)</span></h3>
+            <h3 style="margin:10px">Program <span ng-show="!main.record.id" style="color: #18A689">(New)</span></h3>
         </div>
 
         <div class="col-sm-7">
@@ -33,7 +33,7 @@
 
                     <div class="col-xs-6">
                         <label>Name</label>
-                        <input type="text" class="form-control" ng-model="main.record.name" ng-enter="main.save_record(main.record)">
+                        <input type="text" class="form-control" ng-model="main.record.name">
 
                     </div>
 
@@ -61,11 +61,11 @@
 
                             <tbody>
 
-                                <tr ng-repeat="record in main.session_exercises">
+                                <tr ng-repeat="record in main.program_sessions">
                                     <td>
                                         <ui-select ng-model="record.exercise">
                                             <ui-select-match>{$ $select.selected.transaction_code $} {$ $select.selected.name $} {$ $select.selected.set_no $}</ui-select-match>
-                                            <ui-select-choices repeat="record in main.exercises | filter: $select.search | limitTo:50">
+                                            <ui-select-choices repeat="record in main.sessions | filter: $select.search | limitTo:50">
                                                 <div ng-bind-html="record.name | highlight: $select.search"></div>
                                                 <small ng-bind-html="record.transaction_code | highlight : $select.search "></small> <span ng-bind-html="record.set_no | highlight : $select.search"></span>
                                              </ui-select-choices>

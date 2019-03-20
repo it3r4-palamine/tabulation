@@ -1,13 +1,13 @@
-var app = angular.module("session", ['common_module', 'file-model', 'angular-sortable-view','ui.bootstrap.contextMenu']);
+var app = angular.module("program", ['common_module', 'file-model', 'angular-sortable-view','ui.bootstrap.contextMenu']);
 
-app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $controller, CommonFunc, RightClick, Notification, CommonRead)
+app.controller('ProgramCtrl', function($scope, $http, $timeout, $element, $controller, CommonFunc, RightClick, Notification, CommonRead)
 {
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope }));
 
 	var self = this;
 	let me = this;
 
-	self.current_module 	= "sessions";
+	self.current_module 	= "subjects";
 	self.pagination			= {};
 	self.session_exercises 	= [];
 	self.records 			= [];
@@ -16,7 +16,7 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 	self.today 				= new Date();
 	self.filters 			= { name : ''};
 	self.filter 			= { name : "" };
-	self.session_exercises  = [];
+	self.program_sessions   = [];
 	$scope.filter 			= { name : "" };
 
 
@@ -28,10 +28,10 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 			self.record = angular.copy(record);
 			self.read_session_exercises(record);
 		} else {
-			self.session_exercises.push({});
+			self.program_sessions.push({});
 		}
 
-		self.open_dialog("/get_dialog/sessions/create_dialog/", 'dialog_width_80', 'main')
+		self.open_dialog("/get_dialog/programs/create_dialog/", 'dialog_width_80', 'main')
 	};
 
 	self.read_session_exercises = function(record)
@@ -48,28 +48,28 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 		});
 
 		response.error(function(response){
-		    self.exercise_questions = [{}]
+		    self.program_sessions = [{}]
 
 		});
 	};
 
 	self.add_session_exercise = function()
     {
-        self.session_exercises.push({});
+        self.program_sessions.push({});
     };
 
 	self.remove_session_exercise = function(record)
 	{
-		self.session_exercises.splice(self.session_exercises.indexOf(record), 1);
+		self.program_sessions.splice(self.program_sessions.indexOf(record), 1);
 	};
 
 	self.save_record = function(record)
 	{
 	    let post_data = angular.copy(record);
 
-	    post_data["session_exercises"] = self.session_exercises;
+	    post_data["program_sessions"] = self.program_sessions;
 
-		self.post_api('session/create/', post_data, null, false, null, false)
+		self.post_api('program/create/', post_data, null, false, null, false)
 			.success(function(response){
 
 				self.record = {};
@@ -96,30 +96,20 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 
 		filters["pagination"] = self.pagination;
 
-		var post = self.post_api("session/read/", filters, "main");
+		var post = self.post_api("program/read/", filters, "main");
 		post.success(function(response){
 			self.records = response.records;
 			// self.generate_pagination(self,response,"records");
 		});
 	};
 
-    self.read_exercises = function()
-    {
-        var post = self.post_api("exercise/read/", null, "main");
-		post.success(function(response){
-			self.exercises = response.records;
-		});
-    };
-
 	self.menu_options = function (record) {
-		console.log(record)
-	    me.context_id = record.uuid;
+	    me.context_id = record.id;
 	    return RightClick.get_menu(me,record)
 	};
 
 	self.main_loader = function(){ self.read_pagination(); };
 	self.main_loader();
 
-	CommonRead.get_questions_new(self);
-	self.read_exercises();
+	CommonRead.get_sessions(self);
 });

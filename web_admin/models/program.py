@@ -16,6 +16,7 @@ class Course(CommonModel):
     def get_dict(self):
         instance = dict()
 
+        instance["uuid"]    = self.uuid
         instance["name"]    = self.name
         instance["company"] = self.company.id
 
@@ -29,3 +30,15 @@ class Program(CommonModel):
     class Meta:
         app_label = "web_admin"
         db_table = "program"
+
+    def __str__(self):
+        return self.name
+
+    def get_dict(self):
+        instance = dict()
+
+        instance["uuid"]        = self.uuid
+        instance["name"]        = self.name
+        instance["description"] = self.description
+
+        return instance
