@@ -1,16 +1,36 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from web_admin.models.course import Course
-from api.serializers.course import CourseSerializer
+from web_admin.models.course import Course, CourseProgram
+from api.serializers.course import CourseSerializer, CourseProgramSerializer
 from utils.response_handler import *
 
 
 class CourseAPIView(APIView):
 
+    @staticmethod
+    def save_course_program(course_id, course_programs):
+
+        for course_program in course_programs:
+
+            course_program["course"]  = course_id
+            course_program["program"] = course_program["program"].get("uuid")
+
+            serializer = CourseProgramSerializer(data=course_program)
+
+            if serializer.is_valid():
+                print("Save")
+                serializer.save()
+            else:
+                print(serializer.errors)
+
     def post(self, request):
         try:
-            data = extract_json_data(request)
-            company = get_current_company(request)
+            data            = extract_json_data(request)
+            company         = get_current_company(request)
+            course_programs = data.get("course_programs", None)
+
+            if not course_programs:
+                raise_error("No Programs")
 
             if data.get("uuid", None):
                 instance = Course.objects.get(pk=data.get("uuid"))
@@ -20,13 +40,15 @@ class CourseAPIView(APIView):
                 serializer = CourseSerializer(data=data)
 
             if serializer.is_valid():
-                serializer.save()
+                instance = serializer.save()
+                self.save_course_program(instance.pk, course_programs)
             else:
                 raise_error(serializer.errors)
 
             return success_response()
         except Exception as e:
-            return error_response(e)
+            print(e)
+            return error_response(str(e))
 
 
 @api_view(["POST"])
@@ -36,10 +58,31 @@ def read_course(request):
         records = []
         company = get_current_company(request)
 
-        subjects = Course.objects.filter(company=company).order_by("-date_created")
+        query_set = Course.objects.filter(company=company).order_by("-date_created")
 
-        for subject in subjects:
-            row = subject.get_dict()
+        for qs in query_set:
+            row = qs.get_dict()
+            records.append(row)
+
+        results["records"] = records
+
+        return success_response(results)
+    except Exception as e:
+        return error_response(str(e))
+
+
+@api_view(["POST"])
+def read_course_programs(request):
+    try:
+        results = {}
+        records = []
+        filters = extract_json_data(request)
+        course_id = filters.get("uuid", None)
+
+        query_set = CourseProgram.objects.filter(course=course_id)
+
+        for qs in query_set:
+            row = qs.get_dict()
             records.append(row)
 
         results["records"] = records

@@ -7,7 +7,7 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 	let self = this;
 	let me = this;
 
-	self.current_module 	= "subjects";
+	self.current_module 	= "course";
 	self.pagination			= {};
 	self.session_exercises 	= [];
 	self.records 			= [];
@@ -26,7 +26,7 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 
 		if ( record ) {
 			self.record = record;
-			// self.read_exercise_questions(record);
+			self.read_course_programs(record);
 		} else {
 		    self.course_programs.push({})
         }
@@ -34,28 +34,27 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 		self.open_dialog("/get_dialog/courses/create_dialog/", 'dialog_width_60 dialog_height_60', 'main')
 	};
 
-	self.read_exercise_questions = function(record)
+	self.read_course_programs = function(record)
 	{
-		let response = self.post_api("exercise/read_exercise_questions/", record, null, false, null, null)
+		let response = self.post_api("course/read_course_programs/", record, null, false, null, null)
 
 		response.success(function(response){
 			self.course_programs = response.records;
 
 			if(response.records.length === 0)
 			{
-				self.add_session_exercise();
+				self.add_course_program();
 			}
 		});
 
 		response.error(function(response){
-		    self.exercise_questions = [{}]
-
+		    self.course_programs = [{}]
 		});
 	};
 
 	self.add_course_program = function()
     {
-        self.exercise_questions.push({});
+        self.course_programs.push({});
     };
 
 	self.remove_course_program = function(record)
@@ -63,10 +62,17 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 		self.course_programs.splice(self.course_programs.indexOf(record), 1);
 	};
 
-	self.save_record = function(data)
+	self.save_record = function(record)
 	{
-		self.post_api('course/create/', data, null, false, null, false)
+		let post_data = angular.copy(record);
+	    post_data["course_programs"] = self.course_programs;
+
+		self.post_api('course/create/', post_data, null, false, null, false)
 			.success(function(response){
+
+				self.record 		 = {};
+				self.course_programs = [];
+
 				self.close_dialog();
 				self.main_loader();
 			}).error(function(response){

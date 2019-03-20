@@ -73,7 +73,7 @@ app.controller('ProgramCtrl', function($scope, $http, $timeout, $element, $contr
 			.success(function(response){
 
 				self.record = {};
-				self.session_exercises = [];
+				self.program_sessions = [];
 
 				self.close_dialog();
 				self.main_loader();

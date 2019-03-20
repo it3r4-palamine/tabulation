@@ -3,7 +3,7 @@
     
     <div class="row">
         <div class="col-sm-5">
-            <h3 style="margin:10px">Subject <span ng-show="!main.record.id" style="color: #18A689">(New)</span></h3>
+            <h3 style="margin:10px">Course <span ng-show="!main.record.id" style="color: #18A689">(New)</span></h3>
         </div>
 
         <div class="col-sm-7">
@@ -72,14 +72,14 @@
                                     <td>
                                         <ui-select ng-model="record.program">
                                             <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                                           <ui-select-choices repeat="record in main.course_programs | filter: $select.search | limitTo:50">
+                                            <ui-select-choices repeat="record in main.programs | filter: $select.search | limitTo:50">
                                             <div ng-bind-html="record.name | highlight: $select.search"></div>
                                         </ui-select-choices>
                                         </ui-select>
                                     </td>
                                     <td>
-                                        <button class="btn btn-primary btn-circle" ng-click="main.add_session_exercise()"><i class="fa fa-plus"></i></button>
-                                        <button class="btn btn-danger btn-circle" ng-click="main.remove_session_exercise(record)"><i class="fa fa-remove"></i></button>
+                                        <button class="btn btn-primary btn-circle" ng-click="main.add_course_program()"><i class="fa fa-plus"></i></button>
+                                        <button class="btn btn-danger btn-circle" ng-click="main.remove_course_program(record)"><i class="fa fa-remove"></i></button>
                                     </td>
                                 </tr>
 

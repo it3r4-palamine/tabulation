@@ -53,6 +53,7 @@ urlpatterns = [
 
     url(r'^course/create/$', course.CourseAPIView.as_view()),
     url(r'^course/read/$', course.read_course),
+    url(r'^course/read_course_programs/$', course.read_course_programs),
 
     url(r'^session/read/$', session.read_sessions),
     url(r'^session/create/$', session.SessionAPIView.as_view()),
