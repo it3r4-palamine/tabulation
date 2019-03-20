@@ -26,6 +26,7 @@ class Session(CommonModel):
 
         return instance
 
+# class SessionExercise(CommonModel):
 
 class StudentSession(models.Model):
     
@@ -165,8 +166,7 @@ class StudentSessionExercise(models.Model):
         db_table  = "session_exercise"
         ordering  = ["id"]
 
-
-    def get_dict(self,complete_instance=False):
+    def get_dict(self, complete_instance=False):
         try:
             instance = {}
             instance['id'] = self.id
