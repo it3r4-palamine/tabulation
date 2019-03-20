@@ -70,10 +70,10 @@
 
                                 <tr ng-repeat="record in main.course_programs">
                                     <td>
-                                        <ui-select ng-model="record.question">
+                                        <ui-select ng-model="record.program">
                                             <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                                           <ui-select-choices repeat="company in main.programs | filter: $select.search | limitTo:50">
-                                            <div ng-bind-html="company.name | highlight: $select.search"></div>
+                                           <ui-select-choices repeat="record in main.course_programs | filter: $select.search | limitTo:50">
+                                            <div ng-bind-html="record.name | highlight: $select.search"></div>
                                         </ui-select-choices>
                                         </ui-select>
                                     </td>

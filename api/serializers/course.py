@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from web_admin.models.program import Course
+from web_admin.models.course import Course
 
 
 class CourseSerializer(serializers.ModelSerializer):

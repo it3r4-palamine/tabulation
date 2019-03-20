@@ -1,15 +1,15 @@
 from web_admin.models.common_model import CommonModel
-from web_admin.models.session import Session
+from web_admin.models.program import Program
 from django.db import models
 
 
-class Program(CommonModel):
+class Course(CommonModel):
 
     price = models.DecimalField(default=0, blank=True, null=True, decimal_places=2, max_digits=7)
 
     class Meta:
         app_label = "web_admin"
-        db_table = "program"
+        db_table = "course"
 
     def __str__(self):
         return self.name
@@ -17,21 +17,21 @@ class Program(CommonModel):
     def get_dict(self):
         instance = dict()
 
-        instance["uuid"]        = self.uuid
-        instance["name"]        = self.name
-        instance["description"] = self.description
+        instance["uuid"]    = self.uuid
+        instance["name"]    = self.name
+        instance["company"] = self.company.id
 
         return instance
 
 
-class ProgramSession(CommonModel):
+class CourseProgram(CommonModel):
 
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
-    session = models.ForeignKey(Session, on_delete=models.CASCADE)
 
     class Meta:
         app_label = "web_admin"
-        db_table = "program_sessions"
+        db_table = "course_programs"
 
     def __str__(self):
         return self.name
@@ -40,7 +40,7 @@ class ProgramSession(CommonModel):
         instance = dict()
 
         instance["uuid"]    = self.pk
-        instance["program"] = self.program.pk
-        instance["session"] = self.session.get_dict() if self.session else None
+        instance["course"]  = self.course.pk
+        instance["program"] = self.program.get_dict() if self.program else None
 
         return instance

@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from web_admin.models import Course
+from web_admin.models.course import Course
 from api.serializers.course import CourseSerializer
 from utils.response_handler import *
 
