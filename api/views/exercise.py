@@ -58,11 +58,17 @@ def read_exercise_questions(request):
 @api_view(["POST"])
 def read_exercise(request):
     try:
-        results = {}
-        records = []
-        company = get_current_company(request)
+        results       = {}
+        records       = []
+        company       = get_current_company(request)
+        filters       = extract_json_data(request)
+        query_filters = Q(company=company) & Q(is_active=True)
 
-        query_set = Transaction_type.objects.filter(company=company,is_active=True).order_by("name", "set_no")[:100]
+        if filters.get("search", None):
+            search         = filters.get("search")
+            query_filters &= Q(name__icontains=search) | Q(transaction_code__icontains=search)
+
+        query_set = Transaction_type.objects.filter(query_filters).order_by("name", "set_no")[:100]
 
         for qs in query_set:
             row = qs.get_dict()
