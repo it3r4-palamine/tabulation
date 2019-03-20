@@ -1,4 +1,5 @@
 from web_admin.models.common_model import CommonModel
+from web_admin.models.session import Session
 from django.db import models
 
 
@@ -40,5 +41,27 @@ class Program(CommonModel):
         instance["uuid"]        = self.uuid
         instance["name"]        = self.name
         instance["description"] = self.description
+
+        return instance
+
+
+class ProgramSession(CommonModel):
+
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+
+    class Meta:
+        app_label = "web_admin"
+        db_table = "program_sessions"
+
+    def __str__(self):
+        return self.name
+
+    def get_dict(self):
+        instance = dict()
+
+        instance["uuid"]    = self.pk
+        instance["program"] = self.program.pk
+        instance["session"] = self.session.get_dict() if self.session else None
 
         return instance

@@ -49,6 +49,7 @@ urlpatterns = [
 
     url(r'^program/create/$', program.ProgramAPIView.as_view()),
     url(r'^program/read/$', program.read_programs),
+    url(r'^program/read_program_sessions/$', program.read_program_sessions),
 
     url(r'^course/create/$', course.CourseAPIView.as_view()),
     url(r'^course/read/$', course.read_course),

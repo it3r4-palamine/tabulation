@@ -7,14 +7,14 @@ from utils.response_handler import *
 class ProgramAPIView(APIView):
 
     @staticmethod
-    def save_program_sessions(session_id, session_exercises):
+    def save_program_sessions(program_id, program_sessions):
 
-        for session_exercise in session_exercises:
+        for program_session in program_sessions:
 
-            session_exercise["session"] = session_id
-            session_exercise["exercise"] = session_exercise["exercise"].get("id")
+            program_session["program"] = program_id
+            program_session["session"] = program_session["session"].get("uuid")
 
-            serializer = SessionExerciseSerializer(data=session_exercise)
+            serializer = ProgramSessionSerializer(data=program_session)
 
             if serializer.is_valid():
                 print("Save")
@@ -41,6 +41,7 @@ class ProgramAPIView(APIView):
 
             if serializer.is_valid():
                 instance = serializer.save()
+                self.save_program_sessions(instance.pk, program_sessions)
 
             else:
                 print(serializer.errors)
@@ -63,6 +64,27 @@ def read_programs(request):
         company = get_current_company(request)
 
         query_set = Program.objects.filter(company=company).order_by("-date_created")
+
+        for qs in query_set:
+            row = qs.get_dict()
+            records.append(row)
+
+        results["records"] = records
+
+        return success_response(results)
+    except Exception as e:
+        return error_response(str(e))
+
+
+@api_view(["POST"])
+def read_program_sessions(request):
+    try:
+        results    = {}
+        records    = []
+        filters    = extract_json_data(request)
+        program_id = filters.get("uuid", None)
+
+        query_set = ProgramSession.objects.filter(program=program_id)
 
         for qs in query_set:
             row = qs.get_dict()

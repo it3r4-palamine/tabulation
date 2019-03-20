@@ -26,20 +26,20 @@ app.controller('ProgramCtrl', function($scope, $http, $timeout, $element, $contr
 
 		if ( record ) {
 			self.record = angular.copy(record);
-			self.read_session_exercises(record);
+			self.read_program_sessions(record);
 		} else {
 			self.program_sessions.push({});
 		}
 
-		self.open_dialog("/get_dialog/programs/create_dialog/", 'dialog_width_80', 'main')
+		self.open_dialog("/get_dialog/programs/create_dialog/", 'dialog_width_80', 'main');
 	};
 
-	self.read_session_exercises = function(record)
+	self.read_program_sessions = function(record)
 	{
-		let response = self.post_api("session/read_session_exercise/", record, null, false, null, null)
+		let response = self.post_api("program/read_program_sessions/", record, null, false, null, null);
 
 		response.success(function(response){
-			self.session_exercises = response.records;
+			self.program_sessions = response.records;
 
 			if(response.records.length === 0)
 			{
