@@ -53,9 +53,9 @@ def read_assessments(request):
 			for sessions in assessment_sessions:
 				if sessions.transaction_type and sessions.transaction_type.pk not in transactionTypeArr:
 					transactionTypeArr.append(sessions.transaction_type.pk)
-			transaction_types = Transaction_type.objects.filter(id__in=transactionTypeArr)
+			transaction_types = Exercise.objects.filter(id__in=transactionTypeArr)
 		else:
-			transaction_types = Transaction_type.objects.filter(id__in=data['transaction_type'])
+			transaction_types = Exercise.objects.filter(id__in=data['transaction_type'])
 		datus = []
 		scoresArr = []
 
@@ -310,7 +310,7 @@ def generate(request):
 		title.text = company_assessment.company.name
 		subtitle.text = "Business Assessment"
 
-		transaction_types = Transaction_type.objects.filter(id__in=data['datus']['transaction_type'])
+		transaction_types = Exercise.objects.filter(id__in=data['datus']['transaction_type'])
 		for transaction_type in transaction_types:
 			transaction_type_title_slide_layout = prs.slide_layouts[0]
 			transaction_type_slide = prs.slides.add_slide(transaction_type_title_slide_layout)

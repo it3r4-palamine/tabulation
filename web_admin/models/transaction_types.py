@@ -2,7 +2,7 @@ from django.db import models
 from web_admin.models.exercise import ExerciseQuestion
 
 
-class Transaction_type(models.Model):
+class Exercise(models.Model):
 	name      		 = models.CharField(max_length=200,blank=True,null=True)
 	transaction_code = models.CharField(max_length=200,blank=True,null=True)
 	exercise_id 	 = models.IntegerField(blank=True, null=True)

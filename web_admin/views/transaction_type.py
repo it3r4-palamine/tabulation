@@ -36,7 +36,7 @@ def read(request):
 
 				if with_questions:
 					t_types_ids = []
-					t_types = Transaction_type.objects.filter(id__in=company.transaction_type)
+					t_types = Exercise.objects.filter(id__in=company.transaction_type)
 					for t_type in t_types:
 						check_question = Assessment_question.objects.filter(is_active=True,company=data['company'],transaction_type=t_type.id)
 						if len(check_question) > 0:
@@ -63,9 +63,9 @@ def read(request):
 		sort_by = generate_sorting(data.pop("sort",None))
 
 		if 'program_id' in data:
-			records = Transaction_type.objects.filter(filters).exclude(id__in=data['program_id']).order_by(*sort_by)
+			records = Exercise.objects.filter(filters).exclude(id__in=data['program_id']).order_by(*sort_by)
 		else:
-			records = Transaction_type.objects.filter(filters).order_by(*sort_by)
+			records = Exercise.objects.filter(filters).order_by(*sort_by)
 
 		results = {'data':[]}
 		results['total_records'] = records.count()
@@ -99,21 +99,21 @@ def create(request):
 	try: 
 		postdata = req_data(request,True)
 		try:
-			instance = Transaction_type.objects.get(company=postdata['company'],id=postdata.get('id',None),is_active=True)
+			instance = Exercise.objects.get(company=postdata['company'], id=postdata.get('id', None), is_active=True)
 			try:
-				check_transaction_type = Transaction_type.objects.filter(company=postdata['company'],transaction_code__iexact=postdata['transaction_code'],name__iexact=postdata['name'],is_active=True,set_no=postdata['set_no']).first()
+				check_transaction_type = Exercise.objects.filter(company=postdata['company'], transaction_code__iexact=postdata['transaction_code'], name__iexact=postdata['name'], is_active=True, set_no=postdata['set_no']).first()
 				if check_transaction_type:
 					if check_transaction_type.pk != postdata['id']: 
 						return error(check_transaction_type.name + " already exists.")
 
 				transaction_type = Transaction_type_form(postdata, instance=instance)
-			except Transaction_type.DoesNotExist:
+			except Exercise.DoesNotExist:
 				transaction_type = Transaction_type_form(postdata, instance=instance)
-		except Transaction_type.DoesNotExist:
+		except Exercise.DoesNotExist:
 			try:
-				check_transaction_type = Transaction_type.objects.get(company=postdata['company'],transaction_code__iexact=postdata['transaction_code'],name__iexact=postdata['name'],is_active=True,set_no=postdata['set_no'])
+				check_transaction_type = Exercise.objects.get(company=postdata['company'], transaction_code__iexact=postdata['transaction_code'], name__iexact=postdata['name'], is_active=True, set_no=postdata['set_no'])
 				return error(check_transaction_type.name + " already exists.")
-			except Transaction_type.DoesNotExist:
+			except Exercise.DoesNotExist:
 				transaction_type = Transaction_type_form(postdata)
 
 		if(transaction_type.is_valid()):
@@ -137,12 +137,12 @@ def delete(request,id = None):
 		if use_in_questions:
 			raise_error("This %s is currently in use."%(t_term))
 		try:
-			record = Transaction_type.objects.get(pk = id)
+			record = Exercise.objects.get(pk = id)
 			record.is_active = False
 			record.transaction_code = str(record.transaction_code) + str(time.mktime(time.gmtime()))
 			record.save()
 			return success("Successfully deleted.")
-		except Transaction_type.DoesNotExist:
+		except Exercise.DoesNotExist:
 			raise_error("%s doesn't exist."%(t_term))
 	except Exception as e:
 		return HttpResponse(e, status = 400)
@@ -162,11 +162,11 @@ def delete_selected(request):
 			if use_in_questions:
 				raise_error("%s is currently in use."%(use_in_questions.transaction_type.name))
 			try:
-				record = Transaction_type.objects.get(pk = ids)
+				record = Exercise.objects.get(pk = ids)
 				record.is_active = False
 				record.transaction_code = str(record.transaction_code) + str(time.mktime(time.gmtime()))
 				record.save()
-			except Transaction_type.DoesNotExist:
+			except Exercise.DoesNotExist:
 				raise_error("%s doesn't exist."%(t_term))
 		
 		return success("Successfully deleted.")
@@ -188,7 +188,7 @@ def get_intelex_exercises(request):
 
 		for record in records["records"]:
 			cprint(record)
-			if Transaction_type.objects.filter(set_no=record['set_no'],transaction_code__iexact=record['exercise_code'],name__iexact=record['exercise_name'],exercise_id=record['id'],is_intelex=True,is_active=True,company=datus['company']).exists():
+			if Exercise.objects.filter(set_no=record['set_no'], transaction_code__iexact=record['exercise_code'], name__iexact=record['exercise_name'], exercise_id=record['id'], is_intelex=True, is_active=True, company=datus['company']).exists():
 				continue
 			else:
 				datus['transaction_code'] = record['exercise_code']

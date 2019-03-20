@@ -146,8 +146,8 @@ def read(request):
 				if not exclude:
 					for t_types in record.transaction_type:
 						try:
-							t_type = Transaction_type.objects.get(id=t_types,is_active=True,company=data['company'])
-						except Transaction_type.DoesNotExist:
+							t_type = Exercise.objects.get(id=t_types, is_active=True, company=data['company'])
+						except Exercise.DoesNotExist:
 							continue
 						transaction_type_dict = {
 												'id'		: t_type.pk,

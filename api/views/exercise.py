@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from web_admin.models.transaction_types import Transaction_type
+from web_admin.models.transaction_types import Exercise
 from api.serializers.exercise import *
 from utils.response_handler import *
 
@@ -68,7 +68,7 @@ def read_exercise(request):
             search         = filters.get("search")
             query_filters &= Q(name__icontains=search) | Q(transaction_code__icontains=search)
 
-        query_set = Transaction_type.objects.filter(query_filters).order_by("name", "set_no")[:100]
+        query_set = Exercise.objects.filter(query_filters).order_by("name", "set_no")[:100]
 
         for qs in query_set:
             row = qs.get_dict()

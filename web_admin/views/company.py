@@ -53,8 +53,8 @@ def read(request):
 				if not exclude:
 					for t_types in record.transaction_type:
 						try:
-							t_type = Transaction_type.objects.get(id=t_types,is_active=True,company=data['company'])
-						except Transaction_type.DoesNotExist:
+							t_type = Exercise.objects.get(id=t_types, is_active=True, company=data['company'])
+						except Exercise.DoesNotExist:
 							continue
 						transaction_type_dict = {
 												'id'		: t_type.pk,
@@ -149,7 +149,7 @@ def get_intelex_subjects(request):
 			has_exists = Company_rename.objects.filter(name__iexact=record['name'],program_id=record['id'],is_active=True,company=datus['company']).first()
 			if has_exists:
 				t_type 			  = has_exists.transaction_type
-				transaction_types = Transaction_type.objects.filter(program_id=record['id'],is_active=True,is_intelex=True)
+				transaction_types = Exercise.objects.filter(program_id=record['id'], is_active=True, is_intelex=True)
 
 				for transaction_type in transaction_types:
 					if transaction_type.pk not in t_type:
@@ -177,7 +177,7 @@ def get_intelex_subjects(request):
 				program['company'] 	  = datus['company']
 				program['name'] 	  = record['name']
 
-				transaction_types 	 = Transaction_type.objects.filter(program_id=record['id'],is_active=True,is_intelex=True)
+				transaction_types 	 = Exercise.objects.filter(program_id=record['id'], is_active=True, is_intelex=True)
 				transaction_typesArr = []
 				for transaction_type in transaction_types:
 					transaction_typesArr.append(transaction_type.pk)

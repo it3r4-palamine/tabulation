@@ -87,7 +87,7 @@ def read(request):
 				if record.transaction_types:
 					for t_types in record.transaction_types:
 						try:
-							t_type = str2model("Transaction_type").objects.get(company=data['company'],id=t_types,is_active=True)
+							t_type = str2model("Exercise").objects.get(company=data['company'],id=t_types,is_active=True)
 						except Transaction_type.DoesNotExist:
 							continue
 						transaction_type_dict = {'id':t_type.pk,'name':t_type.name,'is_active':t_type.is_active}
@@ -122,7 +122,7 @@ def generate_code(request):
 			# filters = {'is_general' : False,"transaction_type__id" : data['transaction_type']['id'],"transaction_type__transaction_code" : data['transaction_type']['transaction_code']}
 			filters = {'is_general' : False,"transaction_type__transaction_code" : data['transaction_type']['transaction_code']}
 			try:
-				transaction_code = str2model("Transaction_type").objects.get(exercise_id=data['transaction_type']['exercise_id'],set_no=data['transaction_type']['set_no'],is_active=True,company=data['company'],transaction_code=data['transaction_type']['transaction_code']).transaction_code
+				transaction_code = str2model("Exercise").objects.get(exercise_id=data['transaction_type']['exercise_id'],set_no=data['transaction_type']['set_no'],is_active=True,company=data['company'],transaction_code=data['transaction_type']['transaction_code']).transaction_code
 			except Exception as e:
 				return error("No code.")
 

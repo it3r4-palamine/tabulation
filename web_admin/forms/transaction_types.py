@@ -4,7 +4,7 @@ from django.db.models import Q
 
 class Transaction_type_form(forms.ModelForm):
 	class Meta:
-		model  = Transaction_type
+		model  = Exercise
 		fields = ('name','transaction_code','is_active','company','exercise_id','set_no','total_items','is_intelex','program_id')
 
 
@@ -13,7 +13,7 @@ class Transaction_type_form(forms.ModelForm):
 
 		transaction_code = (Q(transaction_code = raw_data["transaction_code"]) & Q(is_active = True) & Q(company = raw_data["company"]) & Q(set_no = raw_data["set_no"]))
 
-		instance = Transaction_type.objects.filter(transaction_code)
+		instance = Exercise.objects.filter(transaction_code)
 		if instance.exists():
 			instance = instance.first()
 			if instance.pk != self.instance.pk and raw_data["transaction_code"]:

@@ -159,7 +159,7 @@ class StudentSession(models.Model):
 class StudentSessionExercise(models.Model):
     
     session = models.ForeignKey("StudentSession", blank=True, null=True,related_name="student_session", on_delete=models.CASCADE)
-    exercise = models.ForeignKey("Transaction_type", blank=True, null=True, on_delete=models.CASCADE)
+    exercise = models.ForeignKey("Exercise", blank=True, null=True, on_delete=models.CASCADE)
     score = models.DecimalField(decimal_places=2, max_digits=5, blank=True, null=True)
     trainer_note = models.ForeignKey("TrainerNote", blank=True, null=True, on_delete=models.CASCADE)
     facilitated_by = models.ForeignKey("User", blank=True, null=True, on_delete=models.CASCADE)

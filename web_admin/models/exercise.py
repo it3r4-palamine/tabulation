@@ -5,7 +5,7 @@ from utils.response_handler import raise_error
 class ExerciseQuestion(models.Model):
 
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    exercise    = models.ForeignKey("Transaction_type", on_delete=models.CASCADE, blank=True, null=True)
+    exercise    = models.ForeignKey("Exercise", on_delete=models.CASCADE, blank=True, null=True)
     question    = models.ForeignKey("Question", on_delete=models.CASCADE)
     is_deleted  = models.BooleanField(default=False)
 

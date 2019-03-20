@@ -115,9 +115,9 @@ def import_questions(request):
 		# else:
 		# 	import_transaction_type = clean_string(data['transaction_type'])
 		# 	try:
-		# 		transaction_type = Transaction_type.objects.get(name__iexact=import_transaction_type,is_active=True)
+		# 		transaction_type = Exercise.objects.get(name__iexact=import_transaction_type,is_active=True)
 		# 		data['transaction_type'] = transaction_type.pk
-		# 	except Transaction_type.DoesNotExist:
+		# 	except Exercise.DoesNotExist:
 		# 		return error("Transaction Type: "+data['transaction_type'] + " does not exists.")
 
 		if 'question' not in data:
@@ -196,9 +196,9 @@ def import_questions(request):
 					transaction_types_id = []
 					for transaction_type in transaction_types:
 						try:
-							data_transaction_type = Transaction_type.objects.get(name__iexact=transaction_type,is_active=True,set_no=data['set_no'])
+							data_transaction_type = Exercise.objects.get(name__iexact=transaction_type, is_active=True, set_no=data['set_no'])
 							transaction_types_id.append(data_transaction_type.pk)
-						except Transaction_type.DoesNotExist:
+						except Exercise.DoesNotExist:
 							return error("%s: "%(t_term)+transaction_type + " does not exists.")
 
 					data['transaction_types'] = list_to_string(transaction_types_id)
@@ -211,9 +211,9 @@ def import_questions(request):
 				else:
 					import_transaction_type = clean_string(data['transaction_type'])
 					try:
-						transaction_type = Transaction_type.objects.get(name__iexact=import_transaction_type,is_active=True,set_no=data['set_no'])
+						transaction_type = Exercise.objects.get(name__iexact=import_transaction_type, is_active=True, set_no=data['set_no'])
 						data['transaction_type'] = transaction_type.pk
-					except Transaction_type.DoesNotExist:
+					except Exercise.DoesNotExist:
 						return error("%s: "%(t_term)+data['transaction_type'] + " does not exists.")
 				data['transaction_types'] = None
 
@@ -225,9 +225,9 @@ def import_questions(request):
 			else:
 				import_transaction_type = clean_string(data['transaction_type'])
 				try:
-					transaction_type = Transaction_type.objects.get(name__iexact=import_transaction_type,is_active=True,set_no=data['set_no'])
+					transaction_type = Exercise.objects.get(name__iexact=import_transaction_type, is_active=True, set_no=data['set_no'])
 					data['transaction_type'] = transaction_type.pk
-				except Transaction_type.DoesNotExist:
+				except Exercise.DoesNotExist:
 					return error("%s: "%(t_term)+data['transaction_type'] + " does not exists.")
 
 		if 'parent_question' in data:
@@ -412,7 +412,7 @@ def import_transaction_types(request):
 		if 'set_no' not in data:
 			return error("Set No. is required.")
 
-		check_transaction_type = Transaction_type.objects.filter(company=data['company'],transaction_code__iexact=data['transaction_code'],name__iexact=data['name'],is_active=True,set_no=data['set_no']).first()
+		check_transaction_type = Exercise.objects.filter(company=data['company'], transaction_code__iexact=data['transaction_code'], name__iexact=data['name'], is_active=True, set_no=data['set_no']).first()
 		if check_transaction_type:
 			return error(data['name'] + " already exists.")
 

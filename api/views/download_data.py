@@ -27,7 +27,7 @@ class Get_programs_and_exercises(APIView):
 
 			# Transaction types
 			transaction_type_list = []
-			transaction_type_qs = Transaction_type.objects.filter(company=request.user.company.pk, is_active=True)
+			transaction_type_qs = Exercise.objects.filter(company=request.user.company.pk, is_active=True)
 
 			for transaction_type in transaction_type_qs:
 				transaction_type_list.append(transaction_type.get_dict())
