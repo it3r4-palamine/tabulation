@@ -18,7 +18,9 @@ angular.module("app")
 
         let post = self.post_api("course/read/", filters, "main");
 		post.then(function(response){
-			self.records = response.records;
+		    let data = response.data;
+			self.records = data.records;
+			console.log(self.records)
 		});
     };
 
