@@ -15,11 +15,21 @@ class Course(CommonModel):
         return self.name
 
     def get_dict(self):
-        instance = dict()
+        instance        = dict()
+        course_programs = []
 
-        instance["uuid"]    = self.uuid
-        instance["name"]    = self.name
-        instance["company"] = self.company.id if self.company else None
+        instance["uuid"]        = self.uuid
+        instance["name"]        = self.name
+        instance["description"] = self.description
+        instance["company"]     = self.company.id if self.company else None
+
+        query_set = CourseProgram.objects.filter(course=self.pk, is_deleted=False)
+
+        for qs in query_set:
+            row = qs.get_dict()
+            course_programs.append(row)
+
+        instance["course_programs"] = course_programs
 
         return instance
 
