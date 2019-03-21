@@ -62,18 +62,23 @@ class SessionAPIView(APIView):
 @api_view(["POST"])
 def read_student_sessions(request):
     try:
-        user = get_current_user(request)
+        results = {}
+        records = []
+        user    = get_current_user(request)
 
-        print(user)
         query_set_enrollment = Enrollment.objects.filter(user=user, is_deleted=False)
 
         for qse in query_set_enrollment:
-            query_set_course_programs = CourseProgram.objects.filter(program__course=qse.course_id)
-        #     for qscp in query_set_course_programs:
-        #         query_set_p
+            query_set_course_programs = CourseProgram.objects.filter(course=qse.course_id)
+            for qs_course_program in query_set_course_programs:
+                query_set_sessions = ProgramSession.objects.filter(program=qs_course_program.pk)
+                for qs_session in query_set_sessions:
+                    session = qs_session.get_dict()
+                    records.append(session)
 
+        results["records"] = records
 
-        return success_response()
+        return success_response(results)
     except Exception as e:
         return error_response(str(e))
 
