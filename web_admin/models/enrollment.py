@@ -12,6 +12,7 @@ class Enrollment(models.Model):
     user 				= models.ForeignKey("User", on_delete=models.CASCADE)
     timeslot            = models.ForeignKey("TimeSlot", null=True, blank=True, on_delete=models.CASCADE)
     company_rename 		= models.ForeignKey("Company_rename", blank=True, null=True, on_delete=models.CASCADE)
+    course              = models.ForeignKey("Course", blank=True, null=True, on_delete=models.CASCADE)
     school 				= models.ForeignKey("School", blank=True,null=True,related_name="school_enrolled", on_delete=models.CASCADE)
     enrollment_type 	= models.ForeignKey("EnrollmentType", blank=True, null=True, on_delete=models.CASCADE)
     code 				= models.CharField(max_length=100,blank=True,null=True,unique=True)
@@ -30,7 +31,7 @@ class Enrollment(models.Model):
 
     def get_details(self):
 
-        instance 					= {}
+        instance 					= dict()
         instance["enrollment_id"] 	= self.id
         instance["program_id"] 		= self.program.id
         instance["student_id"] 		= self.student.id
@@ -80,6 +81,15 @@ class Enrollment(models.Model):
                 instance["session_credits_consumed"] = self.get_total_session_time()
  
                 return instance
+
+            if dict_type == STUDENT:
+
+                instance["id"] = self.id
+                instance["course"] = self.course.get_dict() if self.course else None
+                instance["program"] = self.company_rename.get_dict() if self.company_rename else None
+
+                return instance
+
             else:
 
                 instance['id'] 							= self.id
@@ -181,11 +191,11 @@ class Enrollment(models.Model):
         elif self.session_credits:
             return self.session_credits.total_seconds()
 
-    def save(self):
+    def save(self, *args, **kwargs):
         top = Enrollment.objects.order_by("-reference_no")[0]
 
         self.reference_no = top.reference_no + 1
-        super(Enrollment, self).save()
+        return super(Enrollment, self).save(*args, **kwargs)
 
 
 class EnrollmentType(models.Model): 

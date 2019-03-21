@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
+from api.serializers.enrollment import EnrollmentSerializer
 from utils import dict_types
 from utils.model_utils import get_next
 from web_admin.models import Enrollment
@@ -22,7 +23,7 @@ def read_enrolled_programs(request):
         enrollments = Enrollment.objects.filter(user=user)
 
         for enrollment in enrollments:
-            row = enrollment.get_dict(dict_type=dict_types.DEVICE)
+            row = enrollment.get_dict(dict_type=dict_types.STUDENT)
             records.append(row)
 
         results["records"] = records
@@ -35,14 +36,27 @@ def read_enrolled_programs(request):
 @api_view(["POST"])
 def enroll_course(request):
     try:
-        data = extract_json_data(request)
+        data        = extract_json_data(request)
+        user        = get_current_user(request)
+        course_id   = data.get("uuid", None)
+        company     = data.get("company", None)
 
-        print(data)
+        enrollment = dict(
+            user=user,
+            course=course_id,
+            company=company)
+
+        serializer = EnrollmentSerializer(data=enrollment)
+
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            print(serializer.errors)
 
         return success_response()
     except Exception as e:
-        return error_response(e)
-
+        print(e)
+        return error_response(str(e), show_line=True)
 
 
 @api_view(["POST"])

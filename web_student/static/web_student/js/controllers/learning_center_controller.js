@@ -22,12 +22,24 @@ angular.module("app")
     {
         let filters = { center_id : self.center_id };
 
-        let post = self.post_api("course/read/", filters, "main");
+        let response = self.post_api("course/read/", filters, "main");
 
-		post.then(function(response){
+		response.then(function(response){
 		    let data = response.data;
 			self.courses = data.records;
 		});
+    };
+
+    self.enroll_course = function(record)
+    {
+        let response = self.post_api("enroll_course/", record);
+
+        response.then(function(response){
+
+
+        }, function(response){
+
+        });
     };
 
     self.read_learning_center_info();

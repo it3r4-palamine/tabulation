@@ -8,3 +8,4 @@ AS_COMPANY    = 10
 BY_CUSTOMER   = 11
 MODEL_TO_DICT = 12
 DEVICE        = 13
+STUDENT       = 14

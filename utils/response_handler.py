@@ -60,6 +60,11 @@ def get_current_company(request):
     return request.user.company if request.user.company else None
 
 
+def get_current_user(request):
+    # Returns User/Student
+    return request.user.id if request.user else None
+
+
 def get_data(request):
     return json.loads(request.body.decode("utf-8")) if request.body.decode("utf-8") else {}
 

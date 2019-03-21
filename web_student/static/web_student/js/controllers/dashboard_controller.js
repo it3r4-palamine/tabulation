@@ -12,7 +12,6 @@ angular.module("app")
         var dialog = $uibModal.open({
 	        templateUrl: "/student_portal/get_dialog/user/dialog_search/",
 	        windowClass : "slide-in-left left-side-modal",
-	        backdrop : 'static',
 	        keyboard : false,
 	        scope : $scope,
             animation : true,
