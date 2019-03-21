@@ -29,7 +29,7 @@ angular.module("app")
         var dialog = $uibModal.open({
 	        templateUrl: "/student_portal/get_dialog/user/sidenav_account/",
 	        windowClass : "slide-in-right right-side-modal",
-	        keyboard : false,
+	        keyboard : true,
 	        scope : $scope,
             animation : true,
 	    });
@@ -39,6 +39,22 @@ angular.module("app")
 	    	// self.current_dialogs.push(dialog)
 	    });
     };
+
+    self.open_notification_sidenav = function()
+    {
+        var dialog = $uibModal.open({
+	        templateUrl: "/student_portal/get_dialog/user/sidenav_notifications/",
+	        windowClass : "slide-in-right right-side-modal",
+	        keyboard : true,
+	        scope : $scope,
+            animation : true,
+	    });
+
+        dialog.opened.then(function(){
+			// self.page_loader[key] = false;
+	    	// self.current_dialogs.push(dialog)
+	    });
+    }
 
     self.read_enrolled_programs = function()
     {
