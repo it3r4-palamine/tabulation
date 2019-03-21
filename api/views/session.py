@@ -1,5 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+
+from web_admin.models import Enrollment, ProgramSession
+from web_admin.models.course import CourseProgram
 from web_admin.models.session import *
 from api.serializers.session import *
 
@@ -54,6 +57,25 @@ class SessionAPIView(APIView):
                 instance.delete()
 
             return error_response(str(e), show_line=True)
+
+
+@api_view(["POST"])
+def read_student_sessions(request):
+    try:
+        user = get_current_user(request)
+
+        print(user)
+        query_set_enrollment = Enrollment.objects.filter(user=user, is_deleted=False)
+
+        for qse in query_set_enrollment:
+            query_set_course_programs = CourseProgram.objects.filter(program__course=qse.course_id)
+        #     for qscp in query_set_course_programs:
+        #         query_set_p
+
+
+        return success_response()
+    except Exception as e:
+        return error_response(str(e))
 
 
 @api_view(["POST"])

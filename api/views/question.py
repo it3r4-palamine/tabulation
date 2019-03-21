@@ -92,7 +92,7 @@ def read_questions(request):
         records = []
         company = get_current_company(request)
 
-        questions = Question.objects.filter(company=company).order_by("-date_created")
+        questions = Question.objects.filter().order_by("-date_created")
 
         for question in questions:
             question_choices = []

@@ -36,24 +36,22 @@ urlpatterns = [
     url(r'^get_students/$', student.get_students),
     url(r'^get_students_with_information/$', student.get_students_with_information),
 
-
+    # AVSM API
+    url(r'^enrollment/check_reference_no/$', enrollment.check_reference_no),
     url(r'^save_student_time_logs/$', student.save_student_time_logs),
-
-
-    url(r'^question/create/$', question.QuestionAPIView.as_view()),
-    url(r'^question/get/(?P<uuid>[\w\-]+)/$', question.QuestionAPIView.as_view()),
-    url(r'^question/read/$', question.read_questions),
 
     url(r'^subject/create/$', subject.SubjectAPIView.as_view()),
     url(r'^subject/read/$', subject.read_subjects),
 
-    url(r'^program/create/$', program.ProgramAPIView.as_view()),
-    url(r'^program/read/$', program.read_programs),
-    url(r'^program/read_program_sessions/$', program.read_program_sessions),
+    # Learning Materials
 
     url(r'^course/create/$', course.CourseAPIView.as_view()),
     url(r'^course/read/$', course.read_course),
     url(r'^course/read_course_programs/$', course.read_course_programs),
+
+    url(r'^program/create/$', program.ProgramAPIView.as_view()),
+    url(r'^program/read/$', program.read_programs),
+    url(r'^program/read_program_sessions/$', program.read_program_sessions),
 
     url(r'^session/read/$', session.read_sessions),
     url(r'^session/create/$', session.SessionAPIView.as_view()),
@@ -63,24 +61,23 @@ urlpatterns = [
     url(r'^exercise/read/$', exercise.read_exercise),
     url(r'^exercise/read_exercise_questions/$', exercise.read_exercise_questions),
 
-    # Student API
-    # Enrollment
-    url(r'^enrollment/read/$', enrollment.read_enrolled_programs),
+    url(r'^question/create/$', question.QuestionAPIView.as_view()),
+    url(r'^question/get/(?P<uuid>[\w\-]+)/$', question.QuestionAPIView.as_view()),
+    url(r'^question/read/$', question.read_questions),
 
     url(r'^learning_center/read/$', learning_center.LearningCenterAPI.as_view()),
     url(r'^learning_center/read/(?P<center_id>[0-9]+)$', learning_center.LearningCenterAPI.as_view()),
 
+    # Student API
+    # Get Student's Enrolled Courses/Programs
+    url(r'^enrollment/read/$', enrollment.read_enrolled_programs),
+
+    # Student Enrolls a Course
     url(r'^enroll_course/$', enrollment.enroll_course),
 
-
+    # Get all session of student
+    url(r'^read_student_sessions/$', session.read_student_sessions),
     url(r'^test_paypal/$', enrollment.test_paypal),
-
-
-
-
-    url(r'^enrollment/check_reference_no/$', enrollment.check_reference_no),
-
-
 
 
 

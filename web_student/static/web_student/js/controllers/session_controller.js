@@ -9,7 +9,7 @@ angular.module("app")
 
     self.read_sessions = function()
     {
-        let response = self.post_api("session/read/");
+        let response = self.post_api("read_student_sessions/");
 
         response.then(function(response){
 
