@@ -1,5 +1,5 @@
 {% load staticfiles %}
-<div class="container-fluid" ng-controller="LearningCenterCtrl as ctrl">
+<div class="container-fluid animated slide-in-left" ng-controller="LearningCenterCtrl as ctrl">
 
     <h2 class="text-center">{$ ctrl.learning_center.name $}</h2>
     <br>
@@ -7,9 +7,9 @@
 
     <div class="row">
 
+        <div class="col-lg-1"></div>
 
-
-        <div class="col-lg-4" ng-repeat="record in ctrl.courses | limitTo : 3">
+        <div class="col-lg-3" ng-repeat="record in ctrl.courses | limitTo : 3">
 
             <div class="ibox">
                     <div class="ibox-title" style="background-image: url({% static 'web_student/img/dev.jpg' %}); background-repeat: no-repeat; background-position: right">
@@ -27,6 +27,8 @@
             </div>
 
         </div>
+
+        <div class="col-lg-1"></div>
 
     </div>
 
@@ -52,7 +54,7 @@
                     <b>Price</b> {$ record.price | currency : '' $}
                     </p>
 
-                    <button class="btn btn-xs btn-warning btn-outline">Enroll</button>
+                    <button class="btn btn-xs btn-primary btn-outline">Learn More</button>
 
                 </div>
 

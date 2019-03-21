@@ -67,8 +67,13 @@ urlpatterns = [
     # Enrollment
     url(r'^enrollment/read/$', enrollment.read_enrolled_programs),
     url(r'^sessions/read/$', enrollment.read_enrolled_programs),
+
     url(r'^learning_center/read/$', learning_center.LearningCenterAPI.as_view()),
     url(r'^learning_center/read/(?P<center_id>[0-9]+)$', learning_center.LearningCenterAPI.as_view()),
+
+    url(r'^enroll_course/$', enrollment.enroll_course),
+
+
 
 
     url(r'^enrollment/check_reference_no/$', enrollment.check_reference_no),

@@ -26,6 +26,16 @@ app.config(function($stateProvider,$urlRouterProvider) {
         }
     };
 
+    var courseState = {
+        name: 'learning_centers.course_details',
+        url: '/learning_centers/course_details?id',
+        templateUrl: '/student_portal/learning_centers/programs/',
+        controller : "LearningCenterCtrl",
+        params : {
+            id : null,
+        }
+    };
+
     var questionnaireState = {
         name: 'questionnaire',
         url: '/questionnaire',
@@ -40,6 +50,7 @@ app.config(function($stateProvider,$urlRouterProvider) {
     };
 
     $stateProvider.state(questionnaireState);
+    $stateProvider.state(courseState);
     $stateProvider.state(sessionsState);
     $stateProvider.state(dashboardState);
     $stateProvider.state(centerState);

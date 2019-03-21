@@ -33,6 +33,19 @@ def read_enrolled_programs(request):
 
 
 @api_view(["POST"])
+def enroll_course(request):
+    try:
+        data = extract_json_data(request)
+
+        print(data)
+
+        return success_response()
+    except Exception as e:
+        return error_response(e)
+
+
+
+@api_view(["POST"])
 def check_reference_no(request):
     try:
         company     = get_current_company(request)
