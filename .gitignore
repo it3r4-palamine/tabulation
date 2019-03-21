@@ -11,3 +11,7 @@ systech_account/static/reports/
 \.idea/
 
 \.DS_Store
+
+web_admin/static/js/common/ipconfig\.js
+
+web_student/static/web_student/js/common/ipconfig\.js
