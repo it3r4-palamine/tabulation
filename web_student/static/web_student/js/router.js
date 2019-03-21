@@ -24,7 +24,6 @@ app.config(function($stateProvider,$urlRouterProvider) {
         params : {
             id : null,
         }
-
     };
 
     var questionnaireState = {

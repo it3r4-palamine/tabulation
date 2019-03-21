@@ -54,7 +54,6 @@ class CourseAPIView(APIView):
 @api_view(["POST"])
 def read_course(request):
     try:
-        print("kani")
         results = {}
         records = []
         filters = extract_json_data(request)
@@ -65,7 +64,7 @@ def read_course(request):
         else:
             q_filters = Q(company=company)
 
-        query_set = Course.objects.filter().order_by("-date_created")
+        query_set = Course.objects.filter(q_filters).order_by("-date_created")
 
         for qs in query_set:
             row = qs.get_dict()
