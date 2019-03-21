@@ -1,12 +1,26 @@
 angular.module("app")
 
-.controller("SessionCtrl", function ($scope) {
+.controller("SessionCtrl", function ($scope, $controller) {
 
-    var self = this;
+    angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
+    let self = this;
 
-    self.test = function()
+    self.sessions = [];
+
+    self.read_sessions = function()
     {
-        alert("Session")
+        let response = self.post_api("session/read/");
+
+        response.then(function(response){
+
+            let data      = response.data;
+            self.sessions = data.records;
+
+        }, function (response) {
+
+        })
     };
+
+    self.read_sessions();
 
 });

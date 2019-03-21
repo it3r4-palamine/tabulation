@@ -2,21 +2,21 @@ var app = angular.module("app");
 
 app.config(function($stateProvider,$urlRouterProvider) {
 
-    var dashboardState = {
+    let dashboardState = {
         name: 'dashboard',
         url: '/dashboard',
         templateUrl: '/student_portal/dashboard/',
         controller : 'DashboardCtrl as ctrl',
     };
 
-    var sessionsState = {
+    let sessionsState = {
         name: 'sessions',
         url: '/sessions',
         templateUrl: '/student_portal/session_page/',
-        controller: 'SessionCtrl'
+        controller: 'SessionCtrl as ctrl'
     };
 
-    var centerState = {
+    let centerState = {
         name: 'learning_centers',
         url: '/learning_centers?id',
         templateUrl: '/student_portal/learning_centers/programs/',
@@ -26,7 +26,7 @@ app.config(function($stateProvider,$urlRouterProvider) {
         }
     };
 
-    var courseState = {
+    let courseState = {
         name: 'learning_centers.course_details',
         url: '/learning_centers/course_details?id',
         templateUrl: '/student_portal/learning_centers/programs/',
@@ -36,14 +36,14 @@ app.config(function($stateProvider,$urlRouterProvider) {
         }
     };
 
-    var questionnaireState = {
+    let questionnaireState = {
         name: 'questionnaire',
         url: '/questionnaire',
         templateUrl: '/student_portal/questionnaire/',
         controller : 'QuestionnaireCtrl as ctrl'
     };
 
-    var coursesState = {
+    let coursesState = {
         name : 'courses',
         url : '/courses',
         templateUrl: '/student_portal/courses/'
