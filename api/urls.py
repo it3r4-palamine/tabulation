@@ -74,6 +74,9 @@ urlpatterns = [
     url(r'^enroll_course/$', enrollment.enroll_course),
 
 
+    url(r'^test_paypal/$', enrollment.test_paypal),
+
+
 
 
     url(r'^enrollment/check_reference_no/$', enrollment.check_reference_no),
