@@ -5,7 +5,7 @@ angular.module("app")
     angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
     var self = this;
 
-    self.test = function()
+    self.open_search_sidenav = function()
     {
         // self.open_dialog("", "animated slideInLeft left");
 

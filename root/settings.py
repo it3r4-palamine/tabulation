@@ -19,10 +19,11 @@ from .local_settings import *
 
 
 import paypalrestsdk
+
 paypalrestsdk.configure({
   "mode": "sandbox", # sandbox or live
-  "client_id": "EBWKjlELKMYqRNQ6sYvFo64FtaRLRR5BdHEESmha49TM",
-  "client_secret": "EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM" })
+  "client_id": "ATpJRFvQhoT_Jj9esCrxoIodM22QtG-qWV8A598_E4CLQnvlKtBQPGAXygPJ_Mif3Yrdiu1LqTcs_z0I",
+  "client_secret": "EBUTPt-sXI1jbMnu-FGR2UsXu1p3oPkVT-0jUWK8v6xgVDu8W5xAScdXZoreTIweTrPaZXVg3GiCipWY" })
 
 
 # Quick-start development settings - unsuitable for production

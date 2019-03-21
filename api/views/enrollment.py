@@ -1,4 +1,5 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
 from api.serializers.enrollment import EnrollmentSerializer
@@ -76,11 +77,45 @@ def check_reference_no(request):
     except Exception as e:
         return error_response(e, show_line=True)
 
+import paypalrestsdk
+import logging
+
+
 @api_view(["POST"])
+@permission_classes((AllowAny, ))
 def test_paypal(request):
     try:
+        paypalrestsdk.configure({
+            "mode": "sandbox",  # sandbox or live
+            "client_id": "ATpJRFvQhoT_Jj9esCrxoIodM22QtG-qWV8A598_E4CLQnvlKtBQPGAXygPJ_Mif3Yrdiu1LqTcs_z0I",
+            "client_secret": "EBUTPt-sXI1jbMnu-FGR2UsXu1p3oPkVT-0jUWK8v6xgVDu8W5xAScdXZoreTIweTrPaZXVg3GiCipWY"})
 
-        return success_response()
+        payment = paypalrestsdk.Payment({
+            "intent": "sale",
+            "payer": {
+                "payment_method": "paypal"},
+            "redirect_urls": {
+                "return_url": "http://127.0.0.1:8000/payment/execute",
+                "cancel_url": "http://127.0.0.1:8000/"},
+            "transactions": [{
+                "item_list": {
+                    "items": [{
+                        "name": "item",
+                        "sku": "item",
+                        "price": "5.00",
+                        "currency": "USD",
+                        "quantity": 1}]},
+                "amount": {
+                    "total": "5.00",
+                    "currency": "USD"},
+                "description": "This is the payment transaction description."}]})
+
+        if payment.create():
+            print("Payment created successfully")
+        else:
+            print(payment.error)
+
+        return success_response({"orderID" : 1})
     except Exception as e:
         return error_response(str(e))
 

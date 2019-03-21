@@ -21,7 +21,9 @@
                             <li ng-repeat="sub_record in record.course_programs | limitTo : 5">{$ sub_record.program.name $}</li>
                         </ul>
 
-                        <button class="btn btn-block btn-warning">Enroll Program</button>
+                        <button id="test" class="btn btn-block btn-warning">Enroll Program</button>
+
+                        <script>paypal.Buttons().render('#test');</script>
 
                     </div>
             </div>
