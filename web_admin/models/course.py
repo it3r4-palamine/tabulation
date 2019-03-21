@@ -21,6 +21,7 @@ class Course(CommonModel):
         instance["uuid"]        = self.uuid
         instance["name"]        = self.name
         instance["description"] = self.description
+        instance["price"]       = self.price
         instance["company"]     = self.company.id if self.company else None
 
         query_set = CourseProgram.objects.filter(course=self.pk, is_deleted=False)

@@ -71,14 +71,16 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Subject</th>
-                                <th>Description</th>
+                                <th class="text-left">Name</th>
+                                <th class="text-right">Description</th>
+                                <th>Price</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="student_session in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(student_session,false)">
                                 <td class="text-left">{$ student_session.name $}</td>
                                 <td class="text-left">{$ student_session.description $}</td>
+                                <td class="text-right">{$ student_session.price | currency $}</td>
                             </tr>
                         </tbody>
                     </table>

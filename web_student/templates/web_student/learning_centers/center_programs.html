@@ -5,12 +5,11 @@
     <br>
 
 
-    <div class="row" >
+    <div class="row">
 
 
-        <div class="col-lg-1"></div>
 
-        <div class="col-lg-3" ng-repeat="record in ctrl.courses | limitTo : 3">
+        <div class="col-lg-4" ng-repeat="record in ctrl.courses | limitTo : 3">
 
             <div class="ibox">
                     <div class="ibox-title" style="background-image: url({% static 'web_student/img/dev.jpg' %}); background-repeat: no-repeat; background-position: right">
@@ -19,7 +18,7 @@
                     <div class="ibox-content">
 
                         <ul>
-                            <li ng-repeat="sub_record in record.course_programs">{$ sub_record.program.name $}</li>
+                            <li ng-repeat="sub_record in record.course_programs | limitTo : 5">{$ sub_record.program.name $}</li>
                         </ul>
 
                         <button class="btn btn-block btn-warning">Enroll Program</button>
@@ -29,18 +28,17 @@
 
         </div>
 
-
-        <div class="col-lg-1"></div>
-
     </div>
 
     <div class="row">
 
         <div class="col-lg-1"></div>
 
-        <div class="col-lg-9">
+        <div class="col-lg-10">
 
-            <div class="my-3 p-3 bg-white rounded box-shadow">
+            <h2 ng-show="ctrl.courses == 0" class="text-center"><i class="fa fa-shopping-basket"></i> Oops, This is still Empty. Come back later</h2>
+
+            <div class="my-3 p-3 bg-white rounded box-shadow" ng-hide="ctrl.courses == 0">
 
                 <h3 class="border-bottom border-gray pb-2 mb-0">Courses Offered</h3>
 
@@ -50,7 +48,8 @@
 
                     <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                     <strong class="d-block text-gray-dark">{$ record.name $}</strong>
-                    {$ record.description $}
+                    {$ record.description $} <br>
+                    <b>Price</b> {$ record.price | currency : '' $}
                     </p>
 
                     <button class="btn btn-xs btn-warning btn-outline">Enroll</button>
