@@ -186,3 +186,9 @@
     float : left;
     width : 500px;
 }
+
+.right-side-modal .modal-dialog {
+    float : right;
+    width : 400px;
+    overflow: hidden;
+}

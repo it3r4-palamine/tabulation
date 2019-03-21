@@ -24,6 +24,22 @@ angular.module("app")
 
     };
 
+    self.open_account_sidenav = function()
+    {
+        var dialog = $uibModal.open({
+	        templateUrl: "/student_portal/get_dialog/user/sidenav_account/",
+	        windowClass : "slide-in-right right-side-modal",
+	        keyboard : false,
+	        scope : $scope,
+            animation : true,
+	    });
+
+        dialog.opened.then(function(){
+			// self.page_loader[key] = false;
+	    	// self.current_dialogs.push(dialog)
+	    });
+    };
+
     self.read_enrolled_programs = function()
     {
         let response = self.post_api("enrollment/read/");
@@ -66,7 +82,7 @@ angular.module("app")
 
 
 
-    self.read_sessions();
+    // self.read_sessions();
     self.read_enrolled_programs();
     self.read_learning_centers();
 

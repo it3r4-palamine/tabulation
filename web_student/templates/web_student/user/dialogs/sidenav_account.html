@@ -1,0 +1,24 @@
+{% load staticfiles %}
+
+<div class="modal-body full-div-height">
+    <div class="ibox-content">
+
+        <div class="contact-box">
+            <a class="row" href="profile.html">
+                <div class="col-6">
+                    <div class="text-center">
+                        <img alt="image" class="rounded-circle m-t-xs img-fluid" src="{% static 'web_student/img/default_boy.png' %}">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <h2>{{ request.user.fullname }}</h2>
+                </div>
+            </a>
+        </div>
+
+        <a href="/logout" role="button" class="btn btn-block btn-defaul text-black-50"><i class="fa fa-power-off"></i> Logout</a>
+
+    </div>
+</div>
+<div class="modal-footer">
+</div>
