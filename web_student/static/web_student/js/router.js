@@ -38,9 +38,12 @@ app.config(function($stateProvider,$urlRouterProvider) {
 
     let questionnaireState = {
         name: 'questionnaire',
-        url: '/questionnaire',
+        url: '/questionnaire?uuid',
         templateUrl: '/student_portal/questionnaire/',
-        controller : 'QuestionnaireCtrl as ctrl'
+        controller : 'QuestionnaireCtrl as ctrl',
+        params : {
+            uuid : null
+        }
     };
 
     let coursesState = {

@@ -1,9 +1,11 @@
 angular.module("app")
 
-.controller("QuestionnaireCtrl", function ($scope,$controller) {
+.controller("QuestionnaireCtrl", function ($scope, $controller, $stateParams) {
 
     angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
     var self = this;
+
+    self.session_id = $stateParams.uuid;
 
 
     self.session_exercises = function()
@@ -29,6 +31,8 @@ angular.module("app")
 
         });
     };
+
+    self.session_exercises();
 
     self.read_questions();
 });

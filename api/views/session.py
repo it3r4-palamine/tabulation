@@ -66,15 +66,25 @@ def read_student_sessions(request):
         records = []
         user    = get_current_user(request)
 
-        query_set_enrollment = Enrollment.objects.filter(user=user, is_deleted=False)
+        query_set_enrollment = Session.objects.filter()
 
-        for qse in query_set_enrollment:
-            query_set_course_programs = CourseProgram.objects.filter(course=qse.course_id)
-            for qs_course_program in query_set_course_programs:
-                query_set_sessions = ProgramSession.objects.filter(program=qs_course_program.pk)
-                for qs_session in query_set_sessions:
-                    session = qs_session.get_dict()
-                    records.append(session)
+        for qs in query_set_enrollment:
+            records.append(qs.get_dict())
+
+        # for qse in query_set_enrollment:
+        #     query_set_course_programs = CourseProgram.objects.filter(course=qse.course_id)
+        #
+        #     print(query_set_course_programs.count())
+        #
+        #     for qs_course_program in query_set_course_programs:
+        #         query_set_sessions = ProgramSession.objects.filter(program=qs_course_program.pk)
+        #
+        #         print(query_set_sessions.count())
+        #
+        #         for qs_session in query_set_sessions:
+        #
+        #             session = qs_session.get_dict()
+        #             records.append(session)
 
         results["records"] = records
 
