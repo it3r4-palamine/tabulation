@@ -18,10 +18,9 @@ class CourseAPIView(APIView):
             serializer = CourseProgramSerializer(data=course_program)
 
             if serializer.is_valid():
-                print("Save")
                 serializer.save()
             else:
-                print(serializer.errors)
+                raise_error(serializer.errors)
 
     def post(self, request):
         try:

@@ -17,7 +17,6 @@ class ProgramAPIView(APIView):
             serializer = ProgramSessionSerializer(data=program_session)
 
             if serializer.is_valid():
-                print("Save")
                 serializer.save()
             else:
                 print(serializer.errors)

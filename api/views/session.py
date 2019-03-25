@@ -35,8 +35,6 @@ class SessionAPIView(APIView):
             company           = get_current_company(request)
             session_exercises = data.get("session_exercises", None)
 
-            print(company)
-
             if not session_exercises:
                 raise_error("No Exercises")
 
