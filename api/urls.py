@@ -1,7 +1,6 @@
 from django.conf.urls import url
 from api.views import question, download_data, login, answers, student, users, subject, enrollment, learning_center, \
     exercise ,course, session, program
-
 urlpatterns = [
 
     url(r'^api-auth', login.ObtainAuthToken.as_view()),
@@ -53,8 +52,8 @@ urlpatterns = [
     url(r'^program/read/$', program.read_programs),
     url(r'^program/read_program_sessions/$', program.read_program_sessions),
 
-    url(r'^session/read/$', session.read_sessions),
     url(r'^session/create/$', session.SessionAPIView.as_view()),
+    url(r'^session/read/$', session.read_sessions),
     url(r'^session/read_session_exercise/$', session.read_session_exercise),
 
     url(r'^exercise/create/$', exercise.ExerciseAPIView.as_view()),
@@ -82,3 +81,4 @@ urlpatterns = [
 
 
 ]
+
