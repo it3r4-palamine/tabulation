@@ -6,5 +6,5 @@ RECORD_DOES_NOT_EXIST   = "Record does not exists"
 USER_NOT_EXIST          = "This account does not exists"
 QUESTION_NO_CHOICES     = "This question doesn't have choices"
 
-
+CREATE_ERROR            = "Can't Create Record"
 SUCCESS                 = "Success"

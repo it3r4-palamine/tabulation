@@ -1,8 +1,5 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-
-from web_admin.models import Enrollment, ProgramSession
-from web_admin.models.course import CourseProgram
 from web_admin.models.session import *
 from api.serializers.session import *
 
@@ -14,30 +11,39 @@ class SessionAPIView(APIView):
 
         for session_exercise in session_exercises:
 
+            uuid = session_exercise.get("uuid", None)
+
             session_exercise["session"] = session_id
             session_exercise["exercise"] = session_exercise["exercise"].get("id")
 
-            serializer = SessionExerciseSerializer(data=session_exercise)
+            if uuid:
+                instance = SessionExercise.objects.get(pk=uuid)
+                serializer = SessionExerciseSerializer(data=session_exercise, instance=instance)
+            else:
+                serializer = SessionExerciseSerializer(data=session_exercise)
 
             if serializer.is_valid():
-                print("Save")
                 serializer.save()
             else:
-                print(serializer.errors)
+                raise_error(serializer.errors)
 
     def post(self, request):
-        instance = None
+        instance   = None
+        is_editing = False
         try:
             data              = extract_json_data(request)
             company           = get_current_company(request)
             session_exercises = data.get("session_exercises", None)
 
+            print(company)
+
             if not session_exercises:
                 raise_error("No Exercises")
 
             if data.get("uuid", None):
-                instance = Session.objects.get(pk=data.get("uuid"))
-                serializer = SessionSerializer(data=data, instance=instance)
+                is_editing  = True
+                instance    = Session.objects.get(pk=data.get("uuid"))
+                serializer  = SessionSerializer(data=data, instance=instance)
             else:
                 data["company"] = company
                 serializer = SessionSerializer(data=data)
@@ -53,7 +59,7 @@ class SessionAPIView(APIView):
             return success_response()
         except Exception as e:
 
-            if instance:
+            if instance and not is_editing:
                 instance.delete()
 
             return error_response(str(e), show_line=True)

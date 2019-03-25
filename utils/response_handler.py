@@ -57,7 +57,7 @@ def convert_date_key(filters,key):
 
 
 def get_current_company(request):
-    return request.user.company if request.user.company else None
+    return request.user.company.id if request.user.company else None
 
 
 def get_current_user(request):
