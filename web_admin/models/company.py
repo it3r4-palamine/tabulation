@@ -1,4 +1,4 @@
-from ..models.transaction_types import *
+from ..models.exercises import *
 from django.contrib.postgres.fields import ArrayField
 from utils.dict_types import *
 

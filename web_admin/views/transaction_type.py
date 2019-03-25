@@ -1,5 +1,5 @@
 from ..forms.transaction_types import *
-from ..models.transaction_types import *
+from ..models.exercises import *
 from ..models.assessments import *
 from ..models.company import *
 from ..views.common import *

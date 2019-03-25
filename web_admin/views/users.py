@@ -1,5 +1,5 @@
 from ..forms.transaction_types import *
-from ..models.transaction_types import *
+from ..models.exercises import *
 from ..forms.user_form import *
 from ..models.user import *
 from ..models.enrollment import *

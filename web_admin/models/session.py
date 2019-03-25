@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from web_admin.models.common_model import *
-from web_admin.models.transaction_types import Exercise
+from web_admin.models.exercises import Exercise
 from utils.response_handler import *
 from utils.date_handler import *
 from django.utils import timezone

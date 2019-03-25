@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from web_admin.models.transaction_types import Exercise
+from web_admin.models.exercises import Exercise
 from api.serializers.exercise import *
 from utils.response_handler import *
 

@@ -1,6 +1,6 @@
 from web_admin.models.crud import *
 from web_admin.models.assessments import *
-from web_admin.models.transaction_types import *
+from web_admin.models.exercises import *
 from web_admin.models.multiple_choice import *
 from web_admin.models.company import *
 from web_admin.models.company_assessment import *
