@@ -64,9 +64,15 @@ urlpatterns = [
     url(r'^question/get/(?P<uuid>[\w\-]+)/$', question.QuestionAPIView.as_view()),
     url(r'^question/read/$', question.read_questions),
 
+    # Read Exercise Questions
+    url(r'^question/read_exercise_questions/$', question.read_exercise_questions),
+
     url(r'^learning_center/read/$', learning_center.LearningCenterAPI.as_view()),
     url(r'^learning_center/read/(?P<center_id>[0-9]+)$', learning_center.LearningCenterAPI.as_view()),
 
+
+
+    url(r'^student_answers/upload/$', learning_center.LearningCenterAPI.as_view()),
     # Student API
     # Get Student's Enrolled Courses/Programs
     url(r'^enrollment/read/$', enrollment.read_enrolled_programs),

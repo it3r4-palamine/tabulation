@@ -1,28 +1,17 @@
-from api.serializers import *
-
 from django.db.models import *
 
 # DJANGO REST
-from rest_framework.views import APIView
+from datetime import datetime
+
+from django.db.models import *
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.parsers import FileUploadParser
+# DJANGO REST
+from rest_framework.views import APIView
 
-
-from web_admin.views.common import *
-
+from web_admin.forms.assessments import *
 # MODELS
 from web_admin.models.company_assessment import *
-from web_admin.models.assessments import *
-from web_admin.forms.assessments import *
 from web_admin.models.multiple_choice import *
-
-from datetime import datetime, timedelta
-
-from PIL import Image
-
-import sys, traceback, os
-import urllib
 
 
 class GetAnswers(APIView):

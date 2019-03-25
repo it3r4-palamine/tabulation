@@ -1,3 +1,4 @@
+from utils import dict_types
 from web_admin.models.common_model import *
 from utils.response_handler import raise_error
 
@@ -16,13 +17,17 @@ class ExerciseQuestion(models.Model):
     def __str__(self):
         return self.question.name
 
-    def get_dict(self):
+    def get_dict(self, dict_type=dict_types.DEFAULT):
         try:
             instance = dict()
 
-            instance["uuid"]     = self.uuid
-            instance["exercise"] = self.exercise.name
-            instance["question"] = self.question.get_dict() if self.question else None
+            if dict_type == dict_types.DEFAULT:
+                instance["uuid"]     = self.uuid
+                instance["exercise"] = self.exercise.name
+                instance["question"] = self.question.get_dict() if self.question else None
+
+            if dict_type == dict_types.QUESTION_ONLY:
+                instance = self.question.get_dict(dict_type=dict_types.QUESTION_ONLY) if self.question else None
 
             return instance
         except Exception as e:

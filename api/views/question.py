@@ -1,8 +1,9 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
+from web_admin.models import ExerciseQuestion
 from web_admin.views.common import raise_error
-from utils import error_messages
+from utils import error_messages, dict_types
 from utils.response_handler import *
 from api.serializers.question import *
 
@@ -103,6 +104,27 @@ def read_questions(request):
 
             row = question.get_dict()
             row["question_choices"] = question_choices
+            records.append(row)
+
+        results["records"] = records
+
+        return success_response(results)
+    except Exception as e:
+        return error_response(str(e))
+
+
+@api_view(["POST"])
+def read_exercise_questions(request):
+    try:
+        data = extract_json_data(request)
+        records = []
+        results = {}
+
+        print(data)
+        query_set = ExerciseQuestion.objects.filter(exercise=data["exercise"])
+
+        for qs in query_set:
+            row = qs.get_dict(dict_type=dict_types.QUESTION_ONLY)
             records.append(row)
 
         results["records"] = records
