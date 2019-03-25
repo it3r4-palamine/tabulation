@@ -20,12 +20,22 @@ class Session(CommonModel):
     def get_dict(self):
         instance = dict()
 
-        instance["uuid"]        = self.uuid
-        instance["name"]        = self.name
-        instance["description"] = self.description
-        instance["company"]     = self.company.id
+        instance["uuid"]              = self.uuid
+        instance["name"]              = self.name
+        instance["description"]       = self.description
+        instance["company"]           = self.company.id
+        instance["session_exercises"] = self.get_session_exercises()
 
         return instance
+
+    def get_session_exercises(self):
+        records = []
+        query_set = SessionExercise.objects.filter(session=self.pk, is_deleted=False)
+
+        for qs in query_set:
+            records.append(qs.get_dict())
+
+        return records
 
 
 class SessionExercise(CommonModel):

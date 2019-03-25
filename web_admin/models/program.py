@@ -17,11 +17,21 @@ class Program(CommonModel):
     def get_dict(self):
         instance = dict()
 
-        instance["uuid"]        = self.uuid
-        instance["name"]        = self.name
-        instance["description"] = self.description
+        instance["uuid"]             = self.uuid
+        instance["name"]             = self.name
+        instance["description"]      = self.description
+        instance["program_sessions"] = self.get_program_sessions()
 
         return instance
+
+    def get_program_sessions(self):
+        records = []
+        query_set = ProgramSession.objects.filter(program=self.pk,is_deleted=False)
+
+        for qs in query_set:
+            records.append(qs.get_dict())
+
+        return records
 
 
 class ProgramSession(CommonModel):
