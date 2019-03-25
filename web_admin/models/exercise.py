@@ -27,7 +27,8 @@ class ExerciseQuestion(models.Model):
                 instance["question"] = self.question.get_dict() if self.question else None
 
             if dict_type == dict_types.QUESTION_ONLY:
-                instance = self.question.get_dict(dict_type=dict_types.QUESTION_ONLY) if self.question else None
+                instance                      = self.question.get_dict(dict_type=dict_types.QUESTION_ONLY) if self.question else None
+                instance["exercise_question"] = self.pk
 
             return instance
         except Exception as e:
