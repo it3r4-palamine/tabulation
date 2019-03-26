@@ -5,6 +5,8 @@ var app = angular.module('app', [
     'toaster',
     'ui.select',
     'common_controller',
+    'common_services',
+    'oitozero.ngSweetAlert',
 ]);
 
 app.config(['$httpProvider', '$interpolateProvider', function($httpProvider, $interpolateProvider) {
@@ -12,23 +14,3 @@ app.config(['$httpProvider', '$interpolateProvider', function($httpProvider, $in
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
     $interpolateProvider.startSymbol('{$').endSymbol('$}');
 }]);
-//
-// app.run(['Carousel', (Carousel) => {
-//   Carousel.setOptions({
-//     arrows: true,
-//     autoplay: false,
-//     autoplaySpeed: 3000,
-//     cssEase: 'ease',
-//     dots: false,
-//
-//     easing: 'linear',
-//     fade: false,
-//     infinite: true,
-//     initialSlide: 0,
-//
-//     slidesToShow: 1,
-//     slidesToScroll: 1,
-//     speed: 500,
-//   });
-// }]);
-//

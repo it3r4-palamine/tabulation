@@ -1,15 +1,13 @@
 {% load staticfiles %}
-<div class="container-fluid animated slide-in-left" ng-controller="LearningCenterCtrl as ctrl">
+<div class="container-fluid animated slide-in-left" ng-controller="LearningCenterCtrl as ctrl" ng-init="ctrl.read_courses(); ctrl.read_learning_center_info();">
 
     <h2 class="text-center">{$ ctrl.learning_center.name $}</h2>
     <br>
 
-
+    <label for="">Featured Courses</label>
     <div class="row">
 
-        <div class="col-lg-1"></div>
-
-        <div class="col-lg-3" ng-repeat="record in ctrl.courses | limitTo : 3">
+        <div class="col-lg-3" ng-repeat="record in ctrl.courses | limitTo : 4">
 
             <div class="ibox">
                     <div class="ibox-title" style="background-image: url({% static 'web_student/img/dev.jpg' %}); background-repeat: no-repeat; background-position: right">
@@ -21,9 +19,6 @@
                             <li ng-repeat="sub_record in record.course_programs | limitTo : 5">{$ sub_record.program.name $}</li>
                         </ul>
 
-                        <button id="test" class="btn btn-block btn-warning">Enroll Program</button>
-
-                        <script>paypal.Buttons().render('#test');</script>
 
                     </div>
             </div>
@@ -56,7 +51,10 @@
                     <b>Price</b> {$ record.price | currency : '' $}
                     </p>
 
-                    <button class="btn btn-xs btn-primary btn-outline" ng-click="ctrl.enroll_course(record)">Learn More</button>
+                    <a ui-sref="course_details({ uuid : '{$ record.uuid $}' })" class="btn btn-white btn-sm"><i class="fas fa-leaf"></i> Learn More </a>
+
+
+{#                    <button class="btn btn-xs btn-primary btn-outline" ng-click="ctrl.enroll_course(record)">Learn More</button>#}
 
                 </div>
 

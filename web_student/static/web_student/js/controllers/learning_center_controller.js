@@ -1,6 +1,6 @@
 angular.module("app")
 
-.controller("LearningCenterCtrl", function ($scope, $controller ,$stateParams)
+.controller("LearningCenterCtrl", function ($scope, $controller, $state, $stateParams, CommonFunc)
 {
     angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
     let self = this;
@@ -10,12 +10,29 @@ angular.module("app")
 
     self.read_learning_center_info = function()
     {
-        let response = self.get_api("learning_center/read/" + self.center_id);
+        if ($state.current.name === "learning_centers")
+        {
+            let response = self.get_api("learning_center/read/" + self.center_id);
 
-        response.then( function(response){
-            let data = response.data;
-            self.learning_center = data.record;
-        });
+            response.then(function(response){
+                let data = response.data;
+                self.learning_center = data.record;
+            });
+        }
+    };
+
+    self.read_course_details = function()
+    {
+        if ($state.current.name === "course_details")
+        {
+            console.log($stateParams.uuid)
+            let course_uuid = $stateParams.uuid;
+            let response = self.get_api("course/get/" + course_uuid);
+
+            response.then(function(response){
+                self.course = response.data;
+            });
+        }
     };
 
     self.read_courses = function()
@@ -32,18 +49,38 @@ angular.module("app")
 
     self.enroll_course = function(record)
     {
-        let response = self.post_api("enroll_course/", record);
+        let confirmation = CommonFunc.confirmation("Delete Enrollment \n" + data.user.fullname + "?");
+		confirmation.then(function(){
 
-        response.then(function(response){
+			let response = me.delete_api("enrollment/delete/" + data.id, null, "main", true);
+			response.then(function(response){
+				self.main_loader();
+			});
+		});
 
 
-        }, function(response){
-
+		SweetAlert.swal({
+            title: "Enroll Course",
+            text: "EEE",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Enroll",
+            cancelButtonText: "Cancel",
+            closeOnConfirm: true
         });
+
+        // let response = self.post_api("enroll_course/", record);
+        //
+        // response.then(function(response){
+        //
+        //
+        // }, function(response){
+        //
+        // });
     };
 
-    self.read_learning_center_info();
-    self.read_courses();
+
 
 });
 

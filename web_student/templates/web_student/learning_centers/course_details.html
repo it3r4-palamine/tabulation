@@ -1,4 +1,45 @@
-<div class="container-fluid" ng-controller="LearningCenterCtrl as ctrl">
+{% load staticfiles %}
+<div class="container-fluid" ng-controller="LearningCenterCtrl as ctrl" ng-init="ctrl.read_course_details()">
+
+    <div class="row" >
+
+        <div class="col-lg-1"></div>
+
+        <div class="col-lg-10" style="background-image: url({% static 'web_student/img/dev.jpg' %}); background-repeat: no-repeat; background-size: cover; background-position: right">
+
+            <h1 class="text-white">{$ ctrl.course.name $}</h1>
+            <br>
+            <p class="text-white">{$ ctrl.course.description $}</p>
+            <button class="btn btn-lg btn-rounded btn-primary btn-outline btn-white text-white" style="float: right;" ng-click="ctrl.enroll_course()">Enroll</button>
+            <br>
+            <div class="space-30"></div>
+        </div>
+
+        <div class="col-lg-1"></div>
+
+    </div>
+
+    <br>
+
+    <h2>What you will learn</h2>
+
+    <div class="row">
+
+
+
+        <div class="col-lg-2"></div>
+
+        <div class="col-lg-8">
+
+            <p ng-repeat="program in ctrl.course.course_programs">
+                {$ program.program.name  $}
+            </p>
+
+        </div>
+
+        <div class="col-lg-2"></div>
+
+    </div>
 
 
 

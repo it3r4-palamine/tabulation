@@ -1,4 +1,4 @@
-var app = angular.module('common_services', [])
+var app = angular.module('common_services', []);
 
 
 app.factory("CommonRequests", function($http, Notification) {

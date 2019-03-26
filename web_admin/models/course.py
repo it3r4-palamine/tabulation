@@ -1,3 +1,4 @@
+from utils import dict_types
 from web_admin.models.common_model import CommonModel
 from web_admin.models.program import Program
 from django.db import models
@@ -14,15 +15,25 @@ class Course(CommonModel):
     def __str__(self):
         return self.name
 
-    def get_dict(self):
+    def get_dict(self, dict_type=dict_types.DEFAULT):
         instance        = dict()
 
-        instance["uuid"]            = self.uuid
-        instance["name"]            = self.name
-        instance["description"]     = self.description
-        instance["price"]           = self.price
-        instance["company"]         = self.company.id if self.company else None
-        instance["course_programs"] = self.get_course_programs()
+        if dict_type == dict_types.DEFAULT:
+
+            instance["uuid"]            = self.uuid
+            instance["name"]            = self.name
+            instance["description"]     = self.description
+            instance["price"]           = self.price
+            instance["company"]         = self.company.id if self.company else None
+            instance["course_programs"] = self.get_course_programs()
+
+        if dict_type == dict_types.COMPLETE:
+            instance["uuid"] = self.uuid
+            instance["name"] = self.name
+            instance["description"] = self.description
+            instance["price"] = self.price
+            instance["company"] = self.company.id if self.company else None
+            instance["course_programs"] = self.get_course_programs()
 
         return instance
 

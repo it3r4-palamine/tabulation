@@ -15,6 +15,7 @@
     <link href="{% static 'web_student/theme/css/animate.css' %}" rel="stylesheet">
 
     <!-- Plugin CSS goes here -->
+    <link rel="stylesheet" href="{% static 'inspinia/css/plugins/sweetalert/sweetalert.css'%}">
     <link rel="stylesheet" href="{% static 'web_student/plugins/angular-ui-carousel/dist/ui-carousel.css' %}">
     <link rel="stylesheet" href="{% static 'web_student/plugins/angular-ui-carousel/dist/ui-carousel.min.css' %}">
 
@@ -97,11 +98,6 @@
 
     {% include "web_student/common/footer_student.html" %}
 
-    <script src="https://www.paypal.com/sdk/js?client-id=sb"></script>
-    <script>paypal.Buttons({        // Finalize the transaction
-            onApprove: function(data, actions) {
-                alert("Success")
 
-            }}).render('#paypal-container');</script>
 
 </html>

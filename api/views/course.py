@@ -1,11 +1,23 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+
+from utils import dict_types
 from web_admin.models.course import Course, CourseProgram
 from api.serializers.course import CourseSerializer, CourseProgramSerializer
 from utils.response_handler import *
 
 
 class CourseAPIView(APIView):
+
+    def get(self, request, uuid):
+        try:
+            instance = Course.objects.get(pk=uuid)
+
+            results = instance.get_dict(dict_type=dict_types.COMPLETE)
+
+            return success_response(results)
+        except Exception as e:
+            return error_response(str(e))
 
     @staticmethod
     def delete_child(child):

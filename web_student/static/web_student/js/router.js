@@ -27,12 +27,12 @@ app.config(function($stateProvider,$urlRouterProvider) {
     };
 
     let courseState = {
-        name: 'learning_centers.course_details',
-        url: '/learning_centers/course_details?id',
-        templateUrl: '/student_portal/learning_centers/programs/',
-        controller : "LearningCenterCtrl",
+        name: 'course_details',
+        url: '/course_details?uuid',
+        templateUrl: '/student_portal/learning_centers/course_details/',
+        controller : "LearningCenterCtrl as ctrl",
         params : {
-            id : null,
+            uuid : null,
         }
     };
 
