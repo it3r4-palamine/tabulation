@@ -31,7 +31,7 @@
     <div class="ibox">
 
         <div class="ibox-title">
-            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_session()">Add Question</button>
+            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_record()">Add Question</button>
             <button class="btn btn-outline btn-default pull-right" ng-click="main.open_import_dialog()">Import</button>
         </div>
 
@@ -62,7 +62,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="record in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(record,false)">
+                                <tr ng-repeat="record in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(record)" ng-click="main.create_edit_record(record)">
                                     <td class="text-left">{$ record.name $}</td>
                                     <td class="text-left">{$ record.subject.name $}</td>
                                     <td class="text-left">{$ record.question_type.name $}</td>

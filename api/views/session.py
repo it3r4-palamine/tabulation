@@ -65,7 +65,7 @@ class SessionAPIView(APIView):
         instance = Session.objects.get(pk=uuid)
         instance.is_deleted = True
         instance.save()
-        SessionExercise.objects.filter(pk=uuid).update(is_deleted=True)
+        SessionExercise.objects.filter(session=uuid).update(is_deleted=True)
 
         return success_response()
 

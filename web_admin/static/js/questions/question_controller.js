@@ -13,7 +13,7 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 	self.question_choices = [];
 
 
-	self.create_edit_session = function(record)
+	self.create_edit_record = function(record)
 	{
 		self.record = {};
 
@@ -41,12 +41,28 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 		self.question_choices.splice(self.question_choices.indexOf(record), 1);
 	};
 
-	self.initiate = function(){
-
+	self.initiate = function()
+	{
 		self.record = {};
 		self.question_choices = [];
 		self.question_choices.push( { name: '', is_correct : false, options: false})
 
+	};
+
+	self.delete_record = function(record)
+	{
+		let confirmation = CommonFunc.confirmation("Delete Question " + record.name + "?");
+		confirmation.then(function(){
+
+			self.delete_api("question/delete/" + record.uuid, null, "main")
+				.success(function(response){
+					Notification.success(response);
+					self.main_loader();
+				})
+				.error(function(response){
+					Notification.warning(response);
+				})
+		})
 	};
 
 	self.save_record = function(record)
@@ -102,9 +118,8 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 		});
 	};
 
-    self.open_import_dialog = function()
-	{
-
+    self.menu_options = function (record) {
+	    return RightClick.get_menu(self, record);
 	};
 
 	self.main_loader = function(){ self.read_pagination(); };

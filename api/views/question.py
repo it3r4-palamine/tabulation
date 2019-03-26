@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 
 from web_admin.models import ExerciseQuestion
 from web_admin.views.common import raise_error
-from utils import error_messages, dict_types
+from utils import error_messages, dict_types, response_handler
 from utils.response_handler import *
 from api.serializers.question import *
 
@@ -85,6 +85,18 @@ class QuestionAPIView(APIView):
             else:
                 raise_error(serializer.errors)
 
+    def delete(self, request, uuid):
+
+        if ExerciseQuestion.objects.filter(question=uuid).exists():
+            return error_response("This question has been assigned to an exercise, You can't delete this question. You need to remove it before deleting this")
+
+        instance = Question.objects.get(pk=uuid)
+        instance.is_deleted = True
+        instance.save()
+        QuestionChoices.objects.filter(question=uuid).update(is_deleted=True)
+
+        return success_response(response_data=response_handler.DELETE_SUCCESS)
+
 
 @api_view(["POST"])
 def read_questions(request):
@@ -93,7 +105,7 @@ def read_questions(request):
         records = []
         company = get_current_company(request)
 
-        questions = Question.objects.filter(company=company).order_by("-date_created")
+        questions = Question.objects.filter(company=company, is_deleted=False).order_by("-date_created")
 
         for question in questions:
             question_choices = []

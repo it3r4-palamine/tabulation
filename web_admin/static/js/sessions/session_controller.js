@@ -125,8 +125,6 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
     };
 
 	self.menu_options = function (record) {
-		console.log(record)
-	    me.context_id = record.uuid;
 	    return RightClick.get_menu(me,record)
 	};
 

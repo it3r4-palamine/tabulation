@@ -411,6 +411,7 @@ app.factory("RightClick", function(){
 
             if (scope.key_in_list(scope.current_module, [
                 "course",
+                "questions",
                 "session",
                 "evaluation_list"])){
                 menu.push(edit_menu);
@@ -464,6 +465,7 @@ app.factory("RightClick", function(){
             }
 
             if(scope.key_in_list(scope.current_module,[
+                "questions",
                 "course",
                 "program",
                 "session",

@@ -190,3 +190,13 @@ class DecimalDateEncoder(json.JSONEncoder):
                 return str(obj)
 
         return json.JSONEncoder.default(self, obj)
+
+CREATE_SUCCESS = {
+    "title" : "Successfully created",
+    "message" : "Record has been created",
+}
+
+DELETE_SUCCESS = {
+    "title" : "Successfully deleted",
+    "message" : "Record has been deleted"
+}

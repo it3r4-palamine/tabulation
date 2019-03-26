@@ -63,6 +63,7 @@ urlpatterns = [
     url(r'^exercise/read_exercise_questions/$', exercise.read_exercise_questions),
 
     url(r'^question/create/$', question.QuestionAPIView.as_view()),
+    url(r'^question/delete/(?P<uuid>[\w\-]+)$', question.QuestionAPIView.as_view()),
     url(r'^question/get/(?P<uuid>[\w\-]+)/$', question.QuestionAPIView.as_view()),
     url(r'^question/read/$', question.read_questions),
 
