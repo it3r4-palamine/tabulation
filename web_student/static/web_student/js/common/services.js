@@ -139,7 +139,7 @@ app.factory("CommonFunc", function($http, SweetAlert) {
     }
 });
 
-app.factory("CommonRead", function($http, CommonRequests)
+app.factory("CommonRead", function()
 {
     return {
 
@@ -151,12 +151,19 @@ app.factory("CommonRead", function($http, CommonRequests)
             })
         },
 
-        get_display_terms: function(scope) {
-            var post = CommonRequests.read_common_records(scope, "display_terms", "/settings/display_settings_read/",{},true);
-            return post.success(function(response){
-                scope["display_terms"] = response.data;
-            })
+        get_learning_centers : function(scope)
+        {
+            let response = scope.get_api("learning_center/read/");
+
+            response.then(function (response) {
+
+                let data = response.data;
+                scope.learning_centers = data.records;
+
+            }, function (response){
+                Notification.error(response)
+            });
         },
     }
-})
+});
 

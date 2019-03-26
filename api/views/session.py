@@ -105,6 +105,7 @@ def read_student_sessions(request):
         return error_response(str(e))
 
 
+# Used in Admin Portal
 @api_view(["POST"])
 def read_sessions(request):
     try:
@@ -125,6 +126,7 @@ def read_sessions(request):
         return error_response(str(e))
 
 
+# Used in Student Portal
 @api_view(["POST"])
 def read_session_exercise(request):
     try:

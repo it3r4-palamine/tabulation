@@ -1,6 +1,6 @@
 angular.module("app")
 
-.controller("DashboardCtrl", function ($scope,$controller,$uibModal) {
+.controller("DashboardCtrl", function ($scope,$controller,$uibModal, CommonRead) {
 
     angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
     var self = this;
@@ -100,6 +100,8 @@ angular.module("app")
 
     // self.read_sessions();
     self.read_enrolled_programs();
-    self.read_learning_centers();
+    // self.read_learning_centers();
+
+    CommonRead.get_learning_centers(self);
 
 });

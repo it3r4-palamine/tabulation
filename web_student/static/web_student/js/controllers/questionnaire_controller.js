@@ -5,8 +5,9 @@ angular.module("app")
     angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
     var self = this;
 
-    self.questions  = [];
-    self.session_id = $stateParams.uuid;
+    self.questions    = [];
+    self.session_id   = $stateParams.uuid;
+    self.session_name = $stateParams.name;
 
 
     self.session_exercises = function()

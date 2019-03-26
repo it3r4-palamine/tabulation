@@ -1,6 +1,6 @@
 angular.module("app")
 
-.controller("SessionCtrl", function ($scope, $controller) {
+.controller("SessionCtrl", function ($scope, $controller, CommonRead) {
 
     angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
     let self = this;
@@ -22,5 +22,7 @@ angular.module("app")
     };
 
     self.read_sessions();
+
+    CommonRead.get_learning_centers(self);
 
 });
