@@ -8,7 +8,11 @@ from utils.response_handler import *
 class CourseAPIView(APIView):
 
     @staticmethod
-    def save_course_program(course_id, course_programs):
+    def delete_child(child):
+        child.is_deleted = True
+        child.save()
+
+    def save_course_program(self, course_id, course_programs):
 
         for course_program in course_programs:
 
@@ -21,8 +25,7 @@ class CourseAPIView(APIView):
                 instance = CourseProgram.objects.get(pk=uuid)
 
                 if "is_deleted" in course_program and course_program["is_deleted"]:
-                    instance.is_deleted = True
-                    instance.save()
+                    self.delete_child(instance)
                     continue
                 else:
                     serializer = CourseProgramSerializer(data=course_program, instance=instance)
