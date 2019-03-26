@@ -4,25 +4,23 @@ app.factory("SweeterAlert", function(SweetAlert){
 
     return {
 
-        simple : function(title, message)
+        simple : function(message)
         {
+            console.log(message);
             var sweetalert = SweetAlert.swal({
-                title: title,
-                text: message,
-                type: "info",
-                showCancelButton: true,
+                title: message.title,
+                text: message.message,
+                type: "success",
                 confirmButtonColor: "#DD6B55",
-                confirmButtonText: confirmtext,
+                confirmButtonText: "Confirm",
                 cancelButtonText: "Cancel",
-                closeOnConfirm: true
+                closeOnConfirm: false
             });
 
             return sweetalert;
         },
         error : function (message)
         {
-            console.log(message)
-
             let sweetalert = SweetAlert.swal({
                 title: message.title,
                 text: message.message,

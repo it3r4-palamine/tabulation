@@ -77,7 +77,7 @@ def read_enrollments(request):
 			pagination = filters.pop("pagination", None)
 
 		# Q Filters
-		q_filters = (Q(is_active=True) & Q(is_deleted=False) & Q(company=filters['company']))
+		q_filters = (Q(is_deleted=False) & Q(company=filters['company']))
 
 		if date_from and date_to:
 
@@ -155,8 +155,8 @@ def save_enrollment(request):
 
 
 		try: 
-			instance = Enrollment.objects.get(id=data.get("id", None)) 
-			form = Enrollment_form(data, instance=instance) 
+			instance = Enrollment.objects.get(id=data.get("id", None))
+			form = Enrollment_form(data, instance=instance)
 		except Enrollment.DoesNotExist:
 
 			if Enrollment.objects.filter(code=data["code"]).exists():
@@ -204,6 +204,7 @@ def save_enrollment(request):
 	except Exception as e:
 		return error_http_response(str(e))
 
+
 def check_reference_no(request,isChecked=False):
 	try:
 		data = req_data(request,True)
@@ -215,7 +216,6 @@ def check_reference_no(request,isChecked=False):
 
 		ref_no_len = len(ref_no)
 
-
 		ref_no = str(int(ref_no) + 1)
 		ref_no = ref_no.zfill(ref_no_len)
 		if isChecked:
@@ -224,6 +224,7 @@ def check_reference_no(request,isChecked=False):
 			return success(ref_no)
 	except Exception as e:
 		return HttpResponse(e,status=400)
+
 
 def delete_enrollment(request):
 	try:
@@ -249,6 +250,7 @@ def delete_enrollment(request):
 		return success("Successfully deleted.")
 	except Exception as e:
 		return error(e)
+
 
 def read_sessions_reconcile(request):
 	try:

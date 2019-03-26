@@ -3,12 +3,12 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
 from api.serializers.enrollment import EnrollmentSerializer
-from utils import dict_types
+from utils import dict_types, response_handler
 from utils.model_utils import get_next
 from utils.view_utils import remove_non_numeric_str
 from web_admin.models import Enrollment
 from utils.response_handler import *
-
+from utils.model_utils import generate_random_code
 
 class EnrollmentAPIView(APIView):
 
@@ -29,10 +29,10 @@ def read_enrolled_programs(request):
 
         user = request.user.id
 
-        enrollments = Enrollment.objects.filter(user=user)
+        query_set = Enrollment.objects.filter(user=user, is_active=True, is_deleted=False)
 
-        for enrollment in enrollments:
-            row = enrollment.get_dict(dict_type=dict_types.STUDENT)
+        for qs in query_set:
+            row = qs.get_dict(dict_type=dict_types.STUDENT)
             records.append(row)
 
         results["records"] = records
@@ -43,7 +43,7 @@ def read_enrolled_programs(request):
 
 
 def check_existing_course(course_id):
-    return Enrollment.objects.filter(course=course_id).exists()
+    return Enrollment.objects.filter(course=course_id,is_deleted=False).exists()
 
 
 @api_view(["POST"])
@@ -58,6 +58,7 @@ def enroll_course(request):
             return error_response({"title" : "Invalid Enrollment", "message": "You are already enrolled to this Course"})
 
         enrollment = dict(
+            code=generate_random_code(),
             user=user,
             course=course_id,
             company=company,
@@ -70,7 +71,7 @@ def enroll_course(request):
         else:
             print(serializer.errors)
 
-        return success_response()
+        return success_response(response_data=response_handler.ENROLLED_SUCCESS)
     except Exception as e:
         return error_response(e, show_line=True)
 

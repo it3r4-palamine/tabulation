@@ -196,7 +196,17 @@
 									<input type="date" name="session credits" ng-change="change_start_date(enrollment_data,'date_to')" ng-model="enrollment_data.session_end_date" class="form-control"> 
 								</div> 
 							</div> 
-						</div> 
+						</div>
+
+                        <div class="row">
+
+                            <div class="col-lg-2">
+                                <label for="">Set Enrollment as Active</label>
+                                <input type="checkbox" ng-model="enrollment_data.is_active">
+                            </div>
+
+                        </div>
+
 					</div>
 			</form>
 	</div>

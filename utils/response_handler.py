@@ -191,6 +191,11 @@ class DecimalDateEncoder(json.JSONEncoder):
 
         return json.JSONEncoder.default(self, obj)
 
+ENROLLED_SUCCESS = {
+    "title" : "Successfully Enrolled",
+    "message" : "You have been enrolled",
+}
+
 CREATE_SUCCESS = {
     "title" : "Successfully created",
     "message" : "Record has been created",

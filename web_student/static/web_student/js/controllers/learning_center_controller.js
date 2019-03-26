@@ -47,14 +47,15 @@ angular.module("app")
 		});
     };
 
-    self.enroll_course = function(record)
+    self.enroll_course = function()
     {
         CommonFunc.confirmation("Confirm Enrollment", "pag sure, mahal baya ni", null, null, function(){
 
-            let response = self.post_api("enroll_course/", self.course, "main").then(function(response){
+            let response = self.post_api("enroll_course/", self.course, "main");
 
-                SweeterAlert.simple("Enrolled naka bes")
-
+            response.then(function(response){
+                let data = response.data;
+                SweeterAlert.simple(data);
             }, function(response){
                 let data = response.data;
                 SweeterAlert.error(data);
