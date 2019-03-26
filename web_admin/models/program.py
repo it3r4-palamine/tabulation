@@ -1,3 +1,4 @@
+from utils import dict_types
 from web_admin.models.common_model import CommonModel
 from web_admin.models.session import Session
 from django.db import models
@@ -46,11 +47,15 @@ class ProgramSession(CommonModel):
     def __str__(self):
         return self.name
 
-    def get_dict(self):
+    def get_dict(self, dict_type=dict_types.DEFAULT):
         instance = dict()
 
-        instance["uuid"]    = self.pk
-        instance["program"] = self.program.pk
-        instance["session"] = self.session.get_dict() if self.session else None
+        if dict_type == dict_types.DEFAULT:
+            instance["uuid"]    = self.pk
+            instance["program"] = self.program.pk
+            instance["session"] = self.session.get_dict() if self.session else None
+
+        if dict_type == dict_types.AS_SESSION:
+            instance = self.session.get_dict() if self.session else None
 
         return instance
