@@ -37,7 +37,9 @@ class StudentAnswerAPIView(APIView):
                 else:
                     print(serializer.errors)
 
-            return success_response(total_correct)
+            result_message = "You scored " + str(total_correct) + "/" + str(len(answers))
+
+            return success_response(result_message)
         except Exception as e:
 
             if answer_ids:

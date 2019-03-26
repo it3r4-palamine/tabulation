@@ -1,6 +1,6 @@
 angular.module("app")
 
-.controller("QuestionnaireCtrl", function ($scope, $controller, $stateParams) {
+.controller("QuestionnaireCtrl", function ($scope, $controller, $stateParams, SweeterAlert) {
 
     angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
     var self = this;
@@ -43,9 +43,15 @@ angular.module("app")
 
         response.then(function(response){
 
+            let data = {
+                title : response.data,
+                message : "Exercise Completed"
+            };
+
+            SweeterAlert.simple(data)
 
         }, function (response){
-
+            SweeterAlert.error(response)
         });
     };
 
