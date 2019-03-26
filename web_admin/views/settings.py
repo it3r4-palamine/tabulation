@@ -5,7 +5,7 @@ from ..models.settings import *
 from ..forms.settings import *
 from ..forms.company import *
 from ..forms.user_type import *
-from ..forms.transaction_types import *
+from ..forms.exercise import *
 from ..views.assessments import *
 from ..views.common import *
 from ..views.sentence_matching import *

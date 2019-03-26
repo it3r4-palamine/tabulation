@@ -1,4 +1,4 @@
-from ..forms.transaction_types import *
+from ..forms.exercise import *
 from ..models.exercises import *
 from ..forms.user_form import *
 from ..models.user import *

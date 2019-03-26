@@ -1,4 +1,4 @@
-from ..forms.transaction_types import *
+from ..forms.exercise import *
 from ..models.exercises import *
 from ..models.company_assessment import *
 from ..forms.company import *
