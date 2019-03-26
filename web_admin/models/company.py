@@ -1,6 +1,6 @@
-from ..models.exercises import *
 from django.contrib.postgres.fields import ArrayField
 from utils.dict_types import *
+from django.db import models
 
 
 class Company(models.Model):

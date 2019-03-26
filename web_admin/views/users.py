@@ -1,15 +1,15 @@
-from ..forms.exercise import *
-from ..models.exercises import *
 from ..forms.user_form import *
-from ..models.user import *
-from ..models.enrollment import *
-from ..models.company_assessment import *
-from ..views.common import *
-from utils.dict_types import *
+import unicodedata
 from datetime import *
+
 import requests
-import sys, os, re, unicodedata
 from django.db.models import ExpressionWrapper, DurationField
+
+from utils.dict_types import *
+from ..forms.user_form import *
+from ..models.company_assessment import *
+from ..models.enrollment import *
+from ..views.common import *
 
 
 def users(request):

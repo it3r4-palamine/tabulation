@@ -1,24 +1,22 @@
 # from ..forms.transaction_types import *
-from ..models.exercises import *
 # from ..forms.company import *
-from ..models.assessments import *
+import errno
+import os
+import sys
+
+from django.conf import settings
+from django.db.models import *
+from pptx import Presentation
+from pptx.enum.dml import MSO_THEME_COLOR
+from pptx.enum.text import PP_ALIGN
+from pptx.util import Inches, Pt
+
 from ..forms.assessments import *
-from ..models.multiple_choice import *
 # from ..forms.generate_report import *
 from ..models.company_assessment import *
+from ..models.multiple_choice import *
 from ..views.common import *
-from django.db.models import *
-import os, shutil, errno
-from django.conf import settings
-import sys, traceback, os
 
-from pptx import Presentation
-from pptx.dml.color import RGBColor
-from pptx.enum.dml import MSO_THEME_COLOR
-from pptx.util import Inches, Pt
-from pptx.enum.text import PP_ALIGN
-
-from difflib import SequenceMatcher
 
 def generate_report(request,generate_report_id):
 	company_assessment = Company_assessment.objects.get(id=generate_report_id)

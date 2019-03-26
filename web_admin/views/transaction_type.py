@@ -1,9 +1,10 @@
+from django.shortcuts import redirect
+
 from ..forms.exercise import *
-from ..models.exercises import *
 from ..models.assessments import *
 from ..models.company import *
 from ..views.common import *
-import sys, traceback, os
+import sys, os
 import requests
 import time
 

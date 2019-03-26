@@ -1,18 +1,15 @@
-from ..forms.exercise import *
-from ..models.exercises import *
-from ..forms.company import *
-from ..models.company import *
-from ..models.enrollment import *
-from ..forms.company_assessment import *
+from ..forms.enrollment import *
+import time
+
+from django.db.models import *
+
+from utils.response_handler import *
 from ..forms.enrollment import *
 from ..forms.payment import *
-from ..models.company_assessment import *
 from ..models.assessments import *
-from django.db.models import *
+from ..models.company_assessment import *
 from ..views.common import *
-from utils.response_handler import *
-import sys, traceback, os
-import time
+
 
 def create_dialog(request):
 	pass
