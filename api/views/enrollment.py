@@ -42,6 +42,10 @@ def read_enrolled_programs(request):
         return error_response(str(e))
 
 
+def check_existing_course(course_id):
+    return Enrollment.objects.filter(course=course_id).exists()
+
+
 @api_view(["POST"])
 def enroll_course(request):
     try:
@@ -50,10 +54,14 @@ def enroll_course(request):
         course_id   = data.get("uuid", None)
         company     = data.get("company", None)
 
+        if check_existing_course(course_id):
+            return error_response({"title" : "Invalid Enrollment", "message": "You are already enrolled to this Course"})
+
         enrollment = dict(
             user=user,
             course=course_id,
-            company=company)
+            company=company,
+            is_active=False)
 
         serializer = EnrollmentSerializer(data=enrollment)
 
@@ -64,8 +72,7 @@ def enroll_course(request):
 
         return success_response()
     except Exception as e:
-        print(e)
-        return error_response(str(e), show_line=True)
+        return error_response(e, show_line=True)
 
 
 @api_view(["POST"])

@@ -1,5 +1,43 @@
 var app = angular.module('common_services', []);
 
+app.factory("SweeterAlert", function(SweetAlert){
+
+    return {
+
+        simple : function(title, message)
+        {
+            var sweetalert = SweetAlert.swal({
+                title: title,
+                text: message,
+                type: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: confirmtext,
+                cancelButtonText: "Cancel",
+                closeOnConfirm: true
+            });
+
+            return sweetalert;
+        },
+        error : function (message)
+        {
+            console.log(message)
+
+            let sweetalert = SweetAlert.swal({
+                title: message.title,
+                text: message.message,
+                type: "error",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Confirm",
+                closeOnConfirm: false
+            });
+
+            return sweetalert;
+        }
+
+    }
+
+});
 
 app.factory("CommonFunc", function($http, SweetAlert) {
     return {
@@ -39,7 +77,7 @@ app.factory("CommonFunc", function($http, SweetAlert) {
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: confirmtext,
                 cancelButtonText: "Cancel",
-                closeOnConfirm: true
+                closeOnConfirm: false
             }, confirmFunction, cancelFunction);
 
             return sweetalert;

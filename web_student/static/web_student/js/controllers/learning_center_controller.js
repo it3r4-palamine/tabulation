@@ -1,6 +1,6 @@
 angular.module("app")
 
-.controller("LearningCenterCtrl", function ($scope, $controller, $state, $stateParams, CommonFunc)
+.controller("LearningCenterCtrl", function ($scope, $controller, $state, $stateParams, CommonFunc, SweeterAlert)
 {
     angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
     let self = this;
@@ -49,10 +49,17 @@ angular.module("app")
 
     self.enroll_course = function(record)
     {
-        CommonFunc.confirmation("Confirm Enrollment", "pag sure", null, null, function(){
+        CommonFunc.confirmation("Confirm Enrollment", "pag sure, mahal baya ni", null, null, function(){
 
-            let response = self.post("enroll")
+            let response = self.post_api("enroll_course/", self.course, "main").then(function(response){
 
+                SweeterAlert.simple("Enrolled naka bes")
+
+            }, function(response){
+                let data = response.data;
+                SweeterAlert.error(data);
+
+            });
         })
     };
 

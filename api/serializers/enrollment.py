@@ -9,4 +9,5 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         fields = ('course',
                   'user',
                   'company',
+                  'is_active',
                   )
