@@ -1,12 +1,13 @@
 from django import forms
-from ..models.exercises import *
+from ..models.exercise import *
 from django.db.models import Q
 
+
 class Transaction_type_form(forms.ModelForm):
+
 	class Meta:
 		model  = Exercise
 		fields = ('name','transaction_code','is_active','company','exercise_id','set_no','total_items','is_intelex','program_id')
-
 
 	def clean(self,):
 		raw_data = self.cleaned_data
