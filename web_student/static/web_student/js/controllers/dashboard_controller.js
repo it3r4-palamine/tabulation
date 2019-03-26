@@ -54,7 +54,7 @@ angular.module("app")
 			// self.page_loader[key] = false;
 	    	// self.current_dialogs.push(dialog)
 	    });
-    }
+    };
 
     self.read_enrolled_programs = function()
     {
@@ -96,12 +96,10 @@ angular.module("app")
         });
     };
 
-
-
-    // self.read_sessions();
-    self.read_enrolled_programs();
-    // self.read_learning_centers();
-
-    CommonRead.get_learning_centers(self);
+    self.init_dashboard = function()
+    {
+        self.read_enrolled_programs();
+        CommonRead.get_learning_centers(self);
+    }
 
 });

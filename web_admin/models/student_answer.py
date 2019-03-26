@@ -1,4 +1,5 @@
-from web_admin.models import CommonModel, Question, QuestionChoices
+from web_admin.models.common_model import CommonModel
+from web_admin.models.question import Question, QuestionChoices
 from django.db import models
 from web_admin.models.exercise import ExerciseQuestion
 

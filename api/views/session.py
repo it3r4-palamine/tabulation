@@ -84,6 +84,7 @@ class SessionAPIView(APIView):
         return success_response()
 
 
+# Used in Student Portal
 @api_view(["POST"])
 def read_student_sessions(request):
     try:

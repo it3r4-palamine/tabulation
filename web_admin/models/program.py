@@ -56,6 +56,6 @@ class ProgramSession(CommonModel):
             instance["session"] = self.session.get_dict() if self.session else None
 
         if dict_type == dict_types.AS_SESSION:
-            instance = self.session.get_dict() if self.session else None
+            instance = self.session.get_dict(dict_type=dict_types.STUDENT_PORTAL) if self.session else None
 
         return instance

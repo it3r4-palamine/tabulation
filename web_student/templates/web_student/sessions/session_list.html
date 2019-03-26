@@ -1,5 +1,5 @@
 {% load staticfiles %}
-<div class="animated scale-in-center">
+<div class="animated scale-in-center" ng-init="ctrl.read_sessions()">
 
     <div class="row">
 
@@ -60,14 +60,14 @@
                                             <span class="label label-primary">Active</span>
                                         </td>
                                         <td class="project-title">
-                                            <a href="project_detail.html">{$ record.name $}</a>
+                                            <a ui-sref="questionnaire({ uuid : '{$ record.uuid $}', name : '{$ record.name $}' })">{$ record.name $}</a>
                                             <br>
                                             <small>Created 03.02.2019</small>
                                         </td>
                                         <td class="project-completion">
-                                                <small>Completion with: 48%</small>
+                                                <small>Completion with: {$ record.session_progress $}%</small>
                                                 <div class="progress progress-mini">
-                                                    <div style="width: 48%;" class="progress-bar"></div>
+                                                    <div ng-style="{ width: '{$ record.session_progress $}' + '%' }" class="progress-bar"></div>
                                                 </div>
                                         </td>
                                         <td class="project-people">

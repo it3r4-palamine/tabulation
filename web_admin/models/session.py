@@ -1,4 +1,7 @@
 from __future__ import unicode_literals
+
+from utils import dict_types
+from web_admin.models.student_answer import StudentAnswer
 from web_admin.models.common_model import *
 from web_admin.models.exercise import Exercise
 from utils.response_handler import *
@@ -17,16 +20,42 @@ class Session(CommonModel):
     def __str__(self):
         return self.name
 
-    def get_dict(self):
+    def get_dict(self, dict_type=dict_types.DEFAULT):
         instance = dict()
 
-        instance["uuid"]              = self.uuid
-        instance["name"]              = self.name
-        instance["description"]       = self.description
-        instance["company"]           = self.company.id
-        instance["session_exercises"] = self.get_session_exercises()
+        if dict_type == dict_types.DEFAULT:
+
+            instance["uuid"]              = self.uuid
+            instance["name"]              = self.name
+            instance["description"]       = self.description
+            instance["company"]           = self.company.id
+            instance["session_exercises"] = self.get_session_exercises()
+
+        if dict_type == dict_types.STUDENT_PORTAL:
+
+            instance["uuid"] = self.uuid
+            instance["name"] = self.name
+            instance["description"] = self.description
+            instance["company"] = self.company.id
+            instance["session_exercises"] = self.get_session_exercises()
+            instance["session_progress"]  = self.get_answered_exercises(as_percentage=True)
 
         return instance
+
+    def get_answered_exercises(self, as_percentage=False):
+        query_set = SessionExercise.objects.filter(session=self.pk,is_deleted=False)
+
+        count_exercises_answered = 0
+        count_exercises          = query_set.count()
+
+        for qs in query_set:
+            if StudentAnswer.objects.filter(exercise_question__exercise=qs.exercise).exists():
+                count_exercises_answered += 1
+
+        if as_percentage:
+            return count_exercises_answered * (100/count_exercises)
+
+        return count_exercises_answered, count_exercises
 
     def get_session_exercises(self):
         records = []

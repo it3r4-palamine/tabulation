@@ -21,8 +21,6 @@ angular.module("app")
         })
     };
 
-    self.read_sessions();
-
     CommonRead.get_learning_centers(self);
 
 });
