@@ -65,8 +65,16 @@ app.controller('ProgramCtrl', function($scope, $http, $timeout, $element, $contr
 
 	self.delete_record = function(record)
 	{
+		let confirmation = CommonFunc.confirmation("Delete Program " + record.name + "?");
+		confirmation.then(function(){
 
-	}
+			self.delete_api("course/delete/" + record.uuid, null, "main")
+				.success(function(response){
+					Notification.success(response);
+					self.main_loader();
+				})
+		})
+	};
 
 	self.save_record = function(record)
 	{

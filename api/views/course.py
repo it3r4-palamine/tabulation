@@ -82,11 +82,15 @@ def read_course(request):
         records = []
         filters = extract_json_data(request)
         company = get_current_company(request)
+        search  = filters.get("search", None)
 
         if "center_id" in filters:
             q_filters = Q(company=filters["center_id"]) & Q(is_deleted=False)
         else:
             q_filters = Q(company=company) & Q(is_deleted=False)
+
+        if search:
+            q_filters &= Q(name__icontains=search) | Q(description__icontains=search)
 
         query_set = Course.objects.filter(q_filters).order_by("-date_created")
 

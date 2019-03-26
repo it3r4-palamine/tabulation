@@ -22,7 +22,7 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 
 	self.create_edit_record = function(record)
 	{
-		$scope.record = {};
+		self.init_record();
 
 		if ( record ) {
 			self.record = record;
@@ -60,6 +60,12 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 	self.remove_course_program = function(record)
 	{
 		record["is_deleted"] = true;
+	};
+
+	self.init_record = function()
+	{
+		self.record = {};
+		self.course_programs = [];
 	};
 
 	self.delete_record = function(record)

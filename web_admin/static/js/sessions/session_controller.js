@@ -63,6 +63,19 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 		self.session_exercises.splice(self.session_exercises.indexOf(record), 1);
 	};
 
+	self.delete_record = function(record)
+	{
+		let confirmation = CommonFunc.confirmation("Delete Course " + record.name + "?");
+		confirmation.then(function(){
+
+			self.delete_api("course/delete/" + record.uuid, null, "main")
+				.success(function(response){
+					Notification.success(response);
+					self.main_loader();
+				})
+		})
+	};
+
 	self.save_record = function(record)
 	{
 	    let post_data = angular.copy(record);
