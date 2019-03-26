@@ -49,35 +49,11 @@ angular.module("app")
 
     self.enroll_course = function(record)
     {
-        let confirmation = CommonFunc.confirmation("Delete Enrollment \n" + data.user.fullname + "?");
-		confirmation.then(function(){
+        CommonFunc.confirmation("Confirm Enrollment", "pag sure", null, null, function(){
 
-			let response = me.delete_api("enrollment/delete/" + data.id, null, "main", true);
-			response.then(function(response){
-				self.main_loader();
-			});
-		});
+            let response = self.post("enroll")
 
-
-		SweetAlert.swal({
-            title: "Enroll Course",
-            text: "EEE",
-            type: "info",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Enroll",
-            cancelButtonText: "Cancel",
-            closeOnConfirm: true
-        });
-
-        // let response = self.post_api("enroll_course/", record);
-        //
-        // response.then(function(response){
-        //
-        //
-        // }, function(response){
-        //
-        // });
+        })
     };
 
 
