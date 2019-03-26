@@ -60,7 +60,7 @@ app.controller('ProgramCtrl', function($scope, $http, $timeout, $element, $contr
 
 	self.remove_session_exercise = function(record)
 	{
-		self.program_sessions.splice(self.program_sessions.indexOf(record), 1);
+		record["is_deleted"] = true;
 	};
 
 	self.save_record = function(record)

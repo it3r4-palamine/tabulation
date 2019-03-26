@@ -7,19 +7,34 @@ from utils.response_handler import *
 class ProgramAPIView(APIView):
 
     @staticmethod
-    def save_program_sessions(program_id, program_sessions):
+    def delete_child(child):
+        child.is_deleted = True
+        child.save()
+
+    def save_program_sessions(self, program_id, program_sessions):
 
         for program_session in program_sessions:
+
+            uuid = program_session.get("uuid", None)
 
             program_session["program"] = program_id
             program_session["session"] = program_session["session"].get("uuid")
 
-            serializer = ProgramSessionSerializer(data=program_session)
+            if uuid:
+                instance = ProgramSession.objects.get(pk=uuid)
+
+                if "is_deleted" in program_session and program_session["is_deleted"]:
+                    self.delete_child(instance)
+                    continue
+                else:
+                    serializer = ProgramSessionSerializer(data=program_session, instance=instance)
+            else:
+                serializer = ProgramSessionSerializer(data=program_session)
 
             if serializer.is_valid():
                 serializer.save()
             else:
-                print(serializer.errors)
+                raise_error(serializer.errors)
 
     def post(self, request):
         instance = None
@@ -62,7 +77,7 @@ def read_programs(request):
         records = []
         company = get_current_company(request)
 
-        query_set = Program.objects.filter(company=company).order_by("-date_created")
+        query_set = Program.objects.filter(company=company,is_deleted=False).order_by("-date_created")
 
         for qs in query_set:
             row = qs.get_dict()
@@ -83,7 +98,7 @@ def read_program_sessions(request):
         filters    = extract_json_data(request)
         program_id = filters.get("uuid", None)
 
-        query_set = ProgramSession.objects.filter(program=program_id)
+        query_set = ProgramSession.objects.filter(program=program_id, is_deleted=False)
 
         for qs in query_set:
             row = qs.get_dict()
