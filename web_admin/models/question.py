@@ -28,20 +28,19 @@ class Question(CommonModel):
 
 			instance["uuid"] 			 = str(self.pk)
 			instance["name"] 			 = self.name
-			instance["question_choices"] = self.get_question_choices()
+			instance["question_choices"] = self.get_question_choices(dict_type)
 
 		return instance
 
-	def get_question_choices(self):
+	def get_question_choices(self,dict_type):
 		records = []
 
 		query_set = QuestionChoices.objects.filter(question=self.pk)
 
 		for qs in query_set:
-			records.append(qs.get_dict())
+			records.append(qs.get_dict(dict_type=dict_type))
 
 		return records
-
 
 
 class QuestionChoices(CommonModel):
@@ -56,13 +55,19 @@ class QuestionChoices(CommonModel):
 	def __str__(self):
 		return self.name
 
-	def get_dict(self):
+	def get_dict(self, dict_type=dict_types.DEFAULT):
 		instance = dict()
 
-		instance["uuid"]	   = str(self.pk)
-		instance["name"]       = self.name
-		instance["question"]   = str(self.question.pk)
-		instance["is_correct"] = self.is_correct
+		if dict_type == dict_types.DEFAULT:
+			instance["uuid"]	   = str(self.pk)
+			instance["name"]       = self.name
+			instance["question"]   = str(self.question.pk)
+			instance["is_correct"] = self.is_correct
+
+		if dict_type == dict_types.QUESTION_ONLY:
+			instance["uuid"] = str(self.pk)
+			instance["name"] = self.name
+			instance["question"] = str(self.question.pk)
 
 		return instance
 

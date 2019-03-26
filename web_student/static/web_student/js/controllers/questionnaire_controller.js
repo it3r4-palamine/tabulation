@@ -25,16 +25,21 @@ angular.module("app")
 
     self.read_questions = function(record)
     {
-        let exercise = { "exercise" : record.exercise.id };
-        let response = self.post_api("question/read_exercise_questions/", exercise);
+        if (!record.has_answered)
+        {
+            let exercise = { "exercise" : record.exercise.id };
+            let response = self.post_api("question/read_exercise_questions/", exercise);
 
-        response.then(function(response){
-            let data = response.data;
-            self.questions = data.records;
+            response.then(function(response){
+                let data = response.data;
+                self.questions = data.records;
 
-        }, function (response){
+            }, function (response){
 
-        });
+            });
+        } else {
+            SweeterAlert.error({title: "Exercise already answered", message: ""})
+        }
     };
 
     self.test = function()

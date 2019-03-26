@@ -24,7 +24,10 @@
                                     <span>{$ record.exercise.name $}</span>
                                     <span>{$ record.exercise.set_no $}</span>
                                 </td>
-                                <td ><i class="fa fa-check-circle" style="color: forestgreen"></i></td>
+                                <td>
+                                    <i class="fa fa-check-circle" style="color: forestgreen" ng-show="record.has_answered"></i>
+                                    <i class="fa fa-check-circle" ng-show="!record.has_answered"></i>
+                                </td>
                             </tr>
 
                         </tbody>

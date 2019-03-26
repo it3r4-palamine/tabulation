@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from utils import dict_types
-from web_admin.models import ProgramSession, Enrollment
+from web_admin.models import ProgramSession, Enrollment, StudentAnswer, ExerciseQuestion
 from web_admin.models.course import CourseProgram
 from web_admin.models.session import *
 from api.serializers.session import *
@@ -136,7 +136,11 @@ def read_session_exercise(request):
         query_set = SessionExercise.objects.filter(session=session_id,is_deleted=False).order_by("-date_created")
 
         for qs in query_set:
+
             row = qs.get_dict()
+            if StudentAnswer.objects.filter(exercise_question__exercise=qs.exercise).exists():
+                row["has_answered"] = True
+
             records.append(row)
 
         results["records"] = records
