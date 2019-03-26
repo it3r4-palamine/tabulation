@@ -407,8 +407,11 @@ app.factory("RightClick", function(){
 
             // Attach to Menu
 
+            // Edit Menu
+
             if (scope.key_in_list(scope.current_module, [
                 "course",
+                "session",
                 "evaluation_list"])){
                 menu.push(edit_menu);
             }

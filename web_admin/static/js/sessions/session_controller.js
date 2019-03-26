@@ -7,7 +7,7 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 	var self = this;
 	let me = this;
 
-	self.current_module 	= "sessions";
+	self.current_module 	= "session";
 	self.pagination			= {};
 	self.session_exercises 	= [];
 	self.records 			= [];
@@ -65,10 +65,10 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 
 	self.delete_record = function(record)
 	{
-		let confirmation = CommonFunc.confirmation("Delete Course " + record.name + "?");
+		let confirmation = CommonFunc.confirmation("Delete Session " + record.name + "?");
 		confirmation.then(function(){
 
-			self.delete_api("course/delete/" + record.uuid, null, "main")
+			self.delete_api("session/delete/" + record.uuid, null, "main")
 				.success(function(response){
 					Notification.success(response);
 					self.main_loader();

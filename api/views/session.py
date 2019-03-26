@@ -51,7 +51,6 @@ class SessionAPIView(APIView):
                 self.save_session_exercises(instance.pk, session_exercises)
 
             else:
-                print(serializer.errors)
                 raise_error(serializer.errors)
 
             return success_response()
@@ -61,6 +60,14 @@ class SessionAPIView(APIView):
                 instance.delete()
 
             return error_response(str(e), show_line=True)
+
+    def delete(self, request, uuid):
+        instance = Session.objects.get(pk=uuid)
+        instance.is_deleted = True
+        instance.save()
+        SessionExercise.objects.filter(pk=uuid).update(is_deleted=True)
+
+        return success_response()
 
 
 @api_view(["POST"])
@@ -104,7 +111,7 @@ def read_sessions(request):
         records = []
         company = get_current_company(request)
 
-        query_set = Session.objects.filter(company=company).order_by("-date_created")
+        query_set = Session.objects.filter(company=company,is_deleted=False).order_by("-date_created")
 
         for qs in query_set:
             row = qs.get_dict()
