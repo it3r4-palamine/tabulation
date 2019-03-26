@@ -123,7 +123,7 @@ urlpatterns = [
 
     url(r'^enrollments/enrollments/$', page_router.get_enrollment_page, name='enrollment'),
     url(r'^enrollments/create_dialog/$', enrollment.create_dialog),
-    url(r'^enrollments/read_enrollees/$', enrollment.read_enrollees),
+    url(r'^enrollments/read_enrollees/$', enrollment.read_enrollments),
     url(r'^enrollments/get_excess_time/$', enrollment.get_excess_time),
     url(r'^enrollments/save_enrollment/$', enrollment.save_enrollment),
     url(r'^enrollments/check_reference_no/$', enrollment.check_reference_no),

@@ -53,34 +53,29 @@ def read_enrollment(request,enrollment_id):
 		return error(e)
 
 
-def read_enrollees(request):
+def read_enrollments(request):
 	try:
-		filters = req_data(request,True)
-		firstname, lastname = "", ""
-		results = { "records": [] }
-		records = []
-		pagination = None
+		filters 	= req_data(request, True)
+		results 	= {}
+		records 	= []
+		pagination 	= None
+		first_name, last_name = "", ""
 
 		# Get Filters
-		search 		= filters.pop("search", "")
+		name_search = filters.pop("search", "")
 		student_id 	= filters.pop("student_id",None)
 		program_id 	= filters.pop("program_id",None)
 		date_from 	= filters.pop("date_from","")
 		date_to 	= filters.pop("date_to","")
 
-		session_start_date = filters.pop("session_start_date","")
-		session_end_date = filters.pop("session_end_date","")
-		school_id = filters.pop("school_id",None)
-		name_search = search
+		session_start_date 	= filters.pop("session_start_date","")
+		session_end_date 	= filters.pop("session_end_date","")
+		school_id 			= filters.pop("school_id",None)
 
 		# Bad Code. There should be a boolean variable for pagination.
 		if "pagination" in filters:
 			pagination = filters.pop("pagination", None)
-			sort_by = filters.pop("sort", None)
 
-		if search:
-			q_filters = Q(user__fullname__icontains=search) | Q(user__first_name__icontains=search)
-		
 		# Q Filters
 		q_filters = (Q(is_active=True) & Q(is_deleted=False) & Q(company=filters['company']))
 
@@ -114,12 +109,11 @@ def read_enrollees(request):
 
 			if name_search:
 				words = name_search.split(' ')
-				firstname = words[0]
-				lastname = words[-1]
+				first_name = words[0]
 
-			q_filters &= (Q(code__icontains=name_search) | Q(user__fullname__icontains = firstname))
+			q_filters &= (Q(code__icontains=name_search) | Q(user__fullname__icontains = first_name))
 		else:
-			q_filters &= (Q(student = request.user.studentprofile.student.id))
+			q_filters &= (Q(student=request.user.studentprofile.student.id))
 
 		# Query
 		# Use select related to improve query speed.
@@ -128,12 +122,9 @@ def read_enrollees(request):
 		query_set = Enrollment.objects.filter(q_filters).select_related(*related).order_by("-id")
 
 		for qs in query_set:
-
 			row = qs.get_dict()
-
 			if row:
 				row["payments"] = list(qs.get_payments())
-
 			records.append(row)
 
 		if pagination:
@@ -145,7 +136,6 @@ def read_enrollees(request):
 
 		return success_list(results, False)
 	except Exception as e:
-		print(e)
 		return error_response(request, e)
 
 
