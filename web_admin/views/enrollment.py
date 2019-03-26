@@ -63,10 +63,10 @@ def read_enrollments(request):
 
 		# Get Filters
 		name_search = filters.pop("search", "")
-		student_id 	= filters.pop("student_id",None)
-		program_id 	= filters.pop("program_id",None)
-		date_from 	= filters.pop("date_from","")
-		date_to 	= filters.pop("date_to","")
+		student_id 	= filters.pop("student_id", None)
+		program_id 	= filters.pop("program_id", None)
+		date_from 	= filters.pop("date_from", None)
+		date_to 	= filters.pop("date_to", None)
 
 		session_start_date 	= filters.pop("session_start_date","")
 		session_end_date 	= filters.pop("session_end_date","")
@@ -136,7 +136,7 @@ def read_enrollments(request):
 
 		return success_list(results, False)
 	except Exception as e:
-		return error_response(request, e)
+		return error_http_response(request, show_line=True)
 
 
 def save_enrollment(request):
