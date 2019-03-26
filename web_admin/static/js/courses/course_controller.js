@@ -59,7 +59,9 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 
 	self.remove_course_program = function(record)
 	{
-		self.course_programs.splice(self.course_programs.indexOf(record), 1);
+		record["is_deleted"] = true;
+		console.log(record);
+		// self.course_programs.splice(self.course_programs.indexOf(record), 1);
 	};
 
 	self.save_record = function(record)

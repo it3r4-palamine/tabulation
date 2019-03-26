@@ -12,10 +12,22 @@ class CourseAPIView(APIView):
 
         for course_program in course_programs:
 
+            uuid = course_program.get("uuid", None)
+
             course_program["course"]  = course_id
             course_program["program"] = course_program["program"].get("uuid")
 
-            serializer = CourseProgramSerializer(data=course_program)
+            if uuid:
+                instance = CourseProgram.objects.get(pk=uuid)
+
+                if "is_deleted" in course_program and course_program["is_deleted"]:
+                    instance.is_deleted = True
+                    instance.save()
+                    continue
+                else:
+                    serializer = CourseProgramSerializer(data=course_program, instance=instance)
+            else:
+                serializer = CourseProgramSerializer(data=course_program)
 
             if serializer.is_valid():
                 serializer.save()
@@ -84,7 +96,7 @@ def read_course_programs(request):
         filters = extract_json_data(request)
         course_id = filters.get("uuid", None)
 
-        query_set = CourseProgram.objects.filter(course=course_id)
+        query_set = CourseProgram.objects.filter(course=course_id, is_deleted=False)
 
         for qs in query_set:
             row = qs.get_dict()

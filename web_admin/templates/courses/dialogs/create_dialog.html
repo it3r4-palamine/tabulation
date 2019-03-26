@@ -78,7 +78,7 @@
 
                             <tbody>
 
-                                <tr ng-repeat="record in main.course_programs">
+                                <tr ng-repeat="record in main.course_programs" ng-show="!record.is_deleted">
                                     <td>
                                         <ui-select ng-model="record.program">
                                             <ui-select-match>{$ $select.selected.name $}</ui-select-match>
