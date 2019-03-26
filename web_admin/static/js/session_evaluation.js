@@ -21,9 +21,10 @@ app.controller('StudentSessionCtrl', function($scope, $http, $timeout, $element,
 	$scope.filter = { name : "" }
 
 
-	self.create_edit_session = function(student_session, fromDraft, record){
-		$scope.record = {}
-		$scope.record['is_active'] = true
+	self.create_edit_session = function(student_session, fromDraft, record)
+	{
+		$scope.record = {};
+		$scope.record['is_active'] = true;
 
 		if (student_session && !fromDraft ) {
 			$scope.read_transaction_types(record)

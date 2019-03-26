@@ -77,7 +77,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="student_session in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(student_session,false)">
+                            <tr ng-repeat="student_session in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_record(student_session,false)">
                                 <td class="text-left">{$ student_session.name $}</td>
                                 <td class="text-left">{$ student_session.description $}</td>
                                 <td class="text-right">{$ student_session.price | currency $}</td>

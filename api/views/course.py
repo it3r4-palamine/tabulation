@@ -16,8 +16,7 @@ class CourseAPIView(APIView):
 
         for course_program in course_programs:
 
-            uuid = course_program.get("uuid", None)
-
+            uuid                      = course_program.get("uuid", None)
             course_program["course"]  = course_id
             course_program["program"] = course_program["program"].get("uuid")
 
@@ -64,6 +63,14 @@ class CourseAPIView(APIView):
             print(e)
             return error_response(str(e))
 
+    def delete(self, request, uuid):
+        instance = Course.objects.get(pk=uuid)
+        instance.is_deleted = True
+        instance.save()
+        CourseProgram.objects.filter(course=uuid).update(is_deleted=True)
+
+        return success_response()
+
 
 @api_view(["POST"])
 def read_course(request):
@@ -74,9 +81,9 @@ def read_course(request):
         company = get_current_company(request)
 
         if "center_id" in filters:
-            q_filters = Q(company=filters["center_id"])
+            q_filters = Q(company=filters["center_id"]) & Q(is_deleted=False)
         else:
-            q_filters = Q(company=company)
+            q_filters = Q(company=company) & Q(is_deleted=False)
 
         query_set = Course.objects.filter(q_filters).order_by("-date_created")
 

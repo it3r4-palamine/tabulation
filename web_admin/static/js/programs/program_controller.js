@@ -7,7 +7,7 @@ app.controller('ProgramCtrl', function($scope, $http, $timeout, $element, $contr
 	var self = this;
 	let me = this;
 
-	self.current_module 	= "subjects";
+	self.current_module 	= "program";
 	self.pagination			= {};
 	self.session_exercises 	= [];
 	self.records 			= [];
@@ -62,6 +62,11 @@ app.controller('ProgramCtrl', function($scope, $http, $timeout, $element, $contr
 	{
 		record["is_deleted"] = true;
 	};
+
+	self.delete_record = function(record)
+	{
+
+	}
 
 	self.save_record = function(record)
 	{

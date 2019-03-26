@@ -20,7 +20,7 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 	self.course_programs    = [];
 
 
-	self.create_edit_session = function(record)
+	self.create_edit_record = function(record)
 	{
 		$scope.record = {};
 
@@ -47,7 +47,7 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 			}
 		});
 
-		response.error(function(response){
+		response.error(function(){
 		    self.course_programs = [{}]
 		});
 	};
@@ -60,6 +60,19 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 	self.remove_course_program = function(record)
 	{
 		record["is_deleted"] = true;
+	};
+
+	self.delete_record = function(record)
+	{
+		let confirmation = CommonFunc.confirmation("Delete Course " + record.name + "?");
+		confirmation.then(function(){
+
+			self.delete_api("course/delete/" + record.uuid, null, "main")
+				.success(function(response){
+					Notification.success(response);
+					self.main_loader();
+				})
+		})
 	};
 
 	self.save_record = function(record)

@@ -46,6 +46,7 @@ urlpatterns = [
 
     url(r'^course/create/$', course.CourseAPIView.as_view()),
     url(r'^course/read/$', course.read_course),
+    url(r'^course/delete/(?P<uuid>[\w\-]+)$', course.CourseAPIView.as_view()),
     url(r'^course/read_course_programs/$', course.read_course_programs),
 
     url(r'^program/create/$', program.ProgramAPIView.as_view()),

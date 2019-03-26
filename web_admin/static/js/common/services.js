@@ -366,128 +366,53 @@ app.factory("Subsidiary2", function(CommonFunc,CommonRead) {
     }
 })
 
-app.factory("RightClick", function(Notification){
+app.factory("RightClick", function(){
     return {
-        get_menu: function(scope, record, is_yahshuan){
-            menu = []
-            copy_menu = ['Copy', function ($itemScope, $event, modelValue, text, $li) {
-                if (scope.current_module == "general_journal")
-                    scope.load_to_edit(record,'copy',false)
-                else
-                    scope.load_to_edit(record,true,true,true)
-            }]
-            attach_menu = ['Attach', function ($itemScope, $event, modelValue, text, $li) {
-                scope.attachment_dialog(record)
-            }]
-
-            /*For P.O and S.O*/
-            po_so_close_menu = ['Close', function ($itemScope, $event, modelValue, text, $li) {
-                scope.close(record)
-            }]
-
-            reverse_menu= ['Reverse', function ($itemScope, $event, modelValue, text, $li) {
-                scope.load_to_edit(record,'reverse',false)
-            }]
-            related_menu = ['Related', function ($itemScope, $event, modelValue, text, $li) {
-                scope.related_transactions(scope,record)
-            }]
-
-            findings_menu = ['Findings', function ($itemScope, $event, modelValue, text, $li) {
-                scope.FindingsService.open_dialog(scope,record)
-            }]
+        get_menu: function(scope, record)
+        {
+            var menu = [];
 
             view_manage_sessions_menu = ['View Session', function($itemScope, $event, modelValue, text, $li) {
                 scope.open_session_handler_dialog(record)
-            }]
+            }];
 
             print_menu = ['Print', function($itemScope, $event, modelValue, text, $li){
-                if(scope.current_module == "enrollment_list"){
+                if(scope.current_module === "enrollment_list"){
                     scope.print_enrollment_form(record)
-                }else if(scope.current_module == "evaluation_list"){
+                }else if(scope.current_module === "evaluation_list"){
                     scope.print_student_session(record)
                 }
-            }]
+            }];
 
             edit_menu = ["Edit", function($itemScope, $event, modelValue, text, $li){
-                scope.create_edit_session(record)
-            }]
+                if (scope.current_module == "evaluation_list")
+                {
+                    scope.create_edit_session(record);
+                } else {
+                    scope.create_edit_record(record);
+                }
+            }];
             
             remove_menu = ['Delete', function ($itemScope, $event, modelValue, text, $li) {
                 scope.delete_student_session(record);
-            }]
-
-            //Stock in and Stock Out
-            close_menu = ['Close', function ($itemScope, $event, modelValue, text, $li) {
-                scope.set_to_closed(record);
-            }]
-            receive_menu = ['Receive', function ($itemScope, $event, modelValue, text, $li) {
-                scope.receive_transfer(record);
-            }]
-            reject_menu = ['Reject', function ($itemScope, $event, modelValue, text, $li) {
-                scope.reject_transfer(record);
-            }]
-
-            show_ledger_menu = ['Show Ledger', function($itemScope, $event, modelValue, text, $li) {
-                scope.show_ledger(record);
-            }]
-
-            status = 'Active'
-            if(scope.current_module == 'employee' || scope.current_module == 'supplier' || scope.current_module == 'customer'){
-                if(record.is_active){
-                    status = 'Inactive'
-                }
-            }
-
-            set_inactive_menu = ['Set '+status, function($itemScope, $event, modelValue, text, $li){
-                scope.set_to_inactive(record);
-            }]
+            }];
 
             delete_menu = ['Delete', function($itemScope, $event, modelValue, text, $li) {
                 if(scope.current_module == "enrollment_list"){
                     scope.delete_enrollment(record)
+                }else{
+                    scope.delete_record(record);
                 }
-            }]
+            }];
+
+            // Attach to Menu
 
             if (scope.key_in_list(scope.current_module, [
+                "course",
                 "evaluation_list"])){
                 menu.push(edit_menu);
             }
 
-            if (scope.key_in_list(scope.current_module,[
-                "monitoring",
-                "purchase_order",
-                "receive_inventory",
-                "paybills","sales_order",
-                "invoice",
-                "credit_memo",
-                "sales_collections",
-                "general_journal"])) {
-                menu.push(attach_menu)
-            }
-            if (scope.key_in_list(scope.current_module,["general_journal"])){
-                menu.push(reverse_menu)
-            }
-            if (scope.key_in_list(scope.current_module,[
-                "purchase_order",
-                "receive_inventory",
-                "paybills",
-                "sales_order",
-                "invoice",
-                "sales_collections",
-                "general_journal"])){
-                menu.push(related_menu)
-            }
-            if (scope.key_in_list(scope.current_module,[
-                "monitoring",
-                "paybills",
-                "invoice",
-                "sales_order",
-                "receive_inventory",
-                "purchase_order",
-                "sales_collections",
-                "general_journal"])) {
-                menu.push(copy_menu)
-            }
             if (scope.key_in_list(scope.current_module,[
                 "evaluation_list",
                 "enrollment_list",
@@ -499,6 +424,7 @@ app.factory("RightClick", function(Notification){
                 "invoice"])){
                 menu.push(print_menu)
             }
+
             if (scope.key_in_list(scope.current_module,[
                 "purchase_order",
                 "sales_order"])){
@@ -513,45 +439,9 @@ app.factory("RightClick", function(Notification){
                 menu.push(receive_menu)
             }
 
-            if(is_yahshuan){
-                if (scope.key_in_list(scope.current_module,[
-                    "purchase_order",
-                    "receive_inventory",
-                    "paybills",
-                    "sales_order",
-                    "invoice",
-                    "sales_collections",
-                    "credit_memo",
-                    "general_journal",
-                    "monitoring"])){
-                    menu.push(findings_menu)
-                }
-            }
+            // Divider
+            menu.push(null);
 
-            if (scope.key_in_list(scope.current_module,[
-                "supplier",
-                "customer",])){
-                menu.push(show_ledger_menu)
-            }
-
-            if (scope.key_in_list(scope.current_module,[
-                "employee",
-                "supplier",
-                "customer",])){
-                menu.push(set_inactive_menu)
-            }
-
-            if(scope.key_in_list(scope.current_module,[
-                "enrollment_list",])){
-                menu.push(view_manage_sessions_menu)
-            }
-            
-            menu.push(null)
-            
-            if (scope.key_in_list(scope.current_module,["stock_in"])) {
-                menu.push(reject_menu)
-            }
-            
             if (scope.key_in_list(scope.current_module,[
                 "purchase_order",
                 "receive_inventory",
@@ -570,9 +460,12 @@ app.factory("RightClick", function(Notification){
                 menu.push(remove_menu)
             }
 
-
-
             if(scope.key_in_list(scope.current_module,[
+                "course",
+                "program",
+                "session",
+                "exercise",
+                "question",
                 "enrollment_list",
                 "sessions"])){
                 menu.push(delete_menu)
@@ -581,7 +474,7 @@ app.factory("RightClick", function(Notification){
             return menu
         }
     }
-})
+});
 
 
 app.factory("Notification", function(toastr) {

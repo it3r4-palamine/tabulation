@@ -15,8 +15,7 @@ class ProgramAPIView(APIView):
 
         for program_session in program_sessions:
 
-            uuid = program_session.get("uuid", None)
-
+            uuid                       = program_session.get("uuid", None)
             program_session["program"] = program_id
             program_session["session"] = program_session["session"].get("uuid")
 

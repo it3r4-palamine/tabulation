@@ -222,6 +222,39 @@ var app = angular.module("common_controller",[]).controller('CommonCtrl', functi
 		})
 	};
 
+	me.delete_api = function(url, params, loader_key, notify, assign_response, close_dialog)
+	{
+		if (loader_key) me.page_loader[loader_key] = true;
+		if (!params) params = {};
+
+		let absoluteUrl = baseUrl + url;
+		let api_token = me.apiToken = document.querySelector('input[name="token"]').getAttribute('value');
+
+		let options = {
+			headers : {
+				"Authorization" : "Token " + api_token
+			},
+			params : params
+		};
+
+		return $http.delete(absoluteUrl, options).success(function(response){
+			if (loader_key) me.page_loader[loader_key] = false;
+			if (assign_response) me[assign_response] = response; //not working
+			if (close_dialog) me.close_dialog();
+		}).error(function(response, status){
+			if (loader_key) me.page_loader[loader_key] = false;
+			if (status == -1)
+			{
+				if(notify) Notification.error("Can't Connect to Server.");
+				return;
+			}
+			if (status == 404 || status == 500){
+				if(notify) Notification.error("Connection error. Please contact administrator.");
+				return;
+			}
+		})
+	};
+
 	me.loader2 = function(loader_key,status){
 		// console.log(loader_key)
 		if(loader_key){
