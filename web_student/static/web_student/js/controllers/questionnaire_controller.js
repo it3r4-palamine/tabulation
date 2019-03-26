@@ -25,14 +25,24 @@ angular.module("app")
 
     self.read_questions = function(record)
     {
-        console.log(record);
         let exercise = { "exercise" : record.exercise.id };
-
         let response = self.post_api("question/read_exercise_questions/", exercise);
 
         response.then(function(response){
             let data = response.data;
             self.questions = data.records;
+
+        }, function (response){
+
+        });
+    };
+
+    self.test = function()
+    {
+        let response = self.post_api("student_answers/save/", self.questions);
+
+        response.then(function(response){
+
 
         }, function (response){
 

@@ -76,7 +76,7 @@ urlpatterns = [
 
     url(r'^enrollment/delete/(?P<id>[0-9]+)$', enrollment.EnrollmentAPIView.as_view()),
 
-    url(r'^student_answers/upload/$', student_answers.StudentAnswerAPIView.as_view()),
+    url(r'^student_answers/save/$', student_answers.StudentAnswerAPIView.as_view()),
 
     #
     # Student API

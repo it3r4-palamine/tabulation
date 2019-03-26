@@ -8,5 +8,6 @@ class StudentAnswerSerializer(serializers.ModelSerializer):
         model = StudentAnswer
         fields = ('student',
                   'exercise_question',
-                  'question_choice',
+                  'question',
+                  'answer',
                   )
