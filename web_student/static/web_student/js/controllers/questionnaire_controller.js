@@ -5,12 +5,12 @@ angular.module("app")
     angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
     var self = this;
 
+    self.questions  = [];
     self.session_id = $stateParams.uuid;
 
 
     self.session_exercises = function()
     {
-        console.log(self.session_id)
         let response = self.post_api("session/read_session_exercises/", { "uuid" : self.session_id });
 
         response.then(function(response){
@@ -25,6 +25,8 @@ angular.module("app")
 
     self.read_questions = function(record)
     {
+        self.current_exercise = angular.copy(record);
+
         if (!record.has_answered)
         {
             let exercise = { "exercise" : record.exercise.id };
@@ -54,6 +56,8 @@ angular.module("app")
             };
 
             SweeterAlert.simple(data)
+
+            self.session_exercises();
 
         }, function (response){
             SweeterAlert.error(response)

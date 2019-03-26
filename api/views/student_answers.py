@@ -33,7 +33,7 @@ class StudentAnswerAPIView(APIView):
 
                 if serializer.is_valid():
                     print("Valid")
-                    # answer_ids.append(serializer.save())
+                    answer_ids.append(serializer.save())
                 else:
                     print(serializer.errors)
 

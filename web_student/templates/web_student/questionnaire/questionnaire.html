@@ -50,11 +50,13 @@
 
         <div class="col-lg-6">
 
+            <h2 class="text-center" ng-show="ctrl.questions.length <= 0">Select an Exercise</h2>
 
-            <div class="ibox">
+            <div class="ibox" ng-show="ctrl.questions.length > 0">
 
                 <div class="ibox-title">
-                    <h3>Exercise A</h3>
+                    <h3>{$ ctrl.current_exercise.exercise.name $}</h3>
+                    <h4>Set {$ ctrl.current_exercise.exercise.set_no $}</h4>
 
                     <div class="ibox-tools">
                        <button class="btn btn-outline btn-primary" ng-click="ctrl.test()">Submit</button>
