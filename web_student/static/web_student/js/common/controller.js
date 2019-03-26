@@ -64,26 +64,6 @@ var app = angular.module("common_controller",["common_config"]).controller('Comm
 		};
 
 		return $http.post(absoluteUrl, params, options);
-
-		// return $http.post(absoluteUrl, params, options).then(function(response){
-        //
-		//     console.log(response)
-        //
-		// 	if (dialog_notify) me.page_loader["dialog"] = false;
-		// 	if (loader_key) me.page_loader[loader_key] = false;
-		// 	if (notify) Notification.success(response);
-		// 	if (assign_response) me[assign_response] = response; //not working
-		// 	if (close_dialog) me.close_dialog();
-		// }, function(response,status){
-		// 	if (loader_key) me.page_loader[loader_key] = false;
-		// 	if (dialog_notify) me.page_loader["dialog"] = false;
-		// 	if (status == 404 || status == 500){
-		// 		if(notify) Notification.error("Connection error. Please contact administrator.");
-		// 		return;
-		// 	}
-        //
-		// 	if (notify) Notification.error(response);
-		// });
 	};
 
 	me.get_api = function(url, params, loader_key, notify, assign_response, close_dialog)

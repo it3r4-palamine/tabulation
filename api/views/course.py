@@ -16,6 +16,9 @@ class CourseAPIView(APIView):
 
         for course_program in course_programs:
 
+            if not bool(course_program):
+                continue
+
             uuid                      = course_program.get("uuid", None)
             course_program["course"]  = course_id
             course_program["program"] = course_program["program"].get("uuid")
@@ -61,7 +64,7 @@ class CourseAPIView(APIView):
             return success_response()
         except Exception as e:
             print(e)
-            return error_response(str(e))
+            return error_response(str(e),show_line=True)
 
     def delete(self, request, uuid):
         instance = Course.objects.get(pk=uuid)
