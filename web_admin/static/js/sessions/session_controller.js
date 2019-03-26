@@ -36,7 +36,7 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 
 	self.read_session_exercises = function(record)
 	{
-		let response = self.post_api("session/read_session_exercise/", record, null, false, null, null)
+		let response = self.post_api("session/read_session_exercises/", record, null, false, null, null)
 
 		response.success(function(response){
 			self.session_exercises = response.records;
@@ -60,7 +60,8 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 
 	self.remove_session_exercise = function(record)
 	{
-		self.session_exercises.splice(self.session_exercises.indexOf(record), 1);
+		record["is_deleted"] = true
+		// self.session_exercises.splice(self.session_exercises.indexOf(record), 1);
 	};
 
 	self.delete_record = function(record)

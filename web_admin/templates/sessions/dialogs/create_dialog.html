@@ -61,7 +61,7 @@
 
                             <tbody>
 
-                                <tr ng-repeat="record in main.session_exercises">
+                                <tr ng-repeat="record in main.session_exercises" ng-show="!record.is_deleted">
                                     <td>
                                         <ui-select ng-model="record.exercise">
                                             <ui-select-match>{$ $select.selected.transaction_code $} {$ $select.selected.name $} {$ $select.selected.set_no $}</ui-select-match>

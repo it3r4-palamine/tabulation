@@ -11,9 +11,15 @@ from api.serializers.session import *
 class SessionAPIView(APIView):
 
     @staticmethod
-    def save_session_exercises(session_id, session_exercises):
+    def delete_child(child):
+        child.is_deleted = True
+        child.save()
+
+    def save_session_exercises(self, session_id, session_exercises):
 
         for session_exercise in session_exercises:
+
+            print(session_exercise)
 
             uuid = session_exercise.get("uuid", None)
 
@@ -22,6 +28,10 @@ class SessionAPIView(APIView):
 
             if uuid:
                 instance = SessionExercise.objects.get(pk=uuid)
+
+                if "is_deleted" in session_exercise and session_exercise["is_deleted"]:
+                    self.delete_child(instance)
+
                 serializer = SessionExerciseSerializer(data=session_exercise, instance=instance)
             else:
                 serializer = SessionExerciseSerializer(data=session_exercise)
@@ -82,10 +92,8 @@ def read_student_sessions(request):
         user    = get_current_user(request)
 
         array_course_uuid  = Enrollment.objects.filter(user=user, is_active=True,is_deleted=False).values_list('course', flat=True)
-        array_program_uuid = CourseProgram.objects.filter(course__in=array_course_uuid).values_list('program', flat=True)
-        query_set_sessions = ProgramSession.objects.filter(program__in=array_program_uuid)
-
-        print(query_set_sessions.count())
+        array_program_uuid = CourseProgram.objects.filter(course__in=array_course_uuid,is_deleted=False).values_list('program', flat=True)
+        query_set_sessions = ProgramSession.objects.filter(program__in=array_program_uuid,is_deleted=False)
 
         for qs in query_set_sessions:
             records.append(qs.get_dict(dict_type=dict_types.AS_SESSION))
@@ -125,7 +133,7 @@ def read_session_exercise(request):
         filters    = extract_json_data(request)
         session_id = filters.get("uuid", None)
 
-        query_set = SessionExercise.objects.filter(session=session_id).order_by("-date_created")
+        query_set = SessionExercise.objects.filter(session=session_id,is_deleted=False).order_by("-date_created")
 
         for qs in query_set:
             row = qs.get_dict()

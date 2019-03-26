@@ -17,19 +17,14 @@
                     <table class="table table-hover table-mail">
                         <tbody>
 
-                            <tr class="read">
-                                <td class="mail-subject"><a href="mail_detail.html">Exercise Set A</a></td>
+                            <tr class="read" ng-repeat="record in ctrl.session_exercises" ng-click="ctrl.read_questions(record)">
+                                <td class="mail-subject">
+                                    <a>{$ record.exercise.transaction_code $}</a>
+                                    <br>
+                                    <span>{$ record.exercise.name $}</span>
+                                    <span>{$ record.exercise.set_no $}</span>
+                                </td>
                                 <td ><i class="fa fa-check-circle" style="color: forestgreen"></i></td>
-                            </tr>
-
-                            <tr class="read">
-                                <td class="mail-subject"><a href="mail_detail.html">Exercise Set B</a></td>
-                                <td class=""><i class="fa fa-check-circle"></i></td>
-                            </tr>
-
-                            <tr class="unread">
-                                <td class="mail-subject"><a href="mail_detail.html">Exercise Set C</a></td>
-                                <td class=""><i class="fa fa-check-circle"></i></td>
                             </tr>
 
                         </tbody>

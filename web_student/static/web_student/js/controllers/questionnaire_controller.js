@@ -10,18 +10,25 @@ angular.module("app")
 
     self.session_exercises = function()
     {
-        let response = self.post_api("/session_exercises/read/");
+        console.log(self.session_id)
+        let response = self.post_api("session/read_session_exercises/", { "uuid" : self.session_id });
 
         response.then(function(response){
+
+            let data = response.data;
+            self.session_exercises = data.records;
 
         }, function (response){
 
         });
     };
 
-    self.read_questions = function()
+    self.read_questions = function(record)
     {
-        let response = self.post_api("question/read/");
+        console.log(record);
+        let exercise = { "exercise" : record.exercise.id };
+
+        let response = self.post_api("question/read_exercise_questions/", exercise);
 
         response.then(function(response){
             let data = response.data;
@@ -33,6 +40,4 @@ angular.module("app")
     };
 
     self.session_exercises();
-
-    self.read_questions();
 });

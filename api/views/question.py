@@ -132,8 +132,7 @@ def read_exercise_questions(request):
         records = []
         results = {}
 
-        print(data)
-        query_set = ExerciseQuestion.objects.filter(exercise=data["exercise"])
+        query_set = ExerciseQuestion.objects.filter(exercise=data["exercise"],is_deleted=False)
 
         for qs in query_set:
             row = qs.get_dict(dict_type=dict_types.QUESTION_ONLY)
