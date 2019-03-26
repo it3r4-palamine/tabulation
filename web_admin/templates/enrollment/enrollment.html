@@ -1,6 +1,13 @@
-{% extends "base.html" %} {% load static %} {% block ngapp %}ng-app="enrollment"{% endblock %} {% block ngctrl %}ng-controller="EnrollmentCtrl as main"{% endblock %} {% block title %}Enrollment {% endblock %} {% block loader_js_bottom %}
-<script type="text/javascript" src="{% static 'js/enrollment.js' %}"></script>
+{% extends "base.html" %}
+{% load static %}
+{% block ngapp %}ng-app="enrollment"{% endblock %}
+{% block ngctrl %}ng-controller="EnrollmentCtrl as main"{% endblock %}
+{% block title %}Enrollment {% endblock %}
+
+{% block loader_js_bottom %}
+    <script type="text/javascript" src="{% static 'js/enrollment.js' %}?v=111"></script>
 {% endblock loader_js_bottom %} {% block page_header %}
+
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>Enrollment</h2>
