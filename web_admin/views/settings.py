@@ -416,7 +416,7 @@ def import_transaction_types(request):
 		if check_transaction_type:
 			return error(data['name'] + " already exists.")
 
-		transaction_code_form = Transaction_type_form(data)
+		transaction_code_form = ExerciseForm(data)
 
 		if transaction_code_form.is_valid():
 			transaction_type_save = transaction_code_form.save()

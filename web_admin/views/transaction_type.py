@@ -106,15 +106,15 @@ def create(request):
 					if check_transaction_type.pk != postdata['id']: 
 						return error(check_transaction_type.name + " already exists.")
 
-				transaction_type = Transaction_type_form(postdata, instance=instance)
+				transaction_type = ExerciseForm(postdata, instance=instance)
 			except Exercise.DoesNotExist:
-				transaction_type = Transaction_type_form(postdata, instance=instance)
+				transaction_type = ExerciseForm(postdata, instance=instance)
 		except Exercise.DoesNotExist:
 			try:
 				check_transaction_type = Exercise.objects.get(company=postdata['company'], transaction_code__iexact=postdata['transaction_code'], name__iexact=postdata['name'], is_active=True, set_no=postdata['set_no'])
 				return error(check_transaction_type.name + " already exists.")
 			except Exercise.DoesNotExist:
-				transaction_type = Transaction_type_form(postdata)
+				transaction_type = ExerciseForm(postdata)
 
 		if(transaction_type.is_valid()):
 			transaction_type.save()
@@ -201,7 +201,7 @@ def get_intelex_exercises(request):
 				datus['total_items'] 	  = record['total_items']
 				datus['company'] 		  = datus['company']
 
-				transaction_type_form = Transaction_type_form(datus)
+				transaction_type_form = ExerciseForm(datus)
 
 				if(transaction_type_form.is_valid()):
 					transaction_type_form.save()
