@@ -190,7 +190,8 @@ app.controller("EnrollmentCtrl", function($scope, $http, $timeout, $element, $co
 		var confirmation = CommonFunc.confirmation("Delete Enrollment \n" + data.user.fullname + "?");
 		confirmation.then(function(){
 
-			let response = me.post_generic("/enrollments/delete_enrollment/", data, null, true).then(function(response){
+			let response = me.delete_api("enrollment/delete/" + data.id, null, "main", true);
+			response.then(function(response){
 				self.main_loader();
 			});
 		});

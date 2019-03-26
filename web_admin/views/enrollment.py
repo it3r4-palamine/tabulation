@@ -39,6 +39,7 @@ def get_excess_time(request):
 	except Exception as err:
 		return error_http_response(err, show_line=True)
 
+
 def read_enrollment(request,enrollment_id):
 	try:
 		result = {}
@@ -51,6 +52,7 @@ def read_enrollment(request,enrollment_id):
 	except Exception as e:
 		return error(e)
 
+
 def read_enrollees(request):
 	try:
 		filters = req_data(request,True)
@@ -60,12 +62,12 @@ def read_enrollees(request):
 		pagination = None
 
 		# Get Filters
-		search = filters.pop("search", "")
-		name_search = filters.pop("name_search", "")
-		student_id = filters.pop("student_id",None)
-		program_id = filters.pop("program_id",None)
-		date_from = filters.pop("date_from","")
-		date_to = filters.pop("date_to","")
+		search 		= filters.pop("search", "")
+		student_id 	= filters.pop("student_id",None)
+		program_id 	= filters.pop("program_id",None)
+		date_from 	= filters.pop("date_from","")
+		date_to 	= filters.pop("date_to","")
+
 		session_start_date = filters.pop("session_start_date","")
 		session_end_date = filters.pop("session_end_date","")
 		school_id = filters.pop("school_id",None)
@@ -123,18 +125,20 @@ def read_enrollees(request):
 		# Use select related to improve query speed.
 		related = ["user", "company_rename", "school"]
 
-		programs = Enrollment.objects.filter(q_filters).select_related(*related).order_by("-id")
-		for program in programs:
-			row = program.get_dict(dict_type = DEFAULT)
+		query_set = Enrollment.objects.filter(q_filters).select_related(*related).order_by("-id")
+
+		for qs in query_set:
+
+			row = qs.get_dict()
 
 			if row:
-				row["payments"] = list(program.get_payments())
+				row["payments"] = list(qs.get_payments())
 
 			records.append(row)
 
 		if pagination:
 			pagination["limit"] = 30
-			results.update(generate_pagination(pagination, programs))
+			results.update(generate_pagination(pagination, query_set))
 			records = records[results['starting']:results['ending']]
 		
 		results["records"] = records

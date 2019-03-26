@@ -5,12 +5,20 @@ from rest_framework.views import APIView
 from api.serializers.enrollment import EnrollmentSerializer
 from utils import dict_types
 from utils.model_utils import get_next
+from utils.view_utils import remove_non_numeric_str
 from web_admin.models import Enrollment
 from utils.response_handler import *
 
 
 class EnrollmentAPIView(APIView):
-    pass
+
+    def delete(self, request, id):
+        instance = Enrollment.objects.get(id=id)
+        instance.code = remove_non_numeric_str(str(datetime.now()))
+        instance.is_deleted = True
+        instance.save()
+
+        return success_response()
 
 
 @api_view(["POST"])

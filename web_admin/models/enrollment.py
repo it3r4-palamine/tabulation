@@ -47,7 +47,7 @@ class Enrollment(models.Model):
                 instance['code'] 					= self.code
                 instance['school']                  = self.school.get_dict() if self.school else None
                 instance['user'] 					= self.user.get_dict()
-                instance['user_id'] 				= self.user.id
+                instance['user_id'] 				= self.user.id if self.user else None
                 instance['company_rename'] 			= self.company_rename.get_dict(dict_type=DEVICE) if self.company_rename else None
                 instance['session_credits_seconds'] = self.session_credits.total_seconds() if self.session_credits else 0
                 instance['session_start_date'] 		= self.session_start_date
@@ -146,6 +146,9 @@ class Enrollment(models.Model):
         return instance
 
     def get_total_session_time(self):
+
+        if not self.company_rename:
+            return timedelta(seconds=0)
 
         session_filters = {
             "company_assessment__company_rename__pk" : self.company_rename.id,

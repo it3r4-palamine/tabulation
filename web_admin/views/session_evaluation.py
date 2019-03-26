@@ -190,8 +190,6 @@ def create(request,from_api=False,session=None):
 
 				for exercise in clean_list(session['session_exercises']):
 
-					print(exercise)
-
 					exercise = set_id(exercise)
 					exercise['session'] = update_result.pk
 					exercise_form = SessionExerciseForm(exercise)
@@ -254,7 +252,6 @@ def create(request,from_api=False,session=None):
 		
 		return success_list(result, False)
 	except Exception as e:
-		cprint(e)
 		if result:
 			result.delete()
 

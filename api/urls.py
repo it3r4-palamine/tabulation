@@ -73,11 +73,16 @@ urlpatterns = [
     url(r'^learning_center/read/$', learning_center.LearningCenterAPI.as_view()),
     url(r'^learning_center/read/(?P<center_id>[0-9]+)$', learning_center.LearningCenterAPI.as_view()),
 
+    url(r'^enrollment/delete/(?P<id>[0-9]+)$', enrollment.EnrollmentAPIView.as_view()),
+
     url(r'^student_answers/upload/$', student_answers.StudentAnswerAPIView.as_view()),
 
+    #
     # Student API
+    #
 
     # Get Student's Enrolled Courses/Programs
+    url(r'^enrollment/read/$', enrollment.read_enrolled_programs),
     url(r'^enrollment/read/$', enrollment.read_enrolled_programs),
 
     # Student Enrolls a Course
