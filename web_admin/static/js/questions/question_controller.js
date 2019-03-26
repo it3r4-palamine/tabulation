@@ -55,7 +55,7 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 
 		self.post_api('question/create/', record, null, true, null, false)
 			.success(function(response){
-				// self.close_dialog();
+				self.close_dialog();
 				self.main_loader();
 			}).error(function(response){
 			})
