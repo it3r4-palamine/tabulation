@@ -9,6 +9,8 @@ class StudentAnswerAPIView(APIView):
         try:
             data = extract_json_data(request)
 
+
+
             print(data)
             query_set = QuestionChoices.objects.filter(pk=data["answer"])
 
