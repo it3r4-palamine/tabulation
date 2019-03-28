@@ -84,7 +84,6 @@ urlpatterns = [
 
     # Get Student's Enrolled Courses/Programs
     url(r'^enrollment/read/$', enrollment.read_enrolled_programs),
-    url(r'^enrollment/read/$', enrollment.read_enrolled_programs),
 
     # Student Enrolls a Course
     url(r'^enroll_course/$', enrollment.enroll_course),
