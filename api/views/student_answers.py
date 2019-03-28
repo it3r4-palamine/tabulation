@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 
 from api.serializers.student_answer import StudentAnswerSerializer
+from utils import response_handler
 from utils.response_handler import *
 from web_admin.models.question import *
 
@@ -10,8 +11,10 @@ class StudentAnswerAPIView(APIView):
     def post(self, request):
         answer_ids = []
         try:
-            answers = extract_json_data(request)
-            user = get_current_user(request)
+            data    = extract_json_data(request)
+            user    = get_current_user(request)
+            answers = data.get("questions")
+            session_exercise_uuid =  data.get("session_exercise")
 
             total_correct = 0
             for answer in answers:
@@ -33,7 +36,7 @@ class StudentAnswerAPIView(APIView):
 
                 if serializer.is_valid():
                     print("Valid")
-                    answer_ids.append(serializer.save())
+                    # answer_ids.append(serializer.save())
                 else:
                     print(serializer.errors)
 
@@ -46,6 +49,6 @@ class StudentAnswerAPIView(APIView):
                 for id in answer_ids:
                     id.delete()
 
-            return error_response(str(e),show_line=True)
+            return error_response(response_data=response_handler.CREATE_ERROR,show_line=True)
 
 

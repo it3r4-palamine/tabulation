@@ -196,6 +196,11 @@ ENROLLED_SUCCESS = {
     "message" : "You have been enrolled",
 }
 
+CREATE_ERROR = {
+    "title" : "Something went wrong",
+    "message" : "An unexpected error occured"
+}
+
 CREATE_SUCCESS = {
     "title" : "Successfully created",
     "message" : "Record has been created",

@@ -47,7 +47,12 @@ angular.module("app")
 
     self.test = function()
     {
-        let response = self.post_api("student_answers/save/", self.questions);
+        let data = {
+            "session_exercise" : self.current_exercise.uuid,
+            "questions" : self.questions
+        };
+
+        let response = self.post_api("student_answers/save/", data);
 
         response.then(function(response){
 
@@ -56,14 +61,13 @@ angular.module("app")
                 message : "Exercise Completed"
             };
 
-            SweeterAlert.simple(data)
+            SweeterAlert.simple(data);
 
             self.session_exercises();
 
         }, function (response){
-            SweeterAlert.error(response)
+            SweeterAlert.error(response.data)
         });
     };
 
-    self.session_exercises();
 });

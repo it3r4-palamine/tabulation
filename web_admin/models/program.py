@@ -1,6 +1,6 @@
 from utils import dict_types
 from web_admin.models.common_model import CommonModel
-from web_admin.models.session import Session
+from web_admin.models.session import Session, SessionExercise
 from django.db import models
 
 
@@ -51,11 +51,22 @@ class ProgramSession(CommonModel):
         instance = dict()
 
         if dict_type == dict_types.DEFAULT:
-            instance["uuid"]    = self.pk
-            instance["program"] = self.program.pk
-            instance["session"] = self.session.get_dict() if self.session else None
+            # Will be used in mobile
+            instance["uuid"]      = self.pk
+            instance["program"]   = self.program.pk
+            instance["session"]   = self.session.get_dict() if self.session else None
+            instance["exercises"] = self.get_session_exercises()
 
         if dict_type == dict_types.AS_SESSION:
             instance = self.session.get_dict(dict_type=dict_types.STUDENT_PORTAL) if self.session else None
 
         return instance
+
+    def get_session_exercises(self):
+        records = []
+        query_set = SessionExercise.objects.filter(session=self.session.pk)
+
+        for qs in query_set:
+            records.append(qs.get_dict())
+
+        return records

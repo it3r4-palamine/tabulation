@@ -19,7 +19,6 @@ class StudentAnswer(CommonModel):
         instance = dict()
 
         instance["student"]  = self.student.get_dict()
-        instance["exercise"] = self.exercise.get_dict()
         instance["question"] = self.question.get_dict()
         instance["answer"]   = self.answer.get_dict()
 
