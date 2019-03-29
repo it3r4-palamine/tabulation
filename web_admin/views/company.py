@@ -156,7 +156,7 @@ def get_intelex_subjects(request):
 					if transaction_type.pk not in t_type:
 						t_type.append(transaction_type.pk)
 
-				t_types 					= {}
+				t_types 					= dict()
 				t_types['program_id'] 		= record['id']
 				t_types['is_active'] 		= True
 				t_types['is_intelex'] 		= True
