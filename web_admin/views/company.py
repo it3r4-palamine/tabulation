@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from ..forms.exercise import *
 from ..models.company_assessment import *
 from ..forms.company import *

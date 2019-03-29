@@ -4,15 +4,16 @@ from utils.response_handler import raise_error
 
 
 class Exercise(models.Model):
-    name = models.CharField(max_length=200, blank=True, null=True)
+
+    name             = models.CharField(max_length=200, blank=True, null=True)
     transaction_code = models.CharField(max_length=200, blank=True, null=True)
-    exercise_id = models.IntegerField(blank=True, null=True)
-    program_id = models.IntegerField(blank=True, null=True)
-    set_no = models.IntegerField(blank=True, null=True)
-    total_items = models.IntegerField(blank=True, null=True)
-    is_active = models.BooleanField(default=1)
-    is_intelex = models.BooleanField(default=0)
-    company = models.ForeignKey("Company", blank=True, null=True, on_delete=models.CASCADE)
+    exercise_id      = models.IntegerField(blank=True, null=True)
+    program_id       = models.IntegerField(blank=True, null=True)
+    set_no           = models.IntegerField(blank=True, null=True)
+    total_items      = models.IntegerField(blank=True, null=True)
+    is_active        = models.BooleanField(default=1)
+    is_intelex       = models.BooleanField(default=0)
+    company          = models.ForeignKey("Company", blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
         app_label = "web_admin"
