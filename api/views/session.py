@@ -141,7 +141,7 @@ def read_session_exercise(request):
         for qs in query_set:
 
             row = qs.get_dict()
-            if StudentAnswer.objects.filter(exercise_question__exercise=qs.exercise).exists():
+            if StudentAnswer.objects.filter(session_exercise=qs.pk).exists():
                 row["has_answered"] = True
 
             records.append(row)

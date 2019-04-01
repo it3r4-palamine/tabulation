@@ -49,7 +49,7 @@ class Session(CommonModel):
         count_exercises          = query_set.count()
 
         for qs in query_set:
-            if StudentAnswer.objects.filter(exercise_question__exercise=qs.exercise).exists():
+            if StudentAnswer.objects.filter(session_exercise=qs.pk).exists():
                 count_exercises_answered += 1
 
         if as_percentage:

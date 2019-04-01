@@ -14,16 +14,18 @@ class StudentAnswerAPIView(APIView):
             data    = extract_json_data(request)
             user    = get_current_user(request)
             answers = data.get("questions")
-            session_exercise_uuid =  data.get("session_exercise")
+            session_exercise_uuid = data.get("session_exercise")
 
             total_correct = 0
             for answer in answers:
 
                 if "answer" not in answer:
-                    raise_error(answer["name"] + " has no answer")
+                    error_message = dict(title="Invalid submission", message=answer["name"] + " has no answer")
+                    return error_response(error_message)
 
                 student_answer = dict(
                     student=user,
+                    session_exercise=session_exercise_uuid,
                     exercise_question=answer["exercise_question"],
                     question=answer["uuid"],
                     answer=answer['answer']
@@ -35,8 +37,7 @@ class StudentAnswerAPIView(APIView):
                 serializer = StudentAnswerSerializer(data=student_answer)
 
                 if serializer.is_valid():
-                    print("Valid")
-                    # answer_ids.append(serializer.save())
+                    answer_ids.append(serializer.save())
                 else:
                     print(serializer.errors)
 

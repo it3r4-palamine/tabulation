@@ -65,7 +65,7 @@
                                             <small>Created 03.02.2019</small>
                                         </td>
                                         <td class="project-completion">
-                                                <small>Completion with: {$ record.session_progress $}%</small>
+                                                <small>Completion with: {$ record.session_progress | currency : '' $}%</small>
                                                 <div class="progress progress-mini">
                                                     <div ng-style="{ width: '{$ record.session_progress $}' + '%' }" class="progress-bar"></div>
                                                 </div>

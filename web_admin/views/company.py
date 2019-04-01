@@ -72,6 +72,7 @@ def read(request):
 	except Exception as e:
 		return HttpResponse(e, status = 400)
 
+
 def create(request):
 	try: 
 		postdata = req_data(request,True)
