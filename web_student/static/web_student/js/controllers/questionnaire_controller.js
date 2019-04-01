@@ -30,8 +30,6 @@ angular.module("app")
 
         if (!record.has_answered)
         {
-            console.log(record);
-
             let exercise = { "exercise" : record.exercise.id };
             let response = self.post_api("question/read_exercise_questions/", exercise);
 
