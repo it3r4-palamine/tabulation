@@ -10,7 +10,7 @@ angular.module("app")
     self.session_name = $stateParams.name;
 
 
-    self.session_exercises = function()
+    self.read_session_exercises = function()
     {
         let response = self.post_api("session/read_session_exercises/", { "uuid" : self.session_id });
 
@@ -63,7 +63,7 @@ angular.module("app")
 
             SweeterAlert.simple(data);
 
-            self.session_exercises();
+            self.read_session_exercises();
 
         }, function (response){
             SweeterAlert.error(response.data)

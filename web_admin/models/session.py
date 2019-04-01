@@ -85,6 +85,17 @@ class SessionExercise(CommonModel):
 
         return instance
 
+    def get_exercise_score(self):
+        total_score = 0
+
+        query_set = StudentAnswer.objects.filter(session_exercise=self.pk)
+
+        for qs in query_set:
+            if qs.answer.is_correct:
+                total_score += 1
+
+        return str(total_score) + "/" + str(query_set.count())
+
 
 class StudentSession(models.Model):
     

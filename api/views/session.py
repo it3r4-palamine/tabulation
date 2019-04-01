@@ -139,10 +139,11 @@ def read_session_exercise(request):
         query_set = SessionExercise.objects.filter(session=session_id,is_deleted=False).order_by("-date_created")
 
         for qs in query_set:
-
             row = qs.get_dict()
+
             if StudentAnswer.objects.filter(session_exercise=qs.pk).exists():
                 row["has_answered"] = True
+                row["score"] = qs.get_exercise_score()
 
             records.append(row)
 

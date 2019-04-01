@@ -1,5 +1,5 @@
 {% load staticfiles %}
-<div class="" ng-init="ctrl.session_exercises()">
+<div class="" ng-init="ctrl.read_session_exercises()">
 
 
 
@@ -21,7 +21,8 @@
                                     <a>{$ record.exercise.transaction_code $}</a>
                                     <br>
                                     <span>{$ record.exercise.name $}</span>
-                                    <span>{$ record.exercise.set_no $}</span>
+                                    <span>{$ record.exercise.set_no $}</span><br>
+                                    <span>Score : <b>{$ record.score $}</b></span>
                                 </td>
                                 <td>
                                     <i class="fa fa-check-circle" style="color: forestgreen" ng-show="record.has_answered"></i>
