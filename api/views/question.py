@@ -134,6 +134,7 @@ def read_exercise_questions(request):
         records = []
         results = {}
 
+        # Prepare Required Parameters for reading question and answers
         session_uuid          = data.get("session", None)
         session_exercise_uuid = data.get("session_exercise", None)
         exercise_uuid         = data.get("exercise", None)
