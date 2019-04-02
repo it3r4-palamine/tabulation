@@ -49,7 +49,7 @@ angular.module("app")
 
     self.enroll_course = function()
     {
-        CommonFunc.confirmation("Confirm Enrollment", "pag sure, mahal baya ni", null, null, function(){
+        CommonFunc.confirmation("Confirm Enrollment", "Wait for your enrollment to be approved", null, null, function(){
 
             let response = self.post_api("enroll_course/", self.course, "main");
 
