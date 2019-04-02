@@ -125,7 +125,7 @@ def read_questions(request):
         return error_response(str(e))
 
 
-# Used in Questionnaire
+# Used in Questionnaire Module
 # Student Portal, used to retrieve questions when selecting a exercises
 @api_view(["POST"])
 def read_exercise_questions(request):
