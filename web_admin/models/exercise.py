@@ -44,9 +44,10 @@ class Exercise(models.Model):
 
 
 class ExerciseQuestion(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    exercise = models.ForeignKey("Exercise", on_delete=models.CASCADE, blank=True, null=True)
-    question = models.ForeignKey("Question", on_delete=models.CASCADE)
+
+    uuid       = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    exercise   = models.ForeignKey("Exercise", on_delete=models.CASCADE, blank=True, null=True)
+    question   = models.ForeignKey("Question", on_delete=models.CASCADE)
     is_deleted = models.BooleanField(default=False)
 
     class Meta:
@@ -68,6 +69,9 @@ class ExerciseQuestion(models.Model):
             if dict_type == dict_types.QUESTION_ONLY:
                 instance = self.question.get_dict(dict_type=dict_types.QUESTION_ONLY) if self.question else None
                 instance["exercise_question"] = self.pk
+
+            if dict_type == dict_types.QUESTION_W_ANSWER:
+                instance = self.question.get_dict(dict_type=dict_types.QUESTION_W_ANSWER) if self.question else None
 
             return instance
         except Exception as e:

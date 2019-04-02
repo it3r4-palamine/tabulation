@@ -30,6 +30,12 @@ class Question(CommonModel):
 			instance["name"] 			 = self.name
 			instance["question_choices"] = self.get_question_choices(dict_type)
 
+		if dict_type == dict_types.QUESTION_W_ANSWER:
+
+			instance["uuid"] = str(self.pk)
+			instance["name"] = self.name
+			instance["question_choices"] = self.get_question_choices(dict_types.DEFAULT)
+
 		return instance
 
 	def get_question_choices(self,dict_type):

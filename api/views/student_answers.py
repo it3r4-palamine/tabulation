@@ -14,6 +14,7 @@ class StudentAnswerAPIView(APIView):
             data    = extract_json_data(request)
             user    = get_current_user(request)
             answers = data.get("questions")
+            session = data.get("session")
             session_exercise_uuid = data.get("session_exercise")
 
             total_correct = 0
@@ -25,6 +26,7 @@ class StudentAnswerAPIView(APIView):
 
                 student_answer = dict(
                     student=user,
+                    session=session,
                     session_exercise=session_exercise_uuid,
                     exercise_question=answer["exercise_question"],
                     question=answer["uuid"],

@@ -7,6 +7,7 @@ class StudentAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentAnswer
         fields = ('student',
+                  'session',
                   'session_exercise',
                   'exercise_question',
                   'question',

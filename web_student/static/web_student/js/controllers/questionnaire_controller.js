@@ -28,9 +28,16 @@ angular.module("app")
     {
         self.current_exercise = angular.copy(record);
 
-        if (!record.has_answered)
+        console.log(record);
+
+        if (true)
         {
-            let exercise = { "exercise" : record.exercise.id };
+            let exercise = {
+                "session" : self.session_id,
+                "exercise" : record.exercise.id,
+                "session_exercise" : record.session
+            };
+
             let response = self.post_api("question/read_exercise_questions/", exercise);
 
             response.then(function(response){
@@ -48,6 +55,7 @@ angular.module("app")
     self.submit_answers = function()
     {
         let data = {
+            "session" : self.session_id,
             "session_exercise" : self.current_exercise.uuid,
             "questions" : self.questions
         };

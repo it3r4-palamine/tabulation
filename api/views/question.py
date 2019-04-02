@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
-from web_admin.models import ExerciseQuestion
+from web_admin.models import ExerciseQuestion, StudentAnswer
 from web_admin.views.common import raise_error
 from utils import error_messages, dict_types, response_handler
 from utils.response_handler import *
@@ -125,6 +125,8 @@ def read_questions(request):
         return error_response(str(e))
 
 
+# Used in Questionnaire
+# Student Portal, used to retrieve questions when selecting a exercises
 @api_view(["POST"])
 def read_exercise_questions(request):
     try:
@@ -136,6 +138,14 @@ def read_exercise_questions(request):
 
         for qs in query_set:
             row = qs.get_dict(dict_type=dict_types.QUESTION_ONLY)
+
+            try:
+                query_set = StudentAnswer.objects.get(session=data["session"], exercise_question=qs.pk, question=qs.question.pk)
+                row = qs.get_dict(dict_type=dict_types.QUESTION_W_ANSWER)
+                row["answer"] = query_set.answer.pk
+            except StudentAnswer.DoesNotExist:
+                pass
+
             records.append(row)
 
         results["records"] = records
