@@ -30,26 +30,21 @@ angular.module("app")
 
         console.log(record);
 
-        if (true)
-        {
-            let exercise = {
-                "session" : self.session_id,
-                "exercise" : record.exercise.id,
-                "session_exercise" : record.session
-            };
+        let exercise = {
+            "session" : self.session_id,
+            "exercise" : record.exercise.id,
+            "session_exercise" : record.uuid
+        };
 
-            let response = self.post_api("question/read_exercise_questions/", exercise);
+        let response = self.post_api("question/read_exercise_questions/", exercise);
 
-            response.then(function(response){
-                let data = response.data;
-                self.questions = data.records;
+        response.then(function(response){
+            let data = response.data;
+            self.questions = data.records;
 
-            }, function (response){
+        }, function (response){
 
-            });
-        } else {
-            SweeterAlert.error({title: "Exercise already answered", message: ""})
-        }
+        });
     };
 
     self.submit_answers = function()

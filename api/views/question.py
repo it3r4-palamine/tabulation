@@ -134,13 +134,20 @@ def read_exercise_questions(request):
         records = []
         results = {}
 
-        query_set = ExerciseQuestion.objects.filter(exercise=data["exercise"],is_deleted=False)
+        session_uuid          = data.get("session", None)
+        session_exercise_uuid = data.get("session_exercise", None)
+        exercise_uuid         = data.get("exercise", None)
+
+        if not session_uuid or not session_exercise_uuid or not exercise_uuid:
+            raise_error("Something went wrong")
+
+        query_set = ExerciseQuestion.objects.filter(exercise=exercise_uuid,is_deleted=False)
 
         for qs in query_set:
             row = qs.get_dict(dict_type=dict_types.QUESTION_ONLY)
 
             try:
-                query_set = StudentAnswer.objects.get(session=data["session"], exercise_question=qs.pk, question=qs.question.pk)
+                query_set = StudentAnswer.objects.get(session=session_uuid, session_exercise=session_exercise_uuid, exercise_question=qs.pk, question=qs.question.pk)
                 row = qs.get_dict(dict_type=dict_types.QUESTION_W_ANSWER)
                 row["answer"] = query_set.answer.pk
                 row["answered_correct"] = query_set.answer.is_correct
