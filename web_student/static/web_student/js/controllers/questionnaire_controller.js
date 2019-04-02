@@ -28,8 +28,6 @@ angular.module("app")
     {
         self.current_exercise = angular.copy(record);
 
-        console.log(record);
-
         let exercise = {
             "session" : self.session_id,
             "exercise" : record.exercise.id,
