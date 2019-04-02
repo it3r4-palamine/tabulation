@@ -143,6 +143,8 @@ def read_exercise_questions(request):
                 query_set = StudentAnswer.objects.get(session=data["session"], exercise_question=qs.pk, question=qs.question.pk)
                 row = qs.get_dict(dict_type=dict_types.QUESTION_W_ANSWER)
                 row["answer"] = query_set.answer.pk
+                row["answered_correct"] = query_set.answer.is_correct
+
             except StudentAnswer.DoesNotExist:
                 pass
 

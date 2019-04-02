@@ -22,7 +22,7 @@ class StudentAnswerAPIView(APIView):
 
                 if "answer" not in answer:
                     error_message = dict(title="Invalid submission", message=answer["name"] + " has no answer")
-                    return error_response(error_message)
+                    raise_error(error_message)
 
                 student_answer = dict(
                     student=user,

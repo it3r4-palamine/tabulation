@@ -69,15 +69,18 @@
                     <div class="feed-activity-list">
 
                         <div class="feed-element" ng-repeat="record in ctrl.questions">
-                            <div class="media-body ">
+                            <div class="media-body">
+
                                 <h3 class="pull-left">{$ record.name $}</h3>
-                                <small class="float-right" ng-hide="true">30 Points</small>
+                                <span class="float-right" style="margin-top: -30px" ng-show="ctrl.current_exercise.has_answered">
+                                    <i style="font-size: 30px;" ng-class="{ 'fa-check-circle' : record.answered_correct , 'fa-times-circle' : !record.answered_correct }" class="fa" ng-style="{ 'color' : record.answered_correct ? 'green' : 'red' }"></i>
+                                </span>
 
                                 <br>
 
                                 <p ng-repeat="choice in record.question_choices">
-                                    <input icheck type="radio" id="{$ choice.uuid $}" ng-model="record.answer" ng-value="choice.uuid"> {$ choice.name $}
-                                    <b class="text-success" ng-show="choice.is_correct"><i style="color:green" class="fa fa-check-circle"></i> Correct Answer</b>
+                                    <input ng-disabled="ctrl.current_exercise.has_answered" icheck type="radio" id="{$ choice.uuid $}" ng-model="record.answer" ng-value="choice.uuid"> {$ choice.name $}
+                                    <b style="color:green" ng-show="choice.is_correct"><i style="color:green" class="fa fa-check-circle"></i> Correct Answer</b>
                                 </p>
 
                             </div>
