@@ -73,14 +73,11 @@
                                 <h3 class="pull-left">{$ record.name $}</h3>
                                 <small class="float-right">30 Points</small>
 
-                                <label for="test" ng-repeat="choice in record.question_choices">
-                                    <p>
-                                        <input type="radio" id="{$ choice.uuid $}" ng-model="record.answer" ng-value="choice.uuid"> {$ choice.name $}
-                                    </p>
+                                <br>
 
-                                </label>
-
-
+                                <p ng-repeat="choice in record.question_choices">
+                                    <input icheck type="radio" id="{$ choice.uuid $}" ng-model="record.answer" ng-value="choice.uuid"> {$ choice.name $}
+                                </p>
 
                             </div>
                         </div>
