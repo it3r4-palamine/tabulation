@@ -45,7 +45,7 @@ angular.module("app")
         }
     };
 
-    self.test = function()
+    self.submit_answers = function()
     {
         let data = {
             "session_exercise" : self.current_exercise.uuid,
@@ -64,6 +64,7 @@ angular.module("app")
             SweeterAlert.simple(data);
 
             self.read_session_exercises();
+            self.questions = [];
 
         }, function (response){
             SweeterAlert.error(response.data)
