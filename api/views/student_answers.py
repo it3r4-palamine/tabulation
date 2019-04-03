@@ -57,7 +57,7 @@ class StudentAnswerAPIView(APIView):
                 for id in answer_ids:
                     id.delete()
 
-            return error_response(response_data=response_handler.CREATE_ERROR,show_line=True)
+            return error_response(response_data=e,show_line=True)
 
 
 @api_view(["POST"])
