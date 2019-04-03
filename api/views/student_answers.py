@@ -1,8 +1,10 @@
+from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from api.serializers.student_answer import StudentAnswerSerializer
 from utils import response_handler
 from utils.response_handler import *
+from web_admin.models import StudentAnswer
 from web_admin.models.question import *
 
 
@@ -54,4 +56,13 @@ class StudentAnswerAPIView(APIView):
 
             return error_response(response_data=response_handler.CREATE_ERROR,show_line=True)
 
+
+@api_view(["POST"])
+def clear_all_answers(request):
+    try:
+        query_set = StudentAnswer.objects.all().delete()
+
+        return success_response("Succcess")
+    except Exception as e:
+        return error_response(e)
 

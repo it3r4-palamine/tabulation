@@ -19,6 +19,15 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 	$scope.filter 			= { name : "" };
 	self.course_programs    = [];
 
+	self.clear_all_answers = function()
+	{
+		let response = self.post_api("student_answers/clear_all/", null, null, false, null, null);
+
+		response.success(function(response){
+			swal("All answers cleared")
+		})
+	};
+
 
 	self.create_edit_record = function(record)
 	{
