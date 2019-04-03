@@ -65,14 +65,14 @@
                         <thead>
                             <tr>
                                 <th>Choice</th>
-                                <th>Is Correct Choice</th>
+                                <th>Correct Choice</th>
                             </tr>
                         </thead>
                         <tbody>
 
                             <tr ng-repeat="choice in main.question_choices">
                                 <td><input type="text" class="form-control" ng-model="choice.name"></td>
-                                <td><center><input type="checkbox" name="choice" ng-model="choice.is_correct" ng-value="selected"></center></td>
+                                <td><center><input icheck type="checkbox" name="choice" ng-model="choice.is_correct" ng-value="selected"></center></td>
                                 <td>
                                     <button class="btn btn-danger btn-xs" ng-click="main.delete_question_choices(choice)"><i class="fa fa-remove"></i></button>
                                 </td>
