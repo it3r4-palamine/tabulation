@@ -19,6 +19,9 @@ class StudentAnswerAPIView(APIView):
             session = data.get("session")
             session_exercise_uuid = data.get("session_exercise")
 
+            if len(answers) == 0:
+                raise_error("No Answers received")
+
             total_correct = 0
             for answer in answers:
 
