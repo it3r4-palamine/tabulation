@@ -61,6 +61,8 @@ angular.module("app")
                 SweeterAlert.error(data);
 
             });
+        }, function(){
+
         })
     };
 
