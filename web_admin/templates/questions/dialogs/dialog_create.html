@@ -28,11 +28,11 @@
         <form class="form-horizontal" name="form">
             
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-xs-12">
                     <label for="">Question</label>
                     <textarea type="text" class="form-control" ng-model="main.record.name"></textarea>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-xs-6" ng-hide="true">
                     <label for="">Question Type</label>
                     <ui-select ng-model="main.record.question_type" required>
                         <ui-select-match>{$ $select.selected.name $}</ui-select-match>
@@ -46,7 +46,7 @@
             <br>
 
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-xs-6" ng-hide="true">
                     <label for="">Subject</label>
                     <ui-select ng-model="main.record.subject" required>
                         <ui-select-match>{$ $select.selected.name $}</ui-select-match>

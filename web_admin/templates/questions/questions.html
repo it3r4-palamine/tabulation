@@ -57,15 +57,11 @@
                             <thead>
                                 <tr>
                                     <th>Question Title</th>
-                                    <th>Subject</th>
-                                    <th>Question Type</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr ng-repeat="record in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(record)" ng-click="main.create_edit_record(record)">
                                     <td class="text-left">{$ record.name $}</td>
-                                    <td class="text-left">{$ record.subject.name $}</td>
-                                    <td class="text-left">{$ record.question_type.name $}</td>
                                 </tr>
                             </tbody>
                         </table>
