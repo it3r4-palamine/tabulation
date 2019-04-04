@@ -58,7 +58,7 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
         self.exercise_questions.push({});
     };
 
-	self.remove_exercise_question = function(record)
+	self.remove_session_exercise = function(record)
 	{
 		self.exercise_questions.splice(self.exercise_questions.indexOf(record), 1);
 	};
