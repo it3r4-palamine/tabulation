@@ -89,6 +89,7 @@ def read_programs(request):
         return error_response(str(e))
 
 
+# Called in Mobile
 @api_view(["POST"])
 def read_program_sessions(request):
     try:

@@ -62,7 +62,14 @@ class Session(CommonModel):
         query_set = SessionExercise.objects.filter(session=self.pk, is_deleted=False)
 
         for qs in query_set:
-            records.append(qs.get_dict())
+
+            row = qs.get_dict()
+
+            if StudentAnswer.objects.filter(session_exercise=qs.pk).exists():
+                row["has_answered"] = True
+                row["score"] = qs.get_exercise_score()
+
+            records.append(row)
 
         return records
 
