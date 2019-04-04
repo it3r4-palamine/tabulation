@@ -15,14 +15,15 @@ class StudentAnswerAPIView(APIView):
         try:
             data    = extract_json_data(request)
             user    = get_current_user(request)
-            answers = data.get("questions")
+            answers = data.get("questions", None)
             session = data.get("session")
             session_exercise_uuid = data.get("session_exercise")
 
-            if len(answers) == 0:
-                raise_error("No Answers received")
-
             total_correct = 0
+
+            if not answers:
+                return error_response("No Answer")
+
             for answer in answers:
 
                 if "answer" not in answer:
@@ -53,11 +54,13 @@ class StudentAnswerAPIView(APIView):
             return success_response(result_message)
         except Exception as e:
 
+            print(e)
+
             if answer_ids:
                 for id in answer_ids:
                     id.delete()
 
-            return error_response(response_data=e,show_line=True)
+            return error_response(response_data=str(e),show_line=True)
 
 
 @api_view(["POST"])
