@@ -81,7 +81,7 @@ class SessionExercise(CommonModel):
 
         instance["uuid"]     = self.uuid
         instance["session"]  = self.session.pk
-        instance["exercise"] = self.exercise.get_dict() if self.exercise else None
+        instance["exercise"] = self.exercise.get_dict(dict_type=dict_types.MINIMAL) if self.exercise else None
 
         return instance
 

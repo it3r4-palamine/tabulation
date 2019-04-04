@@ -19,25 +19,29 @@ class Exercise(models.Model):
         app_label = "web_admin"
         db_table = "transaction_types"
 
-    def get_dict(self, isV2=False):
-        transaction_type = {}
+    def get_dict(self, dict_type=dict_types.DEFAULT, isV2=False):
+        instance = {}
 
-        if isV2:
-            transaction_type['transactionTypeId'] = self.pk
-            transaction_type['transactionTypeName'] = self.name
+        if dict_type == dict_types.MINIMAL:
+            instance['id'] = self.pk
+            instance['name'] = self.name
+            instance['transaction_code'] = self.transaction_code
+        elif isV2:
+            instance['transactionTypeId'] = self.pk
+            instance['transactionTypeName'] = self.name
         else:
-            transaction_type['id'] = self.pk
-            transaction_type['name'] = self.name
-            transaction_type['transaction_code'] = self.transaction_code
-            transaction_type['is_active'] = self.is_active
-            transaction_type['exercise_id'] = self.exercise_id
-            transaction_type['program_id'] = self.program_id
-            transaction_type['set_no'] = self.set_no
-            transaction_type['total_items'] = self.total_items
-            transaction_type['is_intelex'] = self.is_intelex
-            transaction_type['company'] = self.company.pk
+            instance['id'] = self.pk
+            instance['name'] = self.name
+            instance['transaction_code'] = self.transaction_code
+            instance['is_active'] = self.is_active
+            instance['exercise_id'] = self.exercise_id
+            instance['program_id'] = self.program_id
+            instance['set_no'] = self.set_no
+            instance['total_items'] = self.total_items
+            instance['is_intelex'] = self.is_intelex
+            instance['company'] = self.company.pk
 
-        return transaction_type
+        return instance
 
     def get_question_count(self):
         return ExerciseQuestion.objects.filter(exercise=self.id, is_deleted=False).count()
