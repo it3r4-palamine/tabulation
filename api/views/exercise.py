@@ -41,7 +41,7 @@ def read_exercise_questions(request):
         results = {}
         records = []
 
-        query_set = ExerciseQuestion.objects.filter(exercise=data["id"]).order_by()[:100]
+        query_set = ExerciseQuestion.objects.filter(exercise=data["id"]).order_by()
 
         for qs in query_set:
             records.append(qs.get_dict())
@@ -66,7 +66,7 @@ def read_exercise(request):
             search         = filters.get("search")
             query_filters &= Q(name__icontains=search) | Q(transaction_code__icontains=search)
 
-        query_set = Exercise.objects.filter(query_filters).order_by("name", "set_no")[:100]
+        query_set = Exercise.objects.filter(query_filters).order_by("name", "set_no")
 
         for qs in query_set:
             row = qs.get_dict()
