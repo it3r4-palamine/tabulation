@@ -1,4 +1,5 @@
 from utils import dict_types
+from web_admin.models import StudentAnswer
 from web_admin.models.common_model import CommonModel
 from web_admin.models.session import Session, SessionExercise
 from django.db import models
@@ -67,6 +68,13 @@ class ProgramSession(CommonModel):
         query_set = SessionExercise.objects.filter(session=self.session.pk)
 
         for qs in query_set:
-            records.append(qs.get_dict())
+
+            row = qs.get_dict()
+
+            if StudentAnswer.objects.filter(session_exercise=qs.pk).exists():
+                row["has_answered"] = True
+                row["score"] = qs.get_exercise_score()
+
+            records.append(row)
 
         return records
