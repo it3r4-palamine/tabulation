@@ -7,7 +7,7 @@ class CommonModel(models.Model):
 
     uuid         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     code         = models.CharField(max_length=100, blank=True, null=True)
-    name         = models.CharField(max_length=250, blank=False, null=False)
+    name         = models.TextField(blank=False, null=False)
     description  = models.CharField(max_length=250, blank=True, null=True)
     company      = models.ForeignKey("Company", blank=True, null=True, on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=timezone.now, blank=True, null=True)
