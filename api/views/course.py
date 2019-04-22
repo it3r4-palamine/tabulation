@@ -104,7 +104,7 @@ def read_course(request):
         if search:
             q_filters &= Q(name__icontains=search) | Q(description__icontains=search)
 
-        query_set = Course.objects.filter(q_filters).order_by("-date_created")
+        query_set = Course.objects.filter(q_filters).order_by("name", "-date_created")
 
         for qs in query_set:
             row = qs.get_dict()

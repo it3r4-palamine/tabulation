@@ -122,7 +122,7 @@ def read_sessions(request):
         records = []
         company = get_current_company(request)
 
-        query_set = Session.objects.filter(company=company,is_deleted=False).order_by("-date_created")
+        query_set = Session.objects.filter(company=company,is_deleted=False).order_by("name", "-date_created")
 
         for qs in query_set:
             row = qs.get_dict()
