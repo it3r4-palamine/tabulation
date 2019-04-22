@@ -83,7 +83,7 @@ class Enrollment(models.Model):
                 return instance
 
             if dict_type == STUDENT:
-
+                print('sdfds')
                 instance["id"] = self.id
                 instance["course"] = self.course.get_dict() if self.course else None
                 instance["program"] = self.company_rename.get_dict() if self.company_rename else None

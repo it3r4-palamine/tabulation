@@ -29,7 +29,7 @@ class Session(CommonModel):
             instance["name"]              = self.name
             instance["description"]       = self.description
             instance["company"]           = self.company.id
-            instance["session_exercises"] = self.get_session_exercises()
+            instance["session_exercises"] = self.get_session_exercises(enrollment_id, program_id)
 
         if dict_type == dict_types.STUDENT_PORTAL:
 
