@@ -13,7 +13,13 @@ angular.module("app")
 
     self.read_session_exercises = function()
     {
-        let response = self.post_api("session/read_session_exercises/", { "uuid" : self.session_id });
+        let filters = {
+            "uuid" : self.session_id,
+            "enrollment_id" : self.enrollment_id,
+            "program_id" : self.program_id
+        };
+
+        let response = self.post_api("session/read_session_exercises/", filters);
 
         response.then(function(response){
 
@@ -32,7 +38,9 @@ angular.module("app")
         let exercise = {
             "session" : self.session_id,
             "exercise" : record.exercise.id,
-            "session_exercise" : record.uuid
+            "session_exercise" : record.uuid,
+            "enrollment_id" : self.enrollment_id,
+            "program_id" : self.program_id
         };
 
         let response = self.post_api("question/read_exercise_questions/", exercise);

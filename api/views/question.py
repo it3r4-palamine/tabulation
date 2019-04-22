@@ -138,6 +138,8 @@ def read_exercise_questions(request):
         session_uuid          = data.get("session", None)
         session_exercise_uuid = data.get("session_exercise", None)
         exercise_uuid         = data.get("exercise", None)
+        enrollment_id         = data.get("enrollment_id", None)
+        program_id            = data.get("program_id", None)
 
         if not session_uuid or not session_exercise_uuid or not exercise_uuid:
             raise_error("Something went wrong")
@@ -148,7 +150,13 @@ def read_exercise_questions(request):
             row = qs.get_dict(dict_type=dict_types.QUESTION_ONLY)
 
             try:
-                query_set = StudentAnswer.objects.get(session=session_uuid, session_exercise=session_exercise_uuid, exercise_question=qs.pk, question=qs.question.pk)
+                query_set = StudentAnswer.objects.get(enrollment=enrollment_id,
+                                                      program_id=program_id,
+                                                      session=session_uuid,
+                                                      session_exercise=session_exercise_uuid,
+                                                      exercise_question=qs.pk,
+                                                      question=qs.question.pk)
+
                 row = qs.get_dict(dict_type=dict_types.QUESTION_W_ANSWER)
                 row["answer"] = query_set.answer.pk
                 row["answered_correct"] = query_set.answer.is_correct
