@@ -11,8 +11,9 @@ class Exercise(models.Model):
     program_id       = models.IntegerField(blank=True, null=True)
     set_no           = models.IntegerField(blank=True, null=True)
     total_items      = models.IntegerField(blank=True, null=True)
-    is_active        = models.BooleanField(default=1)
-    is_intelex       = models.BooleanField(default=0)
+    is_active        = models.BooleanField(default=True)
+    is_intelex       = models.BooleanField(default=False)
+    is_post_test     = models.BooleanField(default=False)
     company          = models.ForeignKey("Company", blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
