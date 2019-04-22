@@ -28,6 +28,7 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 			self.record = angular.copy(record);
 			self.read_session_exercises(record);
 		} else {
+			self.session_exercises = [];
 			self.session_exercises.push({});
 		}
 
