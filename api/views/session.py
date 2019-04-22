@@ -164,3 +164,26 @@ def read_session_exercise(request):
         return success_response(results)
     except Exception as e:
         return error_response(str(e))
+
+
+# Used in Student Portal
+@api_view(["POST"])
+def generate_post_test(request):
+    try:
+        session = extract_json_data(request)
+        questions = []
+        query_set_exercises = SessionExercise.objects.filter(session=session["uuid"]).values_list("exercise", flat=True)
+
+        print(query_set_exercises)
+        print(len(query_set_exercises))
+        for item in query_set_exercises:
+            query_set_record_questions = ExerciseQuestion.objects.filter(exercise=item)
+            print(len(query_set_record_questions))
+            for qs in query_set_record_questions:
+                questions.append(qs.get_dict(dict_type=dict_types.QUESTION_ONLY))
+
+        print(len(questions))
+
+        return success_response()
+    except Exception as e:
+        return error_response(str(e))

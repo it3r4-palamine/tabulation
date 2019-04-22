@@ -58,6 +58,7 @@ urlpatterns = [
     url(r'^session/read/$', session.read_sessions),
     url(r'^session/delete/(?P<uuid>[\w\-]+)$', session.SessionAPIView.as_view()),
     url(r'^session/read_session_exercises/$', session.read_session_exercise),
+    url(r'^session/generate_post_test/$', session.generate_post_test),
 
     url(r'^exercise/create/$', exercise.ExerciseAPIView.as_view()),
     url(r'^exercise/read/$', exercise.read_exercise),

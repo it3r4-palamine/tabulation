@@ -78,6 +78,19 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 		})
 	};
 
+	self.generate_post_test = function()
+	{
+		let confirmation = CommonFunc.confirmation("Generate Post Test?");
+		confirmation.then(function(){
+
+			self.post_api("session/generate_post_test/", self.record, "main")
+				.success(function(response){
+					Notification.success(response);
+					self.main_loader();
+				})
+		})
+	};
+
 	self.save_record = function(record)
 	{
 	    let post_data = angular.copy(record);

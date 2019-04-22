@@ -13,6 +13,11 @@
                     <span>Save</span>
                 </button>
 
+                <button ng-disabled="!main.record.uuid" class="btn btn-sm btn-link" ng-click="main.generate_post_test(main.record)">
+                    <i class="fa fa-list-alt dialog-button" class="dialog-button"></i>
+                    <span>Generate Post Test</span>
+                </button>
+
                 <button class="btn btn-sm btn-link" ng-click="main.close_dialog()">
                     <i class="fa fa-times-circle dialog-button"></i>
                     <span>Close</span>
