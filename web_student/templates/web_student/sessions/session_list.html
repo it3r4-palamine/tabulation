@@ -57,7 +57,8 @@
                                     <tbody>
                                     <tr ng-repeat="record in ctrl.sessions">
                                         <td class="project-status">
-                                            <span class="label label-primary">Active</span>
+                                            <span class="label label-primary">{$ record.program_name $}</span>
+
                                         </td>
                                         <td class="project-title">
                                             <a ui-sref="questionnaire({ uuid : '{$ record.uuid $}', name : '{$ record.name $}' })">{$ record.name $}</a>
@@ -74,7 +75,7 @@
 
                                         </td>
                                         <td class="project-actions">
-                                            <a ui-sref="questionnaire({ uuid : '{$ record.uuid $}', name : '{$ record.name $}' })" class="btn btn-white btn-sm"><i class="fas fa-play-circle"></i> Start </a>
+                                            <a ui-sref="questionnaire({ uuid : '{$ record.uuid $}', name : '{$ record.name $}', enrollment_id : '{$ record.enrollment_id $}', program_id : '{$ record.program_id $}' })" class="btn btn-white btn-sm"><i class="fas fa-play-circle"></i> Start </a>
                                         </td>
                                     </tr>
 

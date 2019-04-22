@@ -48,7 +48,7 @@ class ProgramSession(CommonModel):
     def __str__(self):
         return self.name
 
-    def get_dict(self, dict_type=dict_types.DEFAULT):
+    def get_dict(self, dict_type=dict_types.DEFAULT, enrollment_id=None):
         instance = dict()
 
         if dict_type == dict_types.DEFAULT:
@@ -58,7 +58,13 @@ class ProgramSession(CommonModel):
             instance["session"]   = self.session.get_dict() if self.session else None
 
         if dict_type == dict_types.AS_SESSION:
-            instance = self.session.get_dict(dict_type=dict_types.STUDENT_PORTAL) if self.session else None
+
+            instance = self.session.get_dict(dict_type=dict_types.STUDENT_PORTAL,
+                                             enrollment_id=enrollment_id,
+                                             program_id=self.program.pk) if self.session else None
+
+            instance["program_id"]   = self.program.pk
+            instance["program_name"] = self.program.name
 
         return instance
 

@@ -20,7 +20,7 @@ class Session(CommonModel):
     def __str__(self):
         return self.name
 
-    def get_dict(self, dict_type=dict_types.DEFAULT):
+    def get_dict(self, dict_type=dict_types.DEFAULT, enrollment_id=None, program_id=None):
         instance = dict()
 
         if dict_type == dict_types.DEFAULT:
@@ -37,19 +37,19 @@ class Session(CommonModel):
             instance["name"] = self.name
             instance["description"] = self.description
             instance["company"] = self.company.id
-            instance["session_exercises"] = self.get_session_exercises()
-            instance["session_progress"]  = self.get_answered_exercises(as_percentage=True)
+            instance["session_exercises"] = self.get_session_exercises(enrollment_id, program_id)
+            instance["session_progress"]  = self.get_answered_exercises(enrollment_id, program_id, as_percentage=True)
 
         return instance
 
-    def get_answered_exercises(self, as_percentage=False):
+    def get_answered_exercises(self, enrollment_id, program_id, as_percentage=False):
         query_set = SessionExercise.objects.filter(session=self.pk,is_deleted=False)
 
         count_exercises_answered = 0
         count_exercises          = query_set.count()
 
         for qs in query_set:
-            if StudentAnswer.objects.filter(session_exercise=qs.pk).exists():
+            if StudentAnswer.objects.filter(enrollment=enrollment_id, program_id=program_id, session_exercise=qs.pk).exists():
                 count_exercises_answered += 1
 
         if as_percentage:
@@ -57,7 +57,7 @@ class Session(CommonModel):
 
         return count_exercises_answered, count_exercises
 
-    def get_session_exercises(self):
+    def get_session_exercises(self, enrollment_id, program_id):
         records = []
         query_set = SessionExercise.objects.filter(session=self.pk, is_deleted=False)
 
@@ -65,7 +65,7 @@ class Session(CommonModel):
 
             row = qs.get_dict()
 
-            if StudentAnswer.objects.filter(session_exercise=qs.pk).exists():
+            if StudentAnswer.objects.filter(enrollment=enrollment_id, program_id=program_id, session_exercise=qs.pk).exists():
                 row["has_answered"] = True
                 row["score"] = qs.get_exercise_score()
 

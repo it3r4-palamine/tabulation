@@ -44,6 +44,8 @@ app.config(function($stateProvider,$urlRouterProvider) {
         params : {
             uuid : null,
             name : null,
+            enrollment_id : null,
+            program_id : null,
         }
     };
 

@@ -12,4 +12,6 @@ class StudentAnswerSerializer(serializers.ModelSerializer):
                   'exercise_question',
                   'question',
                   'answer',
+                  'enrollment',
+                  'program',
                   )

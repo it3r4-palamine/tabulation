@@ -7,6 +7,8 @@ from django.db import models
 
 class StudentAnswer(CommonModel):
 
+    enrollment        = models.ForeignKey("Enrollment", on_delete=models.CASCADE, blank=True, null=True)
+    program           = models.ForeignKey("Program", on_delete=models.CASCADE, blank=True, null=True)
     student           = models.ForeignKey("User", on_delete=models.CASCADE)
     session           = models.ForeignKey("Session", on_delete=models.CASCADE, blank=True, null=True)
     session_exercise  = models.ForeignKey("SessionExercise", on_delete=models.CASCADE, blank=True, null=True)

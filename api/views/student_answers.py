@@ -2,7 +2,6 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from api.serializers.student_answer import StudentAnswerSerializer
-from utils import response_handler
 from utils.response_handler import *
 from web_admin.models import StudentAnswer
 from web_admin.models.question import *
@@ -13,13 +12,21 @@ class StudentAnswerAPIView(APIView):
     def post(self, request):
         answer_ids = []
         try:
-            data    = extract_json_data(request)
-            user    = get_current_user(request)
-            answers = data.get("questions", None)
-            session = data.get("session")
+            data       = extract_json_data(request)
+            user       = get_current_user(request)
+            enrollment = data.get("enrollment", None)
+            program    = data.get("program", None)
+            answers    = data.get("questions", None)
+            session    = data.get("session")
             session_exercise_uuid = data.get("session_exercise")
 
             total_correct = 0
+
+            if not enrollment:
+                return error_response("No Enrollment")
+
+            if not program:
+                return error_response("No Program")
 
             if not answers:
                 return error_response("No Answer")
@@ -31,6 +38,8 @@ class StudentAnswerAPIView(APIView):
                     raise_error(error_message)
 
                 student_answer = dict(
+                    enrollment=enrollment,
+                    program=program,
                     student=user,
                     session=session,
                     session_exercise=session_exercise_uuid,
@@ -53,8 +62,6 @@ class StudentAnswerAPIView(APIView):
 
             return success_response(result_message)
         except Exception as e:
-
-            print(e)
 
             if answer_ids:
                 for id in answer_ids:

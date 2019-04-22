@@ -92,12 +92,20 @@ def read_student_sessions(request):
         records = []
         user    = get_current_user(request)
 
-        array_course_uuid  = Enrollment.objects.filter(user=user, is_active=True,is_deleted=False).values_list('course', flat=True)
-        array_program_uuid = CourseProgram.objects.filter(course__in=array_course_uuid,is_deleted=False).values_list('program', flat=True)
-        query_set_sessions = ProgramSession.objects.filter(program__in=array_program_uuid,is_deleted=False)
+        query_set_enrollments = Enrollment.objects.filter(user=user, is_active=True,is_deleted=False).values("id", "course")
 
-        for qs in query_set_sessions:
-            records.append(qs.get_dict(dict_type=dict_types.AS_SESSION))
+        for enrollment in query_set_enrollments:
+
+            enrollment_id = enrollment.get("id")
+
+            array_program_uuid = CourseProgram.objects.filter(course=enrollment["course"], is_deleted=False).values_list('program', flat=True)
+            query_set_sessions = ProgramSession.objects.filter(program__in=array_program_uuid,is_deleted=False)
+
+            for qs in query_set_sessions:
+                row = qs.get_dict(dict_type=dict_types.AS_SESSION, enrollment_id=enrollment_id)
+                row["enrollment_id"] = enrollment_id
+                row["course_id"]     = enrollment["course"]
+                records.append(row)
 
         results["records"] = records
 

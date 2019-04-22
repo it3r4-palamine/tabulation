@@ -5,10 +5,11 @@ angular.module("app")
     angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
     var self = this;
 
-    self.questions    = [];
-    self.session_id   = $stateParams.uuid;
-    self.session_name = $stateParams.name;
-
+    self.questions     = [];
+    self.session_id    = $stateParams.uuid;
+    self.session_name  = $stateParams.name;
+    self.enrollment_id = $stateParams.enrollment_id;
+    self.program_id    = $stateParams.program_id;
 
     self.read_session_exercises = function()
     {
@@ -50,7 +51,9 @@ angular.module("app")
         let data = {
             "session" : self.session_id,
             "session_exercise" : self.current_exercise.uuid,
-            "questions" : self.questions
+            "questions" : self.questions,
+            "enrollment" : self.enrollment_id,
+            "program" : self.program_id,
         };
 
         let response = self.post_api("student_answers/save/", data);
