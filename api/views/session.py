@@ -1,6 +1,10 @@
+import math
+import random
+
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
+from api.serializers.exercise import ExerciseSerializer, ExerciseQuestionSerializer
 from utils import dict_types
 from web_admin.models import ProgramSession, Enrollment, StudentAnswer, ExerciseQuestion
 from web_admin.models.course import CourseProgram
@@ -18,8 +22,6 @@ class SessionAPIView(APIView):
     def save_session_exercises(self, session_id, session_exercises):
 
         for session_exercise in session_exercises:
-
-            print(session_exercise)
 
             uuid = session_exercise.get("uuid", None)
 
@@ -170,22 +172,72 @@ def read_session_exercise(request):
 @api_view(["POST"])
 def generate_post_test(request):
     try:
-        session = extract_json_data(request)
-        questions = []
+        session             = extract_json_data(request)
+        questions           = []
+        selected_questions  = []
         query_set_exercises = SessionExercise.objects.filter(session=session["uuid"]).values_list("exercise", flat=True)
 
-        print(query_set_exercises)
-        print(len(query_set_exercises))
         for item in query_set_exercises:
             query_set_record_questions = ExerciseQuestion.objects.filter(exercise=item)
-            print(len(query_set_record_questions))
             for qs in query_set_record_questions:
                 questions.append(qs.get_dict(dict_type=dict_types.QUESTION_ONLY))
 
+        question_size    = math.ceil(len(questions) / 2)
+        random_positions = random.sample(range(len(questions) - 1), question_size)
 
+        for position in random_positions:
+            selected_questions.append(questions[position])
 
-        print(len(questions))
+        exercise_name = " ".join([session["name"], "Post Test"])
+        exercise_code = " ".join([session["name"], "Post Test"])
+
+        exercise = dict(
+            name=exercise_name,
+            transaction_code=exercise_code,
+            company=get_current_company(request),
+            is_post_test=True
+        )
+
+        serializer = ExerciseSerializer(data=exercise)
+
+        if serializer.is_valid():
+
+            exercise = serializer.save()
+
+            for exercise_question in selected_questions:
+
+                exercise_question["exercise"] = exercise.pk
+                exercise_question["question"] = exercise_question["uuid"]
+
+                serializer  = ExerciseQuestionSerializer(data=exercise_question)
+
+                if serializer.is_valid():
+                    serializer.save()
+                    print("OK sa exercise questions")
+                else:
+                    print("bad")
+                    raise_error(serializer.errors)
+
+            session_exercise = dict(
+                session=session["uuid"],
+                exercise=exercise.pk
+            )
+
+            session_serializer = SessionExerciseSerializer(data=session_exercise)
+
+            if session_serializer.is_valid():
+                session_serializer.save()
+            else:
+                print(session_serializer.errors)
+
+        else:
+
+            if exercise:
+                exercise.delete()
+
+            print(serializer.errors)
 
         return success_response()
     except Exception as e:
+        print(e)
         return error_response(str(e))

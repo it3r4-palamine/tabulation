@@ -1,8 +1,21 @@
 from rest_framework import serializers
-from web_admin.models.exercise import ExerciseQuestion
+from web_admin.models.exercise import Exercise, ExerciseQuestion
+
+
+class ExerciseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Exercise
+        fields = (
+            'name',
+            'transaction_code',
+            'is_post_test',
+            'company',
+        )
 
 
 class ExerciseQuestionSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ExerciseQuestion
         fields = ('question',
