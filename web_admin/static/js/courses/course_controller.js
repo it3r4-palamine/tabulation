@@ -40,7 +40,7 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 		    self.course_programs.push({})
         }
 
-		self.open_dialog("/get_dialog/courses/create_dialog/", 'dialog_width_60 dialog_height_60', 'main')
+		self.open_dialog("/get_dialog/courses/create_dialog/", 'dialog_width_60', 'main')
 	};
 
 	self.read_course_programs = function(record)
