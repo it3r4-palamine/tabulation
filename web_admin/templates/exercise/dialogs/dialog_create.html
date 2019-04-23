@@ -35,7 +35,7 @@
                         <label>Exercise Name</label>
                         <ui-select ng-model="main.record.exercise" ng-change="main.read_exercise_questions(main.record.exercise)">
                             <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                            <ui-select-choices repeat="company in main.exercises | filter: $select.search | limitTo:50">
+                            <ui-select-choices repeat="company in main.exercises | filter: $select.search | limitTo:50" refresh="main.read_exercises($select.search)" refresh-delay="4" minimum-input-length="1">
                                 <div ng-bind-html="company.name | highlight: $select.search"></div>
                                 <small>{$ company.transaction_code | json $}</small>
 

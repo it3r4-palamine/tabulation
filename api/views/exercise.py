@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from web_admin.models.exercise import Exercise
 from api.serializers.exercise import *
 from utils.response_handler import *
+from web_admin.views.common import generate_pagination
 
 
 class ExerciseAPIView(APIView):
@@ -61,20 +62,29 @@ def read_exercise(request):
         company       = get_current_company(request)
         filters       = extract_json_data(request)
         query_filters = Q(company=company) & Q(is_active=True)
+        pagination    = filters.get("pagination")
+        limit         = None if pagination else 50
 
         if filters.get("search", None):
             search         = filters.get("search")
             query_filters &= Q(name__icontains=search) | Q(transaction_code__icontains=search)
 
-        query_set = Exercise.objects.filter(query_filters).order_by("name", "set_no")
+        query_set = Exercise.objects.filter(query_filters).order_by("name", "set_no")[:limit]
 
         for qs in query_set:
             row = qs.get_dict()
             row["question_count"] = qs.get_question_count()
             records.append(row)
 
+        if pagination:
+            pagination["limit"] = 30
+            pagination["current_page"] = 1
+            results.update(generate_pagination(pagination, query_set))
+            records = records[results['starting']:results['ending']]
+
         results["records"] = records
 
         return success_response(results)
     except Exception as e:
+        print(e)
         return error_response(str(e))

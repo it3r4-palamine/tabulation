@@ -29,6 +29,8 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 		if ( record ) {
 			self.record["exercise"] = record;
 			self.read_exercise_questions(record);
+		} else {
+			self.exercise_questions = [{}]
 		}
 
 		self.open_dialog("/get_dialog/exercise/dialog_create/", 'dialog_width_80', 'main')
@@ -100,13 +102,17 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 		var post = self.post_api("exercise/read/", filters, "main");
 		post.success(function(response){
 			self.records = response.records;
-			// self.generate_pagination(self,response,"records");
+			self.starting = response.starting;
+			self.ending = response.records.length;
+			self.pagination.limit_options = angular.copy(self.pagination.read_user_credits);
+			self.pagination["total_records"] = response.total_records;
+			self.pagination["total_pages"] = response.total_pages;
 		});
 	};
 
-    self.read_exercises = function()
+    self.read_exercises = function(search)
     {
-        var post = self.post_api("exercise/read/", null, "main");
+        var post = self.post_api("exercise/read/", { "search" : search }, null);
 		post.success(function(response){
 			self.exercises = response.records;
 		});

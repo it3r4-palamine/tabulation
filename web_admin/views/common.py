@@ -177,8 +177,10 @@ def clean_string(strr,remove_delimeters = []): #remove spaces and delimeters
 
 	return strr
 
+
 def list_to_string(arr,separator=","):
 	return separator.join(map(str, arr))
+
 
 def pagination(request):
 	return render(request, 'common/pagination.html')
