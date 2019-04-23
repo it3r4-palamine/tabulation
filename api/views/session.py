@@ -171,6 +171,7 @@ def read_session_exercise(request):
 # Used in Student Portal
 @api_view(["POST"])
 def generate_post_test(request):
+    exercise_instance = None
     try:
         session             = extract_json_data(request)
         questions           = []
@@ -202,25 +203,23 @@ def generate_post_test(request):
 
         if serializer.is_valid():
 
-            exercise = serializer.save()
+            exercise_instance = serializer.save()
 
             for exercise_question in selected_questions:
 
-                exercise_question["exercise"] = exercise.pk
+                exercise_question["exercise"] = exercise_instance.pk
                 exercise_question["question"] = exercise_question["uuid"]
 
                 serializer  = ExerciseQuestionSerializer(data=exercise_question)
 
                 if serializer.is_valid():
                     serializer.save()
-                    print("OK sa exercise questions")
                 else:
-                    print("bad")
                     raise_error(serializer.errors)
 
             session_exercise = dict(
                 session=session["uuid"],
-                exercise=exercise.pk
+                exercise=exercise_instance.pk
             )
 
             session_serializer = SessionExerciseSerializer(data=session_exercise)
@@ -228,16 +227,14 @@ def generate_post_test(request):
             if session_serializer.is_valid():
                 session_serializer.save()
             else:
-                print(session_serializer.errors)
-
+                raise_error(session_serializer.errors)
         else:
-
-            if exercise:
-                exercise.delete()
-
-            print(serializer.errors)
+            raise_error(serializer.errors)
 
         return success_response()
     except Exception as e:
-        print(e)
+
+        if exercise_instance:
+            exercise_instance.delete()
+
         return error_response(str(e))
