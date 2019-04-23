@@ -90,6 +90,11 @@ app.controller('CourseCtrl', function($scope, $http, $timeout, $element, $contro
 		})
 	};
 
+	self.generate_assessment_test = function()
+	{
+		alert("Test");
+	};
+
 	self.save_record = function(record)
 	{
 		let post_data = angular.copy(record);

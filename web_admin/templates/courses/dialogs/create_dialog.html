@@ -3,7 +3,7 @@
     
     <div class="row">
         <div class="col-sm-5">
-            <h3 style="margin:10px">Course <span ng-show="!main.record.uuid" style="color: #18A689">(New)</span></h3>
+            <h2 style="margin:10px">Course <span ng-show="!main.record.uuid" style="color: #18A689">(New)</span></h2>
         </div>
 
         <div class="col-sm-7">
@@ -11,6 +11,11 @@
                 <button class="btn btn-sm btn-link" ng-click="main.save_record(main.record, 'open')">
                     <i class="fa fa-save dialog-button"></i>
                     <span>Save</span>
+                </button>
+
+                <button class="btn btn-sm btn-link" ng-click="main.generate_assessment_test(main.record)">
+                    <i class="fa fa-save dialog-button"></i>
+                    <span>Generate</span>
                 </button>
 
                 <button class="btn btn-sm btn-link" ng-click="main.close_dialog()">
@@ -53,6 +58,8 @@
 
                     </div>
 
+                    <br>
+
                     <div class="row">
 
                         <div class="col-xs-6">
@@ -67,37 +74,38 @@
 
                         <div class="col-xs-12">
 
-                        <table class="table table-condensed">
+                            <table class="table table-condensed">
 
-                            <thead>
-                                <tr>
-                                    <th>Program</th>
-                                    <th>Option</th>
-                                </tr>
-                            </thead>
+                                <thead>
+                                    <tr>
+                                        <th>Program</th>
+                                        <th>Option</th>
+                                    </tr>
+                                </thead>
 
-                            <tbody>
+                                <tbody>
 
-                                <tr ng-repeat="record in main.course_programs" ng-show="!record.is_deleted">
-                                    <td>
-                                        <ui-select ng-model="record.program">
-                                            <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                                            <ui-select-choices repeat="record in main.programs | filter: $select.search | limitTo:50">
-                                            <div ng-bind-html="record.name | highlight: $select.search"></div>
-                                        </ui-select-choices>
-                                        </ui-select>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-primary btn-circle" ng-click="main.add_course_program()"><i class="fa fa-plus"></i></button>
-                                        <button class="btn btn-danger btn-circle" ng-click="main.remove_course_program(record)"><i class="fa fa-remove"></i></button>
-                                    </td>
-                                </tr>
+                                    <tr ng-repeat="record in main.course_programs" ng-show="!record.is_deleted">
+                                        <td>
+                                            <ui-select ng-model="record.program">
+                                                <ui-select-match>{$ $select.selected.name $}</ui-select-match>
+                                                <ui-select-choices repeat="record in main.programs | filter: $select.search | limitTo:50">
+                                                <div ng-bind-html="record.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                            </ui-select>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger btn-circle" ng-click="main.remove_course_program(record)"><i class="fa fa-remove"></i></button>
+                                        </td>
+                                    </tr>
 
-                            </tbody>
+                                </tbody>
 
-                        </table>
+                            </table>
 
-                    </div>
+                            <a ng-click="main.add_course_program()">Add Program</a>
+
+                        </div>
 
                     </div>
 

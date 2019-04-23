@@ -82,8 +82,8 @@
                                 <tr ng-repeat="record in main.exercise_questions">
                                     <td>
                                         <ui-select ng-model="record.question">
-                                            <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                                           <ui-select-choices repeat="company in main.questions | filter: $select.search | limitTo:50">
+                                            <ui-select-match>{$ $select.selected.name | limitTo: 50 $}</ui-select-match>
+                                            <ui-select-choices repeat="company in main.questions | filter: $select.search | limitTo:50">
                                             <div ng-bind-html="company.name | highlight: $select.search"></div>
                                         </ui-select-choices>
                                         </ui-select>
