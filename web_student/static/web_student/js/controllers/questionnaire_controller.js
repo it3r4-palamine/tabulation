@@ -83,6 +83,22 @@ angular.module("app")
         });
     };
 
+    self.checkUnicode = function(idx)
+    {
+        for (var i = 0; i < self.questions[idx].question_choices.length; i++)
+        {
+            self.questions[idx].question_choices[i].isUnicode = false;
+
+            for (var j = 0; j < self.questions[idx].question_choices[i].name.length; j++)
+            {
+                if (self.questions[idx].question_choices[i].name.charCodeAt(j) > 128)
+                {
+                    self.questions[idx].question_choices[i].isUnicode = true
+                }
+            }
+        }
+    }
+
 })
 
 .directive('icheck', function($timeout)
