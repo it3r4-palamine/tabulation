@@ -58,9 +58,9 @@
                     <h3>{$ ctrl.current_exercise.exercise.name $}</h3>
                     <h4>Set {$ ctrl.current_exercise.exercise.set_no $}</h4>
 
-                    <div class="ibox-tools">
+                    <!-- <div class="ibox-tools">
                        <button class="btn btn-outline btn-primary" ng-click="ctrl.submit_answers()" ng-hide="ctrl.current_exercise.has_answered">Submit</button>
-                    </div>
+                    </div> -->
 
                 </div>
 
@@ -68,7 +68,7 @@
 
                     <div class="feed-activity-list">
 
-                        <div class="feed-element" ng-repeat="record in ctrl.questions">
+                        <div class="feed-element" ng-repeat="record in ctrl.questions track by $index" ng-init="ctrl.checkUnicode($index)">
                             <div class="media-body">
 
                                 <h3 class="pull-left">{$ record.name $}</h3>
@@ -84,7 +84,9 @@
                                 <br>
 
                                 <p ng-repeat="choice in record.question_choices">
-                                    <input ng-disabled="ctrl.current_exercise.has_answered" icheck type="radio" id="{$ choice.uuid $}" ng-model="record.answer" ng-value="choice.uuid"> {$ choice.name $}
+                                    <input ng-disabled="ctrl.current_exercise.has_answered" icheck type="radio" id="{$ choice.uuid $}" ng-model="record.answer" ng-value="choice.uuid"/>
+                                    <span ng-hide="choice.isUnicode">{$ choice.name $}</span>
+                                    <span ng-show="choice.isUnicode" style="font-size: 30px;">{$ choice.name $}</span>
                                     <b style="color:green" ng-show="choice.is_correct"><i style="color:green" class="fa fa-check-circle"></i> Correct Answer</b>
                                 </p>
 
@@ -92,6 +94,9 @@
                         </div>
 
                     </div>
+
+                    <br>
+                    <button class="btn btn-outline btn-primary pull-right" ng-click="ctrl.submit_answers()" ng-hide="ctrl.current_exercise.has_answered">Submit</button>
 
                 </div>
 
