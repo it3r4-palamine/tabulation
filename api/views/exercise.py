@@ -14,19 +14,27 @@ class ExerciseAPIView(APIView):
             exercise            = data.get("exercise", None)
             exercise_questions  = data.get("exercise_questions", None)
             is_assessment_test  = data.get("is_assessment_test", None)
+            course              = data.get("course", None)
+
+            print(data)
 
             if not exercise_questions or len(exercise_questions) == 0:
                 raise_error("No Questions")
 
             if is_assessment_test:
                 exercise = dict(
-                    transaction_code=data["assessment_code"],
-                    name=data["assessment_name"],
+                    transaction_code=data.get("transaction_code"),
+                    name=data.get("name"),
                     company=get_current_company(request),
                     is_assessment_test=True,
+                    course=course["uuid"]
                 )
 
-                serializer = ExerciseSerializer(data=exercise)
+                if "id" in data:
+                    instance = Exercise.objects.get(id=data["id"])
+                    serializer = ExerciseSerializer(data=exercise, instance=instance)
+                else:
+                    serializer = ExerciseSerializer(data=exercise)
 
                 if serializer.is_valid():
                     instance = serializer.save()
@@ -35,6 +43,9 @@ class ExerciseAPIView(APIView):
                     print(serializer.errors)
 
             for exercise_question in exercise_questions:
+
+                if not exercise_question.get("question"):
+                    raise_error("Invalid Question")
 
                 exercise_question["exercise"] = exercise["id"]
                 exercise_question["question"] = exercise_question["question"]["uuid"]

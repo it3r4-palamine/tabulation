@@ -157,6 +157,14 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 		});
     };
 
+    self.read_courses = function()
+	{
+		let post = self.post_api("course/read/", null, "main");
+		post.success(function(response){
+			self.courses = response.records;
+		});
+	};
+
 	self.menu_options = function (record) {
 	    me.context_id = record.id;
 	    return RightClick.get_menu(me,record)
@@ -166,5 +174,6 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 	self.main_loader();
 
 	CommonRead.get_questions_new(self);
+	self.read_courses();
 	self.read_exercises();
 });

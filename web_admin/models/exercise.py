@@ -15,6 +15,7 @@ class Exercise(models.Model):
     is_intelex         = models.BooleanField(default=False)
     is_post_test       = models.BooleanField(default=False)
     is_assessment_test = models.BooleanField(default=False)
+    course             = models.ForeignKey("Course", blank=True, null=True, on_delete=models.CASCADE)
     company            = models.ForeignKey("Company", blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
@@ -45,6 +46,7 @@ class Exercise(models.Model):
             instance['is_intelex']          = self.is_intelex
             instance['is_post_test']        = self.is_post_test
             instance['is_assessment_test']  = self.is_assessment_test
+            instance['course']              = self.course.get_dict() if self.course else None
             instance['company']             = self.company.pk
 
         return instance

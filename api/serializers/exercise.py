@@ -11,6 +11,7 @@ class ExerciseSerializer(serializers.ModelSerializer):
             'transaction_code',
             'is_post_test',
             'is_assessment_test',
+            'course',
             'company',
         )
 

@@ -38,12 +38,10 @@
 
                     <div class="col-xs-6">
                         <label>Link to Course</label>
-                        <ui-select ng-model="main.record.exercise" ng-change="main.read_exercise_questions(main.record.exercise)">
+                        <ui-select ng-model="main.record.course">
                             <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                            <ui-select-choices repeat="company in main.exercises | filter: $select.search | limitTo:50" refresh="main.read_exercises($select.search)" refresh-delay="4" minimum-input-length="1">
-                                <div ng-bind-html="company.name | highlight: $select.search"></div>
-                                <small>{$ company.transaction_code | json $}</small>
-
+                            <ui-select-choices repeat="course in main.courses | filter: $select.search | limitTo:50">
+                                <div ng-bind-html="course.name | highlight: $select.search"></div>
                             </ui-select-choices>
                         </ui-select>
                     </div>
