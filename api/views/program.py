@@ -1,6 +1,9 @@
+from pprint import pprint
+
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from api.serializers.program import *
+from utils import dict_types
 from utils.response_handler import *
 
 
@@ -89,19 +92,27 @@ def read_programs(request):
         return error_response(str(e))
 
 
-# Called in Mobile
+# Called in Mobile YIAS
 @api_view(["POST"])
 def read_program_sessions(request):
     try:
-        results    = {}
-        records    = []
-        filters    = extract_json_data(request)
-        program_id = filters.get("uuid", None)
+        results       = {}
+        records       = []
+        filters       = extract_json_data(request)
+        program_id    = filters.get("uuid", None)
+        enrollment_id = filters.get("enrollment", None)
 
         query_set = ProgramSession.objects.filter(program=program_id, is_deleted=False)
 
         for qs in query_set:
-            row = qs.get_dict()
+
+            if get_user_agent(request) == "ANDROID":
+                # Used in YIAS Mobile
+                row = qs.get_dict(dict_type=dict_types.ANDROID, enrollment_id=enrollment_id)
+            else:
+                # Used in Web ADMIN
+                row = qs.get_dict()
+
             records.append(row)
 
         results["records"] = records

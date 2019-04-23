@@ -75,6 +75,11 @@ def extract_json_data(request):
     return post_params
 
 
+# Returns a value of user agent origin
+def get_user_agent(request):
+    return request.META["HTTP_USER_AGENT"] if request.META else None
+
+
 def extract_get_parameters(data):
     return ast.literal_eval(data)
 

@@ -52,13 +52,21 @@ class ProgramSession(CommonModel):
         instance = dict()
 
         if dict_type == dict_types.DEFAULT:
-            # Will be used in mobile
+            # Used in Admin Side
             instance["uuid"]      = self.pk
             instance["program"]   = self.program.pk
             instance["session"]   = self.session.get_dict() if self.session else None
 
-        if dict_type == dict_types.AS_SESSION:
+        if dict_type == dict_types.ANDROID:
+            # Used in mobile
+            instance["uuid"]    = self.pk
+            instance["program"] = self.program.pk
+            instance["session"] = self.session.get_dict(dict_type=dict_types.STUDENT_PORTAL,
+                                                        enrollment_id=enrollment_id,
+                                                        program_id=self.program.pk) if self.session else None
 
+        if dict_type == dict_types.AS_SESSION:
+            # Used in Student Portal
             instance = self.session.get_dict(dict_type=dict_types.STUDENT_PORTAL,
                                              enrollment_id=enrollment_id,
                                              program_id=self.program.pk) if self.session else None
