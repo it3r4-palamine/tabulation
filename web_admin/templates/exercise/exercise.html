@@ -28,6 +28,7 @@
 
         <div class="ibox-title">
             <button class="btn btn-outline btn-primary" ng-click="main.create_edit_session()">Add Exercise</button>
+            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_dialog_assessment()">Create an Assessment Test</button>
         </div>
 
         <div class="ibox">
@@ -39,6 +40,16 @@
                     <div class="col-xs-3">
                         <label>Search</label>
                         <input type="text" ng-model="main.filters.search" name="search" placeholder="Search..." class="form-control" ng-enter="main.read_pagination()">
+                    </div>
+
+                    <div class="col-xs-3">
+                        <label>Exercise Type</label>
+                        <ui-select ng-model="main.filters.exercise_type" ng-change="main.main_loader()">
+                            <ui-select-match>{$ $select.selected $}</ui-select-match>
+                            <ui-select-choices repeat="exercise_type in main.exercise_types | filter: $select.search | limitTo:50">
+                                <div ng-bind-html="exercise_type | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
 
                 </div>
@@ -62,7 +73,12 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="record in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(student_session)" ng-click="main.create_edit_session(record)">
-                                <td class="text-left">{$ record.transaction_code $}</td>
+                                <td class="text-left">
+                                    <i ng-show="record.is_assessment_test" class="fa fa-list-ol text-warning" aria-hidden="true"></i>
+                                    <i ng-show="record.is_post_test" class="fa fa-list-ol text-success" aria-hidden="true"></i>
+                                    <i ng-show="!record.is_post_test && !record.is_assessment_test" class="fa fa-list-ol text-danger" aria-hidden="true"></i>
+                                    <span>{$ record.transaction_code $}</span>
+                                </td>
                                 <td class="text-left">{$ record.name $}</td>
                                 <td class="text-right">{$ record.set_no $}</td>
                                 <td class="text-right">{$ record.question_count $}</td>

@@ -10,6 +10,7 @@ class ExerciseSerializer(serializers.ModelSerializer):
             'name',
             'transaction_code',
             'is_post_test',
+            'is_assessment_test',
             'company',
         )
 

@@ -1,0 +1,114 @@
+{% load staticfiles %}
+<div class="modal-header">
+    
+    <div class="row">
+        <div class="col-sm-5">
+            <h3 style="margin:10px">Assessment Test <span ng-show="main.record.uuid" style="color: #18A689">(New)</span></h3>
+        </div>
+
+        <div class="col-sm-7">
+            <div class="pull-right">
+                <button class="btn btn-sm btn-link" ng-click="main.save_assessment_test(main.record)">
+                    <i class="fa fa-save dialog-button"></i>
+                    <span>Save</span>
+                </button>
+
+                <button class="btn btn-sm btn-link" ng-click="main.close_dialog()">
+                    <i class="fa fa-times-circle dialog-button"></i>
+                    <span>Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="ibox-content no-padding-top">
+    {% include "common/loader.html" %}
+
+        <div class="ibox">
+
+            <div class="ibox-content">
+
+                <div class="row">
+
+                    <div class="col-xs-6">
+                        <label>Assessment Name</label>
+                        <input type="text" class="form-control" ng-model="main.record.name">
+                    </div>
+
+                    <div class="col-xs-6">
+                        <label>Link to Course</label>
+                        <ui-select ng-model="main.record.exercise" ng-change="main.read_exercise_questions(main.record.exercise)">
+                            <ui-select-match>{$ $select.selected.name $}</ui-select-match>
+                            <ui-select-choices repeat="company in main.exercises | filter: $select.search | limitTo:50" refresh="main.read_exercises($select.search)" refresh-delay="4" minimum-input-length="1">
+                                <div ng-bind-html="company.name | highlight: $select.search"></div>
+                                <small>{$ company.transaction_code | json $}</small>
+
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                    <div class="col-xs-6">
+                        <label for="">Code</label>
+                        <input type="text" class="form-control" ng-model="main.record.transaction_code">
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                    <div class="col-xs-12">
+
+                        <table class="table table-condensed">
+
+                            <thead>
+                                <tr>
+                                    <th>Question</th>
+                                    <th>Option</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr ng-repeat="record in main.exercise_questions">
+                                    <td>
+                                        <ui-select ng-model="record.question">
+                                            <ui-select-match>{$ $select.selected.name | limitTo: 50 $}</ui-select-match>
+                                            <ui-select-choices repeat="company in main.questions | filter: $select.search | limitTo:50">
+                                            <div ng-bind-html="company.name | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                        </ui-select>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger btn-circle" ng-click="main.remove_session_exercise(record)"><i class="fa fa-remove"></i></button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                        <a ng-click="main.add_exercise_question()">Add Question</a>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+</div>

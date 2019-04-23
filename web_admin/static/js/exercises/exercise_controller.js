@@ -18,13 +18,15 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 	self.filter 			= { name : "" };
 	self.exercise_questions = [];
 	$scope.filter 			= { name : "" };
-
+	self.exercise_types = [
+		"Exercise",
+		"Post Test",
+		"Assessment Test",
+	];
 
 	self.create_edit_session = function(record)
 	{
 		self.record = {};
-
-		console.log(record);
 
 		if ( record ) {
 			self.record["exercise"] = record;
@@ -33,7 +35,18 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 			self.exercise_questions = [{}]
 		}
 
-		self.open_dialog("/get_dialog/exercise/dialog_create/", 'dialog_width_80', 'main')
+		if (record && record.is_assessment_test)
+		{
+			self.record = record;
+			self.open_dialog("/get_dialog/exercise/dialog_create_assessment/", 'dialog_width_80', 'main')
+		} else {
+			self.open_dialog("/get_dialog/exercise/dialog_create/", 'dialog_width_80', 'main')
+		}
+	};
+
+	self.create_edit_dialog_assessment = function()
+	{
+		self.open_dialog("/get_dialog/exercise/dialog_create_assessment/", 'dialog_width_80', 'main')
 	};
 
 	self.read_exercise_questions = function(record)
@@ -63,6 +76,26 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 	self.remove_session_exercise = function(record)
 	{
 		self.exercise_questions.splice(self.exercise_questions.indexOf(record), 1);
+	};
+
+	self.save_assessment_test = function(record)
+	{
+		let post_data = record;
+
+		post_data["is_assessment_test"] = true;
+	    post_data["exercise_questions"] = self.exercise_questions;
+
+		self.post_api('exercise/create/', post_data, null, false, null, false)
+		.success(function(response){
+
+			self.record = {};
+			self.session_exercises = [];
+
+			self.close_dialog();
+			self.main_loader();
+		}).error(function(response){
+			Notification.error(response)
+		})
 	};
 
 	self.save_record = function(record)
@@ -96,8 +129,9 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 		filters = self.format_time(filters);
 
 		self.pagination["limit"] = 20;
-
 		filters["pagination"] = self.pagination;
+
+		console.log(filters)
 
 		var post = self.post_api("exercise/read/", filters, "main");
 		post.success(function(response){
@@ -112,7 +146,12 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 
     self.read_exercises = function(search)
     {
-        var post = self.post_api("exercise/read/", { "search" : search }, null);
+		let filters = {
+    		"search" : search,
+			"exercise_type" : self.filters.exercise_type,
+		};
+
+        var post = self.post_api("exercise/read/", filters, null);
 		post.success(function(response){
 			self.exercises = response.records;
 		});

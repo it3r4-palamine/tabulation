@@ -13,6 +13,26 @@ class ExerciseAPIView(APIView):
             data                = extract_json_data(request)
             exercise            = data.get("exercise", None)
             exercise_questions  = data.get("exercise_questions", None)
+            is_assessment_test  = data.get("is_assessment_test", None)
+
+            if not exercise_questions or len(exercise_questions) == 0:
+                raise_error("No Questions")
+
+            if is_assessment_test:
+                exercise = dict(
+                    transaction_code=data["assessment_code"],
+                    name=data["assessment_name"],
+                    company=get_current_company(request),
+                    is_assessment_test=True,
+                )
+
+                serializer = ExerciseSerializer(data=exercise)
+
+                if serializer.is_valid():
+                    instance = serializer.save()
+                    exercise["id"] = instance.pk
+                else:
+                    print(serializer.errors)
 
             for exercise_question in exercise_questions:
 
@@ -32,7 +52,7 @@ class ExerciseAPIView(APIView):
 
             return success_response("Success")
         except Exception as e:
-            return error_response(e,show_line=True)
+            return error_response(str(e), show_line=True)
 
 
 @api_view(["POST"])
@@ -64,10 +84,20 @@ def read_exercise(request):
         query_filters = Q(company=company) & Q(is_active=True)
         pagination    = filters.get("pagination")
         limit         = None if pagination else 50
+        exercise_type = filters.get("exercise_type")
 
         if filters.get("search", None):
             search         = filters.get("search")
             query_filters &= Q(name__icontains=search) | Q(transaction_code__icontains=search)
+
+        if exercise_type == "Assessment Test":
+            query_filters &= Q(is_assessment_test=True) & Q(is_post_test=False)
+
+        if exercise_type == "Post Test":
+            query_filters &= Q(is_post_test=True) & Q(is_assessment_test=False)
+
+        if exercise_type == "Exercise":
+            query_filters &= Q(is_post_test=False) & Q(is_assessment_test=False)
 
         query_set = Exercise.objects.filter(query_filters).order_by("name", "set_no")[:limit]
 

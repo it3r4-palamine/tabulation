@@ -5,16 +5,17 @@ from utils.response_handler import raise_error
 
 class Exercise(models.Model):
 
-    name             = models.CharField(max_length=200, blank=True, null=True)
-    transaction_code = models.CharField(max_length=200, blank=True, null=True)
-    exercise_id      = models.IntegerField(blank=True, null=True)
-    program_id       = models.IntegerField(blank=True, null=True)
-    set_no           = models.IntegerField(blank=True, null=True)
-    total_items      = models.IntegerField(blank=True, null=True)
-    is_active        = models.BooleanField(default=True)
-    is_intelex       = models.BooleanField(default=False)
-    is_post_test     = models.BooleanField(default=False)
-    company          = models.ForeignKey("Company", blank=True, null=True, on_delete=models.CASCADE)
+    name               = models.CharField(max_length=200, blank=True, null=True)
+    transaction_code   = models.CharField(max_length=200, blank=True, null=True)
+    exercise_id        = models.IntegerField(blank=True, null=True)
+    program_id         = models.IntegerField(blank=True, null=True)
+    set_no             = models.IntegerField(blank=True, null=True)
+    total_items        = models.IntegerField(blank=True, null=True)
+    is_active          = models.BooleanField(default=True)
+    is_intelex         = models.BooleanField(default=False)
+    is_post_test       = models.BooleanField(default=False)
+    is_assessment_test = models.BooleanField(default=False)
+    company            = models.ForeignKey("Company", blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
         app_label = "web_admin"
@@ -24,23 +25,27 @@ class Exercise(models.Model):
         instance = {}
 
         if dict_type == dict_types.MINIMAL:
-            instance['id'] = self.pk
-            instance['name'] = self.name
-            instance['transaction_code'] = self.transaction_code
+            instance['id']                 = self.pk
+            instance['name']               = self.name
+            instance['transaction_code']   = self.transaction_code
+            instance['is_post_test']       = self.is_post_test
+            instance['is_assessment_test'] = self.is_assessment_test
         elif isV2:
-            instance['transactionTypeId'] = self.pk
+            instance['transactionTypeId']   = self.pk
             instance['transactionTypeName'] = self.name
         else:
-            instance['id'] = self.pk
-            instance['name'] = self.name
-            instance['transaction_code'] = self.transaction_code
-            instance['is_active'] = self.is_active
-            instance['exercise_id'] = self.exercise_id
-            instance['program_id'] = self.program_id
-            instance['set_no'] = self.set_no
-            instance['total_items'] = self.total_items
-            instance['is_intelex'] = self.is_intelex
-            instance['company'] = self.company.pk
+            instance['id']                  = self.pk
+            instance['name']                = self.name
+            instance['transaction_code']    = self.transaction_code
+            instance['is_active']           = self.is_active
+            instance['exercise_id']         = self.exercise_id
+            instance['program_id']          = self.program_id
+            instance['set_no']              = self.set_no
+            instance['total_items']         = self.total_items
+            instance['is_intelex']          = self.is_intelex
+            instance['is_post_test']        = self.is_post_test
+            instance['is_assessment_test']  = self.is_assessment_test
+            instance['company']             = self.company.pk
 
         return instance
 
