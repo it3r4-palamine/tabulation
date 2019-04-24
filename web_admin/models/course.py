@@ -1,4 +1,5 @@
 from utils import dict_types
+from web_admin.models import Exercise
 from web_admin.models.common_model import CommonModel
 from web_admin.models.program import Program
 from django.db import models
@@ -19,6 +20,7 @@ class Course(CommonModel):
         instance        = dict()
 
         if dict_type == dict_types.DEFAULT:
+            assessment_test = self.get_assessment_test()
 
             instance["uuid"]            = self.uuid
             instance["name"]            = self.name
@@ -26,6 +28,7 @@ class Course(CommonModel):
             instance["price"]           = self.price
             instance["company"]         = self.company.id if self.company else None
             instance["course_programs"] = self.get_course_programs()
+            instance["assessment_test"] = assessment_test.get_dict(dict_type=dict_types.MINIMAL) if assessment_test else None
 
         if dict_type == dict_types.COMPLETE:
             instance["uuid"] = self.uuid
@@ -46,6 +49,14 @@ class Course(CommonModel):
             records.append(row)
 
         return records
+
+    def get_assessment_test(self):
+        try:
+            return Exercise.objects.get(course=self.pk, is_assessment_test=True)
+        except Exercise.DoesNotExist:
+            return None
+        except Exercise.MultipleObjectsReturned:
+            return None
 
 
 class CourseProgram(CommonModel):

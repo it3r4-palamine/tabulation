@@ -16,8 +16,6 @@ class ExerciseAPIView(APIView):
             is_assessment_test  = data.get("is_assessment_test", None)
             course              = data.get("course", None)
 
-            print(data)
-
             if not exercise_questions or len(exercise_questions) == 0:
                 raise_error("No Questions")
 
