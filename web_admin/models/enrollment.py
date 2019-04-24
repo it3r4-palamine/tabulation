@@ -8,6 +8,7 @@ from ..views.common import *
 
 
 class Enrollment(models.Model):
+
     reference_no        = models.IntegerField(default=0, blank=True, null=True)
     user 				= models.ForeignKey("User", on_delete=models.CASCADE)
     timeslot            = models.ForeignKey("TimeSlot", null=True, blank=True, on_delete=models.CASCADE)

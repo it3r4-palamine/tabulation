@@ -160,8 +160,6 @@ def read_session_exercise(request):
 
         if is_assessment_test and course_id:
             query_set = Exercise.objects.filter(course=course_id, is_assessment_test=True)
-            print("mao ba ni lord")
-            print(len(query_set))
 
             for qs in query_set:
                 row = dict(exercise=qs.get_dict(dict_type=dict_types.MINIMAL))
