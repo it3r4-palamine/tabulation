@@ -62,6 +62,7 @@ app.config(function($stateProvider,$urlRouterProvider) {
         templateUrl: '/student_portal/questionnaire/',
         controller : 'QuestionnaireCtrl as ctrl',
         params : {
+            name : "Assessment Test",
             enrollment_id : null,
             course_id : null,
             is_assessment_test : true,

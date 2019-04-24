@@ -19,13 +19,14 @@ class StudentAnswerAPIView(APIView):
             answers    = data.get("questions", None)
             session    = data.get("session")
             session_exercise_uuid = data.get("session_exercise")
+            is_assessment_test    = data.get("is_assessment_test")
 
             total_correct = 0
 
             if not enrollment:
                 return error_response("No Enrollment")
 
-            if not program:
+            if not is_assessment_test and not program:
                 return error_response("No Program")
 
             if not answers:

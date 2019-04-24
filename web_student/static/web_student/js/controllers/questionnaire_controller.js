@@ -55,7 +55,7 @@ angular.module("app")
             self.questions = data.records;
 
         }, function (response){
-
+            SweeterAlert.error({title : "Oops!", message : response.data});
         });
     };
 
@@ -67,6 +67,7 @@ angular.module("app")
             "questions" : self.questions,
             "enrollment" : self.enrollment_id,
             "program" : self.program_id,
+            "is_assessment_test" : self.is_assessment_test,
         };
 
         let response = self.post_api("student_answers/save/", data);
@@ -84,7 +85,7 @@ angular.module("app")
             self.questions = [];
 
         }, function (response){
-            SweeterAlert.error(response.data)
+            SweeterAlert.error({title : "Oops!", message : response.data});
         });
     };
 

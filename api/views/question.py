@@ -150,7 +150,7 @@ def read_exercise_questions(request):
         # For Assessment Test
         is_assessment_test    = data.get("is_assessment_test", False)
 
-        if not is_assessment_test and not session_uuid or not session_exercise_uuid or not exercise_uuid:
+        if not is_assessment_test and (not session_uuid or not session_exercise_uuid or not exercise_uuid):
             raise_error("Something went wrong")
         elif is_assessment_test:
             query_set = ExerciseQuestion.objects.filter(exercise=exercise_uuid,is_deleted=False)
