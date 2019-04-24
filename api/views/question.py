@@ -136,9 +136,10 @@ def read_questions(request):
 @api_view(["POST"])
 def read_exercise_questions(request):
     try:
-        data = extract_json_data(request)
-        records = []
-        results = {}
+        data      = extract_json_data(request)
+        records   = []
+        results   = {}
+        query_set = []
 
         # Prepare Required Parameters for reading question and answers
         session_uuid          = data.get("session", None)
