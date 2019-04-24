@@ -149,25 +149,36 @@ def read_sessions(request):
 @api_view(["POST"])
 def read_session_exercise(request):
     try:
-        results       = {}
-        records       = []
-        filters       = extract_json_data(request)
-        session_id    = filters.get("uuid", None)
-        enrollment_id = filters.get("enrollment_id", None)
-        program_id    = filters.get("program_id", None)
+        results            = {}
+        records            = []
+        filters            = extract_json_data(request)
+        session_id         = filters.get("uuid", None)
+        enrollment_id      = filters.get("enrollment_id", None)
+        program_id         = filters.get("program_id", None)
+        is_assessment_test = filters.get("is_assessment_test", False)
+        course_id          = filters.get("course_id", False)
 
-        query_set = SessionExercise.objects.filter(session=session_id, is_deleted=False).order_by("-date_created")
+        if is_assessment_test and course_id:
+            query_set = Exercise.objects.filter(course=course_id, is_assessment_test=True)
+            print("mao ba ni lord")
+            print(len(query_set))
 
-        for qs in query_set:
-            row = qs.get_dict()
+            for qs in query_set:
+                row = dict(exercise=qs.get_dict(dict_type=dict_types.MINIMAL))
+                records.append(row)
+        else:
+            query_set = SessionExercise.objects.filter(session=session_id, is_deleted=False).order_by("-date_created")
 
-            if StudentAnswer.objects.filter(enrollment=enrollment_id,
-                                            program=program_id,
-                                            session_exercise=qs.pk).exists():
-                row["has_answered"] = True
-                row["score"] = qs.get_exercise_score()
+            for qs in query_set:
+                row = qs.get_dict()
 
-            records.append(row)
+                if StudentAnswer.objects.filter(enrollment=enrollment_id,
+                                                program=program_id,
+                                                session_exercise=qs.pk).exists():
+                    row["has_answered"] = True
+                    row["score"] = qs.get_exercise_score()
+
+                records.append(row)
 
         results["records"] = records
 

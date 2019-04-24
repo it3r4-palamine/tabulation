@@ -5,18 +5,22 @@ angular.module("app")
     angular.extend(this, $controller('CommonCtrl', {$scope: $scope}));
     var self = this;
 
-    self.questions     = [];
-    self.session_id    = $stateParams.uuid;
-    self.session_name  = $stateParams.name;
-    self.enrollment_id = $stateParams.enrollment_id;
-    self.program_id    = $stateParams.program_id;
+    self.questions          = [];
+    self.session_id         = $stateParams.uuid;
+    self.session_name       = $stateParams.name;
+    self.enrollment_id      = $stateParams.enrollment_id;
+    self.program_id         = $stateParams.program_id;
+    self.is_assessment_test = $stateParams.is_assessment_test;
+    self.course_id          = $stateParams.course_id;
 
     self.read_session_exercises = function()
     {
         let filters = {
             "uuid" : self.session_id,
             "enrollment_id" : self.enrollment_id,
-            "program_id" : self.program_id
+            "program_id" : self.program_id,
+            "is_assessment_test" : self.is_assessment_test,
+            "course_id" : self.course_id,
         };
 
         let response = self.post_api("session/read_session_exercises/", filters);

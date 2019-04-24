@@ -141,6 +141,10 @@ def read_exercise_questions(request):
         enrollment_id         = data.get("enrollment_id", None)
         program_id            = data.get("program_id", None)
 
+        # For Assessment Test
+        is_assessment_test    = data.get("is_assessment_test", False)
+
+
         if not session_uuid or not session_exercise_uuid or not exercise_uuid:
             raise_error("Something went wrong")
 

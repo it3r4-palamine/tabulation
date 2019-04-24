@@ -59,7 +59,7 @@
 
                             <thead>
                                 <tr>
-                                    <th>Question</th>
+                                    <th>Exercise</th>
                                     <th>Option</th>
                                 </tr>
                             </thead>
@@ -70,14 +70,13 @@
                                     <td>
                                         <ui-select ng-model="record.exercise">
                                             <ui-select-match>{$ $select.selected.transaction_code $} {$ $select.selected.name $} {$ $select.selected.set_no $}</ui-select-match>
-                                            <ui-select-choices repeat="record in main.exercises | filter: $select.search | limitTo:50">
+                                            <ui-select-choices repeat="record in main.exercises | filter: $select.search | limitTo:50" refresh="main.read_exercises($select.search)" refresh-delay="4" minimum-input-length="1">
                                                 <div ng-bind-html="record.name | highlight: $select.search"></div>
                                                 <small ng-bind-html="record.transaction_code | highlight : $select.search "></small> <span ng-bind-html="record.set_no | highlight : $select.search"></span>
                                              </ui-select-choices>
                                         </ui-select>
                                     </td>
                                     <td>
-                                        <button class="btn btn-primary btn-circle" ng-click="main.add_session_exercise()"><i class="fa fa-plus"></i></button>
                                         <button class="btn btn-danger btn-circle" ng-click="main.remove_session_exercise(record)"><i class="fa fa-remove"></i></button>
                                     </td>
                                 </tr>
@@ -85,6 +84,8 @@
                             </tbody>
 
                         </table>
+
+                        <a ng-click="main.add_session_exercise()">Add Exercise</a>
 
                     </div>
 

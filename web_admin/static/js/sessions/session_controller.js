@@ -131,9 +131,13 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 		});
 	};
 
-    self.read_exercises = function()
+    self.read_exercises = function(search)
     {
-        var post = self.post_api("exercise/read/", null, "main");
+    	let filters = {
+    		"search" : search
+		};
+
+        var post = self.post_api("exercise/read/", filters, "main");
 		post.success(function(response){
 			self.exercises = response.records;
 		});

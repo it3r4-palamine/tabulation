@@ -92,8 +92,6 @@ def read(request):
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		filename = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-		print(sys.exc_traceback.tb_lineno)
-		print(filename)
 		return HttpResponse(e, status = 400)
 
 def create(request):

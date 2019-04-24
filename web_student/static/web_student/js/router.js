@@ -46,6 +46,7 @@ app.config(function($stateProvider,$urlRouterProvider) {
             name : null,
             enrollment_id : null,
             program_id : null,
+            is_assessment_test : false,
         }
     };
 
@@ -55,12 +56,25 @@ app.config(function($stateProvider,$urlRouterProvider) {
         templateUrl: '/student_portal/courses/'
     };
 
+    let assessmentTestState = {
+        name : 'assessment_test',
+        url : '/assessment_test?enrollment_id?course_id',
+        templateUrl: '/student_portal/questionnaire/',
+        controller : 'QuestionnaireCtrl as ctrl',
+        params : {
+            enrollment_id : null,
+            course_id : null,
+            is_assessment_test : true,
+        }
+    };
+
     $stateProvider.state(questionnaireState);
     $stateProvider.state(courseState);
     $stateProvider.state(sessionsState);
     $stateProvider.state(dashboardState);
     $stateProvider.state(centerState);
     $stateProvider.state(coursesState);
+    $stateProvider.state(assessmentTestState);
 
     $urlRouterProvider.otherwise('/dashboard');
 

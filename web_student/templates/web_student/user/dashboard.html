@@ -39,9 +39,6 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-
-
-
                         <div>
                             <div class="feed-activity-list">
 
@@ -53,6 +50,8 @@
                                         <small class="float-right" ng-hide="true">10 hours left</small>
                                         <strong>{$ record.course.name $}</strong><br>
                                         <small class="text-muted">Expire on {$ record.session_start_date | date : 'shortDate' $}</small>
+                                        <br>
+                                        <a ui-sref="assessment_test({ enrollment_id : '{$ record.id $}', course_id : '{$ record.course.uuid $}' })">Take Assessment Test</a>
 
                                     </div>
                                 </div>
