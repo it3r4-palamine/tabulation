@@ -44,7 +44,8 @@ angular.module("app")
             "exercise" : record.exercise.id,
             "session_exercise" : record.uuid,
             "enrollment_id" : self.enrollment_id,
-            "program_id" : self.program_id
+            "program_id" : self.program_id,
+            "is_assessment_test" : self.is_assessment_test,
         };
 
         let response = self.post_api("question/read_exercise_questions/", exercise);

@@ -103,9 +103,15 @@ def read_questions(request):
     try:
         results = {}
         records = []
+        filters = extract_json_data(request)
         company = get_current_company(request)
+        search  = filters.get("search", None)
+        q_filters = Q(company=company) & Q(is_deleted=False)
 
-        questions = Question.objects.filter(company=company, is_deleted=False).order_by("-date_created")
+        if search:
+            q_filters &= Q(name__icontains=search) | Q(description__icontains=search)
+
+        questions = Question.objects.filter(q_filters).order_by("-date_created")
 
         for question in questions:
             question_choices = []
@@ -144,11 +150,12 @@ def read_exercise_questions(request):
         # For Assessment Test
         is_assessment_test    = data.get("is_assessment_test", False)
 
-
-        if not session_uuid or not session_exercise_uuid or not exercise_uuid:
+        if not is_assessment_test and not session_uuid or not session_exercise_uuid or not exercise_uuid:
             raise_error("Something went wrong")
-
-        query_set = ExerciseQuestion.objects.filter(exercise=exercise_uuid,is_deleted=False)
+        elif is_assessment_test:
+            query_set = ExerciseQuestion.objects.filter(exercise=exercise_uuid,is_deleted=False)
+        else:
+            query_set = ExerciseQuestion.objects.filter(exercise=exercise_uuid,is_deleted=False)
 
         for qs in query_set:
             row = qs.get_dict(dict_type=dict_types.QUESTION_ONLY)
