@@ -1,6 +1,5 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from web_admin.models.exercise import Exercise
 from api.serializers.exercise import *
 from utils.response_handler import *
 from web_admin.views.common import generate_pagination
@@ -72,6 +71,7 @@ class ExerciseAPIView(APIView):
             return success_response()
         except Exception as e:
             return error_response(str(e))
+
 
 @api_view(["POST"])
 def read_exercise_questions(request):

@@ -95,6 +95,7 @@ def read_course(request):
         filters = extract_json_data(request)
         company = get_current_company(request)
         search  = filters.get("search", None)
+        exclude_with_assessment = filters.get("exclude_with_assessment", False)
 
         if "center_id" in filters:
             q_filters = Q(company=filters["center_id"]) & Q(is_deleted=False)
@@ -108,6 +109,10 @@ def read_course(request):
 
         for qs in query_set:
             row = qs.get_dict()
+
+            if exclude_with_assessment and not row["assessment_test"]:
+                continue
+
             records.append(row)
 
         results["records"] = records

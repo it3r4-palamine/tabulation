@@ -46,6 +46,9 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 
 	self.create_edit_dialog_assessment = function()
 	{
+		self.record = {};
+		self.exercise_questions = [];
+
 		self.open_dialog("/get_dialog/exercise/dialog_create_assessment/", 'dialog_width_80', 'main')
 	};
 
@@ -145,8 +148,6 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 		self.pagination["limit"] = 20;
 		filters["pagination"] = self.pagination;
 
-		console.log(filters)
-
 		var post = self.post_api("exercise/read/", filters, "main");
 		post.success(function(response){
 			self.records = response.records;
@@ -173,7 +174,7 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 
     self.read_courses = function()
 	{
-		let post = self.post_api("course/read/", null, "main");
+		let post = self.post_api("course/read/", { exclude_with_assessment : true }, "main");
 		post.success(function(response){
 			self.courses = response.records;
 		});
@@ -185,7 +186,11 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 	    return RightClick.get_menu(me,record)
 	};
 
-	self.main_loader = function(){ self.read_pagination(); };
+	self.main_loader = function(){
+		self.read_pagination();
+		self.read_courses();
+	};
+
 	self.main_loader();
 
 	CommonRead.get_questions_new(self);
