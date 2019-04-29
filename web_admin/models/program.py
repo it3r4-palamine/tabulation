@@ -86,7 +86,7 @@ class ProgramSession(CommonModel):
 
             if StudentAnswer.objects.filter(session_exercise=qs.pk).exists():
                 row["has_answered"] = True
-                row["score"] = qs.get_exercise_score()
+                row["score"] = qs.get_scores()
 
             records.append(row)
 

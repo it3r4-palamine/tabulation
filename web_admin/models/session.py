@@ -67,7 +67,7 @@ class Session(CommonModel):
 
             if StudentAnswer.objects.filter(enrollment=enrollment_id, program_id=program_id, session_exercise=qs.pk).exists():
                 row["has_answered"] = True
-                row["score"] = qs.get_exercise_score()
+                row["score"] = qs.get_scores()
 
             records.append(row)
 
@@ -92,7 +92,7 @@ class SessionExercise(CommonModel):
 
         return instance
 
-    def get_exercise_score(self):
+    def get_scores(self):
         total_score = 0
 
         query_set = StudentAnswer.objects.filter(session_exercise=self.pk)

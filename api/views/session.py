@@ -163,6 +163,10 @@ def read_session_exercise(request):
 
             for qs in query_set:
                 row = dict(exercise=qs.get_dict(dict_type=dict_types.MINIMAL))
+
+                if StudentAnswer.objects.filter(enrollment=enrollment_id).exists():
+                    row["has_answered"] = True
+
                 records.append(row)
         else:
             query_set = SessionExercise.objects.filter(session=session_id, is_deleted=False).order_by("-date_created")
@@ -174,7 +178,7 @@ def read_session_exercise(request):
                                                 program=program_id,
                                                 session_exercise=qs.pk).exists():
                     row["has_answered"] = True
-                    row["score"] = qs.get_exercise_score()
+                    row["score"] = qs.get_scores()
 
                 records.append(row)
 
