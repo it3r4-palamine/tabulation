@@ -27,8 +27,8 @@
     <div class="ibox">
 
         <div class="ibox-title">
-            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_session()">Add Exercise</button>
-            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_dialog_assessment()">Create an Assessment Test</button>
+            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_record(null, false)">Add Exercise</button>
+            <button class="btn btn-outline btn-primary" ng-click="main.create_edit_record(null, true)">Create an Assessment Test</button>
         </div>
 
         <div class="ibox">
@@ -72,7 +72,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="record in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(record)" ng-click="main.create_edit_session(record)">
+                            <tr ng-repeat="record in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(record)" ng-click="main.create_edit_record(record)">
                                 <td class="text-left">
                                     <i ng-show="record.is_assessment_test" class="fa fa-list-ol text-warning" aria-hidden="true"></i>
                                     <i ng-show="record.is_post_test" class="fa fa-list-ol text-success" aria-hidden="true"></i>

@@ -24,9 +24,10 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 		"Assessment Test",
 	];
 
-	self.create_edit_session = function(record)
+	self.create_edit_record = function(record, is_assessment)
 	{
 		self.record = {};
+		self.exercise_questions = [];
 
 		if ( record ) {
 			self.record["exercise"] = record;
@@ -35,7 +36,7 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 			self.exercise_questions = [{}]
 		}
 
-		if (record && record.is_assessment_test)
+		if (is_assessment || (record && record.is_assessment_test))
 		{
 			self.record = record;
 			self.open_dialog("/get_dialog/exercise/dialog_create_assessment/", 'dialog_width_80', 'main')

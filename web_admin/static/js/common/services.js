@@ -413,6 +413,7 @@ app.factory("RightClick", function(){
                 "course",
                 "questions",
                 "session",
+                "exercise",
                 "evaluation_list"])){
                 menu.push(edit_menu);
             }
