@@ -166,6 +166,7 @@ def read_session_exercise(request):
 
                 if StudentAnswer.objects.filter(enrollment=enrollment_id).exists():
                     row["has_answered"] = True
+                    row["score"] = qs.get_scores(is_assessment_test=True, enrollment_id=enrollment_id)
 
                 records.append(row)
         else:

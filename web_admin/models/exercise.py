@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from utils import dict_types
 from web_admin.models.common_model import *
 from utils.response_handler import raise_error
@@ -53,6 +55,21 @@ class Exercise(models.Model):
 
     def get_question_count(self):
         return ExerciseQuestion.objects.filter(exercise=self.id, is_deleted=False).count()
+
+    def get_scores(self, is_assessment_test=False, enrollment_id=None):
+        total_score = 0
+
+        if is_assessment_test:
+            q_filters = Q(enrollment=enrollment_id, session=None, program=None,session_exercise=None)
+
+        from web_admin.models import StudentAnswer
+        query_set = StudentAnswer.objects.filter(q_filters)
+
+        for qs in query_set:
+            if qs.answer.is_correct:
+                total_score += 1
+
+        return str(total_score) + "/" + str(query_set.count())
 
 
 class ExerciseQuestion(models.Model):

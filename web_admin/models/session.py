@@ -94,8 +94,9 @@ class SessionExercise(CommonModel):
 
     def get_scores(self):
         total_score = 0
+        q_filters = Q(session_exercise=self.pk)
 
-        query_set = StudentAnswer.objects.filter(session_exercise=self.pk)
+        query_set = StudentAnswer.objects.filter(q_filters)
 
         for qs in query_set:
             if qs.answer.is_correct:
