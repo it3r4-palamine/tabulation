@@ -67,7 +67,8 @@
                             <tr>
                                 <th>Code</th>
                                 <th>Name</th>
-                                <th>Set</th>
+                                <th ng-hide="main.filters.exercise_type == 'Assessment Test'">Set</th>
+                                <th ng-show="main.filters.exercise_type == 'Assessment Test'">Course</th>
                                 <th>Question Count</th>
                             </tr>
                         </thead>
@@ -80,7 +81,8 @@
                                     <span>{$ record.transaction_code $}</span>
                                 </td>
                                 <td class="text-left">{$ record.name $}</td>
-                                <td class="text-right">{$ record.set_no $}</td>
+                                <td class="text-right" ng-hide="record.course">{$ record.set_no $}</td>
+                                <td class="text-left" ng-show="record.course">{$ record.course.name $}</td>
                                 <td class="text-right">{$ record.question_count $}</td>
                             </tr>
                         </tbody>
