@@ -1,6 +1,6 @@
-var app = angular.module("questions", ['common_module', 'file-model', 'angular-sortable-view','ui.bootstrap.contextMenu']);
+var app = angular.module("questions", ['common_module', 'file-model', 'angular-sortable-view','ui.bootstrap.contextMenu','angularFileUpload', 'common_config']);
 
-app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $controller, CommonFunc, RightClick, Notification, CommonRead)
+app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $controller, CommonFunc, RightClick, Notification, CommonRead, FileUploader, configSettings)
 {
 	angular.extend(this, $controller('CommonCtrl', {$scope: $scope }));
 	var self = this;
@@ -16,17 +16,16 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 	self.create_edit_record = function(record)
 	{
 		self.record = {};
+		console.log(record);
+		self.initUploader(record);
 
 		if (record)
 		{
 			self.record = angular.copy(record);
 			self.get_record(record);
 
-
 		} else {
-
 			self.initiate();
-
 		}
 
 		self.open_dialog("/get_dialog/questions/dialog_create/", 'dialog_width_80 dialog_width_50', 'main')
@@ -46,7 +45,39 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 		self.record = {};
 		self.question_choices = [];
 		self.question_choices.push( { name: '', is_correct : false, options: false})
+	};
 
+	self.initUploader = function(record)
+	{
+		let url = configSettings.baseUrl + "question/upload_question_image/";
+		let api_token = document.querySelector('input[name="token"]').getAttribute('value');
+
+		var uploader = self.uploader = new FileUploader({
+			url: url,
+			formData: [record],
+			removeAfterUpload: false,
+			autoUpload: true,
+			withCredentials: true,
+			alias: 'inventory_image',
+			headers : {
+				"Authorization" : "Token " + api_token
+				}
+		});
+
+		uploader.onCompleteAll = function(item,response,status,headers) {
+
+		};
+
+		uploader.onSuccessItem = function()
+		{
+			Notification.success("Picture Uploaded");
+			self.read_record(client);
+		};
+
+		uploader.onErrorItem = function(item, response)
+		{
+			Notification.error(response);
+		}
 	};
 
 	self.delete_record = function(record)
@@ -79,9 +110,6 @@ app.controller('QuestionCtrl', function($scope, $http, $timeout, $element, $cont
 
 	self.validate_record = function(data)
 	{
-
-
-
 		return true;
 	};
 

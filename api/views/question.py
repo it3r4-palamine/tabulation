@@ -1,6 +1,10 @@
+import uuid
+
+from django.core.files.storage import FileSystemStorage
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
+from root import settings
 from web_admin.models import ExerciseQuestion, StudentAnswer
 from web_admin.views.common import raise_error
 from utils import error_messages, dict_types, response_handler
@@ -129,6 +133,42 @@ def read_questions(request):
         return success_response(results)
     except Exception as e:
         return error_response(str(e))
+
+
+@api_view(["POST"])
+def write_question_image(request):
+    try:
+        data = request.POST
+        files = request.FILES
+        uploaded_file = files["inventory_image"]
+        print(data)
+        inventory_id = data["uuid"]
+
+        # Get File Name
+        filename = uploaded_file.name
+
+        # Extract File Extension
+        ext = filename.split('.')[-1]
+
+        # Generate UUID for Filename
+        file_uuid = uuid.uuid4()
+        filename = "%s.%s" % (file_uuid, ext)
+        record = Question.objects.get(uuid=inventory_id)
+
+        if record.default_image and str(record.default_image) != "/media/default_inventory.jpg":
+            file_path = settings.BASE_DIR + str(record.default_image)
+            os.remove(file_path)
+
+        fs = FileSystemStorage()
+        filename = fs.save(filename, uploaded_file)
+        uploaded_file_url = fs.url(filename)
+
+        record.default_image = uploaded_file_url
+        record.save()
+
+        return success_response("Image Uploaded")
+    except Exception as e:
+        return error_http_response(str(e), show_line=True)
 
 
 # Used in Questionnaire Module

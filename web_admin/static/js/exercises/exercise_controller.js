@@ -45,17 +45,9 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 		}
 	};
 
-	self.create_edit_dialog_assessment = function()
-	{
-		self.record = {};
-		self.exercise_questions = [];
-
-		self.open_dialog("/get_dialog/exercise/dialog_create_assessment/", 'dialog_width_80', 'main')
-	};
-
 	self.read_exercise_questions = function(record)
 	{
-		let response = self.post_api("exercise/read_exercise_questions/", record, null, false, null, null)
+		let response = self.post_api("exercise/read_exercise_questions/", record, null, false, null, null);
 
 		response.success(function(response){
 			self.exercise_questions = response.records;
@@ -104,7 +96,6 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 
 	self.delete_record = function(record)
 	{
-		console.log(record)
 		let confirmation = CommonFunc.confirmation("Delete Exercise " + record.name + "?");
 		confirmation.then(function(){
 
@@ -121,7 +112,6 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 	    let post_data = record;
 
 	    post_data["exercise_questions"] = self.exercise_questions;
-        console.log(post_data);
 
 		self.post_api('exercise/create/', post_data, null, false, null, false)
 			.success(function(response){
@@ -175,7 +165,7 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 
     self.read_courses = function()
 	{
-		let post = self.post_api("course/read/", { exclude_with_assessment : true }, "main");
+		let post = self.post_api("course/read/", { exclude_with_assessment : true }, null);
 		post.success(function(response){
 			self.courses = response.records;
 		});
@@ -192,9 +182,12 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 		self.read_courses();
 	};
 
-	self.main_loader();
-
-	CommonRead.get_questions_new(self);
 	self.read_courses();
 	self.read_exercises();
+	CommonRead.get_questions_new(self);
+
+	self.main_loader();
+
+
+
 });

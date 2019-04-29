@@ -32,6 +32,12 @@
                     <label for="">Question</label>
                     <textarea type="text" class="form-control" ng-model="main.record.name"></textarea>
                 </div>
+
+                <div class="col-xs-6">
+                    <img src="{$ main.record.default_image $}" alt="" height="auto" width="250">
+                    <input type="file" class="btn btn-success" nv-file-select="" uploader="main.uploader"/>
+                </div>
+
                 <div class="col-xs-6" ng-hide="true">
                     <label for="">Question Type</label>
                     <ui-select ng-model="main.record.question_type" required>

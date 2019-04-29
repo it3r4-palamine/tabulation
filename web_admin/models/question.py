@@ -6,6 +6,7 @@ class Question(CommonModel):
 
 	subject       = models.ForeignKey("Subject", null=True, blank=True, on_delete=models.CASCADE)
 	question_type = models.ForeignKey("QuestionType", null=True, blank=True, on_delete=models.CASCADE)
+	default_image = models.ImageField(null=True, blank=True, default='/media/default_inventory.jpg')
 
 	class Meta:
 		app_label = "web_admin"
@@ -21,6 +22,7 @@ class Question(CommonModel):
 
 			instance["uuid"] 		  = str(self.pk)
 			instance["name"] 		  = self.name
+			instance["default_image"] = str(self.default_image) if self.default_image else ""
 			instance["subject"]       = self.subject.get_dict() if self.subject else None
 			instance["question_type"] = self.question_type.get_dict() if self.question_type else None
 
