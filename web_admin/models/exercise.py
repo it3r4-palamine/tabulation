@@ -65,6 +65,9 @@ class Exercise(models.Model):
         from web_admin.models import StudentAnswer
         query_set = StudentAnswer.objects.filter(q_filters)
 
+        if len(query_set) == 0:
+            return None
+
         for qs in query_set:
             if qs.answer.is_correct:
                 total_score += 1

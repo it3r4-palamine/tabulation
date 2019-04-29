@@ -87,9 +87,20 @@ class Enrollment(models.Model):
                 instance["id"] = self.id
                 instance["course"] = self.course.get_dict() if self.course else None
                 instance["program"] = self.company_rename.get_dict() if self.company_rename else None
+                instance["has_taken_assessment_test"] = False
+
+                assessment_test = self.get_assessment_test_details()
+
+                if assessment_test:
+                    instance["assessment_test"]  = assessment_test
+                    instance["assessment_score"] = assessment_test["score"]
+
+                    if assessment_test["score"]:
+                        instance["has_taken_assessment_test"] = True
+
+                    instance["exercise_id"]      = assessment_test["id"]
 
                 return instance
-
             else:
 
                 instance['id'] 							= self.id
@@ -121,6 +132,26 @@ class Enrollment(models.Model):
         except Exception as e:
             print_error_logs(e)
             print(e)
+
+    def get_assessment_test_details(self):
+        try:
+            row = None
+            course_id = self.course.pk if self.course else None
+
+            if course_id:
+                query_set = Exercise.objects.get(course=course_id, is_assessment_test=True)
+                assessment_score = query_set.get_scores(is_assessment_test=True, enrollment_id=self.pk)
+
+                row = query_set.get_dict()
+                row["score"] = assessment_score
+            else:
+                return None
+
+            return row
+        except Exercise.DoesNotExist:
+            return None
+        except Exercise.MultipleObjectsReturned:
+            return None
 
     def get_payments(self):
         payments = Payment.objects.filter(enrollment=self.id,is_deleted=False).values()
