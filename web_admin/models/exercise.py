@@ -3,6 +3,7 @@ from django.db.models import Q
 from utils import dict_types
 from web_admin.models.common_model import *
 from utils.response_handler import raise_error
+import time
 
 
 class Exercise(models.Model):
@@ -14,6 +15,7 @@ class Exercise(models.Model):
     set_no             = models.IntegerField(blank=True, null=True)
     total_items        = models.IntegerField(blank=True, null=True)
     is_active          = models.BooleanField(default=True)
+    is_deleted         = models.BooleanField(default=False)
     is_intelex         = models.BooleanField(default=False)
     is_post_test       = models.BooleanField(default=False)
     is_assessment_test = models.BooleanField(default=False)
@@ -55,6 +57,12 @@ class Exercise(models.Model):
 
     def get_question_count(self):
         return ExerciseQuestion.objects.filter(exercise=self.id, is_deleted=False).count()
+
+    def delete(self):
+        self.is_active = False
+        self.is_deleted = True
+        self.transaction_code = str(self.transaction_code) + str(time.mktime(time.gmtime()))
+        self.save()
 
     def get_scores(self, is_assessment_test=False, enrollment_id=None):
         total_score = 0

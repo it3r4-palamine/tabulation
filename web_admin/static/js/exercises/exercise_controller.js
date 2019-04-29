@@ -7,7 +7,7 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 	var self = this;
 	let me = this;
 
-	self.current_module 	= "subjects";
+	self.current_module 	= "exercise";
 	self.pagination			= {};
 	self.session_exercises 	= [];
 	self.records 			= [];
@@ -98,6 +98,20 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 		})
 	};
 
+	self.delete_record = function(record)
+	{
+		console.log(record)
+		let confirmation = CommonFunc.confirmation("Delete Exercise " + record.name + "?");
+		confirmation.then(function(){
+
+			self.delete_api("exercise/delete/" + record.id, null, "main")
+				.success(function(response){
+					Notification.success(response);
+					self.main_loader();
+				})
+		})
+	};
+
 	self.save_record = function(record)
 	{
 	    let post_data = record;
@@ -166,6 +180,7 @@ app.controller('ExerciseCtrl', function($scope, $http, $timeout, $element, $cont
 	};
 
 	self.menu_options = function (record) {
+		console.log(record)
 	    me.context_id = record.id;
 	    return RightClick.get_menu(me,record)
 	};

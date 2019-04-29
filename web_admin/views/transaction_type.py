@@ -138,6 +138,7 @@ def delete(request,id = None):
 		try:
 			record = Exercise.objects.get(pk = id)
 			record.is_active = False
+			record.is_deleted = True
 			record.transaction_code = str(record.transaction_code) + str(time.mktime(time.gmtime()))
 			record.save()
 			return success("Successfully deleted.")

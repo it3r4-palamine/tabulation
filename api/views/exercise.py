@@ -63,6 +63,15 @@ class ExerciseAPIView(APIView):
         except Exception as e:
             return error_response(str(e), show_line=True)
 
+    def delete(self, request, id):
+        try:
+            print(id)
+            query_set = Exercise.objects.get(id=id)
+            query_set.delete()
+            print(query_set)
+            return success_response()
+        except Exception as e:
+            return error_response(str(e))
 
 @api_view(["POST"])
 def read_exercise_questions(request):
@@ -90,7 +99,7 @@ def read_exercise(request):
         records       = []
         company       = get_current_company(request)
         filters       = extract_json_data(request)
-        query_filters = Q(company=company) & Q(is_active=True)
+        query_filters = Q(company=company) & Q(is_active=True) & Q(is_deleted=False)
         pagination    = filters.get("pagination")
         limit         = None if pagination else 50
         exercise_type = filters.get("exercise_type")

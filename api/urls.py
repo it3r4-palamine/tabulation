@@ -61,6 +61,7 @@ urlpatterns = [
     url(r'^session/generate_post_test/$', session.generate_post_test),
 
     url(r'^exercise/create/$', exercise.ExerciseAPIView.as_view()),
+    url(r'^exercise/delete/(?P<id>[0-9]+)$', exercise.ExerciseAPIView.as_view()),
     url(r'^exercise/read/$', exercise.read_exercise),
     url(r'^exercise/read_exercise_questions/$', exercise.read_exercise_questions),
 
