@@ -169,7 +169,7 @@
 								<label class="col-sm-2 control-label">Session Credits:</label>  
 								<div class="col-sm-2"> 
 									<label class="col-sm-2 control-label">Hours</label>  
-									<input type="number" name="session credits" ng-model="enrollment_data.session_credits.hours" class="form-control"> 
+									<input type="number" ng-model="enrollment_data.session_credits.hours" class="form-control">
 								</div>
 								<form class="form-horizontal" name="form">
 									<div class="col-sm-2"> 
@@ -188,23 +188,24 @@
 							<div class="form-group"> 
 								<label class="col-sm-2 control-label">Session Start Date:</label>  
 								<div class="col-sm-3"> 
-									<input type="date" name="session credits" ng-change="change_start_date(enrollment_data,'date_from')" ng-model="enrollment_data.session_start_date" class="form-control"> 
+									<input type="date" ng-change="change_start_date(enrollment_data,'date_from')" ng-model="enrollment_data.session_start_date" class="form-control">
 								</div> 
 								
 								<label class="col-sm-2 control-label">Session End Date:</label>  
 								<div class="col-sm-3"> 
-									<input type="date" name="session credits" ng-change="change_start_date(enrollment_data,'date_to')" ng-model="enrollment_data.session_end_date" class="form-control"> 
+									<input type="date" ng-change="change_start_date(enrollment_data,'date_to')" ng-model="enrollment_data.session_end_date" class="form-control">
 								</div> 
 							</div> 
 						</div>
 
                         <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Activate Enrollment</label>
+                                <div class="col-sm-3">
+                                    <input icheck type="checkbox" ng-model="enrollment_data.is_active">
+								</div>
 
-                            <div class="col-lg-2">
-                                <label for="">Set Enrollment as Active</label>
-                                <input type="checkbox" ng-model="enrollment_data.is_active">
                             </div>
-
                         </div>
 
 					</div>

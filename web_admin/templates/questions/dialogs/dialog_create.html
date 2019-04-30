@@ -26,43 +26,44 @@
 
         {% include "common/loader.html" %}
         <form class="form-horizontal" name="form">
-            
+
             <div class="row">
+
                 <div class="col-xs-12">
-                    <label for="">Question</label>
-                    <textarea type="text" class="form-control" ng-model="main.record.name"></textarea>
+
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li><a class="nav-link active" data-toggle="tab" href="#tab-1"> Question</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-2">Image</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" id="tab-1" class="tab-pane active">
+                                <div class="panel-body">
+
+                                    <div class="col-xs-12">
+                                        <label for="">Question</label>
+                                        <textarea type="text" style="height: 250px" class="form-control" ng-model="main.record.name"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" id="tab-2" class="tab-pane">
+                                <div class="panel-body">
+                                    <div class="col-xs-6">
+                                        <img src="{$ main.record.default_image $}" alt="" width="200">
+                                        <input type="file" class="btn btn-success" nv-file-select="" uploader="main.uploader"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
                 </div>
 
-                <div class="col-xs-6">
-                    <img src="{$ main.record.default_image $}" alt="" height="auto" width="250">
-                    <input type="file" class="btn btn-success" nv-file-select="" uploader="main.uploader"/>
-                </div>
-
-                <div class="col-xs-6" ng-hide="true">
-                    <label for="">Question Type</label>
-                    <ui-select ng-model="main.record.question_type" required>
-                        <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                       <ui-select-choices repeat="record in main.question_types | filter: $select.search | limitTo:50">
-                        <div ng-bind-html="record.name | highlight: $select.search"></div>
-                    </ui-select-choices>
-                    </ui-select>
-                </div>
             </div>
-
-            <br>
-
-            <div class="row">
-                <div class="col-xs-6" ng-hide="true">
-                    <label for="">Subject</label>
-                    <ui-select ng-model="main.record.subject" required>
-                        <ui-select-match>{$ $select.selected.name $}</ui-select-match>
-                       <ui-select-choices repeat="record in main.subjects | filter: $select.search | limitTo:50">
-                        <div ng-bind-html="record.name | highlight: $select.search"></div>
-                    </ui-select-choices>
-                    </ui-select>
-                </div>
-            </div>
-
+            
             <div class="row">
                 <div class="col-xs-12">
                     <br>

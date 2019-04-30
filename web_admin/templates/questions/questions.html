@@ -57,11 +57,13 @@
                         <table class="table table-condensed">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Question Title</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr ng-repeat="record in main.records" class="hand_cursor" style="text-align: center;" context-menu="main.menu_options(record)" ng-click="main.create_edit_record(record)">
+                                    <td><i ng-show="record.default_image" class="fa fa-file-image-o text-success"></i></td>
                                     <td class="text-left">{$ record.name $}</td>
                                 </tr>
                             </tbody>
