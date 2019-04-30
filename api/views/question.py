@@ -141,7 +141,6 @@ def write_question_image(request):
         data = request.POST
         files = request.FILES
         uploaded_file = files["inventory_image"]
-        print(data)
         inventory_id = data["uuid"]
 
         # Get File Name
