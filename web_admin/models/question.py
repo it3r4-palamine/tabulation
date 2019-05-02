@@ -18,6 +18,16 @@ class Question(CommonModel):
 	def get_dict(self, dict_type=dict_types.DEFAULT):
 		instance = dict()
 
+		video_url = str(self.default_image)
+		print(video_url)
+
+		self.default_image = None
+		self.save()
+
+		if video_url is "/media/default_inventory.jpg":
+			print("here")
+
+
 		if dict_type == dict_types.DEFAULT:
 
 			instance["uuid"] 		  = str(self.pk)
