@@ -20,11 +20,9 @@ class Question(CommonModel):
 
 		if dict_type == dict_types.DEFAULT:
 
-			print(len(str(self.default_image)))
-
 			instance["uuid"] 		  = str(self.pk)
 			instance["name"] 		  = self.name
-			instance["default_image"] = str(self.default_image) if len(str(self.default_image)) == 0 else None
+			instance["default_image"] = str(self.default_image) if len(str(self.default_image)) > 1 else None
 			instance["subject"]       = self.subject.get_dict() if self.subject else None
 			instance["question_type"] = self.question_type.get_dict() if self.question_type else None
 
@@ -32,7 +30,7 @@ class Question(CommonModel):
 
 			instance["uuid"] 			 = str(self.pk)
 			instance["name"] 			 = self.name
-			instance["default_image"] = str(self.default_image) if self.default_image else None
+			instance["default_image"]    = str(self.default_image) if len(str(self.default_image)) > 1 else None
 			instance["question_choices"] = self.get_question_choices(dict_type)
 
 		if dict_type == dict_types.QUESTION_W_ANSWER:

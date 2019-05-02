@@ -15,3 +15,5 @@ systech_account/static/reports/
 web_admin/static/js/common/ipconfig\.js
 
 web_student/static/web_student/js/common/ipconfig\.js
+
+web_admin/static/uploads/

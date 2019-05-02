@@ -156,7 +156,9 @@ def write_question_image(request):
 
         if record.default_image and str(record.default_image) != "/media/default_inventory.jpg":
             file_path = settings.BASE_DIR + str(record.default_image)
-            os.remove(file_path)
+
+            if os.path.isfile(file_path):
+                os.remove(file_path)
 
         fs = FileSystemStorage()
         filename = fs.save(filename, uploaded_file)
