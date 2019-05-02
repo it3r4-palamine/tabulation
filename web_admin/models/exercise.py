@@ -116,3 +116,15 @@ class ExerciseQuestion(models.Model):
             return instance
         except Exception as e:
             raise_error(e)
+
+
+class ExerciseVideo(models.Model):
+
+    exercise   = models.ForeignKey("Exercise", on_delete=models.CASCADE)
+    video_url  = models.TextField()
+    is_active  = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        app_label = "web_admin"
+        db_table = "exercise_videos"

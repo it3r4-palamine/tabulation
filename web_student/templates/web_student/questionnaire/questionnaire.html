@@ -71,6 +71,8 @@
                         <div class="feed-element" ng-repeat="record in ctrl.questions track by $index" ng-init="ctrl.checkUnicode($index)">
                             <div class="media-body">
 
+                                <img ng-show="record.default_image" width="400" src="{$ record.default_image $}" alt="">
+
                                 <h3 class="pull-left">{$ record.name $}</h3>
                                 <span class="float-right" style="margin-top: -30px" ng-show="ctrl.current_exercise.has_answered">
                                     <i style="font-size: 30px;"

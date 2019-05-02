@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from root import settings
 from web_admin.models import ExerciseQuestion, StudentAnswer
-from web_admin.views.common import raise_error
+from web_admin.views.common import raise_error, generate_pagination
 from utils import error_messages, dict_types, response_handler
 from utils.response_handler import *
 from api.serializers.question import *
@@ -102,31 +102,40 @@ class QuestionAPIView(APIView):
         return success_response(response_data=response_handler.DELETE_SUCCESS)
 
 
+# Used in Admin Page for loading questions
 @api_view(["POST"])
 def read_questions(request):
     try:
-        results = {}
-        records = []
-        filters = extract_json_data(request)
-        company = get_current_company(request)
-        search  = filters.get("search", None)
-        q_filters = Q(company=company) & Q(is_deleted=False)
+        results    = {}
+        records    = []
+        filters    = extract_json_data(request)
+        company    = get_current_company(request)
+        pagination = filters.get("pagination")
+        search     = filters.get("search", None)
+        limit      = None if pagination else 50
+        q_filters  = Q(company=company) & Q(is_deleted=False)
 
         if search:
             q_filters &= Q(name__icontains=search) | Q(description__icontains=search)
 
-        questions = Question.objects.filter(q_filters).order_by("-date_created")
+        query_set = Question.objects.filter(q_filters).order_by("-date_created")[:limit]
 
-        for question in questions:
+        for qs in query_set:
             question_choices = []
-            question_choices_record = QuestionChoices.objects.filter(question=question.uuid)
+            question_choices_record = QuestionChoices.objects.filter(question=qs.uuid)
 
             for question_choice in question_choices_record:
                 question_choices.append(question_choice.get_dict())
 
-            row = question.get_dict()
+            row = qs.get_dict()
             row["question_choices"] = question_choices
             records.append(row)
+
+        if pagination:
+            pagination["limit"] = 30
+            pagination["current_page"] = 1
+            results.update(generate_pagination(pagination, query_set))
+            records = records[results['starting']:results['ending']]
 
         results["records"] = records
 
