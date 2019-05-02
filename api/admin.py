@@ -9,5 +9,8 @@ admin.site.register(Question)
 admin.site.register(QuestionChoices)
 admin.site.register(Company)
 admin.site.register(StudentAnswer)
+admin.site.register(Exercise)
+admin.site.register(ExerciseVideo)
+admin.site.register(SessionVideo)
 
 

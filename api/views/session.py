@@ -151,6 +151,7 @@ def read_session_exercise(request):
     try:
         results            = {}
         records            = []
+        session_videos     = []
         filters            = extract_json_data(request)
         session_id         = filters.get("uuid", None)
         enrollment_id      = filters.get("enrollment_id", None)
@@ -183,7 +184,13 @@ def read_session_exercise(request):
 
                 records.append(row)
 
-        results["records"] = records
+        query_set_session_videos = SessionVideo.objects.filter(session=session_id, is_deleted=False)
+
+        for qs in query_set_session_videos:
+            session_videos.append(qs.get_dict())
+
+        results["session_videos"] = session_videos
+        results["records"]        = records
 
         return success_response(results)
     except Exception as e:

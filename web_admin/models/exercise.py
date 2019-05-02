@@ -26,6 +26,9 @@ class Exercise(models.Model):
         app_label = "web_admin"
         db_table = "transaction_types"
 
+    def __str__(self):
+        return self.name
+
     def get_dict(self, dict_type=dict_types.DEFAULT, isV2=False):
         instance = {}
 

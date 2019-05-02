@@ -71,7 +71,7 @@
                         <div class="feed-element" ng-repeat="record in ctrl.questions track by $index" ng-init="ctrl.checkUnicode($index)">
                             <div class="media-body">
 
-                                <img ng-show="record.default_image" width="400" src="{$ record.default_image $}" alt="">
+                                <img ng-click="ctrl.select_question(record)" ng-show="record.default_image" width="100" height="100" src="{$ record.default_image $}" alt="">
 
                                 <h3 class="pull-left">{$ record.name $}</h3>
                                 <span class="float-right" style="margin-top: -30px" ng-show="ctrl.current_exercise.has_answered">
@@ -107,6 +107,15 @@
         </div>
 
         <div class="col-lg-3">
+            
+            <div class="ibox">
+                <div class="ibox-title">
+                    Question Image
+                </div>
+                <div class="ibox-content">
+                    <img style="max-width: 100%" src="{$ ctrl.selected_question.default_image $}" alt="">
+                </div>
+            </div>
 
             <div class="ibox">
                 <div class="ibox-title">
@@ -115,9 +124,12 @@
                 <div class="ibox-content">
 
                     <h5>Learn more about the topic</h5>
-                    <figure>
-                        <iframe src="https://www.youtube.com/embed/D4VNfXp7rmc" frameborder="0" allowfullscreen="" data-aspectratio="0.8211764705882353" style="width: 100%; height: 150px;"></iframe>
-                    </figure>
+
+                    <div ng-repeat="video in ctrl.session_videos | orderBy: '-date'"  style="padding:20px">
+                    <div>
+                       <iframe allowfullscreen="" style="width: 100%; height: 150px;" ng-src="{$ video.video_url | trusted $}"
+                         frameborder="0" allowfullscreen></iframe>
+                    </div>
 
                 </div>
             </div>
@@ -126,5 +138,84 @@
 
     </div>
 
+    <div class="small-chat-box fadeInRight animated">
+
+            <div class="heading" draggable="true">
+                <small class="chat-date float-right">
+                    02.19.2015
+                </small>
+                Small chat
+            </div>
+
+            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 234px;"><div class="content" style="overflow: hidden; width: auto; height: 234px;">
+
+                <div class="left">
+                    <div class="author-name">
+                        Monica Jackson <small class="chat-date">
+                        10:02 am
+                    </small>
+                    </div>
+                    <div class="chat-message active">
+                        Lorem Ipsum is simply dummy text input.
+                    </div>
+
+                </div>
+                <div class="right">
+                    <div class="author-name">
+                        Mick Smith
+                        <small class="chat-date">
+                            11:24 am
+                        </small>
+                    </div>
+                    <div class="chat-message">
+                        Lorem Ipsum is simpl.
+                    </div>
+                </div>
+                <div class="left">
+                    <div class="author-name">
+                        Alice Novak
+                        <small class="chat-date">
+                            08:45 pm
+                        </small>
+                    </div>
+                    <div class="chat-message active">
+                        Check this stock char.
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="author-name">
+                        Anna Lamson
+                        <small class="chat-date">
+                            11:24 am
+                        </small>
+                    </div>
+                    <div class="chat-message">
+                        The standard chunk of Lorem Ipsum
+                    </div>
+                </div>
+                <div class="left">
+                    <div class="author-name">
+                        Mick Lane
+                        <small class="chat-date">
+                            08:45 pm
+                        </small>
+                    </div>
+                    <div class="chat-message active">
+                        I belive that. Lorem Ipsum is simply dummy text.
+                    </div>
+                </div>
+
+
+            </div><div class="slimScrollBar" style="background: rgb(0, 0, 0); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 162.481px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.4; z-index: 90; right: 1px;"></div></div>
+            <div class="form-chat">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control">
+                    <span class="input-group-btn"> <button class="btn btn-primary" type="button">Send
+                </button> </span></div>
+            </div>
+
+        </div>
+
 
 </div>
+

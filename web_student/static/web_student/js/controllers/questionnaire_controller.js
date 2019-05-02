@@ -29,6 +29,7 @@ angular.module("app")
 
             let data = response.data;
             self.session_exercises = data.records;
+            self.session_videos    = data.session_videos
 
         }, function (response){
 
@@ -57,6 +58,10 @@ angular.module("app")
         }, function (response){
             SweeterAlert.error({title : "Oops!", message : response.data});
         });
+    };
+
+    self.select_question = function(question) {
+        self.selected_question = angular.copy(question);
     };
 
     self.submit_answers = function()
@@ -106,4 +111,11 @@ angular.module("app")
     }
 
 });
+
+app.filter('trusted', ['$sce', function ($sce) {
+    return function(url) {
+            var video_id = url.split('v=')[1].split('&')[0];
+        return $sce.trustAsResourceUrl("https://www.youtube.com/embed/" + video_id);
+    };
+}]);
 

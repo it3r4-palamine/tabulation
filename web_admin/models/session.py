@@ -105,6 +105,23 @@ class SessionExercise(CommonModel):
         return str(total_score) + "/" + str(query_set.count())
 
 
+class SessionVideo(models.Model):
+
+    session    = models.ForeignKey("Session", on_delete=models.CASCADE)
+    video_url  = models.TextField()
+    is_active  = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        app_label = "web_admin"
+        db_table = "session_videos"
+
+    def get_dict(self):
+        instance = dict()
+        instance["video_url"] = self.video_url
+        return instance
+
+
 class StudentSession(models.Model):
     
     student         = models.ForeignKey("User", on_delete=models.CASCADE)
