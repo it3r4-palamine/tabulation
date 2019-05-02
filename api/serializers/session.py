@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from web_admin.models.session import Session, SessionExercise
+from web_admin.models.session import Session, SessionExercise, SessionVideo
 
 
 class SessionSerializer(serializers.ModelSerializer):
@@ -18,4 +18,14 @@ class SessionExerciseSerializer(serializers.ModelSerializer):
         fields = (
             'session',
             'exercise',
+        )
+
+
+class SessionVideoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SessionVideo
+        fields = (
+            'session',
+            'video_url',
         )

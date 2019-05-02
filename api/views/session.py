@@ -43,6 +43,29 @@ class SessionAPIView(APIView):
             else:
                 raise_error(serializer.errors)
 
+    def save_session_videos(self, session_id, session_videos):
+
+        for session_video in session_videos:
+
+            uuid = session_video.get("uuid", None)
+
+            session_video["session"] = session_id
+
+            if uuid:
+                instance = SessionVideo.objects.get(pk=uuid)
+
+                if "is_deleted" in session_video and session_video["is_deleted"]:
+                    self.delete_child(instance)
+
+                serializer = SessionVideoSerializer(data=session_video, instance=instance)
+            else:
+                serializer = SessionVideoSerializer(data=session_video)
+
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                raise_error(serializer.errors)
+
     def post(self, request):
         instance   = None
         is_editing = False
@@ -50,6 +73,7 @@ class SessionAPIView(APIView):
             data              = extract_json_data(request)
             company           = get_current_company(request)
             session_exercises = data.get("session_exercises", None)
+            session_videos    = data.get("session_videos", None)
 
             if not session_exercises:
                 raise_error("No Exercises")
@@ -65,6 +89,7 @@ class SessionAPIView(APIView):
             if serializer.is_valid():
                 instance = serializer.save()
                 self.save_session_exercises(instance.pk, session_exercises)
+                self.save_session_videos(instance.pk, session_videos)
 
             else:
                 raise_error(serializer.errors)

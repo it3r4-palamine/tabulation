@@ -118,6 +118,8 @@ class SessionVideo(models.Model):
 
     def get_dict(self):
         instance = dict()
+        instance["uuid"]      = str(self.pk)
+        instance["session"]   = self.session.pk
         instance["video_url"] = self.video_url
         return instance
 

@@ -17,6 +17,7 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 	self.filters 			= { name : ''};
 	self.filter 			= { name : "" };
 	self.session_exercises  = [];
+	self.session_videos     = [];
 	$scope.filter 			= { name : "" };
 
 
@@ -29,7 +30,9 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 			self.read_session_exercises(record);
 		} else {
 			self.session_exercises = [];
+			self.session_videos    = [];
 			self.session_exercises.push({});
+			self.session_videos.push({})
 		}
 
 		self.open_dialog("/get_dialog/sessions/create_dialog/", 'dialog_width_80', 'main')
@@ -41,6 +44,7 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 
 		response.success(function(response){
 			self.session_exercises = response.records;
+			self.session_videos    = response.session_videos;
 
 			if(response.records.length === 0)
 			{
@@ -59,10 +63,19 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
         self.session_exercises.push({});
     };
 
+	self.add_session_video = function()
+	{
+		self.session_videos.push({});
+	};
+
 	self.remove_session_exercise = function(record)
 	{
 		record["is_deleted"] = true
-		// self.session_exercises.splice(self.session_exercises.indexOf(record), 1);
+	};
+
+	self.remove_session_video = function(record)
+	{
+		record["is_deleted"] = true;
 	};
 
 	self.delete_record = function(record)
@@ -96,6 +109,7 @@ app.controller('SessionCtrl', function($scope, $http, $timeout, $element, $contr
 	    let post_data = angular.copy(record);
 
 	    post_data["session_exercises"] = self.session_exercises;
+	    post_data["session_videos"]    = self.session_videos;
 
 		self.post_api('session/create/', post_data, null, false, null, false)
 			.success(function(response){
