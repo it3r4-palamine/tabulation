@@ -28,7 +28,7 @@ nltk==3.2.5
 olefile==0.44
 paypalrestsdk==1.13.1
 pilkit==2.0
-Pillow==4.3.0
+Pillow==6.2.0
 psycopg2==2.7.3.2
 pycparser==2.19
 pyexcel==0.5.6
